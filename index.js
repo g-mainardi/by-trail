@@ -5,7 +5,10 @@ const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Se
 const app = express();
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/trekkingApp')
+// Env var injected from Docker Compose
+const mongoURI = process.env.MONGO_URI;
+
+mongoose.connect(mongoURI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(error => console.error('Connection to MongoDB failed: ', error));
 

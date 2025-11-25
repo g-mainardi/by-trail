@@ -1,10 +1,14 @@
 services:
 
+  # 1. Database 
   mongo:
     image: mongo
     ports:
       - 27017:27017
+    volumes:
+      - mongo-data:/data/db # persist data, to insert real db path
 
+  # 2. Mongo Express GUI
   mongo-express:
     image: mongo-express
     restart: always
@@ -13,3 +17,23 @@ services:
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
       ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongo
+
+  # 3. Backend (Node/Express)
+  server:
+    build:
+      context:  . 
+      dockerfile: ./server/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/by-trail
+    volumes:
+      - .:/app            # Syncronize local files with the container (Hot Reload)
+      - /app/node_modules # Avoid to override container's module
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data: # named volume to not lost data on turn off
