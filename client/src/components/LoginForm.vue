@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue"
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -16,6 +14,8 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
+import type { HTMLAttributes } from "vue"
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -68,9 +68,9 @@ const props = defineProps<{
               </Button>
               <FieldDescription class="text-center">
                 Don't have an account?
-                <a href="#">
+                <RouterLink to="/signup">
                   Sign up
-                </a>
+                </RouterLink>
               </FieldDescription>
             </Field>
           </FieldGroup>
