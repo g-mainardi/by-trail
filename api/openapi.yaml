@@ -53,8 +53,35 @@ paths:
                 properties:
                   token:
                     type: string
+        "400":
+          description: Bad Request - Invalid input (e.g., missing username or password)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         "401":
           description: Unauthorized
+        "429":
+          description: Too Many Requests - Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   /users:
     get:
       tags:
@@ -68,9 +95,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                      format: email
         "500":
           description: Internal server error
+
+  /signup:
     post:
       tags:
         - Users
@@ -88,8 +123,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "500":
-          description: Internal server error
+        "400":
+          description: Bad Request - Invalid input (e.g., malformed email, missing required fields, duplicate username/email)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 
 components:
   schemas:
@@ -107,13 +149,20 @@ components:
         password:
           type: string
           format: password
-        creationDate:
+          writeOnly: true # Passwords should not be exposed in responses
+        createAt:
           type: string
           format: date-time
         interestingRegions:
           type: array
           items:
             type: string
+          description: |
+            A list of region identifiers that the user finds interesting. Each string should be a region name. This allows users to bookmark or follow specific geographic regions.
+          example:
+            - "Emilia-Romagna"
+            - "Toscana"
+            - "Sicilia"
         status:
           type: string
           enum:
@@ -124,5 +173,5 @@ components:
         - username
         - email
         - password
-        - creationDate
+        - createAt
         - status
