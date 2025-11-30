@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import type { HTMLAttributes } from "vue"
+import { RouterLink } from 'vue-router'
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]

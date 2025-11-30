@@ -14,6 +14,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { RouterLink } from 'vue-router'
 </script>
 
 <template>
