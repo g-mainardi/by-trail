@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const fs = require('fs');
+import mongoose from 'mongoose';
+import fs from 'fs';
 
 // Helper to read the secret
 const getMongoURI = () => {
@@ -27,4 +27,4 @@ const connectDB = async () => {
     }
 };
 
-module.exports = connectDB;
+export default connectDB;

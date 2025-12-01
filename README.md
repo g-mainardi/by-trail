@@ -5,7 +5,7 @@
 1. Set up Docker secrets for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:
 
     ```text
-   mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/?appName=Cluster0    
+   mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0    
    ```
 
 2. Start MongoDB server and Express application using Docker Compose:

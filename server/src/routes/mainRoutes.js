@@ -1,10 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } from '../models/models.js';
 
-const router = express.Router();
-const {User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } = require('../models/models');
+export const mainRoutes = express.Router();
 
-router.get('/', (req, res) => {
+mainRoutes.get('/', (req, res) => {
     res.send('Hello, World!');
 });
-
-module.exports = router;
