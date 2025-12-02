@@ -1,10 +1,20 @@
 <script lang="ts">
 export const description = "Landing page."
+export default { name: 'Hero' };
 </script>
 
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
+const { t } = useI18n()
 </script>
 
 <template>
@@ -12,16 +22,49 @@ import { RouterLink } from 'vue-router';
       background-image: url('/src/assets/login-wallpaper.png'); 
       background-size: cover; 
       background-position: center;">
+    <div class="absolute top-6 right-6">
+      <Select class="w-[200px]" v-model="$i18n.locale">
+        <SelectTrigger class="bg-white text-black">
+          <SelectValue placeholder="Select a language" />
+        </SelectTrigger>
+        <SelectContent class="bg-white">
+          <SelectItem value="en">🇬🇧 English</SelectItem>
+          <SelectItem value="it">🇮🇹 Italiano</SelectItem>
+          <SelectItem value="es">🇪🇸 Español</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+
     <div class="flex flex-col items-center">
-      <h1 class="text-4xl font-bold text-white">Welcome to By-Trail</h1>
+      <h1 class="text-4xl font-bold text-white">{{ t("welcome") }}</h1>
       <div class="mt-6 flex gap-4">
       <RouterLink to="/login">
-        <Button>Log In</Button>
+        <Button>{{ t("login") }}</Button>
       </RouterLink>
       <RouterLink to="/signup">
-        <Button variant="secondary">Sign Up</Button>
+        <Button variant="secondary">{{ t("signup") }}</Button>
       </RouterLink>
       </div>
     </div>
   </div>
 </template>
+
+<i18n>
+{
+  "en": {
+    "welcome": "Welcome to By-Trail",
+    "login": "Log In",
+    "signup": "Sign Up"
+  },
+  "it": {
+    "welcome": "Benvenuto su By-Trail",
+    "login": "Accedi",
+    "signup": "Registrati"
+  },
+  "es": {
+    "welcome": "Bienvenido a By-Trail",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse"
+  }
+}
+</i18n>
