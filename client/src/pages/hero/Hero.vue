@@ -5,13 +5,7 @@ export default { name: 'Hero' };
 
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import SelectLanguage from '@/components/ui/select/SelectLanguage.vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
 const { t } = useI18n()
@@ -23,16 +17,7 @@ const { t } = useI18n()
       background-size: cover; 
       background-position: center;">
     <div class="absolute top-6 right-6">
-      <Select class="w-[200px]" v-model="$i18n.locale">
-        <SelectTrigger class="bg-white text-black">
-          <SelectValue placeholder="Select a language" />
-        </SelectTrigger>
-        <SelectContent class="bg-white">
-          <SelectItem value="en">🇬🇧 English</SelectItem>
-          <SelectItem value="it">🇮🇹 Italiano</SelectItem>
-          <SelectItem value="es">🇪🇸 Español</SelectItem>
-        </SelectContent>
-      </Select>
+      <SelectLanguage />
     </div>
 
     <div class="flex flex-col items-center">
