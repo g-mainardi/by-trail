@@ -22,6 +22,7 @@ services:
 
   # 3. Backend (Node/Express)
   server:
+    container_name: by-trail-server
     build: ./server
     ports:
       - "3000:3000"
@@ -38,6 +39,18 @@ services:
     # Note: If use Atlas, not depending on Local container anymore
     # depends_on: 
     #   - mongo 
+  
+  # 4. Frontend (Vite/React)
+  client:
+    container_name: by-trail-client
+    build: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app        # Synch files for HMR
+      - /app/node_modules    # Protect container's node_modules
+    depends_on:
+      - server
 
 secrets:
   db_uri:
