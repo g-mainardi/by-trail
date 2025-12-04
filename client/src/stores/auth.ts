@@ -55,5 +55,36 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login');
   };
 
-  return { token, user, error, isLoading, login, logout };
+  const signup = async (name: string, email: string, pass: string) => {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            name, 
+            email, 
+            password: pass 
+            // favRegions: [] //todo
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || 'Signup failed');
+
+      return true;
+
+    } catch (err: any) {
+      console.error(err);
+      error.value = err.message;
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  return { token, user, error, isLoading, login, signup, logout };
 });
