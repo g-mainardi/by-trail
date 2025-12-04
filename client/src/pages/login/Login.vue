@@ -1,9 +1,11 @@
 <script lang="ts">
 export const description = "A simple login form."
+export default { name: 'Login' };
 </script>
 
 <script setup lang="ts">
 import LoginForm from "@/components/LoginForm.vue";
+import SelectLanguage from '@/components/ui/select/SelectLanguage.vue';
 </script>
 
 <template>
@@ -14,6 +16,9 @@ import LoginForm from "@/components/LoginForm.vue";
       background-size: cover; 
       background-position: center;"
   >
+    <div class="absolute top-0 right-6">
+      <SelectLanguage />
+    </div>
     <div class="w-full max-w-sm">
       <LoginForm />
     </div>

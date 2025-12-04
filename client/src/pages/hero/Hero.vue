@@ -16,7 +16,7 @@ const { t } = useI18n()
       background-image: url('/src/assets/login-wallpaper.png'); 
       background-size: cover; 
       background-position: center;">
-    <div class="absolute top-6 right-6">
+    <div class="absolute top-0 right-6">
       <SelectLanguage />
     </div>
 
@@ -37,17 +37,17 @@ const { t } = useI18n()
 <i18n>
 {
   "en": {
-    "welcome": "Welcome to By-Trail",
+    "welcome": "Welcome to By Trail",
     "login": "Log In",
     "signup": "Sign Up"
   },
   "it": {
-    "welcome": "Benvenuto su By-Trail",
+    "welcome": "Benvenuto su By Trail",
     "login": "Accedi",
     "signup": "Registrati"
   },
   "es": {
-    "welcome": "Bienvenido a By-Trail",
+    "welcome": "Bienvenido a By Trail",
     "login": "Iniciar sesión",
     "signup": "Registrarse"
   }
