@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import Hero from './pages/hero/Hero.vue'
 import Login from './pages/login/Login.vue'
@@ -17,4 +18,11 @@ export const router = createRouter({
   routes,
 })
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+const pinia = createPinia()
+
+// Install plugins
+app.use(router)
+app.use(pinia) 
+
+app.mount('#app')
