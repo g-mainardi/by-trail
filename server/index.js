@@ -1,20 +1,24 @@
 import express from 'express'
+import cors from 'cors';
 import connectDB from './src/config/db.js';
 import { mainRoutes } from './src/routes/mainRoutes.js';
-import cors from 'cors';
+import authRoutes from './src/routes/authRoutes.js';
 
+// Environment variables setup
 const PORT = process.env.PORT || 3000; // Default port for Express
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5173'; // Vite default port
+
 const app = express();
 
-// Middleware
+// Middleware setup
 app.use(express.json());
 
-// 1. connnect to DB
+// DB connection
 connectDB();
 
-// 2. Use Routes    
-app.use('/api', mainRoutes);
+// Routes
+app.use('/api', mainRoutes);      // Public/Generic routes
+app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 
 app.use(cors({
     origin: CLIENT_ORIGIN,
