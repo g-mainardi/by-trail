@@ -17,4 +17,15 @@ export const router = createRouter({
   routes,
 })
 
+const testFetchData = async () => {
+  try {
+    const res = await fetch('/api') 
+    const text = await res.text()
+    console.log('Server response:', text)
+  } catch (error) {
+    console.error('Errore during server call:', error)
+  }
+}
+testFetchData()
+
 createApp(App).use(router).mount('#app')
