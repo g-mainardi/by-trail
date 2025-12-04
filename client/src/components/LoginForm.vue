@@ -16,6 +16,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { 
+  Alert, 
+  AlertDescription, 
+  AlertTitle 
+} from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-vue-next' // Import Error Icon
 import { cn } from '@/lib/utils'
 import type { HTMLAttributes } from "vue"
 import { RouterLink } from 'vue-router'
@@ -51,11 +57,15 @@ const handleLogin = async () => {
       <CardContent>
         <form @submit.prevent="handleLogin">
           
-          <div v-if="authStore.error" class="mb-4 p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md">
-            {{ authStore.error }}
-          </div>
-
           <FieldGroup>
+            <Alert v-if="authStore.error" variant="destructive" class="mb-4">
+              <AlertCircle class="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {{ authStore.error }}
+              </AlertDescription>
+            </Alert>
+
             <Field>
               <FieldLabel for="email">
                 Email
