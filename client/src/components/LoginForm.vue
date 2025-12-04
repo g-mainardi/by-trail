@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,6 +23,20 @@ import { RouterLink } from 'vue-router'
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
+
+const authStore = useAuthStore()
+
+// Reactive state for form inputs
+const email = ref('')
+const password = ref('')
+
+const handleLogin = async () => {
+  // Prevent empty submission
+  if (!email.value || !password.value) return
+  
+  // Call the login action from Pinia store
+  await authStore.login(email.value, password.value)
+}
 </script>
 
 <template>
@@ -33,7 +49,12 @@ const props = defineProps<{
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form @submit.prevent="handleLogin">
+          
+          <div v-if="authStore.error" class="mb-4 p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md">
+            {{ authStore.error }}
+          </div>
+
           <FieldGroup>
             <Field>
               <FieldLabel for="email">
@@ -41,6 +62,7 @@ const props = defineProps<{
               </FieldLabel>
               <Input
                 id="email"
+                v-model="email"
                 type="email"
                 placeholder="m@example.com"
                 required
@@ -58,11 +80,16 @@ const props = defineProps<{
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input 
+                id="password" 
+                v-model="password" 
+                type="password" 
+                required 
+              />
             </Field>
             <Field>
-              <Button type="submit">
-                Login
+              <Button type="submit" :disabled="authStore.isLoading">
+                {{ authStore.isLoading ? 'Signing in...' : 'Login' }}
               </Button>
               <Button variant="outline" type="button">
                 Login with Google
