@@ -1,0 +1,70 @@
+name: E2E Integration Smoke Test
+
+# all branches
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  docker-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Create the dummy secret file (using GitHub Secrets)
+      - name: Create Dummy Secret
+        run: |
+          mkdir -p secrets
+          echo "${{ secrets.CI_MONGO_URI }}" > secrets/mongo_atlas_uri.txt
+      
+      # 3. Create a dummy JWT secret file (using GitHub Secrets)
+      - name: Create Dummy JWT Secret
+        run: |
+          echo "${{ secrets.JWT_SECRET }}" > secrets/jwt_secret.txt
+
+      # 4. Create the .env file from the example
+      # This ensures docker-compose finds the necessary variables.
+      - name: Create .env file
+        run: cp .env.example .env
+
+      # 5. Start the stack using Docker Compose
+      # We use the --build flag to ensure fresh images are created.
+      # We detach (-d) so the steps can continue while containers run.
+      - name: Start Containers
+        run: docker compose up -d --build
+
+      # 6. Wait for services to be ready
+      # Docker takes a few seconds to boot Node.js and Mongo.
+      # We pause the workflow for 30 seconds to let everything initialize.
+      - name: Wait for services initialization
+        run: sleep 30
+
+      # 7. Check container status
+      # Useful for debugging if a test fails (shows logs of crashed containers).
+      - name: Check running containers
+        run: docker compose ps -a
+
+      # 8. Test Server Reachability (Backend)
+      # We curl localhost:3000/api to see if Express is responding.
+      # The --fail flag makes the step fail if the HTTP code is an error (e.g., 404 or 500).
+      - name: Test Server API Endpoint
+        run: curl --fail http://localhost:3000/api
+
+      # 9. Test Client Reachability (Frontend)
+      # We curl localhost:5173 to see if Vite is serving the HTML.
+      # Thanks to 'host: true' in vite config, this works from the GitHub runner.
+      - name: Test Client Frontend
+        run: curl --fail http://localhost:5173
+
+      # 10. Dump logs on failure
+      # If any previous step failed, this runs to show us what went wrong inside the containers.
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
