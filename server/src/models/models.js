@@ -7,6 +7,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     creationDate: { type: Date, default: Date.now },
     favRegions: { type: [String], default: [] }, 
     status: { type: String, enum: ['active', 'banned'], default: 'active' },
@@ -15,6 +16,7 @@ const userSchema = new Schema({
 const adminSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     creationDate: { type: Date, default: Date.now },
 });
 
