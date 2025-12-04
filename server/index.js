@@ -3,7 +3,8 @@ import connectDB from './src/config/db.js';
 import { mainRoutes } from './src/routes/mainRoutes.js';
 import cors from 'cors';
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Default port for Express
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5173'; // Vite default port
 const app = express();
 
 // Middleware
@@ -16,7 +17,7 @@ connectDB();
 app.use('/api', mainRoutes);
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Vite dev server
+    origin: CLIENT_ORIGIN,
     credentials: true,
 }));
 

@@ -29,6 +29,8 @@ services:
     secrets:
       - db_uri
     environment:
+      PORT: ${SERVER_PORT:-3000}
+      CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
       MONGO_URI_FILE: /run/secrets/db_uri
       MONGO_URI_LOCAL: mongodb://mongo:27017/by-trail
       # For using Local or Atlas
@@ -47,6 +49,8 @@ services:
     ports:
       - "5173:5173"
     environment:
+      VITE_PORT: ${CLIENT_PORT:-5173}
+      VITE_SERVER_URL: http://${SERVER_HOST:-server}:${SERVER_PORT:-3000}
       CHOKIDAR_USEPOLLING: "true" # Tell Vite to use polling (better FS changes detection in Docker)
     volumes:
       - ./client:/app        # Synch files for HMR
