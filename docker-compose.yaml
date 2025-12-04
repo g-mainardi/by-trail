@@ -34,7 +34,7 @@ services:
       MONGO_URI_FILE: /run/secrets/db_uri
       MONGO_URI_LOCAL: mongodb://mongo:27017/by-trail
       # For using Local or Atlas
-      USE_ATLAS: "true" 
+      USE_ATLAS: ${USE_ATLAS:-true}
     volumes:
       - ./server:/app            # Syncronize local files with the container (Hot Reload)
       - /app/node_modules
