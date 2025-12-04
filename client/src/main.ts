@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import Hero from './pages/hero/Hero.vue'
 import Login from './pages/login/Login.vue'
@@ -17,15 +18,11 @@ export const router = createRouter({
   routes,
 })
 
-const testFetchData = async () => {
-  try {
-    const res = await fetch('/api') 
-    const text = await res.text()
-    console.log('Server response:', text)
-  } catch (error) {
-    console.error('Errore during server call:', error)
-  }
-}
-testFetchData()
+const app = createApp(App)
+const pinia = createPinia()
 
-createApp(App).use(router).mount('#app')
+// Install plugins
+app.use(router)
+app.use(pinia) 
+
+app.mount('#app')
