@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SignupForm from "@/components/SignupForm.vue";
+import SelectLanguage from '@/components/ui/select/SelectLanguage.vue';
 </script>
 
 <template>
@@ -10,6 +11,9 @@ import SignupForm from "@/components/SignupForm.vue";
       background-size: cover; 
       background-position: center;"
   >
+    <div class="absolute top-0 right-6">
+      <SelectLanguage />
+    </div>
     <div class="w-full max-w-sm">
       <SignupForm />
     </div>
