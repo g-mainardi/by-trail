@@ -12,7 +12,7 @@ properties:
     type: string
     format: password
     writeOnly: true # Passwords should not be exposed in responses
-  createAt:
+  createdAt:
     type: string
     format: date-time
   interestingRegions:
@@ -35,5 +35,5 @@ required:
   - username
   - email
   - password
-  - createAt
+  - createdAt
   - status

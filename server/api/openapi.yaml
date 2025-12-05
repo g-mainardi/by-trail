@@ -31,12 +31,12 @@ tags:
 paths:
   # Authentication
   /login:
-    $ref: "./endpoints/authentication.yaml#/~1login"
+    $ref: "./paths/authentication.yaml#/~1login"
   /signup:
-    $ref: "./endpoints/authentication.yaml#/~1signup"
+    $ref: "./paths/authentication.yaml#/~1signup"
   # Users
   /users:
-    $ref: "./endpoints/users.yaml#/~1users"
+    $ref: "./paths/users.yaml#/~1users"
   # Bivacchi
 
   # Trails

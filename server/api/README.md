@@ -4,11 +4,11 @@ This project organizes API definitions by context. All endpoint specifications a
 
 ## Referencing endpoints
 
-Inside each file there could be multiple endpoints,
+Inside each file there may be multiple endpoints,
 you can reference a specific endpoint using this syntax:
 
 ```yaml
-$ref: "./endpoints/filename.yaml#/~1endpointPath"
+$ref: "./paths/filename.yaml#/~1endpointPath"
 ```
 
 Where:
