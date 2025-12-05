@@ -1,6 +1,6 @@
 openapi: 3.0.4
 info:
-  title: By-Trails API
+  title: By Trail API
   description: |-
     This is 'By Trail', a SaaS to plan and monitor trekking based 
     on the OpenAPI 3.0 specification.
@@ -13,9 +13,15 @@ servers:
     description: Local Docker Server
 
 tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Alerts
+    description: Management of user alerts and notifications
+  - name: Admin
+    description: Administrative operations and management
   - name: Users
     description: User profiles, settings, and lists
-  - name: Bivouacs
+  - name: Bivacchi
     description: Management of shelters and bivouacs
   - name: Trails
     description: Management of hiking trails
@@ -23,155 +29,25 @@ tags:
     description: Bivouac booking management
 
 paths:
+  # Authentication
   /login:
-    post:
-      tags:
-        - Users
-      summary: User login
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-                  format: password
-              required:
-                - username
-                - password
-      responses:
-        "200":
-          description: Successful login
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-        "400":
-          description: Bad Request - Invalid input (e.g., missing username or password)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-        "401":
-          description: Unauthorized
-        "429":
-          description: Too Many Requests - Rate limit exceeded
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-  /users:
-    get:
-      tags:
-        - Users
-      summary: Retrieve a list of users
-      responses:
-        "200":
-          description: A list of users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    username:
-                      type: string
-                    email:
-                      type: string
-                      format: email
-        "500":
-          description: Internal server error
-
+    $ref: "./paths/authentication.yaml#/~1login"
   /signup:
-    post:
-      tags:
-        - Users
-      summary: Create a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        "201":
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          description: Bad Request - Invalid input (e.g., malformed email, missing required fields, duplicate username/email)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+    $ref: "./paths/authentication.yaml#/~1signup"
+  # Users
+  /users:
+    $ref: "./paths/users.yaml#/~1users"
+  # Bivacchi
+
+  # Trails
+
+  # Reservations
+
+  # Alerts
+
+  # Admin
 
 components:
   schemas:
     User:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        username:
-          type: string
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-          format: password
-          writeOnly: true # Passwords should not be exposed in responses
-        createAt:
-          type: string
-          format: date-time
-        interestingRegions:
-          type: array
-          items:
-            type: string
-          description: |
-            A list of region identifiers that the user finds interesting. Each string should be a region name. This allows users to bookmark or follow specific geographic regions.
-          example:
-            - "Emilia-Romagna"
-            - "Toscana"
-            - "Sicilia"
-        status:
-          type: string
-          enum:
-            - active
-            - inactive
-      required:
-        - id
-        - username
-        - email
-        - password
-        - createAt
-        - status
+      $ref: "./components/schemas/User.yaml"

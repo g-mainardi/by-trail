@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  username:
+    type: string
+  email:
+    type: string
+    format: email
+  password:
+    type: string
+    format: password
+    writeOnly: true # Passwords should not be exposed in responses
+  createdAt:
+    type: string
+    format: date-time
+  interestingRegions:
+    type: array
+    items:
+      type: string
+    description: |
+      A list of region identifiers that the user finds interesting. Each string should be a region name. This allows users to bookmark or follow specific geographic regions.
+    example:
+      - "Emilia-Romagna"
+      - "Toscana"
+      - "Sicilia"
+  status:
+    type: string
+    enum:
+      - active
+      - inactive
+required:
+  - id
+  - username
+  - email
+  - password
+  - createdAt
+  - status
