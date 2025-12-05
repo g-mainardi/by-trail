@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -14,6 +16,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { 
+  Alert, 
+  AlertDescription, 
+  AlertTitle 
+} from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-vue-next' // Import Error Icon
 import { cn } from '@/lib/utils'
 import type { HTMLAttributes } from "vue"
 import { useI18n } from 'vue-i18n'
@@ -23,6 +31,20 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
+
+const authStore = useAuthStore()
+
+// Reactive state for form inputs
+const email = ref('')
+const password = ref('')
+
+const handleLogin = async () => {
+  // Prevent empty submission
+  if (!email.value || !password.value) return
+  
+  // Call the login action from Pinia store
+  await authStore.login(email.value, password.value)
+}
 </script>
 
 <template>
@@ -35,14 +57,24 @@ const props = defineProps<{
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form @submit.prevent="handleLogin">
+          
           <FieldGroup>
+            <Alert v-if="authStore.error" variant="destructive" class="mb-4">
+              <AlertCircle class="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {{ authStore.error }}
+              </AlertDescription>
+            </Alert>
+
             <Field>
               <FieldLabel for="email">
                 {{ t("email") }}
               </FieldLabel>
               <Input
                 id="email"
+                v-model="email"
                 type="email"
                 placeholder="m@example.com"
                 required
@@ -60,11 +92,16 @@ const props = defineProps<{
                   {{ t("forgot_password") }}
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input 
+                id="password" 
+                v-model="password" 
+                type="password" 
+                required 
+              />
             </Field>
             <Field>
-              <Button type="submit">
-                {{ t("login_button") }}
+              <Button type="submit" :disabled="authStore.isLoading">
+                {{ authStore.isLoading ? 'Signing in...' : t("login_button") }}
               </Button>
               <Button variant="outline" type="button">
                 {{ t("login_google") }}
