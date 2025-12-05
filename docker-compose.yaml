@@ -22,22 +22,41 @@ services:
 
   # 3. Backend (Node/Express)
   server:
+    container_name: by-trail-server
     build: ./server
     ports:
       - "3000:3000"
     secrets:
       - db_uri
     environment:
+      PORT: ${SERVER_PORT:-3000}
+      CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
       MONGO_URI_FILE: /run/secrets/db_uri
       MONGO_URI_LOCAL: mongodb://mongo:27017/by-trail
       # For using Local or Atlas
-      USE_ATLAS: "true" 
+      USE_ATLAS: "${USE_ATLAS:-true}"
     volumes:
-      - ./server:/app            # Syncronize local files with the container (Hot Reload)
+      - ./server:/app            # Synchronize local files with the container (Hot Reload)
       - /app/node_modules
     # Note: If use Atlas, not depending on Local container anymore
     # depends_on: 
     #   - mongo 
+  
+  # 4. Frontend (Vite/React)
+  client:
+    container_name: by-trail-client
+    build: ./client
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_PORT: ${CLIENT_PORT:-5173}
+      VITE_SERVER_URL: http://${SERVER_HOST:-server}:${SERVER_PORT:-3000}
+      CHOKIDAR_USEPOLLING: "true" # Tell Vite to use polling (better FS changes detection in Docker)
+    volumes:
+      - ./client:/app        # Sync files for HMR
+      - /app/node_modules    # Protect container's node_modules
+    depends_on:
+      - server
 
 secrets:
   db_uri:
