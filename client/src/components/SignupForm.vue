@@ -94,7 +94,8 @@ const { t } = useI18n()
     "log_in": "Log in",
     "name_placeholder": "John Doe",
     "password_description": "Must be at least 8 characters long.",
-    "confirm_password_description": "Please confirm your password."
+    "confirm_password_description": "Please confirm your password.",
+    "email_description": "We'll never share your email with anyone else."
   },
   "it": {
     "signup": "Crea un account",
@@ -108,7 +109,8 @@ const { t } = useI18n()
     "log_in": "Accedi",
     "name_placeholder": "Mario Rossi",
     "password_description": "Deve contenere almeno 8 caratteri.",
-    "confirm_password_description": "Per favore conferma la tua password."
+    "confirm_password_description": "Per favore conferma la tua password.",
+    "email_description": "Non condivideremo mai la tua email con nessun altro."
   },
   "es": {
     "signup": "Crea una cuenta",
@@ -122,7 +124,8 @@ const { t } = useI18n()
     "log_in": "Iniciar sesión",
     "name_placeholder": "Juan Pérez",
     "password_description": "Debe tener al menos 8 caracteres.",
-    "confirm_password_description": "Por favor confirma tu contraseña."
+    "confirm_password_description": "Por favor confirma tu contraseña.",
+    "email_description": "Nunca compartiremos tu correo electrónico con nadie más."
   }
 }
 </i18n>
