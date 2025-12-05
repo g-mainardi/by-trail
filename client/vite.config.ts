@@ -10,7 +10,7 @@ export default defineConfig({
     vue(),
     tailwindcss(),
     VueI18nPlugin({
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './path/to/src/locales/**'),
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
     })],
   resolve: {
     alias: {
