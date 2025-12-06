@@ -5,8 +5,9 @@ import { ref } from "vue"
 
 import {
   SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+  //useSidebar,
 } from '@/components/ui/sidebar'
 
 const props = defineProps<{
@@ -17,26 +18,26 @@ const props = defineProps<{
   }[]
 }>()
 
-const { isMobile } = useSidebar()
+//const { isMobile } = useSidebar()
 const appInfo = ref(props.appInfo[0])
 </script>
 
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
-      <div 
+      <SidebarMenuButton 
         v-if="appInfo"
-        class="flex w-full items-center gap-3 rounded-lg p-3 text-sidebar-foreground" 
         size="lg"
+        class="cursor-default hover:bg-transparent"  
       >
         <div class="flex aspect-square size-10 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-          <component :is="appInfo.logo" class="size-7" />
+          <component :is="appInfo.logo" class="size-6" />
         </div>
         <div class="grid flex-1 text-left text-sm leading-tight">
           <span class="truncate font-medium">{{ appInfo.name }}</span>
           <span class="truncate text-xs">{{ appInfo.slogan }}</span>
         </div>
-      </div>
+      </SidebarMenuButton>
     </SidebarMenuItem>
   </SidebarMenu>
 </template>

@@ -8,11 +8,7 @@ export const containerClass = "w-full h-full"
 import AppSidebar from "@/components/AppSidebar.vue"
 import {
   Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import {

@@ -2,19 +2,16 @@
 import type { SidebarProps } from '@/components/ui/sidebar'
 
 import {
-  BookOpen,
-  Bot,
-  Frame,
   Map,
   MountainSnow,
-  PieChart,
-  Settings2,
-  SquareTerminal,
+  Route,
+  Settings,
+  TentTree,
+  UserRound,
 } from "lucide-vue-next"
-import NavMain from '@/components/NavMain.vue'
-import NavProjects from '@/components/NavProjects.vue'
+import AppInfo from '@/components/AppInfo.vue'
 import NavUser from '@/components/NavUser.vue'
-import TeamSwitcher from '@/components/AppInfo.vue'
+import SidebarOptions from '@/components/SidebarOptions.vue'
 
 import {
   Sidebar,
@@ -42,108 +39,31 @@ const data = {
       slogan: "You are what you discover",
     },
   ],
-  navMain: [
+  sidebarOptions: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
+      title: "Mappe",
       url: "#",
       icon: Map,
+    },
+    {
+      title: "Percorsi",
+      url: "#",
+      icon: Route,
+    },
+    {
+      title: "Bivacchi e Rifugi",
+      url: "#",
+      icon: TentTree,
+    },
+    {
+      title: 'Profilo',
+      url: '#',
+      icon: UserRound,
+    },
+    {
+      title: "Impostazioni",
+      url: "#",
+      icon: Settings,
     },
   ],
 }
@@ -152,11 +72,10 @@ const data = {
 <template>
   <Sidebar v-bind="props">
     <SidebarHeader>
-      <TeamSwitcher :appInfo="data.appInfo" />
+      <AppInfo :appInfo="data.appInfo" />
     </SidebarHeader>
     <SidebarContent>
-      <NavMain :items="data.navMain" />
-      <NavProjects :projects="data.projects" />
+      <SidebarOptions :items="data.sidebarOptions" />
     </SidebarContent>
     <SidebarFooter>
       <NavUser :user="data.user" />
