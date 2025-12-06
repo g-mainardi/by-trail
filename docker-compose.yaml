@@ -32,9 +32,13 @@ services:
       PORT: ${SERVER_PORT:-3000}
       CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
       MONGO_URI_FILE: /run/secrets/db_uri
-      MONGO_URI_LOCAL: mongodb://mongo:27017/by-trail
+      MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
       # For using Local or Atlas
+<<<<<<< HEAD
+      USE_ATLAS: "false" 
+=======
       USE_ATLAS: "${USE_ATLAS:-true}"
+>>>>>>> 6985da746fa010d174056980a0ae8813d9b96f34
     volumes:
       - ./server:/app            # Synchronize local files with the container (Hot Reload)
       - /app/node_modules

@@ -5,7 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
+    "start:dev": "nodemon index.js",
+    "seed": "node seed.js"
+=======
     "start:dev": "nodemon"
+>>>>>>> 6985da746fa010d174056980a0ae8813d9b96f34
   },
   "author": "",
   "license": "ISC",
