@@ -34,7 +34,7 @@ import {
         </div>
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div class="bg-muted/50 flex-1 rounded-xl min-h-[calc(100vh-8rem)]" />
+        <div class="bg-muted/50 flex-1 rounded-xl min-h-[calc(100vh-8rem)]"></div>
       </div>
     </SidebarInset>
   </SidebarProvider>

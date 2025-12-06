@@ -10,8 +10,8 @@ import {
   UserRound,
 } from "lucide-vue-next"
 import AppInfo from '@/components/AppInfo.vue'
-import NavUser from '@/components/NavUser.vue'
 import SidebarOptions from '@/components/SidebarOptions.vue'
+import SidebarUser from '@/components/SidebarUser.vue'
 
 import {
   Sidebar,
@@ -78,7 +78,7 @@ const data = {
       <SidebarOptions :items="data.sidebarOptions" />
     </SidebarContent>
     <SidebarFooter>
-      <NavUser :user="data.user" />
+      <SidebarUser :user="data.user" />
     </SidebarFooter>
     <SidebarRail />
   </Sidebar>
