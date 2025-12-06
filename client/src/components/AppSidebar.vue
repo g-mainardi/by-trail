@@ -2,13 +2,11 @@
 import type { SidebarProps } from '@/components/ui/sidebar'
 
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Map,
+  MountainSnow,
   PieChart,
   Settings2,
   SquareTerminal,
@@ -16,7 +14,7 @@ import {
 import NavMain from '@/components/NavMain.vue'
 import NavProjects from '@/components/NavProjects.vue'
 import NavUser from '@/components/NavUser.vue'
-import TeamSwitcher from '@/components/TeamSwitcher.vue'
+import TeamSwitcher from '@/components/AppInfo.vue'
 
 import {
   Sidebar,
@@ -37,21 +35,11 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
+  appInfo: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      name: "By Trail",
+      logo: MountainSnow,
+      slogan: "You are what you discover",
     },
   ],
   navMain: [
@@ -164,7 +152,7 @@ const data = {
 <template>
   <Sidebar v-bind="props">
     <SidebarHeader>
-      <TeamSwitcher :teams="data.teams" />
+      <TeamSwitcher :appInfo="data.appInfo" />
     </SidebarHeader>
     <SidebarContent>
       <NavMain :items="data.navMain" />
