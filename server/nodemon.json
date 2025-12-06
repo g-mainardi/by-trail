@@ -1,0 +1,11 @@
+{
+  "watch": ["."],
+  "ext": "js,json,ts",
+  "exec": "node index.js",
+  "delay": "1000",
+  "legacyWatch": true,
+  "events": {
+    "restart": "echo 'Nodemon: Server Restarted'"
+  },
+  "signal": "SIGTERM"
+}
