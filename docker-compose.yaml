@@ -28,17 +28,15 @@ services:
       - "3000:3000"
     secrets:
       - db_uri
+      - jwt_secret
     environment:
       PORT: ${SERVER_PORT:-3000}
       CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
       MONGO_URI_FILE: /run/secrets/db_uri
-      MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
+      MONGO_URI_LOCAL: mongodb://mongo:27017/by-trail
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
       # For using Local or Atlas
-<<<<<<< HEAD
-      USE_ATLAS: "false" 
-=======
       USE_ATLAS: "${USE_ATLAS:-true}"
->>>>>>> 6985da746fa010d174056980a0ae8813d9b96f34
     volumes:
       - ./server:/app            # Synchronize local files with the container (Hot Reload)
       - /app/node_modules
@@ -65,6 +63,8 @@ services:
 secrets:
   db_uri:
     file: ./secrets/mongo_atlas_uri.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
 
 volumes:
   mongo-data: # named volume to not lost data on turn off
