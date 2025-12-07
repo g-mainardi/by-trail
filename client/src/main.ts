@@ -6,6 +6,7 @@ import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './pages/home-page/HomePage.vue'
+import { createPinia } from 'pinia'
 import './style.css'
 
 const i18n = createI18n({
@@ -26,4 +27,12 @@ export const router = createRouter({
   routes,
 })
 
-createApp(App).use(router).use(i18n).mount('#app')
+const app = createApp(App)
+const pinia = createPinia()
+
+// Install plugins
+app.use(router)
+app.use(pinia) 
+app.use(i18n)
+
+app.mount('#app')
