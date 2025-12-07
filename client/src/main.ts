@@ -5,6 +5,7 @@ import Signup from '@/pages/register/Signup.vue'
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHistory } from 'vue-router'
+import HomePage from './pages/home-page/HomePage.vue'
 import './style.css'
 
 const i18n = createI18n({
@@ -16,7 +17,8 @@ const i18n = createI18n({
 const routes = [
   { path: '/', component: Hero },
   { path: '/login', component: Login },
-  { path: '/signup', component: Signup }
+  { path: '/signup', component: Signup },
+  { path: '/homepage', component: HomePage}
 ]
 
 export const router = createRouter({

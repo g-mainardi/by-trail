@@ -21,7 +21,7 @@ const adminSchema = new Schema({
 const bivaccoSchema = new Schema({
     name: { type: String, required: true },
     region: { type: String, required: true },
-    city: { type: String, required: true },
+    mountainRange: { type: String, required: true },
     altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
     likes: { type: Number , default: 0, min: 0 },
