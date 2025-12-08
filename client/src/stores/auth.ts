@@ -55,7 +55,7 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login');
   };
 
-  const signup = async (name: string, email: string, pass: string) => {
+  const signup = async (name: string, email: string, signupPassword: string) => {
     isLoading.value = true;
     error.value = null;
 
@@ -66,7 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
         body: JSON.stringify({ 
             name, 
             email, 
-            password: pass 
+            password: signupPassword 
             // favRegions: [] //todo
         }),
       });
