@@ -2,12 +2,18 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter();
   
   // State
   const token = ref<string | null>(localStorage.getItem('token'));
-  const user = ref<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
   const error = ref<string | null>(null);
   const isLoading = ref(false);
 
