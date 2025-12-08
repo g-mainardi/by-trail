@@ -75,7 +75,7 @@ const handleSignup = async () => {
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <form @sumbmit.prevent="handleSignup">
+      <form @submit.prevent="handleSignup">
 
         <Alert v-if="validationError || authStore.error" variant="destructive" class="mb-6">
           <AlertCircle class="h-4 w-4" />
