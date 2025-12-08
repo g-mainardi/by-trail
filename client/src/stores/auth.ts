@@ -75,6 +75,8 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (!res.ok) throw new Error(data.message || 'Signup failed');
 
+      router.push('/');
+
       return true;
 
     } catch (err: any) {

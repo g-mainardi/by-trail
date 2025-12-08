@@ -23,11 +23,10 @@ import { AlertCircle } from 'lucide-vue-next' // Import Error Icon
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 const { t } = useI18n()
 
 const authStore = useAuthStore()
-const router = useRouter()
 
 // Reactive state for form inputs
 const name = ref('')
@@ -57,12 +56,7 @@ const handleSignup = async () => {
   }
 
   // Call backend through Pinia store
-  const success = await authStore.signup(name.value, email.value, password.value)
-
-  // Redirect to login on success
-  if (success) {
-    router.push('/login')
-  }
+  await authStore.signup(name.value, email.value, password.value)
 }
 </script>
 
