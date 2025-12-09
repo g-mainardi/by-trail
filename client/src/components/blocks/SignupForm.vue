@@ -50,7 +50,13 @@ const handleSignup = async () => {
     validationError.value = t('signup_passwords_do_not_match')
     return
   }
-  if (password.value.length < 8){
+    // Password complexity validation
+  const hasMinLength = password.value.length >= 8
+  const hasUppercase = /[A-Z]/.test(password.value)
+  const hasLowercase = /[a-z]/.test(password.value)
+  const hasNumber = /[0-9]/.test(password.value)
+
+  if (!hasMinLength || !hasUppercase || !hasLowercase || !hasNumber) {
     validationError.value = t('signup_passwords_requirements')
     return
   }
