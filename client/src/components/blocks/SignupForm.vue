@@ -41,17 +41,17 @@ const handleSignup = async () => {
   
   // Prevent empty submission
   if (!name.value || !email.value || !password.value || !confirmPassword.value) {
-    validationError.value = "Please fill in all fields."
+    validationError.value = t('signup_fill_all_fields')
     return
   }
 
   // Check password
   if (password.value !== confirmPassword.value) {
-    validationError.value = "Passwords do not match."
+    validationError.value = t('signup_passwords_do_not_match')
     return
   }
-  if (password.value.length < 8) {
-    validationError.value = "Password must be at least 8 characters long."
+  if (password.value.length < 8){
+    validationError.value = t('signup_passwords_requirements')
     return
   }
 
@@ -162,7 +162,10 @@ const handleSignup = async () => {
     "name_placeholder": "John Doe",
     "password_description": "Must be at least 8 characters long.",
     "confirm_password_description": "Please confirm your password.",
-    "email_description": "We'll never share your email with anyone else."
+    "email_description": "We'll never share your email with anyone else.",  
+    "signup_fill_all_fields": "Please fill in all fields.",
+    "signup_passwords_do_not_match": "Passwords do not match.",
+    "signup_passwords_requirements": "Password must be at least 8 characters long and include uppercase letters, lowercase letters, and numbers."
   },
   "it": {
     "error": "Errore",
@@ -179,7 +182,10 @@ const handleSignup = async () => {
     "name_placeholder": "Mario Rossi",
     "password_description": "Deve contenere almeno 8 caratteri.",
     "confirm_password_description": "Per favore conferma la tua password.",
-    "email_description": "Non condivideremo mai la tua email con nessun altro."
+    "email_description": "Non condivideremo mai la tua email con nessun altro.",
+    "signup_fill_all_fields": "Per favore, compila tutti i campi.",
+    "signup_passwords_do_not_match": "Le password non corrispondono.",
+    "signup_passwords_requirements": "La password deve contenere almeno 8 caratteri e includere lettere maiuscole, lettere minuscole e numeri."
   },
   "es": {
     "error": "Error",
@@ -196,7 +202,10 @@ const handleSignup = async () => {
     "name_placeholder": "Juan Pérez",
     "password_description": "Debe tener al menos 8 caracteres.",
     "confirm_password_description": "Por favor confirma tu contraseña.",
-    "email_description": "Nunca compartiremos tu correo electrónico con nadie más."
+    "email_description": "Nunca compartiremos tu correo electrónico con nadie más.",
+    "signup_fill_all_fields": "Por favor, completa todos los campos.",
+    "signup_passwords_do_not_match": "Las contraseñas no coinciden.",
+    "signup_passwords_requirements": "La contraseña debe tener al menos 8 caracteres e incluir letras mayúsculas, letras minúsculas y números."
   }
 }
 </i18n>
