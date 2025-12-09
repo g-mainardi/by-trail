@@ -6,6 +6,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  favRegions?: string[];
 }
 
 export const useAuthStore = defineStore('auth', () => {
