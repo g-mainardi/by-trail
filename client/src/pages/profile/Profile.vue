@@ -10,23 +10,50 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Check, ChevronsUpDown, X } from 'lucide-vue-next'; // Icons
+import { cn } from '@/lib/utils';
+
+// --- Shadcn Command & Popover ---
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 const authStore = useAuthStore();
 const { user, isLoading } = storeToRefs(authStore);
 
 const { t } = useI18n();
 
+// --- Constants ---
+const ITALIAN_REGIONS = [
+  "Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna",
+  "Friuli-Venezia Giulia", "Lazio", "Liguria", "Lombardia", "Marche",
+  "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana",
+  "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"
+];
+
 // --- Form Local State ---
 const formData = ref({
   name: '',
-  email: '', // Read-only
-  favRegions: '', // Comma-separated string
+  email: '',
+  favRegions: [] as string[], 
   language: 'en',
   darkMode: false,
 });
 
 const feedbackMessage = ref('');
 const isError = ref(false);
+const openRegions = ref(false); // Popover state  
 
 // --- Init Data ---
 onMounted(async () => {
@@ -37,25 +64,36 @@ onMounted(async () => {
   if (user.value) {
     formData.value.name = user.value.name;
     formData.value.email = user.value.email;
-    formData.value.favRegions = (user.value.favRegions ?? []).join(', '); // Array -> String conversion 
+    formData.value.favRegions = user.value.favRegions ? [...user.value.favRegions] : []; 
   }
 });
+
+// --- Logic: Toggle Region ---
+const toggleRegion = (region: string) => {
+  const current = formData.value.favRegions;
+  if (current.includes(region)) {
+    // Remove
+    formData.value.favRegions = current.filter((r) => r !== region);
+  } else {
+    // Add
+    formData.value.favRegions.push(region);
+  }
+};
+
+// --- Logic: Remove Tag ---
+const removeRegion = (region: string) => {
+  formData.value.favRegions = formData.value.favRegions.filter((r) => r !== region);
+};
 
 // --- Handle Save ---
 const handleSave = async () => {
   feedbackMessage.value = '';
   isError.value = false;
 
-  // 1. String -> Array conversion
-  const regionsArray = formData.value.favRegions
-    .split(',')
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
-
-  // 2. Prepare payload
+  // 1. Prepare payload
   const payload = {
     name: formData.value.name,
-    favRegions: regionsArray,
+    favRegions: formData.value.favRegions,
     language: formData.value.language,
     darkMode: formData.value.darkMode
   };
@@ -96,7 +134,7 @@ const handleSave = async () => {
       <CardContent class="space-y-6">
         
         <div v-if="feedbackMessage" 
-             :class="`p-3 text-sm rounded-md ${isError ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`">
+             :class="cn('p-3 text-sm rounded-md', isError ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600')">
           {{ feedbackMessage }}
         </div>
 
@@ -113,9 +151,63 @@ const handleSave = async () => {
             <p class="text-[0.8rem] text-muted-foreground">{{t("unmodifiable_email")}}</p>
           </div>
 
-          <div class="space-y-2">
-            <Label for="regions">{{t("preferred_regions")}}</Label>
-            <Input id="regions" v-model="formData.favRegions" :placeholder="t('regions_examples')" />
+          <div class="space-y-3">
+            <Label>{{ t("preferred_regions") }}</Label>
+            
+            <Popover v-model:open="openRegions">
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  :aria-expanded="openRegions"
+                  class="justify-between w-full"
+                >
+                  <span class="text-muted-foreground">
+                    {{ t("example")}} {{ ITALIAN_REGIONS.slice(0, 3).join(', ') }}, ...
+                  </span>
+                  <ChevronsUpDown class="w-4 h-4 ml-2 opacity-50 shrink-0" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="w-full p-0">
+                <Command>
+                  <CommandInput :placeholder="t('search_region')" />
+                  <CommandEmpty>{{t("no_region_found")}}</CommandEmpty>
+                  <CommandList>
+                    <CommandGroup>
+                      <CommandItem
+                        v-for="region in ITALIAN_REGIONS"
+                        :key="region"
+                        :value="region"
+                        @select="() => toggleRegion(region)"
+                      >
+                        <Check
+                          :class="cn(
+                            'mr-2 h-4 w-4',
+                            formData.favRegions.includes(region) ? 'opacity-100' : 'opacity-0'
+                          )"
+                        />
+                        {{ region }}
+                      </CommandItem>
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+              <Badge 
+                v-for="region in formData.favRegions" 
+                :key="region" 
+                variant="secondary"
+                class="flex items-center gap-1 px-3 py-1"
+              >
+                {{ region }}
+                <X 
+                  class="w-3 h-3 cursor-pointer hover:text-red-500" 
+                  @click="removeRegion(region)"
+                />
+              </Badge>
+            </div>
           </div>
 
         </form>
@@ -139,11 +231,13 @@ const handleSave = async () => {
     "your_name": "Your full name",
     "unmodifiable_email": "Your email cannot be modified.",
     "preferred_regions": "Preferred Regions",
-    "regions_examples": "e.g., Alps, Dolomites, Apennines",
+    "example": "e.g.",
     "profile_update_success": "Profile updated successfully.",
     "profile_update_error": "An error occurred while updating your profile.",
     "saving": "Saving...",
     "save_modifications": "Save Modifications",
+    "search_region": "Search region...",
+    "no_region_found": "No region found."
   },
   "it": {
     "complete_name": "Nome Completo",
@@ -152,11 +246,13 @@ const handleSave = async () => {
     "your_name": "Il tuo nome completo",
     "unmodifiable_email": "La tua email non può essere modificata.",
     "preferred_regions": "Regioni Preferite",
-    "regions_examples": "es., Alpi, Dolomiti, Appennini",
+    "example": "es.",
     "profile_update_success": "Profilo aggiornato con successo.",
     "profile_update_error": "Si è verificato un errore durante l'aggiornamento del profilo.",
     "saving": "Salvataggio...",
     "save_modifications": "Salva Modifiche",
+    "search_region": "Cerca regione...",
+    "no_region_found": "Nessuna regione trovata."
   },
   "es": {
     "complete_name": "Nombre Completo",
@@ -165,11 +261,13 @@ const handleSave = async () => {
     "your_name": "Tu nombre completo",
     "unmodifiable_email": "Tu correo electrónico no se puede modificar.",
     "preferred_regions": "Regiones Preferidas",
-    "regions_examples": "ej., Alpes, Dolomitas, Apeninos",
+    "example": "p.ej.",
     "profile_update_success": "Perfil actualizado con éxito.",
     "profile_update_error": "Ocurrió un error al actualizar tu perfil.",
     "saving": "Guardando...",
     "save_modifications": "Guardar Modificaciones",
+    "search_region": "Buscar región...",
+    "no_region_found": "No se encontró ninguna región."
   }
 }
 </i18n>
