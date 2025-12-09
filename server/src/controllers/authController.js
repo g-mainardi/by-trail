@@ -91,7 +91,7 @@ export const login = async (req, res) => {
         // Prevents server crash (500) if the user record is corrupted (missing password)
         if (!user.password) {
             console.error(`Error: User ${email} has no password field in DB.`);
-            return res.status(400).json({ message: 'Account corrupted. Please contact support.' });
+            return res.status(400).json({ message: 'There was a problem with your account. Please contact support at support@example.com.' });
         }
 
         // 2. Check if user is banned
