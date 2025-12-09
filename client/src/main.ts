@@ -17,12 +17,38 @@ const i18n = createI18n({
 })
 
 const routes = [
-  { path: '/', component: Hero },
-  { path: '/login', component: Login },
-  { path: '/signup', component: Signup },
-  { path: '/homepage', component: HomePage},
-  { path: '/profile', component: Profile },
-]
+  {
+    path: '/',
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: "Hero",
+        component: Hero
+      },
+      {
+        path: 'profile', 
+        name: "Profile",
+        component: Profile 
+      },
+      {
+        path: 'homepage', 
+        name: "HomePage",
+        component: HomePage
+      }
+    ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup
+  }
+];
 
 export const router = createRouter({
   history: createWebHistory(),
