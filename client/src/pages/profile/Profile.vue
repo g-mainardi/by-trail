@@ -64,11 +64,12 @@ onMounted(async () => {
   if (user.value) {
     formData.value.name = user.value.name;
     formData.value.email = user.value.email;
+    // Create a copy of the array to avoid direct mutation of store state
     formData.value.favRegions = user.value.favRegions ? [...user.value.favRegions] : []; 
   }
 });
 
-// --- Logic: Toggle Region ---
+// --- Logic: Toggle Region (Add/Remove from Popover) ---
 const toggleRegion = (region: string) => {
   const current = formData.value.favRegions;
   if (current.includes(region)) {
@@ -80,7 +81,7 @@ const toggleRegion = (region: string) => {
   }
 };
 
-// --- Logic: Remove Tag ---
+// --- Logic: Remove Tag (Remove from Badge) ---
 const removeRegion = (region: string) => {
   formData.value.favRegions = formData.value.favRegions.filter((r) => r !== region);
 };
@@ -103,7 +104,7 @@ const handleSave = async () => {
 
   if (success) {
     feedbackMessage.value = t("profile_update_success");
-    // applyTheme(payload.darkMode); 
+    //todo applyTheme(payload.darkMode); 
   } else {
     isError.value = true;
     feedbackMessage.value = t("profile_update_error");
@@ -162,8 +163,11 @@ const handleSave = async () => {
                   :aria-expanded="openRegions"
                   class="justify-between w-full"
                 >
-                  <span class="text-muted-foreground">
-                    {{ t("example")}} {{ ITALIAN_REGIONS.slice(0, 3).join(', ') }}, ...
+                  <span class="text-muted-foreground" v-if="formData.favRegions.length === 0">
+                    {{ t("select_regions") }}
+                  </span>
+                  <span class="text-foreground" v-else>
+                     {{ formData.favRegions.length }} {{ t("selected_regions") }}
                   </span>
                   <ChevronsUpDown class="w-4 h-4 ml-2 opacity-50 shrink-0" />
                 </Button>
@@ -202,10 +206,13 @@ const handleSave = async () => {
                 class="flex items-center gap-1 px-3 py-1"
               >
                 {{ region }}
-                <X 
-                  class="w-3 h-3 cursor-pointer hover:text-red-500" 
-                  @click="removeRegion(region)"
-                />
+                <button 
+                  type="button"
+                  class="ml-1 rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  @click.prevent.stop="removeRegion(region)"
+                >
+                  <X class="w-3 h-3 cursor-pointer hover:text-red-500" />
+                </button>
               </Badge>
             </div>
           </div>
@@ -231,7 +238,8 @@ const handleSave = async () => {
     "your_name": "Your full name",
     "unmodifiable_email": "Your email cannot be modified.",
     "preferred_regions": "Preferred Regions",
-    "example": "e.g.",
+    "select_regions": "Select regions...",
+    "selected_regions": "regions selected",
     "profile_update_success": "Profile updated successfully.",
     "profile_update_error": "An error occurred while updating your profile.",
     "saving": "Saving...",
@@ -246,7 +254,8 @@ const handleSave = async () => {
     "your_name": "Il tuo nome completo",
     "unmodifiable_email": "La tua email non può essere modificata.",
     "preferred_regions": "Regioni Preferite",
-    "example": "es.",
+    "select_regions": "Seleziona regioni...",
+    "selected_regions": "regioni selezionate",
     "profile_update_success": "Profilo aggiornato con successo.",
     "profile_update_error": "Si è verificato un errore durante l'aggiornamento del profilo.",
     "saving": "Salvataggio...",
@@ -261,7 +270,8 @@ const handleSave = async () => {
     "your_name": "Tu nombre completo",
     "unmodifiable_email": "Tu correo electrónico no se puede modificar.",
     "preferred_regions": "Regiones Preferidas",
-    "example": "p.ej.",
+    "select_regions": "Seleccionar regiones...",
+    "selected_regions": "regiones seleccionadas",
     "profile_update_success": "Perfil actualizado con éxito.",
     "profile_update_error": "Ocurrió un error al actualizar tu perfil.",
     "saving": "Guardando...",
