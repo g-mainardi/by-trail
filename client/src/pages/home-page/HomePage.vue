@@ -16,7 +16,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { RouterView } from "vue-router"
+// router/index.ts o router.js
 </script>
+
 <template>
   <SidebarProvider>
     <AppSidebar />
@@ -29,12 +32,15 @@ import {
             class="mr-2 data-[orientation=vertical]:h-4"
           />
           <Breadcrumb>
-                <BreadcrumbPage>Mappe</BreadcrumbPage>
+            <BreadcrumbPage>Mappe</BreadcrumbPage>
           </Breadcrumb>
         </div>
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div class="bg-muted/50 flex-1 rounded-xl min-h-[calc(100vh-8rem)]"></div>
+        <div class="bg-muted/50 flex-1 rounded-xl min-h-[calc(100vh-8rem)]">
+          <!-- Your content goes here -->
+           <RouterView />
+        </div>
       </div>
     </SidebarInset>
   </SidebarProvider>

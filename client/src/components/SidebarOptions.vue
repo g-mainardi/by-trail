@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { LucideIcon } from "lucide-vue-next"
+import type { LucideIcon } from "lucide-vue-next";
 
 import {
   SidebarGroup,
@@ -7,7 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
 defineProps<{
   items: {
@@ -23,12 +23,14 @@ defineProps<{
     <SidebarGroupLabel>Platform</SidebarGroupLabel>
     <SidebarMenu>
       <div v-for="item in items" :key="item.title">
-        <SidebarMenuItem>
-          <SidebarMenuButton :tooltip="item.title">
-            <component :is="item.icon" v-if="item.icon"/>
-            <span>{{ item.title }}</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        <RouterLink :to="item.url">
+          <SidebarMenuItem>
+            <SidebarMenuButton :tooltip="item.title">
+              <component :is="item.icon" v-if="item.icon"/>
+              <span>{{ item.title }}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </RouterLink>
       </div>
     </SidebarMenu>
   </SidebarGroup>

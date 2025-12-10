@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { SidebarProps } from '@/components/ui/sidebar'
 
+import AppInfo from '@/components/AppInfo.vue'
+import SidebarOptions from '@/components/SidebarOptions.vue'
+import SidebarUser from '@/components/SidebarUser.vue'
 import {
   Map,
   MountainSnow,
@@ -9,9 +12,6 @@ import {
   TentTree,
   UserRound,
 } from "lucide-vue-next"
-import AppInfo from '@/components/AppInfo.vue'
-import SidebarOptions from '@/components/SidebarOptions.vue'
-import SidebarUser from '@/components/SidebarUser.vue'
 
 import {
   Sidebar,
@@ -61,8 +61,8 @@ const data = {
       icon: UserRound,
     },
     {
-      title: "Impostazioni",
-      url: "#",
+      title: "Settings",
+      url: "/settings",
       icon: Settings,
     },
   ],
