@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Button from '../ui/button/Button.vue';
@@ -10,11 +11,11 @@ const { t } = useI18n()
 
 const password = ref('')
 
+const authStore = useAuthStore()
+
 const handleDeleteAccount = async () => {
   if (!password.value) return;
-  // Here you would typically call a method to delete the account,
-  // passing the password for confirmation.
-  // TODO
+  await authStore.deleteAccount(password.value);
 }
 </script>
 

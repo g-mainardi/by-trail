@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -16,14 +19,11 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { 
-  Alert, 
-  AlertDescription, 
-  AlertTitle 
-} from '@/components/ui/alert'
-import { AlertCircle } from 'lucide-vue-next' // Import Error Icon
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/auth'
+import { AlertCircle } from 'lucide-vue-next'; // Import Error Icon
 import type { HTMLAttributes } from "vue"
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 const { t } = useI18n()

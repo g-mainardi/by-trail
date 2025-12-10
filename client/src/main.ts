@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHistory } from 'vue-router'
-import Settings from './pages/home-page/contents/Settings.vue'
+import Settings from './pages/home-page/contents/settings/Settings.vue'
 import HomePage from './pages/home-page/HomePage.vue'
 import './style.css'
 
