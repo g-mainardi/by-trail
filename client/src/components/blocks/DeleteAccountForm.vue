@@ -10,12 +10,13 @@ import Input from '../ui/input/Input.vue';
 const { t } = useI18n()
 
 const password = ref('')
-
 const authStore = useAuthStore()
+const email = authStore.user?.email || ''
 
 const handleDeleteAccount = async () => {
   if (!password.value) return;
-  await authStore.deleteAccount(password.value);
+  console.log("Deleting account for:", email);
+  await authStore.deleteAccount(email, password.value);
 }
 </script>
 
@@ -23,6 +24,10 @@ const handleDeleteAccount = async () => {
   <form @submit.prevent="handleDeleteAccount">
     <FieldGroup class="w-[33%]">
       <Field>
+        <FieldLabel>
+          Email
+        </FieldLabel>
+        <span class="font-bold"> {{ email }} </span>
         <FieldLabel for="password">
           {{ t("password_label") }}
         </FieldLabel>

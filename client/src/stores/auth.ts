@@ -3,13 +3,20 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  favRegions?: string[];
+}
+
 export const useAuthStore = defineStore('auth', () => {
 
   const router = useRouter();
 
   // State
   const token = ref<string | null>(localStorage.getItem('token'));
-  const user = ref<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
   const error = ref<string | null>(null);
   const isLoading = ref(false);
   const httpHelper = new HttpHelper('/api', token.value || undefined);
@@ -36,7 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('user', JSON.stringify(data.user));
 
       // Redirect to Home
-      router.push('/');
+      router.push('/homepage');
       return true;
     } catch (err: any) {
       console.error(err);
@@ -55,28 +62,23 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login');
   };
 
-  const signup = async (name: string, email: string, pass: string) => {
+  const signup = async (name: string, email: string, signupPassword: string) => {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          password: pass
-          // favRegions: [] //todo
-        }),
-      });
-
+      const body = {
+        name,
+        email,
+        password: signupPassword
+      }
+      const res = await httpHelper.post('/auth/signup', body);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || 'Signup failed');
 
+      router.push('/login');
       return true;
-
     } catch (err: any) {
       console.error(err);
       error.value = err.message;
@@ -87,20 +89,22 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const deleteAccount = async (password: String) => {
+  const deleteAccount = async (email: string, password: string) => {
     if (!token.value) return;
     isLoading.value = true;
     error.value = null;
 
     try {
-      const body = { email: user.value.email, password: password };
-      httpHelper.post('/auth/delete', body);
+      const body = { email: email, password: password };
+      let res = await httpHelper.post('/auth/delete', body);
+      const data = await res.json();
+      console.log(data.message);
     } catch (err: any) {
       log(err.message);
       return false;
     } finally {
       isLoading.value = false;
-      router.push('/');
+      router.push('/login');
     }
   }
 
