@@ -2,12 +2,19 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  favRegions?: string[];
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter();
   
   // State
   const token = ref<string | null>(localStorage.getItem('token'));
-  const user = ref<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
   const error = ref<string | null>(null);
   const isLoading = ref(false);
 
@@ -55,7 +62,7 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login');
   };
 
-  const signup = async (name: string, email: string, pass: string) => {
+  const signup = async (name: string, email: string, signupPassword: string) => {
     isLoading.value = true;
     error.value = null;
 
@@ -66,7 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
         body: JSON.stringify({ 
             name, 
             email, 
-            password: pass 
+            password: signupPassword 
             // favRegions: [] //todo
         }),
       });
@@ -74,6 +81,8 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || 'Signup failed');
+
+      router.push('/');
 
       return true;
 

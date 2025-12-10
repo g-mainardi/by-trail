@@ -80,10 +80,18 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // 1. Find user by email
-        const user = await User.findOne({ email });
+        // 1. Find user and explicitly select the password field
+        // This is crucial if your schema has { select: false } on password
+        const user = await User.findOne({ email }).select('+password');
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // --- DEFENSIVE CHECK ---
+        // Prevents server crash (500) if the user record is corrupted (missing password)
+        if (!user.password) {
+            console.error(`Error: User ${email} has no password field in DB.`);
+            return res.status(400).json({ message: 'There was a problem with your account. Please contact support at support@example.com.' });
         }
 
         // 2. Check if user is banned
