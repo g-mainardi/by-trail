@@ -6,9 +6,6 @@ import { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, 
 
 const MONGO_URI_LOCAL = 'mongodb://localhost:27017/by_trail'
 
-const rawData = fs.readFileSync('./src/data/seedData.json', 'utf8');
-const data = JSON.parse(rawData);
-
 const loadData = (fileName) => {
     try {
         const filePath = path.join(process.cwd(), 'src', 'data', fileName);
@@ -16,7 +13,7 @@ const loadData = (fileName) => {
         console.log(`Successfully loaded ${fileName}`);
         return JSON.parse(rawData);
     } catch (error) {
-        console.error(`Error loading data from ${fileName}`);
+        console.error(`Error loading data from ${fileName}:`, error);
         return [];
     }
 }
@@ -31,8 +28,8 @@ const seedData = async () => {
         await User.deleteMany({});
         await Bivacco.deleteMany({});
 
-        const users = await User.insertMany(data.users);
-        const bivaccos = await Bivacco.insertMany(data);
+        const users = await User.insertMany(usersData.users);
+        const bivaccos = await Bivacco.insertMany(bivaccosData.bivaccos);
 
         await mongoose.connection.close();
         process.exit(0);

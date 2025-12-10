@@ -1,6 +1,6 @@
 {
     "users": [
-        { "name": "Jeff Bezossss", "email": "jeff_bezos@gmail.com" },
-        { "name": "Mark Zuckenberg", "email": "markinho_brazil@yahoo.com" }
+        { "name": "Jeff Bezossss", "email": "jeff_bezos@gmail.com", "password": "ombelico del mondo?" },
+        { "name": "Mark Zuckenberg", "email": "markinho_brazil@yahoo.com", "password": "giovani wannaby?" }
     ]
 }
