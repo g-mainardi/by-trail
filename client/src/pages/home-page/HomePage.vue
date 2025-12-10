@@ -32,7 +32,7 @@ import { RouterView } from "vue-router"
             class="mr-2 data-[orientation=vertical]:h-4"
           />
           <Breadcrumb>
-            <BreadcrumbPage>Mappe</BreadcrumbPage>
+            <BreadcrumbPage>{{ $route.name }}</BreadcrumbPage>
           </Breadcrumb>
         </div>
       </header>

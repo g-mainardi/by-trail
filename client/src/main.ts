@@ -22,6 +22,7 @@ const routes = [
   { path: '/signup', component: Signup },
   {
     path: '/homepage',
+    name: 'Homepage',
     component: HomePage,
     children: [
       {
