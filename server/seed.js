@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } from './src/models/models.js'
+import { Bivacco, Trail, User } from './src/models/models.js';
 
 const MONGO_URI_LOCAL = 'mongodb://localhost:27017/by_trail'
 
 const seedData = async () => {
     try {
         await mongoose.connect(MONGO_URI_LOCAL); // Look for explanation
-        
+
         await User.deleteMany({});
         await Bivacco.deleteMany({});
         await Trail.deleteMany({});
@@ -17,7 +17,7 @@ const seedData = async () => {
         ]);
 
         const bivaccos = await Bivacco.insertMany([
-            { 
+            {
                 name: 'Bivacco Bedin',
                 region: 'Veneto',
                 mountainRange: 'Dolomiti',

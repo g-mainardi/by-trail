@@ -108,3 +108,22 @@
               password:
                 type: string
                 format: password
+    responses:
+      "400":
+        description: Bad Request - Missing or invalid input
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string"
+      "500":
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string

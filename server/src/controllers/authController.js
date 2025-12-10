@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import validator from 'validator';
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
-import validator from 'validator';
 
 let JWT_SECRET;
 try {
@@ -38,8 +38,8 @@ export const signup = async (req, res) => {
             minNumbers: 1,
             minSymbols: 0
         })) {
-            return res.status(400).json({ 
-                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' 
+            return res.status(400).json({
+                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
             });
         }
 
@@ -105,14 +105,14 @@ export const login = async (req, res) => {
         );
 
         // 5. Send response
-        res.json({ 
-            token, 
-            user: { 
-                id: user._id, 
-                name: user.name, 
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
                 email: user.email,
-                favRegions: user.favRegions 
-            } 
+                favRegions: user.favRegions
+            }
         });
 
     } catch (error) {
@@ -120,3 +120,29 @@ export const login = async (req, res) => {
         res.status(500).json({ message: 'Server error during login' });
     }
 };
+
+export const deleteAccount = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        // 1. Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // 2. Validate password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // 3. Delete user account
+        await User.deleteOne({ _id: user._id });
+
+        res.json({ message: 'Account deleted successfully' });
+
+    } catch (error) {
+        console.error('Delete Account Error:', error);
+        res.status(500).json({ message: 'Server error during account deletion' });
+    }
+}

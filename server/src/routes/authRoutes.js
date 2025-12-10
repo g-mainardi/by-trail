@@ -1,6 +1,6 @@
 import express from 'express';
-import { signup, login } from '../controllers/authController.js'; 
 import rateLimit from 'express-rate-limit';
+import { deleteAccount, login, signup } from '../controllers/authController.js';
 
 // Rate limiter for authentication endpoints
 const authRateLimiter = rateLimit({
@@ -14,7 +14,8 @@ const authRateLimiter = rateLimit({
 const router = express.Router();
 
 // Define endpoints
-router.post('/signup', authRateLimiter, signup);
+router.post('/signup', signup);
 router.post('/login', authRateLimiter, login);
+router.post('/delete', deleteAccount);
 
 export default router;
