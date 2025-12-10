@@ -34,6 +34,8 @@ paths:
     $ref: "./paths/authentication.yaml#/~1login"
   /signup:
     $ref: "./paths/authentication.yaml#/~1signup"
+  /delete:
+    $ref: "./paths/authentication.yaml#/~1delete"
   # Users
   /users:
     $ref: "./paths/users.yaml#/~1users"

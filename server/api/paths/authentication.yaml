@@ -85,3 +85,26 @@
               properties:
                 message:
                   type: string
+
+/delete:
+  post:
+    summary: Delete user account
+    description: Deletes the user account and all associated data.
+    tags:
+      - Authentication
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
