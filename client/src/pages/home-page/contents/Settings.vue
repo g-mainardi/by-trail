@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import type { CardContent } from '@/components/ui/card';
+import DeleteAccountForm from '@/components/blocks/DeleteAccountForm.vue';
 import {
   Card,
+  CardContent,
   CardFooter,
   CardHeader,
   CardTitle
@@ -52,7 +52,7 @@ const { t } = useI18n()
               {{ t("delete_account_title") }}
             </h1>
             <Separator orientation="horizontal" class="my-4" />
-            <Button variant="destructive">{{ t("delete_account_button") }}</Button>
+            <DeleteAccountForm />
           </CardContent>
           <CardFooter>
           </CardFooter>
