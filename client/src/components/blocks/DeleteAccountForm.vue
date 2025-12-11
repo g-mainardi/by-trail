@@ -15,14 +15,14 @@ const email = authStore.user?.email || ''
 
 const handleDeleteAccount = async () => {
   if (!password.value) return;
-  console.log("Deleting account for:", email);
+  authStore.isAccountDeleteFailed = false;
   await authStore.deleteAccount(email, password.value);
 }
 </script>
 
 <template>
   <form @submit.prevent="handleDeleteAccount">
-    <FieldGroup class="w-[33%]">
+    <FieldGroup class="w-[50%]">
       <Field>
         <FieldLabel>
           Email
@@ -38,7 +38,7 @@ const handleDeleteAccount = async () => {
           required 
         />
       </Field>
-      <Button type="submit" variant="destructive" @click="authStore.isAccountDeleteFailed = false">
+      <Button type="submit" variant="destructive">
         {{ t("delete_account_button") }}
       </Button>
     </FieldGroup>

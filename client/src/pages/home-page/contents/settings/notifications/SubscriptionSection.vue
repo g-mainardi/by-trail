@@ -13,8 +13,8 @@ const { t } = useI18n()
     </h1>
     <Separator orientation="horizontal" class="my-4" />
     <div class="flex items-center space-x-2 mb-4">
-      <Switch id="new-bivoucs" />
-      <Label for="new-bivoucs">{{ t("get_updates_new_bivouacs") }}</Label>
+      <Switch id="new-bivouacs" />
+      <Label for="new-bivouacs">{{ t("get_updates_new_bivouacs") }}</Label>
     </div>
     <div class="flex items-center space-x-2 mb-4">
       <Switch id="new-routes" />

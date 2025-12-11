@@ -17,7 +17,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { RouterView } from "vue-router"
-// router/index.ts o router.js
 </script>
 
 <template>

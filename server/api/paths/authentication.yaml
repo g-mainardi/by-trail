@@ -109,6 +109,15 @@
                 type: string
                 format: password
     responses:
+      "200":
+        description: Account deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
       "400":
         description: Bad Request - Missing or invalid input
         content:
@@ -117,7 +126,7 @@
               type: object
               properties:
                 error:
-                  type: string"
+                  type: string
       "500":
         description: Internal Server Error
         content:

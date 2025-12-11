@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import Separator from '@/components/ui/separator/Separator.vue';
+import { useAuthStore } from '@/stores/auth';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n()
+const authStore = useAuthStore();
 </script>
 
 <template>
@@ -11,7 +13,7 @@ const { t } = useI18n()
       {{ t("session_title") }}
     </h1>
     <Separator orientation="horizontal" class="my-4" />
-    <Button variant="outline">{{ t("logout_button") }}</Button>
+    <Button variant="outline" @click="authStore.logout()">{{ t("logout_button") }}</Button>
   </div>
 </template>
 

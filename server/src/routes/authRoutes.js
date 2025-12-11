@@ -14,8 +14,8 @@ const authRateLimiter = rateLimit({
 const router = express.Router();
 
 // Define endpoints
-router.post('/signup', signup);
+router.post('/signup', authRateLimiter, signup);
 router.post('/login', authRateLimiter, login);
-router.post('/delete', deleteAccount);
+router.post('/delete', authRateLimiter, deleteAccount);
 
 export default router;

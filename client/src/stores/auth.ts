@@ -14,7 +14,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   const router = useRouter();
   const isAccountDeleteFailed = ref(false);
-  const isAccountDeleteSuccess = ref(false);
   const accountDeleteMessage = ref<string>('');
 
   // State
@@ -74,7 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
         name,
         email,
         password: signupPassword
-      }
+      };
       const res = await httpHelper.post('/auth/signup', body);
       const data = await res.json();
 
@@ -102,20 +101,30 @@ export const useAuthStore = defineStore('auth', () => {
       let res = await httpHelper.post('/auth/delete', body);
       let data = await res.json();
       if (res.status === 200) {
+        clearAuthenticationStore();
         router.push('/login');
       } else {
         isAccountDeleteFailed.value = true;
-        accountDeleteMessage.value = data.message || 'Account deletion failed';
+        accountDeleteMessage.value = data.error || 'Account deletion failed';
       }
     } catch (err: any) {
       log(err.message);
       return false;
     } finally {
       isLoading.value = false;
-    }
-  }
+    };
+  };
 
-  const log = (message: string) => {
+  function clearAuthenticationStore() {
+    token.value = null;
+    user.value = null;
+    error.value = null;
+    isLoading.value = false;
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  };
+
+  function log(message: string) {
     error.value = message;
     console.error(message);
   };

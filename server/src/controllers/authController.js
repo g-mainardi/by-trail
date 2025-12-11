@@ -135,22 +135,28 @@ export const deleteAccount = async (req, res) => {
         // 1. Find user by email
         const user = await User.findOne({ email }).select('+password');
         if (!user) {
-            console.log(`Delete Account Error: No user found with email ${email}`);
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        // --- DEFENSIVE CHECK ---
+        // Prevents server crash (500) if the user record is corrupted (missing password)
+        if (!user.password) {
+            console.error(`Error: User ${email} has no password field in DB.`);
+            return res.status(400).json({ error: 'There was a problem with your account. Please contact support at support@example.com.' });
         }
 
         // 2. Validate password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ error: 'Invalid credentials' });
         }
 
         // 3. Delete user account
-        await User.deleteOne({ _id: user._id });
+        let result = await User.deleteOne({ _id: user._id });
+        if (result.deletedCount === 1) {
+            res.status(200).json({ message: 'Account deleted successfully' });
+        };
     } catch (error) {
-        console.error('Delete Account Error:', error);
-        res.status(500).json({ message: 'Server error during account deletion' });
-    } finally {
-        res.status(200).json({ message: 'Account deleted successfully' });
+        res.status(500).json({ error: 'Server error during account deletion' });
     }
 }

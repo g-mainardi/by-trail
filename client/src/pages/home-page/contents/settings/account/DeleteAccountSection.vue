@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DeleteAccountForm from '@/components/blocks/DeleteAccountForm.vue';
-import { Alert, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Separator from '@/components/ui/separator/Separator.vue';
 import { useAuthStore } from '@/stores/auth';
 import { AlertCircleIcon } from 'lucide-vue-next';
@@ -16,10 +16,10 @@ const auth = useAuthStore();
     </h1>
     <Separator orientation="horizontal" class="my-4" />
     <DeleteAccountForm />
-    <Alert variant="destructive" v-if="auth.isAccountDeleteFailed" class="mt-2 w-[33%]">
+    <Alert variant="destructive" v-if="auth.isAccountDeleteFailed" class="mt-2 w-[50%]">
       <AlertCircleIcon />
-      <AlertDescription>{{ auth.accountDeleteMessage }}</AlertDescription>
       <AlertTitle>{{ t("delete_account_failed") }}</AlertTitle>
+      <AlertDescription>Server: {{ auth.accountDeleteMessage }}</AlertDescription>
     </Alert>
   </div>
 
