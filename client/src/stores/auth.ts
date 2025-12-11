@@ -26,8 +26,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   // 1. Fetch Profile (The Source of Truth)
   // Call this when the app starts or after login to get fresh data
-  const fetchProfile = async () => {
-    if (!token.value) return;
+  const fetchProfile = async (): Promise<boolean> => {
+    if (!token.value) return false;
     
     isLoading.value = true;
     try {
@@ -52,8 +52,11 @@ export const useAuthStore = defineStore('auth', () => {
       // Update localStorage to keep it somewhat in sync
       localStorage.setItem('user', JSON.stringify(data.user));
 
+      return true;
     } catch (err: any) {
       console.error('Fetch Profile Error:', err);
+      error.value = err.message;
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -118,7 +121,10 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('user', JSON.stringify(data.user));
 
       // FETCH FULL PROFILE NOW
-      await fetchProfile();
+      const profileSuccess = await fetchProfile();
+      if (!profileSuccess) {
+        throw new Error('Failed to load user profile');
+      }
 
       // Redirect to Home
       router.push('/');

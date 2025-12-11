@@ -25,12 +25,11 @@ export const getProfile = async (req, res) => {
                 email: user.email,
                 favRegions: user.favRegions,
                 creationDate: user.creationDate,
-            },
-            // If no settings found, return default values
-            settings: settings || { darkMode: false, language: 'en' }
+            }
         });
 
     } catch (error) {
+        console.error("Error retrieving profile:", error);
         res.status(500).json({ message: 'Server error retrieving profile' });
     }
 };
@@ -54,21 +53,11 @@ export const updateProfile = async (req, res) => {
             });
         }
 
-        // 2. Update or create Settings 
-        if (darkMode !== undefined || language) {
-            await Setting.findOneAndUpdate(
-                { user: userId },
-                { 
-                    user: userId,
-                    ...(darkMode !== undefined && { darkMode }),
-                    ...(language && { language })
-                },
-                { upsert: true, new: true, setDefaultsOnInsert: true }
-            );
-        }
-
-        // 3. Return updated profile data
+        // 2. Return updated profile data
         const updatedUser = await User.findById(userId).select('-password');
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         const updatedSettings = await Setting.findOne({ user: userId });
 
         res.status(200).json({
@@ -82,6 +71,7 @@ export const updateProfile = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Error updating profile:", error);
         res.status(500).json({ message: 'Server error updating profile' });
     }
 };

@@ -46,9 +46,7 @@ const ITALIAN_REGIONS = [
 const formData = ref({
   name: '',
   email: '',
-  favRegions: [] as string[], 
-  language: 'en',
-  darkMode: false,
+  favRegions: [] as string[]
 });
 
 const feedbackMessage = ref('');
@@ -94,14 +92,11 @@ const handleSave = async () => {
   // 1. Prepare payload
   const payload = {
     name: formData.value.name,
-    favRegions: formData.value.favRegions,
-    language: formData.value.language,
-    darkMode: formData.value.darkMode
+    favRegions: formData.value.favRegions
   };
 
-  // 3. Call store action to update profile
+  // 2. Call store action to update profile
   const success = await authStore.updateProfile(payload);
-
   if (success) {
     feedbackMessage.value = t("profile_update_success");
     //todo applyTheme(payload.darkMode); 
