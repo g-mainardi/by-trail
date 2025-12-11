@@ -58,6 +58,19 @@ export const router = createRouter({
   routes,
 })
 
+
+// Navigation guard to protect routes that require authentication
+const isAuthenticated = (): boolean => { return !!localStorage.getItem('token')};
+
+// Apply the navigation guard
+router.beforeEach((to, _from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated()) {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
+});
+
 const app = createApp(App)
 const pinia = createPinia()
 
