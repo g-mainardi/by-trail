@@ -51,12 +51,12 @@ const handleSignup = async () => {
     return
   }
     // Password complexity validation
-  const hasMinLength = password.value.length >= 8
-  const hasUppercase = /[A-Z]/.test(password.value)
-  const hasLowercase = /[a-z]/.test(password.value)
-  const hasNumber = /[0-9]/.test(password.value)
-
-  if (!hasMinLength || !hasUppercase || !hasLowercase || !hasNumber) {
+  if (
+    password.value.length < 8 ||
+    !/[A-Z]/.test(password.value) ||
+    !/[a-z]/.test(password.value) ||
+    !/[0-9]/.test(password.value)
+  ) {
     validationError.value = t('signup_passwords_requirements')
     return
   }

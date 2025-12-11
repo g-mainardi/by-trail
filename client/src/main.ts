@@ -2,6 +2,7 @@ import App from '@/App.vue'
 import Hero from '@/pages/hero/Hero.vue'
 import Login from '@/pages/login/Login.vue'
 import Signup from '@/pages/register/Signup.vue'
+import Profile from '@/pages/profile/Profile.vue'
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -16,11 +17,38 @@ const i18n = createI18n({
 })
 
 const routes = [
-  { path: '/', component: Hero },
-  { path: '/login', component: Login },
-  { path: '/signup', component: Signup },
-  { path: '/homepage', component: HomePage}
-]
+  {
+    path: '/',
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: "Hero",
+        component: Hero
+      },
+      {
+        path: 'profile', 
+        name: "Profile",
+        component: Profile 
+      },
+      {
+        path: 'homepage', 
+        name: "HomePage",
+        component: HomePage
+      }
+    ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup
+  }
+];
 
 export const router = createRouter({
   history: createWebHistory(),
