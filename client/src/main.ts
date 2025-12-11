@@ -5,6 +5,7 @@ import { createI18n } from 'vue-i18n'
 import '@/assets/style.css'
 
 import App from '@/App.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
 import Hero from '@/pages/hero/Hero.vue'
 import Login from '@/pages/login/Login.vue'
 import Signup from '@/pages/register/Signup.vue'
@@ -20,6 +21,7 @@ const i18n = createI18n({
 const routes = [
   {
     path: '/',
+    component: MainLayout, // All the children routes will use this layout
     meta: { requiresAuth: true },
     children: [
       {
