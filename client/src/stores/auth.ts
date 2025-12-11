@@ -13,6 +13,9 @@ interface User {
 export const useAuthStore = defineStore('auth', () => {
 
   const router = useRouter();
+  const isAccountDeleteFailed = ref(false);
+  const isAccountDeleteSuccess = ref(false);
+  const accountDeleteMessage = ref<string>('');
 
   // State
   const token = ref<string | null>(localStorage.getItem('token'));
@@ -97,8 +100,12 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const body = { email: email, password: password };
       let res = await httpHelper.post('/auth/delete', body);
+      let data = await res.json();
       if (res.status === 200) {
         router.push('/login');
+      } else {
+        isAccountDeleteFailed.value = true;
+        accountDeleteMessage.value = data.message || 'Account deletion failed';
       }
     } catch (err: any) {
       log(err.message);
@@ -113,5 +120,5 @@ export const useAuthStore = defineStore('auth', () => {
     console.error(message);
   };
 
-  return { token, user, error, isLoading, login, signup, logout, deleteAccount };
+  return { token, user, error, isLoading, isAccountDeleteFailed, accountDeleteMessage, login, signup, logout, deleteAccount };
 });

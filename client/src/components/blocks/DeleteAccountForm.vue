@@ -38,7 +38,7 @@ const handleDeleteAccount = async () => {
           required 
         />
       </Field>
-      <Button type="submit" variant="destructive">
+      <Button type="submit" variant="destructive" @click="authStore.isAccountDeleteFailed = false">
         {{ t("delete_account_button") }}
       </Button>
     </FieldGroup>
