@@ -97,14 +97,14 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const body = { email: email, password: password };
       let res = await httpHelper.post('/auth/delete', body);
-      const data = await res.json();
-      console.log(data.message);
+      if (res.status === 200) {
+        router.push('/login');
+      }
     } catch (err: any) {
       log(err.message);
       return false;
     } finally {
       isLoading.value = false;
-      router.push('/login');
     }
   }
 
