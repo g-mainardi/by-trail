@@ -1,0 +1,18 @@
+{
+    "bivaccos":[
+        {
+            "name": "Bivacco Bedin",
+            "region": "Veneto",
+            "mountainRange": "Dolomiti",
+            "altitude": 2210,
+            "capacity": 9
+        },
+        {
+            "name": "Bivacco Vigolana",
+            "region": "Trentino - Alto Adige",
+            "mountainRange": "Prealpi Venete",
+            "altitude": 2030,
+            "capacity": 8
+        }
+    ]
+}
