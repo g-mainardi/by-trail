@@ -10,7 +10,7 @@ export const description = "A simple map"
   
 
   const zoom = ref(13);
-  const center = ref([46.3133334, 11.9787921]); /*ref([44.1477173, 12.2314194]);*/
+  const center = ref([46.3133334, 11.9787921]); 
   const bivaccos = ref([
     {
       name: 'Bivacco Bedin',
