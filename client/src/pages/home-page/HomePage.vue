@@ -12,28 +12,37 @@ export const description = "A simple map"
 </script>
 
 <template>
-  <div class="map-container">
-    <l-map
-      v-model:zoom="zoom"
-      :center="center"
-      :useGlobalLeaflet="false"
-    >
-      <l-tile-layer
-        url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=ab8e9f716fab4870bb4378fa9dc9d11c"
-        attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
-      >
-      </l-tile-layer>
-    </l-map>
-  </div>
+    <div class="map-wrapper">
+      <div class="map-container">
+        <l-map
+          v-model:zoom="zoom"
+          :center="center"
+          :useGlobalLeaflet="false"
+        >
+          <l-tile-layer
+            url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=ab8e9f716fab4870bb4378fa9dc9d11c"
+            attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
+          >
+          </l-tile-layer>
+        </l-map>
+      </div>
+    </div>
 </template>
 
 <style scoped>
-  .map-container {
+  .map-wrapper {
     margin: auto;
-    height: 90%;
-    width: 90%;
+    height: 600px;
+    width: 1200px;
+    padding: 20px;
+  }
+  .map-wrapper .map-container {
+    height: 100%;
+    width: 100%;
     border: 3px solid green;
     border-radius: 10px;
     overflow: hidden;
+    position: relative;
+    z-index: 0;
   }
 </style>

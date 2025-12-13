@@ -24,7 +24,8 @@ const pageName = computed(() => route.name ? route.name.toString() : 'Home');
     <AppSidebar />
     
     <SidebarInset>
-      <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+      <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12
+      sticky top-0 z-1 bg-background border-b">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
           <Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
@@ -39,7 +40,7 @@ const pageName = computed(() => route.name ? route.name.toString() : 'Home');
         </div>
       </header>
 
-      <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div class="flex flex-1 flex-col gap-4 pt-0">
          <RouterView />
       </div>
     </SidebarInset>
