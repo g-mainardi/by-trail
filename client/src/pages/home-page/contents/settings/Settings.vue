@@ -16,10 +16,6 @@ import SubscriptionSection from './notifications/SubscriptionSection.vue';
 const { t } = useI18n()
 </script>
 
-<script lang="ts">
-
-</script>
-
 <template>
   <div class="p-4">
     <Tabs default-value="account">

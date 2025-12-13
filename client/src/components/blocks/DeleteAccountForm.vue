@@ -15,7 +15,6 @@ const email = authStore.user?.email || ''
 
 const handleDeleteAccount = async () => {
   if (!password.value) return;
-  authStore.isAccountDeleteFailed = false;
   await authStore.deleteAccount(email, password.value);
 }
 </script>

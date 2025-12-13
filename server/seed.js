@@ -20,7 +20,6 @@ const loadData = (fileName) => {
 
 const seedData = async () => {
     try {
-        await mongoose.connect(MONGO_URI_LOCAL); // Look for explanation
         await mongoose.connect(MONGO_URI_LOCAL);
 
         const usersData = loadData('users.json');

@@ -16,11 +16,11 @@ interface User {
 
 export const useAuthStore = defineStore('auth', () => {
 
+
+  // --- State ---
   const router = useRouter();
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
-
-  // --- State ---
   const token = ref<string | null>(localStorage.getItem('token'));
   const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
   const error = ref<string | null>(null);
@@ -178,8 +178,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  // TODO: put the token in the body instead of the email to improve security
   const deleteAccount = async (email: string, password: string) => {
     if (!token.value) return;
+    isAccountDeleteFailed.value = false;
     isLoading.value = true;
     error.value = null;
 

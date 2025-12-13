@@ -131,6 +131,10 @@ export const login = async (req, res) => {
 
 export const deleteAccount = async (req, res) => {
     const { email, password } = req.body;
+    // Input validation: check for missing or empty email/password
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required.' });
+    }
     try {
         // 1. Find user by email
         const user = await User.findOne({ email }).select('+password');
@@ -155,8 +159,11 @@ export const deleteAccount = async (req, res) => {
         let result = await User.deleteOne({ _id: user._id });
         if (result.deletedCount === 1) {
             res.status(200).json({ message: 'Account deleted successfully' });
-        };
+        } else {
+            res.status(500).json({ error: 'Error deleting account' });
+        }
     } catch (error) {
+        console.error('Delete Account Error:', error);
         res.status(500).json({ error: 'Server error during account deletion' });
     }
 }
