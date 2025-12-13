@@ -5,7 +5,7 @@ export const description = "A simple map"
 <script setup lang="ts">
   import 'leaflet/dist/leaflet.css';
   import { ref } from 'vue';
-  import { LIcon, LMap, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet'
+  import { LIcon, LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet'
   import bivaccoIcon from '@/assets/bivacco.png'; /* @attribution: <a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a> */
   
 
@@ -13,7 +13,12 @@ export const description = "A simple map"
   const center = ref([46.3133334, 11.9787921]); /*ref([44.1477173, 12.2314194]);*/
   const bivaccos = ref([
     {
+      name: 'Bivacco Bedin',
       coords: [46.3133334, 11.9787921],
+    },
+    {
+      name: 'Bivacco Giacomelli alla Madonnina',
+      coords: [45.9710000, 11.1860000],
     }
   ]);
   const iconUrl = bivaccoIcon;
@@ -30,15 +35,19 @@ export const description = "A simple map"
           >
           </l-tile-layer>
 
-          <l-marker
-            v-for="bivacco in bivaccos"
-            :lat-lng="bivacco.coords"
+          <l-marker v-for="bivacco in bivaccos" :lat-lng="bivacco.coords"
           >
             <l-icon
               :icon-url="iconUrl"
               :icon-size="iconSize"  
-              class-name="my-styled-bivacco"
+              class-name="bivaccoIconStyle"
             />
+
+            <l-popup>
+              <div class="popup-content">
+                <h3>{{ bivacco.name }}</h3>
+              </div>
+            </l-popup>
           </l-marker>
         </l-map>
       </div>
@@ -62,13 +71,11 @@ export const description = "A simple map"
     z-index: 0;
   }
 
-  :deep(.my-styled-bivacco) {
+  :deep(.bivaccoIconStyle) {
     box-sizing: border-box;
     border: 1px solid #000000;
     border-radius: 5px;
     background-color: rgb(255, 173, 254);
     padding: 5px;
 }
-
-
 </style>
