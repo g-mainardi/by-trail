@@ -1,3 +1,4 @@
+import { HttpHelper } from '@/stores/httpHelper';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -14,13 +15,17 @@ interface User {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const router = useRouter();
-  
+
+
   // --- State ---
+  const router = useRouter();
+  const isAccountDeleteFailed = ref(false);
+  const accountDeleteMessage = ref<string>('');
   const token = ref<string | null>(localStorage.getItem('token'));
   const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
   const error = ref<string | null>(null);
   const isLoading = ref(false);
+  const httpHelper = new HttpHelper('/api', token.value || undefined);
 
   // --- Actions ---
 
@@ -28,11 +33,11 @@ export const useAuthStore = defineStore('auth', () => {
   // Call this when the app starts or after login to get fresh data
   const fetchProfile = async (): Promise<boolean> => {
     if (!token.value) return false;
-    
+
     isLoading.value = true;
     try {
       const res = await fetch('/api/users/profile', {
-        headers: { 
+        headers: {
           'Authorization': `Bearer ${token.value}`,
           'Content-Type': 'application/json'
         }
@@ -45,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       const data = await res.json();
-      
+
       // Update state with fresh data from DB
       user.value = data.user;
 
@@ -70,9 +75,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const res = await fetch('/api/users/profile', {
         method: 'PUT',
-        headers: { 
-            'Authorization': `Bearer ${token.value}`,
-            'Content-Type': 'application/json' 
+        headers: {
+          'Authorization': `Bearer ${token.value}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(updateData),
       });
@@ -83,9 +88,9 @@ export const useAuthStore = defineStore('auth', () => {
 
       // Update local state immediately with the response
       user.value = data.user;
-      
+
       localStorage.setItem('user', JSON.stringify(data.user));
-      
+
       return true;
     } catch (err: any) {
       console.error(err);
@@ -100,15 +105,11 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (email: string, password: string) => {
     isLoading.value = true;
     error.value = null;
-    
+
     try {
       // API Call to Backend
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
+      const body = { email, password };
+      const res = await httpHelper.post('/auth/login', body);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || 'Login failed');
@@ -116,7 +117,8 @@ export const useAuthStore = defineStore('auth', () => {
       // Save critical auth data
       token.value = data.token;
       user.value = data.user;
-      
+      httpHelper.setToken(data.token);
+
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
 
@@ -153,42 +155,68 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
 
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name, 
-          email, 
-          password: signupPassword,
-          favRegions }),
-      });
-
+      const body = {
+        name,
+        email,
+        password: signupPassword,
+        favRegions
+      };
+      const res = await httpHelper.post('/auth/signup', body);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || 'Signup failed');
 
-      router.push('/');
-
+      router.push('/login');
       return true;
-
     } catch (err: any) {
       console.error(err);
       error.value = err.message;
       return false;
     } finally {
+      console.log("Account creation process finished.");
       isLoading.value = false;
     }
   };
 
-  return { 
-    token, 
-    user, 
-    error, 
-    isLoading, 
-    login, 
-    signup, 
-    logout,
-    fetchProfile,
-    updateProfile
+  // TODO: put the token in the body instead of the email to improve security
+  const deleteAccount = async (email: string, password: string) => {
+    if (!token.value) return;
+    isAccountDeleteFailed.value = false;
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const body = { email: email, password: password };
+      let res = await httpHelper.post('/auth/delete', body);
+      let data = await res.json();
+      if (res.status === 200) {
+        clearAuthenticationStore();
+        router.push('/login');
+      } else {
+        isAccountDeleteFailed.value = true;
+        accountDeleteMessage.value = data.error || 'Account deletion failed';
+      }
+    } catch (err: any) {
+      log(err.message);
+      return false;
+    } finally {
+      isLoading.value = false;
+    };
   };
+
+  function clearAuthenticationStore() {
+    token.value = null;
+    user.value = null;
+    error.value = null;
+    isLoading.value = false;
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  };
+
+  function log(message: string) {
+    error.value = message;
+    console.error(message);
+  };
+
+  return { token, user, error, isLoading, isAccountDeleteFailed, accountDeleteMessage, login, signup, logout, deleteAccount, fetchProfile, updateProfile };
 });

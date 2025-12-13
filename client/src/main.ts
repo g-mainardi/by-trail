@@ -1,16 +1,15 @@
-import { createApp } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import { createPinia } from 'pinia'
-import { createI18n } from 'vue-i18n'
 import '@/assets/style.css'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import App from '@/App.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-import Hero from '@/pages/hero/Hero.vue'
 import Login from '@/pages/login/Login.vue'
-import Signup from '@/pages/register/Signup.vue'
 import Profile from '@/pages/profile/Profile.vue'
-import HomePage from '@/pages/home-page/HomePage.vue'
+import Signup from '@/pages/register/Signup.vue'
+import Settings from './pages/home-page/contents/settings/Settings.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -25,19 +24,14 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: '',
-        name: "Hero",
-        component: Hero
-      },
-      {
-        path: 'profile', 
+        path: 'profile',
         name: "Profile",
-        component: Profile 
+        component: Profile
       },
       {
-        path: 'homepage', 
-        name: "HomePage",
-        component: HomePage
+        path: 'settings',
+        name: "Settings",
+        component: Settings
       }
     ]
   },
@@ -60,7 +54,7 @@ export const router = createRouter({
 
 
 // Navigation guard to protect routes that require authentication
-const isAuthenticated = (): boolean => { return !!localStorage.getItem('token')};
+const isAuthenticated = (): boolean => { return !!localStorage.getItem('token') };
 
 // Apply the navigation guard
 router.beforeEach((to, _from, next) => {
@@ -76,7 +70,7 @@ const pinia = createPinia()
 
 // Install plugins
 app.use(router)
-app.use(pinia) 
+app.use(pinia)
 app.use(i18n)
 
 app.mount('#app')

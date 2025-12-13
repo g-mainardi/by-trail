@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import validator from 'validator';
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
-import validator from 'validator';
 
 let JWT_SECRET;
 try {
@@ -38,8 +38,8 @@ export const signup = async (req, res) => {
             minNumbers: 1,
             minSymbols: 0
         })) {
-            return res.status(400).json({ 
-                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' 
+            return res.status(400).json({
+                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
             });
         }
 
@@ -113,14 +113,14 @@ export const login = async (req, res) => {
         );
 
         // 5. Send response
-        res.json({ 
-            token, 
-            user: { 
-                id: user._id, 
-                name: user.name, 
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
                 email: user.email,
-                favRegions: user.favRegions 
-            } 
+                favRegions: user.favRegions
+            }
         });
 
     } catch (error) {
@@ -128,3 +128,42 @@ export const login = async (req, res) => {
         res.status(500).json({ message: 'Server error during login' });
     }
 };
+
+export const deleteAccount = async (req, res) => {
+    const { email, password } = req.body;
+    // Input validation: check for missing or empty email/password
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required.' });
+    }
+    try {
+        // 1. Find user by email
+        const user = await User.findOne({ email }).select('+password');
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        // --- DEFENSIVE CHECK ---
+        // Prevents server crash (500) if the user record is corrupted (missing password)
+        if (!user.password) {
+            console.error(`Error: User ${email} has no password field in DB.`);
+            return res.status(400).json({ error: 'There was a problem with your account. Please contact support at support@example.com.' });
+        }
+
+        // 2. Validate password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        // 3. Delete user account
+        let result = await User.deleteOne({ _id: user._id });
+        if (result.deletedCount === 1) {
+            res.status(200).json({ message: 'Account deleted successfully' });
+        } else {
+            res.status(500).json({ error: 'Error deleting account' });
+        }
+    } catch (error) {
+        console.error('Delete Account Error:', error);
+        res.status(500).json({ error: 'Server error during account deletion' });
+    }
+}
