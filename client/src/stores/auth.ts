@@ -129,7 +129,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       // Redirect to Home
-      router.push('/homepage');
+      router.push('/');
       return true;
     } catch (err: any) {
       console.error(err);

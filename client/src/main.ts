@@ -6,11 +6,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import App from '@/App.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-import Hero from '@/pages/hero/Hero.vue'
-import HomePage from '@/pages/home-page/HomePage.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
 import Signup from '@/pages/register/Signup.vue'
+import Settings from './pages/home-page/contents/settings/Settings.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -25,19 +24,14 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: '',
-        name: "Hero",
-        component: Hero
-      },
-      {
         path: 'profile',
         name: "Profile",
         component: Profile
       },
       {
-        path: 'homepage',
-        name: "HomePage",
-        component: HomePage
+        path: 'settings',
+        name: "Settings",
+        component: Settings
       }
     ]
   },
