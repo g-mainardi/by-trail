@@ -3,6 +3,20 @@ export const description = "A simple map"
 </script>
 
 <script setup lang="ts">
+<<<<<<< HEAD
+  import AppSidebar from "@/components/AppSidebar.vue"
+  import {
+    Breadcrumb,
+    BreadcrumbPage,
+  } from "@/components/ui/breadcrumb"
+  import { Separator } from "@/components/ui/separator"
+  import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+  } from "@/components/ui/sidebar"
+  import { RouterView } from "vue-router"
+
   import 'leaflet/dist/leaflet.css';
   import { ref } from 'vue';
   import { LIcon, LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet'
@@ -26,6 +40,29 @@ export const description = "A simple map"
 </script>
 
 <template>
+  <SidebarProvider>
+    <AppSidebar />
+    
+    <SidebarInset>
+      <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12
+      sticky top-0 z-1 bg-background border-b">
+        <div class="flex items-center gap-2 px-4">
+          <SidebarTrigger class="-ml-1" />
+          <Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
+          
+          <Breadcrumb>
+            <BreadcrumbPage>{{ $route.name }}</BreadcrumbPage>
+          </Breadcrumb>
+        </div>
+      </header>
+
+      <div class="flex flex-1 flex-col gap-4 pt-0">
+        <!-- Your content goes here -->
+        <RouterView />
+      </div>
+    </SidebarInset>
+  </SidebarProvider>
+
     <div class="map-wrapper">
       <div class="map-container">
         <l-map v-model:zoom="zoom" :center="center" :useGlobalLeaflet="false">

@@ -30,10 +30,12 @@ tags:
 
 paths:
   # Authentication
-  /login:
+  /auth/login:
     $ref: "./paths/authentication.yaml#/~1login"
-  /signup:
+  /auth/signup:
     $ref: "./paths/authentication.yaml#/~1signup"
+  /auth/delete:
+    $ref: "./paths/authentication.yaml#/~1delete"
   # Users
   /users:
     $ref: "./paths/users.yaml#/~1users"
