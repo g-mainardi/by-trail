@@ -85,7 +85,7 @@ const filteredBivouacs = computed(() => {
 </script>
 
 <template>
-  <div class="bar flex items-center gap-4 mb-4">
+  <div class="bar flex items-center">
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
   <div v-for="bivouac in filteredBivouacs" :key="bivouac.id">

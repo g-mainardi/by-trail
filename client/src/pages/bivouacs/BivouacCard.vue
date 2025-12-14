@@ -47,41 +47,44 @@ function checkAvailability(): boolean {
 </script>
 
 <template>
-  <Card class="gap-2 py-4">
-    <CardTitle class="flex items-center gap-4 px-6">
+  <Card class="gap-2 p-4">
+    <CardTitle class="flex items-center gap-4">
       <ThiigsIcon :path="getIconPath()" :size="6" />
       <h1 class="text-2xl font-bold">
         {{ bivouac.name }}
       </h1>
     </CardTitle>
-    <CardContent class="flex items-center justify-between gap-4 ">
-      <span class="w-[50%]">
+    <CardContent class="flex flex-col md:flex-row gap-4 justify-between p-0">
+      <!-- Description -->
+      <span class="description text-sm md:text-base flex-1 flex items-center">
         {{ bivouac.description }}
       </span>
-      <div class="icons flex gap-4 w-[50%] justify-evenly">
-        <div class="icon1 flex flex-col">
+      <Card class="p-2">
+        <CardContent class="icons flex justify-evenly px-0">
+          <div class="icon1 flex flex-col">
           <ThiigsIcon :path="mountain" :size="4" />
             <span class="text-center font-mono text-sm">{{ bivouac.altitude }}</span>
-        </div>
-        <div class="icon2 flex flex-col">
-          <ThiigsIcon :path="beds" :size="4" />
-          <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
-        </div>
-        <div class="icon3 flex flex-col">
-          <ThiigsIcon :path="toilet" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.hasToilets ? 'Yes' : 'No' }}
-          </span>
-        </div>
-        <div class="icon4 flex flex-col">
-          <ThiigsIcon :path="calendar" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ checkAvailability() ? 'Open' : 'Closed' }}
-          </span>
-        </div>
-      </div>
+          </div>
+          <div class="icon2 flex flex-col">
+            <ThiigsIcon :path="beds" :size="4" />
+            <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
+          </div>
+          <div class="icon3 flex flex-col">
+            <ThiigsIcon :path="toilet" :size="4" />
+            <span class="text-center font-mono text-sm">
+              {{ bivouac.hasToilets ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="icon4 flex flex-col">
+            <ThiigsIcon :path="calendar" :size="4" />
+            <span class="text-center font-mono text-sm">
+              {{ checkAvailability() ? 'Open' : 'Closed' }}
+            </span>
+          </div>  
+        </CardContent>
+      </Card>
     </CardContent>
-    <CardFooter class="flex gap-2 px-6">
+    <CardFooter class="flex gap-2 px-0">
       <Button class="flex-1">
         <Eye />
         <span class="hidden md:inline">View</span>
