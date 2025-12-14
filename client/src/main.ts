@@ -6,6 +6,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import App from '@/App.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import Maps from '@/pages/home-page/contents/Maps.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
 import Signup from '@/pages/register/Signup.vue'
@@ -23,6 +24,11 @@ const routes = [
     component: MainLayout, // All the children routes will use this layout
     meta: { requiresAuth: true },
     children: [
+      {
+        path: 'maps',
+        name: 'Maps',
+        component: Maps
+      },
       {
         path: 'profile',
         name: "Profile",
