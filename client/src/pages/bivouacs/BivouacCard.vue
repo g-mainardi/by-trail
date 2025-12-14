@@ -47,7 +47,7 @@ function checkAvailability(): boolean {
 </script>
 
 <template>
-  <Card class="gap-2">
+  <Card class="gap-2 py-4">
     <CardTitle class="flex items-center gap-4 px-6">
       <ThiigsIcon :path="getIconPath()" :size="6" />
       <h1 class="text-2xl font-bold">
