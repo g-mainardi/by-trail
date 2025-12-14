@@ -3,7 +3,6 @@ export const description = "A simple map"
 </script>
 
 <script setup lang="ts">
-<<<<<<< HEAD
   import AppSidebar from "@/components/AppSidebar.vue"
   import {
     Breadcrumb,
