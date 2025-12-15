@@ -13,18 +13,25 @@ const getMongoURI = () => {
     }
 
     // Case 2: Fallback (Use Local DB)
-    console.log("No Secret found, use local URI by default...");
+    console.log("No Secret found (or USE_ATLAS=false), using local URI...");
     return process.env.MONGO_URI_LOCAL; 
 };
 
 const connectDB = async () => {
     const uri = getMongoURI();
-    try {
-        await mongoose.connect(uri);
-        console.log("Connected to MongoDB via Mongoose");
-    } catch (error) {
-        console.error("Error connecting to MongoDB Atlas:", error);
-    }
+
+    const tryConnect = async () => {
+        try {
+            await mongoose.connect(uri);
+            console.log("MongoDB Connected successfully!");
+        } catch (error) {
+            console.error(`MongoDB connection error: ${error.message}`);
+            console.log("Retrying in 5 seconds...");
+            setTimeout(tryConnect, 5000);
+        }
+    };
+
+    await tryConnect();
 };
 
 export default connectDB;
