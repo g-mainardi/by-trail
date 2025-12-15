@@ -14,9 +14,11 @@ export interface Bivouac {
   hasToilets?: boolean;
   openDate?: Date;
   closeDate?: Date;
+  isOpen?: boolean;
 }
 
-const bivouacs = ref<Bivouac[]>([
+
+let bivouacs = ref<Bivouac[]>([
   { id: 1, name: 'Bivacco Alpha', description: 'A cozy bivacco in the mountains. This is a great place to relax and enjoy nature.', favorite: true, type: 'bivouac', altitude: 1500, capacity: 10, hasToilets: true, openDate: new Date('2024-06-01'), closeDate: new Date('2024-09-30') },
   { id: 2, name: 'Rifugio Beta', description: 'A scenic bivacco near the lake. This is a great place to relax and enjoy nature.', favorite: false, type: 'refuge', altitude: 1200, capacity: 20, hasToilets: true },
   { id: 3, name: 'Rifugio Gamma', description: 'A rustic bivacco in the forest.', favorite: true, type: 'refuge', altitude: 900, capacity: 15, hasToilets: false, openDate: new Date('2024-05-15'), closeDate: new Date('2024-10-15') },
@@ -27,8 +29,27 @@ const bivouacs = ref<Bivouac[]>([
   { id: 8, name: 'Rifugio Theta', description: 'A charming bivacco with friendly staff.', favorite: true, type: 'refuge', altitude: 1000, capacity: 18, hasToilets: true }
 ]);
 
+bivouacs.value.forEach(bivouac => {
+  bivouac.isOpen = isOpen(bivouac.openDate!, bivouac.closeDate!);
+});
+
+function isOpen(openDate: Date, closeDate: Date): boolean {
+  const today = new Date();
+  if (!openDate || !closeDate) {
+    return true; // Always open if no dates defined
+  }
+  return today >= openDate && today <= closeDate;
+}
+
+function toggleFavorite(bivouacId: number) {
+  const bivouac = bivouacs.value.find(b => b.id === bivouacId);
+  if (bivouac) {
+    bivouac.favorite = !bivouac.favorite;
+  }
+}
+
 const filters = ref({
-  desiredBeds: 4,
+  desiredBeds: 0,
   withToiletsOnly: false,
   favoritesOnly: false,
   minAltitude: 0,
@@ -70,14 +91,7 @@ const filteredBivouacs = computed(() => {
       }
     }
     if (filters.value.onlyOpen) {
-      const today = new Date();
-      if (bivouac.openDate && bivouac.closeDate) {
-        if (today < bivouac.openDate || today > bivouac.closeDate) {
-          return false;
-        }
-      } else {
-        return true; // If no open/close dates are defined, consider it always open
-      }
+      return bivouac.isOpen;
     }
     return true;
   });
@@ -89,6 +103,6 @@ const filteredBivouacs = computed(() => {
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
   <div v-for="bivouac in filteredBivouacs" :key="bivouac.id">
-    <BivouacCard :bivouac="bivouac" />
+    <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
   </div>
 </template>
