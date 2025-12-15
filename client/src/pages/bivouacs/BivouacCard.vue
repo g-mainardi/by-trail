@@ -51,30 +51,28 @@ function getIconPath() {
       <span class="description text-sm md:text-base flex-1 flex items-center">
         {{ bivouac.description }}
       </span>
-      <Card class="p-2">
-        <CardContent class="icons flex justify-evenly px-0">
-          <div class="icon1 flex flex-col">
-          <ThiigsIcon :path="mountain" :size="4" />
-            <span class="text-center font-mono text-sm">{{ bivouac.altitude }}</span>
-          </div>
-          <div class="icon2 flex flex-col">
-            <ThiigsIcon :path="beds" :size="4" />
-            <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
-          </div>
-          <div class="icon3 flex flex-col">
-            <ThiigsIcon :path="toilet" :size="4" />
-            <span class="text-center font-mono text-sm">
-              {{ bivouac.hasToilets ? t('yes') : t('no') }}
-            </span>
-          </div>
-          <div class="icon4 flex flex-col">
-            <ThiigsIcon :path="calendar" :size="4" />
-            <span class="text-center font-mono text-sm">
-              {{ bivouac.isOpen ? t('open') : t('closed') }}
-            </span>
-          </div>  
-        </CardContent>
-      </Card>
+      <div class="icons-wrapper p-2 flex justify-evenly gap-2">
+        <div class="icon1 flex flex-col">
+        <ThiigsIcon :path="mountain" :size="4" />
+          <span class="text-center font-mono text-sm">{{ bivouac.altitude }}</span>
+        </div>
+        <div class="icon2 flex flex-col">
+          <ThiigsIcon :path="beds" :size="4" />
+          <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
+        </div>
+        <div class="icon3 flex flex-col">
+          <ThiigsIcon :path="toilet" :size="4" />
+          <span class="text-center font-mono text-sm">
+            {{ bivouac.hasToilets ? t('yes') : t('no') }}
+          </span>
+        </div>
+        <div class="icon4 flex flex-col">
+          <ThiigsIcon :path="calendar" :size="4" />
+          <span class="text-center font-mono text-sm">
+            {{ bivouac.isOpen ? t('open') : t('closed') }}
+          </span>
+        </div>
+      </div>
     </CardContent>
     <CardFooter class="flex gap-2 px-0">
       <Button class="flex-1">
