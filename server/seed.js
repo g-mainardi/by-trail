@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
 import fs from 'fs';
+import mongoose from "mongoose";
 import path from 'path';
 
-import { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } from './src/models/models.js'
+import { Bivacco, User } from './src/models/models.js';
 
 const MONGO_URI_LOCAL = 'mongodb://localhost:27017/by_trail'
 
