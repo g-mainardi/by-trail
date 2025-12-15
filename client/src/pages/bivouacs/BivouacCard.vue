@@ -7,7 +7,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
-import { Eye, Heart, Star } from 'lucide-vue-next';
+import { ArrowUpRight as ArrowUpRightIcon, Eye as EyeIcon, Heart as HeartIcon } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import type { Bivouac } from './Bivouacs.vue';
 const { t } = useI18n()
@@ -76,18 +76,18 @@ function getIconPath() {
     </CardContent>
     <CardFooter class="flex gap-2 px-0">
       <Button class="flex-1">
-        <Eye />
+        <EyeIcon />
         <span class="hidden md:inline">{{ t('view') }}</span>
       </Button>
       <Button variant="secondary" class="flex-1" @click="$emit('toggle-favorite', bivouac.id)">
-        <Heart
+        <HeartIcon
           :fill="bivouac.favorite ? 'red' : 'none'"
           :color="bivouac.favorite ? 'red' : 'currentColor'"
         />
         <span class="hidden md:inline">{{ t('favorite') }}</span>
       </Button>
       <Button variant="outline" class="flex-1">
-        <Star />
+        <ArrowUpRightIcon />
         <span class="hidden md:inline">{{ t('plan') }}</span>
       </Button>
     </CardFooter>
