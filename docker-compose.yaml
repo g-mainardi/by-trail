@@ -3,6 +3,7 @@ services:
   # 1. Local Database
   mongo:
     image: mongo
+    profiles: ["local-db"] 
     ports:
       - 27017:27017
     volumes:
@@ -11,6 +12,7 @@ services:
   # 2. Mongo Express GUI (optional for local DB)
   mongo-express:
     image: mongo-express
+    profiles: ["local-db"]
     ports:
       - 8081:8081
     environment:
@@ -34,15 +36,12 @@ services:
       MONGO_URI_FILE: /run/secrets/db_uri
       MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
       JWT_SECRET_FILE: /run/secrets/jwt_secret
-      # For using Local or Atlas
-      USE_ATLAS: "${USE_ATLAS:-true}" 
+      # Logic handled inside the app: to use Atlas or local MongoDB
+      USE_ATLAS: "${USE_ATLAS:-false}" 
 
     volumes:
       - ./server:/app            # Synchronize local files with the container (Hot Reload)
       - /app/node_modules
-    # Note: If use Atlas, not depending on Local container anymore
-    # depends_on: 
-    #   - mongo 
   
   # 4. Frontend (Vite/React)
   client:
