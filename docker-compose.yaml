@@ -37,7 +37,7 @@ services:
       MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
       JWT_SECRET_FILE: /run/secrets/jwt_secret
       # Logic handled inside the app: to use Atlas or local MongoDB
-      USE_ATLAS: "${USE_ATLAS:-false}" 
+      USE_ATLAS: "${USE_ATLAS:-true}" 
 
     volumes:
       - ./server:/app            # Synchronize local files with the container (Hot Reload)

@@ -34,7 +34,7 @@
    - Local Database structure at [http://localhost:8081](http://localhost:8081).
    - Main Application at the port you have specified (default is '5173') [http://localhost:5173](http://localhost:5173).
 
-6. To stop and delete the services, run:
+6. To stop services and delete volumes, run:
 
     - Remote (with `USE_ATLAS=true`)
 
