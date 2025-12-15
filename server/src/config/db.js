@@ -20,14 +20,24 @@ const getMongoURI = () => {
 const connectDB = async () => {
     const uri = getMongoURI();
 
-    const tryConnect = async () => {
+    const MAX_RETRIES = 10;
+    const INITIAL_DELAY_MS = 5000;
+    const MAX_DELAY_MS = 60000; // 1 minute
+
+    const tryConnect = async (retries = 0, delay = INITIAL_DELAY_MS) => {
         try {
             await mongoose.connect(uri);
             console.log("MongoDB Connected successfully!");
         } catch (error) {
             console.error(`MongoDB connection error: ${error.message}`);
-            console.log("Retrying in 5 seconds...");
-            setTimeout(tryConnect, 5000);
+            if (retries < MAX_RETRIES) {
+                const nextDelay = Math.min(delay * 2, MAX_DELAY_MS);
+                console.log(`Retrying in ${delay / 1000} seconds... (Attempt ${retries + 1} of ${MAX_RETRIES})`);
+                setTimeout(() => tryConnect(retries + 1, nextDelay), delay);
+            } else {
+                console.error("Maximum retry attempts reached. Could not connect to MongoDB.");
+                process.exit(1);
+            }
         }
     };
 
