@@ -2,7 +2,7 @@ export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
     // Type must be lowercase and not empty
-    'type-case': [2, 'always', 'lower-case'],    
+    'type-case': [2, 'always', 'lower-case'],
     'type-empty': [2, 'never'],
     
     // Allowed types of commit
@@ -21,8 +21,8 @@ export default {
 
     // If scope is present, must be one of the following
     'scope-enum': [
-      2, 
-      'always', 
+      2,
+      'always',
       ['client', 'server', 'repo', 'api', 'ui']
     ],
     

@@ -1,7 +1,7 @@
 {
   "name": "by-trail",
   "version": "1.0.0",
-  "description": "1. (to run with remote DB) Set up Docker secret for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:",
+  "description": "Trail tracking application",
   "main": "index.js",
   "type": "module",
   "scripts": {
