@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import AppSidebar from "@/components/AppSidebar.vue"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { useRoute } from 'vue-router';
+} from "@/components/ui/sidebar";
+import AppSidebar from "@/pages/sidebar/AppSidebar.vue";
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const pageName = computed(() => route.name ? route.name.toString() : 'Home');

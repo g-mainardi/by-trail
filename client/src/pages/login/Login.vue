@@ -4,8 +4,8 @@ export default { name: 'Login' };
 </script>
 
 <script setup lang="ts">
-import LoginForm from "@/components/blocks/LoginForm.vue";
 import SelectLanguage from '@/components/ui/select/SelectLanguage.vue';
+import LoginForm from "@/pages/login/LoginForm.vue";
 </script>
 
 <template>
