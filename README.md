@@ -2,7 +2,7 @@
 
 ## Setup and Run
 
-1. Set up Docker secret for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:
+1. (to run with remote DB) Set up Docker secret for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:
 
     ```text
    mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0    
@@ -18,16 +18,32 @@
 
 4. Start the application using Docker Compose:
 
-    ```bash
-    docker compose up -d
-    ```
+    - Remote (with `USE_ATLAS=true`)
+
+        ```bash
+        docker compose up -d
+        ```
+
+    - Local (with `USE_ATLAS=false`)
+
+        ```bash
+        docker compose --profile local-db up -d
+        ```
 
 5. Access:
    - Local Database structure at [http://localhost:8081](http://localhost:8081).
    - Main Application at the port you have specified (default is '5173') [http://localhost:5173](http://localhost:5173).
 
-6. To stop the services, run:
+6. To stop services and delete volumes, run:
 
-    ```bash
-    docker compose down
-    ```
+    - Remote (with `USE_ATLAS=true`)
+
+        ```bash
+        docker compose down -v
+        ```
+
+    - Local (with `USE_ATLAS=false`)
+
+        ```bash
+        docker compose --profile local-db down -v
+        ```
