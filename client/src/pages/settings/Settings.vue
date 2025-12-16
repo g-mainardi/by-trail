@@ -2,79 +2,71 @@
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
+  CardFooter
 } from '@/components/ui/card';
-import CardDescription from '@/components/ui/card/CardDescription.vue';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from 'vue-i18n';
 import DeleteAccountSection from './account/DeleteAccountSection.vue';
-import LogoutSection from './account/LogoutSection.vue';
 import ChangeLanguageSection from './appearance/ChangeLanguageSection.vue';
 import SubscriptionSection from './notifications/SubscriptionSection.vue';
 const { t } = useI18n()
 </script>
 
 <template>
-  <div class="p-4">
-    <Tabs default-value="account">
+  <Tabs default-value="account">
 
-      <TabsList>
-        <TabsTrigger value="account">
-          {{ t("tab_account") }}
-        </TabsTrigger>
-        <TabsTrigger value="appearance">
-          {{ t("tab_appearance") }}
-        </TabsTrigger>
-        <TabsTrigger value="notifications">
-          {{ t("tab_notifications") }}
-        </TabsTrigger>
-      </TabsList>
+    <TabsList>
+      <TabsTrigger value="account">
+        {{ t("tab_account") }}
+      </TabsTrigger>
+      <TabsTrigger value="appearance">
+        {{ t("tab_appearance") }}
+      </TabsTrigger>
+      <TabsTrigger value="notifications">
+        {{ t("tab_notifications") }}
+      </TabsTrigger>
+    </TabsList>
 
-      <TabsContent value="account">
-        <Card>
-          <CardHeader>
-            <CardTitle>{{ t("account_settings") }}</CardTitle>
-            <CardDescription>{{ t("manage_account_settings") }}</CardDescription>
-          </CardHeader>
-          <CardContent class="px-6">
-            <DeleteAccountSection />
-            <LogoutSection />
-          </CardContent>
-          <CardFooter>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      <TabsContent value="appearance">
-        <Card>
-          <CardHeader>
-            <CardTitle>{{ t("appearance_settings") }}</CardTitle>
-            <CardDescription>{{ t("choose_preferred_settings") }}</CardDescription>
-          </CardHeader>
-          <CardContent class="px-6">
-            <ChangeLanguageSection />
-          </CardContent>
-          <CardFooter>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-      <TabsContent value="notifications">
-        <Card>
-          <CardHeader>
-            <CardTitle>{{ t("notification_settings") }}</CardTitle>
-            <CardDescription>{{ t("manage_notification_preferences") }}</CardDescription>
-          </CardHeader>
-          <CardContent class="px-6">
-            <SubscriptionSection />
-          </CardContent>
-          <CardFooter>
-          </CardFooter>
-        </Card>
-      </TabsContent>
-    </Tabs>
-  </div>
+    <TabsContent value="account">
+      <Card class="card">
+        <CardContent class="card-content">
+          <DeleteAccountSection />
+        </CardContent>
+        <CardFooter>
+        </CardFooter>
+      </Card>
+    </TabsContent>
+    <TabsContent value="appearance">
+      <Card class="card">
+        <CardContent class="card-content">
+          <ChangeLanguageSection />
+        </CardContent>
+        <CardFooter>
+        </CardFooter>
+      </Card>
+    </TabsContent>
+    <TabsContent value="notifications">
+      <Card class="card">
+        <CardContent class="card-content">
+          <SubscriptionSection />
+        </CardContent>
+        <CardFooter>
+        </CardFooter>
+      </Card>
+    </TabsContent>
+  </Tabs>
 </template>
+
+<style scoped>
+  .card {
+    gap: 0;
+    padding: calc(var(--spacing) * 6);
+  }
+  .card-content {
+    padding: 0;
+  }
+</style>
+
 
 <i18n>
   {

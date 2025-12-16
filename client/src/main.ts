@@ -8,9 +8,9 @@ import App from '@/App.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
-import Signup from '@/pages/register/Signup.vue'
 import Bivouacs from './pages/bivouacs/Bivouacs.vue'
 import Settings from './pages/settings/Settings.vue'
+import Signup from './pages/signup/Signup.vue'
 
 const i18n = createI18n({
   legacy: false,

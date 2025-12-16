@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import Field from '@/components/ui/field/Field.vue';
+import FieldGroup from '@/components/ui/field/FieldGroup.vue';
+import FieldLabel from '@/components/ui/field/FieldLabel.vue';
+import Input from '@/components/ui/input/Input.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import Button from '../ui/button/Button.vue';
-import Field from '../ui/field/Field.vue';
-import FieldGroup from '../ui/field/FieldGroup.vue';
-import FieldLabel from '../ui/field/FieldLabel.vue';
-import Input from '../ui/input/Input.vue';
 const { t } = useI18n()
 
 const password = ref('')
@@ -21,7 +21,7 @@ const handleDeleteAccount = async () => {
 
 <template>
   <form @submit.prevent="handleDeleteAccount">
-    <FieldGroup class="w-[50%]">
+    <FieldGroup class="w-full">
       <Field>
         <FieldLabel>
           Email
@@ -31,8 +31,9 @@ const handleDeleteAccount = async () => {
           {{ t("password_label") }}
         </FieldLabel>
         <Input 
-          id="password" 
+          id="password"
           type="password" 
+          placeholder="Insert your password"
           v-model="password"
           required 
         />
