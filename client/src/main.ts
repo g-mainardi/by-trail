@@ -9,7 +9,8 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
 import Signup from '@/pages/register/Signup.vue'
-import Settings from './pages/home-page/contents/settings/Settings.vue'
+import Bivouacs from './pages/bivouacs/Bivouacs.vue'
+import Settings from './pages/settings/Settings.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -27,6 +28,11 @@ const routes = [
         path: 'profile',
         name: "Profile",
         component: Profile
+      },
+      {
+        path: 'bivouacs',
+        name: "Bivouacs",
+        component: Bivouacs
       },
       {
         path: 'settings',

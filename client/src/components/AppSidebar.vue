@@ -52,7 +52,7 @@ const data = {
     },
     {
       title: "Bivacchi e Rifugi",
-      url: "#",
+      url: "/bivouacs",
       icon: TentTree,
     },
     {
