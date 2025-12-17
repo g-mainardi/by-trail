@@ -1,5 +1,5 @@
 <script lang="ts">
-export const description = "A simple map"
+export const description = "Map displaying bivaccos and trails icons"
 </script>
 
 <script setup lang="ts">
@@ -7,10 +7,9 @@ import 'leaflet/dist/leaflet.css';
 import { ref } from 'vue';
 import { LIcon, LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet'
 import bivaccoIcon from '@/assets/bivacco.png'; /* @attribution: <a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a> */
-  
 
 const zoom = ref(13);
-const center = ref([46.3133334, 11.9787921]); 
+const center = ref([46.3133334, 11.9787921]);
 const bivaccos = ref([
   {
     name: 'Bivacco Bedin',
@@ -38,7 +37,7 @@ const iconSize = [25, 25];
         <l-marker v-for="bivacco in bivaccos" :lat-lng="bivacco.coords">
           <l-icon
             :icon-url="iconUrl"
-            :icon-size="iconSize"  
+            :icon-size="iconSize"
             class-name="bivaccoIconStyle"
           />
 
