@@ -47,3 +47,51 @@
         ```bash
         docker compose --profile local-db down -v
         ```
+
+## Commit Message Linting
+
+This project uses Commitlint to enforce conventional commit messages. Make sure to follow the commit message guidelines when making changes.
+
+To enable commit message linting, use `npm install` to install the necessary dependencies.
+
+Husky is set up to run Commitlint on each commit message. If your commit message does not follow the specified format, the commit will be rejected, the guidelines are as follows.
+
+### Commit Message Format
+
+```bash
+<type>(<scope>): <description>
+```
+
+### Allowed Types
+
+- `feat` - A new feature
+- `fix` - A bug fix
+- `docs` - Documentation changes
+- `refactor` - Code refactoring
+- `chore` - Maintenance tasks
+- `test` - Adding or updating tests
+
+### Allowed Scopes (optional)
+
+- `client` - Client-side changes
+- `server` - Server-side changes
+- `repo` - Repository configuration
+- `api` - API changes
+- `ui` - User interface changes
+
+### Rules
+
+- Type must be lowercase and cannot be empty
+- Description must not be empty
+- If a scope is provided, it must be one of the allowed scopes
+
+### Examples
+
+```bash
+feat(client): add user authentication
+fix(api): resolve token expiration issue
+docs: update README setup instructions
+refactor(server): optimize database queries
+chore(repo): update dependencies
+test(ui): add unit tests for login component
+```
