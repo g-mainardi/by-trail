@@ -24,7 +24,7 @@ const pageName = computed(() => route.name ? route.name.toString() : 'Home');
     <AppSidebar />
   
     <SidebarInset>
-      <div class="flex items-center gap-2 px-4">
+      <div class="flex items-center gap-2 h-10 px-4">
         <SidebarTrigger class="-ml-1" />
         
         <Separator orientation="vertical" class="mx-1 data-[orientation=vertical]:h-4" />
@@ -32,7 +32,7 @@ const pageName = computed(() => route.name ? route.name.toString() : 'Home');
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage>{{ pageName }}</BreadcrumbPage>
+              <BreadcrumbPage class="text-base">{{ pageName }}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
