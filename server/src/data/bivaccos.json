@@ -17,9 +17,9 @@
             "coords": [45.9710000, 11.1860000],
             "altitude": 2030,
             "capacity": 8
-        }, 
+        },
         {
-            "name": "Bivacco Fanton", 
+            "name": "Bivacco Fanton",
             "region": "Veneto",
             "mountainRange": "Dolomiti",
             "comune": "Auronzo di Cadore",
@@ -38,7 +38,7 @@
         },
         {
             "name": "Bivacco Camposecco",
-            "region":"Piemonte",
+            "region": "Piemonte",
             "mountainRange": "Alpi Pennine",
             "comune": "Antrona Schieranco",
             "coords": [46.0591829, 8.0503568],
@@ -65,13 +65,13 @@
         },
         {
             "name": "Bivacco Perugini",
-            "region":"Friuli Venezia Giulia",
+            "region": "Friuli Venezia Giulia",
             "mountainRange": "Prealpi Venete",
             "comune": "Cimolais",
             "coords": [46.39738, 12.48214],
             "altitude": 2060,
             "capacity": 9
-        }, 
+        },
         {
             "name": "Bivacco Giordano",
             "region": "Valle d'Aosta",
@@ -83,7 +83,7 @@
         },
         {
             "name": "Bivacco Balzola",
-            "region":"Valle d'Aosta",
+            "region": "Valle d'Aosta",
             "mountainRange": "Alpi Graie",
             "comune": "Cogne",
             "coords": [45.601159, 7.269006],

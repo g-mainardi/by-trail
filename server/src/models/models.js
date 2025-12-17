@@ -27,7 +27,13 @@ const bivaccoSchema = new Schema({
     comune: { type: String, required: true },
     coords: { 
         type: [Number], // Expecting [lat, long]
-        required: true
+        required: true, // Remember for later: industry standard for MongoDB is GeoJSON
+        validate: { 
+            validator: function(arr) {  
+                return Array.isArray(arr) && arr.length === 2;  
+            },  
+            message: 'Coordinates must be [latitude, longitude]'  
+        }  
     },
     altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
