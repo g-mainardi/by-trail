@@ -28,7 +28,7 @@ const appInfo = ref(props.appInfo[0])
       <SidebarMenuButton 
         v-if="appInfo"
         size="lg"
-        class="cursor-default hover:bg-transparent"  
+        class="hover:bg-transparent"  
       >
         <div class="flex aspect-square size-10 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
           <component :is="appInfo.logo" class="size-6" />

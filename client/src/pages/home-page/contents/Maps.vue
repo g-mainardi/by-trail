@@ -32,7 +32,7 @@ const iconSize = [25, 25];
     >
     </l-tile-layer>
 
-    <l-marker v-for="bivacco in bivaccos" :lat-lng="bivacco.coords">
+    <l-marker v-for="bivacco in bivaccos" :key="bivacco.name" :lat-lng="bivacco.coords">
       <l-icon
         :icon-url="iconUrl"
         :icon-size="iconSize"  
