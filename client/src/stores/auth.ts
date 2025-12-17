@@ -1,4 +1,4 @@
-import { HttpHelper } from '@/stores/httpHelper';
+import { HttpHelper } from '@/stores/utility/httpHelper';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
