@@ -81,12 +81,15 @@ const data = {
     <SidebarHeader>
       <AppInfo :appInfo="data.appInfo" />
     </SidebarHeader>
+
     <SidebarContent>
       <SidebarOptions :items="data.sidebarOptions" />
     </SidebarContent>
+
     <SidebarFooter>
       <SidebarUser />
     </SidebarFooter>
+    
     <SidebarRail />
   </Sidebar>
 </template>

@@ -30,7 +30,7 @@ const appInfo = ref(props.appInfo[0])
         size="lg"
         class="hover:bg-transparent"  
       >
-        <div class="flex aspect-square size-10 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+        <div class="flex aspect-square size-10 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground">
           <component :is="appInfo.logo" class="size-6" />
         </div>
         <div class="grid flex-1 text-left text-sm leading-tight">
