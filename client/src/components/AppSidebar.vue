@@ -42,7 +42,7 @@ const data = {
   sidebarOptions: [
     {
       title: "Mappe",
-      url: "#",
+      url: "/maps",
       icon: Map,
     },
     {
