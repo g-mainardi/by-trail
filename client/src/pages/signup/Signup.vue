@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SignupForm from "@/components/blocks/SignupForm.vue";
 import SelectLanguage from '@/components/ui/select/SelectLanguage.vue';
+import SignupForm from "@/pages/signup/SignupForm.vue";
 </script>
 
 <template>

@@ -1,26 +1,21 @@
 <script setup lang="ts">
 import { Label } from '@/components/ui/label';
-import Separator from '@/components/ui/separator/Separator.vue';
 import { Switch } from '@/components/ui/switch';
 import { useI18n } from 'vue-i18n';
+import SectionTitle from '../account/SectionTitle.vue';
 const { t } = useI18n()
 </script>
 
 <template>
-  <div class="my-4">
-    <h1 class="scroll-m-20 text-left font-mono text-4 tracking-tight text-balance">
-      {{ t("subscription") }}
-    </h1>
-    <Separator orientation="horizontal" class="my-4" />
-    <div class="flex items-center space-x-2 mb-4">
-      <Switch id="new-bivouacs" />
-      <Label for="new-bivouacs">{{ t("get_updates_new_bivouacs") }}</Label>
-    </div>
-    <div class="flex items-center space-x-2 mb-4">
-      <Switch id="new-routes" />
-      <Label for="new-routes">{{ t("get_updates_new_routes") }}</Label>
-    </div>
-  </div>  
+  <SectionTitle :title="t('subscription')" />
+  <div class="flex items-center space-x-2 mb-4">
+    <Switch id="new-bivouacs" />
+    <Label for="new-bivouacs">{{ t("get_updates_new_bivouacs") }}</Label>
+  </div>
+  <div class="flex items-center space-x-2 mb-4">
+    <Switch id="new-routes" />
+    <Label for="new-routes">{{ t("get_updates_new_routes") }}</Label>
+  </div>
 </template>
 
 <i18n>
