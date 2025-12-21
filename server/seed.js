@@ -2,9 +2,22 @@ import fs from 'fs';
 import mongoose from "mongoose";
 import path from 'path';
 
-import { Bivacco, User } from './src/models/models.js';
+import { Bivacco, } from './src/models/models.js';
 
-const MONGO_URI_LOCAL = 'mongodb://localhost:27017/by_trail'
+const getMongoURI = () => {
+    
+    console.log("USE_ATLAS is:", process.env.USE_ATLAS);
+    const withAtlas = process.env.USE_ATLAS === "true";
+    const secretPath = process.env.MONGO_URI_FILE;
+
+    if (withAtlas && secretPath && fs.existsSync(secretPath)) {
+        console.log("Target: MongoDB Atlas");
+        return fs.readFileSync(secretPath, 'utf8').trim();
+    }
+    
+    console.log("Target: Local MongoDB");
+    return process.env.MONGO_URI_LOCAL;
+}
 
 const loadData = (fileName) => {
     try {
@@ -20,16 +33,17 @@ const loadData = (fileName) => {
 
 const seedData = async () => {
     try {
-        await mongoose.connect(MONGO_URI_LOCAL);
+        const uri = getMongoURI();
+        await mongoose.connect(uri);
 
-        const usersData = loadData('users.json');
         const bivaccosData = loadData('bivaccos.json');
 
-        await User.deleteMany({});
-        await Bivacco.deleteMany({});
+        if (!bivaccosData.bivaccos) {
+            throw new Error("JSON files missing 'bivaccos' keys.");
+        }
 
-        const users = await User.insertMany(usersData.users);
-        const bivaccos = await Bivacco.insertMany(bivaccosData.bivaccos);
+        await Bivacco.deleteMany({});
+        await Bivacco.insertMany(bivaccosData.bivaccos);
 
         await mongoose.connection.close();
         process.exit(0);
