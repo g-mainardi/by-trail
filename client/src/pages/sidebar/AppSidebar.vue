@@ -5,6 +5,7 @@ import AppInfo from '@/pages/sidebar/AppInfo.vue'
 import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue'
 import SidebarUser from '@/pages/sidebar/SidebarUser.vue'
 import {
+  LogOutIcon,
   Map,
   MountainSnow,
   Route,
@@ -64,6 +65,11 @@ const data = {
       title: "Settings",
       url: "/settings",
       icon: Settings,
+    },
+    {
+      title: "Logout",
+      url: "/logout",
+      icon: LogOutIcon,
     },
   ],
 }
