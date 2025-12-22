@@ -28,10 +28,7 @@
                   pageSize:
                     type: integer
                     description: Number of bivouacs to return per page
-                    pageSize:
-                      type: integer
-                      description: Number of bivouacs to return per page
-                      default: 50
+                    default: 50
               nextPage:
                 type: string
                 format: uuid

@@ -27,9 +27,9 @@ const bivouacSchema = new Schema({
     mountainRange: { type: String, required: true },
     comune: { type: String, required: true },
     coords: {
-        x: { type: Number, required: true },
-        y: { type: Number, required: true },
-        z: { type: Number, required: true },
+        latitude: { type: Number, required: true },
+        longitude: { type: Number, required: true },
+        altitude: { type: Number, required: true },
     },
     capacity: { type: Number, required: true },
     likes: { type: Number, default: 0, min: 0 },

@@ -31,7 +31,11 @@ export interface Bivouac {
   name: string;
   region: string;
   mountainRange: string;
-  altitude: number;
+  coords: {
+    latitude: Number,
+    longitude: Number,
+    altitude: Number,
+  }
   capacity: number;
   likes: number;
   note?: string;
@@ -44,7 +48,7 @@ export interface BivouacResponse {
 
 interface RequestOptions {
   region?: string;
-  favoriteOnly?: boolean;
+  favoritesOnly?: boolean;
   sortByLikes?: 'asc' | 'desc';
   pageSize?: number; // Default to 50 if not provided
 }
@@ -57,7 +61,6 @@ export const useBivouacStore = defineStore('bivouacs', () => {
   async function fetchBivouacs(options?: RequestOptions, nextPage?: UUID): Promise<BivouacResponse> {
 
     const body = {
-      token: token.value,
       options: options,
       nextPage: nextPage
     };

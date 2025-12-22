@@ -1,8 +1,12 @@
 import express from 'express';
-import { fetchBivouacs } from '../controllers/bivouacsController.ts';
+import { fetchBivouacs, fetchMapBivouacs } from '../controllers/bivouacsController.ts';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/list', fetchBivouacs)
+router.use(protect);
+
+router.post('/list', fetchBivouacs);
+router.post('/map', fetchMapBivouacs);
 
 export default router;

@@ -1,41 +1,35 @@
 <script setup lang="ts">
-import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useBivouacStore, type Bivouac, type BivouacResponse } from '@/stores/bivouacs';
 import { computed, ref } from 'vue';
 import BivouacCard from './BivouacCard.vue';
 import FilterBar from './FilterBar.vue';
 
 const bivouacStore = useBivouacStore();
-const bivouacsResponse = await bivouacStore.fetchBivouacs();
-let bivouacs = ref<Bivouac[]>(bivouacsResponse.bivouacs);
+const bivouacsResponse = ref<BivouacResponse>(
+  await bivouacStore.fetchBivouacs().catch(error => {
+    console.error('Error fetching bivouacs:', error);
+    return { bivouacs: [] };
+  })
+);
 
-function fetchNextPage() {
-  if (bivouacsResponse.nextPage) {
-    bivouacStore.fetchBivouacs({}, bivouacsResponse.nextPage).then(response => {
-      bivouacs.value.push(...response.bivouacs);
-      bivouacsResponse.nextPage = response.nextPage;
-    });
+const bivouacs = ref<Bivouac[]>(bivouacsResponse.value.bivouacs);
+
+async function fetchNextPage() {  
+  if (!bivouacsResponse.value.nextPage) {  
+    return;  
   }
+  try {  
+    const response = await bivouacStore.fetchBivouacs({}, bivouacsResponse.value.nextPage);  
+    bivouacs.value.push(...response.bivouacs);
+    bivouacsResponse.value.nextPage = response.nextPage;  
+  } catch (error) {  
+    console.error('Error fetching next page of bivouacs:', error);  
+  }  
 }
 
-// TODO: move isOpen calculation to the store
-// bivouacs.value.forEach(bivouac => {
-//   bivouac.isOpen = isOpen(bivouac.openDate!, bivouac.closeDate!);
-// });
-
-// function isOpen(openDate: Date, closeDate: Date): boolean {
-//   const today = new Date();
-//   if (!openDate || !closeDate) {
-//     return true; // Always open if no dates defined
-//   }
-//   return today >= openDate && today <= closeDate;
-// }
-
 function toggleFavorite(bivouacId: number) {
-
-  // const bivouac = bivouacs.value.find(b => b.id === bivouacId);
-  // if (bivouac) {
-  //   bivouac.favorite = !bivouac.favorite;
-  // }
+  // TODO
+  console.log('Not implemented yet: toggleFavorite for bivouacId', bivouacId);
 }
 
 export interface Filter {
@@ -54,37 +48,25 @@ const minDesiredBeds: Filter = {
 
 const altitudeFilter: Filter = {
   currentValue: { min: 0, max: 10000 },
-  default: {
-    min: 0,
-    max: 10000
-  },
+  default: { min: 0, max: 10000 },
   predicate: (bivouac: Bivouac, value: any) => {
-    if (bivouac.altitude !== undefined) {
-      return bivouac.altitude >= value.min 
-        && bivouac.altitude <= value.max;
+    const altitude = bivouac.coords?.altitude;
+    if (altitude !== undefined) {
+      return altitude >= value.min 
+        && altitude <= value.max;
     }
     return true;
   },
 };
-
 
 const filters = ref({
   minDesiredBeds: minDesiredBeds,
   altitudeFilter: altitudeFilter,
 })
 
-// const filters = ref({
-//   desiredBeds: 0,
-//   withToiletsOnly: false,
-//   favoritesOnly: false,
-//   minAltitude: 0,
-//   maxAltitude: 5000,
-//   onlyOpen: false,
-// });
-
 function resetFilters() {
   Object.values(filters.value).forEach(filter => {
-    filter.currentValue = structuredClone(filter.default);
+    filter.currentValue = JSON.parse(JSON.stringify(filter.default));
   });
 }
 

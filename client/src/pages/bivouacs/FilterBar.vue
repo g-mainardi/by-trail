@@ -74,18 +74,18 @@ defineProps<{
         </Toggle> -->
 
         <div class="altitude-label flex items-center gap-2 mb-2">
-          <MountainIcon :fill="(filters.altitudeFilter.currentValue.min > 0 || filters.altitudeFilter.currentValue.max < 5000) ? 'purple' : 'none'" />
+          <MountainIcon :fill="(filters.altitudeFilter.currentValue.min > filters.altitudeFilter.default.min || filters.altitudeFilter.currentValue.max < filters.altitudeFilter.default.max) ? 'purple' : 'none'" />
           {{ t('set_altitude_range') }}
         </div>
 
         <div class="altitude-filter flex items-center gap-2">
-          <NumberField id="altitude-min" :default-value="0" :min="0" :max="5000" v-model="filters.altitudeFilter.currentValue.min" class="w-full">
+          <NumberField id="altitude-min" :default-value="filters.altitudeFilter.default.min" :min="filters.altitudeFilter.default.min" :max="filters.altitudeFilter.default.max" v-model="filters.altitudeFilter.currentValue.min" class="w-full">
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
           </NumberField>
           -
-          <NumberField id="altitude-max" :default-value="5000" :min="0" :max="5000" v-model="filters.altitudeFilter.currentValue.max" class="w-full">
+          <NumberField id="altitude-max" :default-value="filters.altitudeFilter.default.max" :min="filters.altitudeFilter.default.min" :max="filters.altitudeFilter.default.max" v-model="filters.altitudeFilter.currentValue.max" class="w-full">
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
@@ -99,7 +99,7 @@ defineProps<{
           {{ t('only_open') }}
         </Toggle> -->
 
-        <Button variant="secondary" @click="$emit('reset')" class="w-full">{{ t('reset') }}</Button>
+        <Button variant="destructive" @click="$emit('reset')" class="w-full">{{ t('reset') }}</Button>
       </div>
     </SheetContent>
   </Sheet>
