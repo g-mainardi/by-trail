@@ -26,17 +26,11 @@ const bivouacSchema = new Schema({
     region: { type: String, required: true },
     mountainRange: { type: String, required: true },
     comune: { type: String, required: true },
-    coords: { 
-        type: [Number], // Expecting [lat, long]
-        required: true, // Remember for later: industry standard for MongoDB is GeoJSON
-        validate: { 
-            validator: function(arr) {  
-                return Array.isArray(arr) && arr.length === 2;  
-            },  
-            message: 'Coordinates must be [latitude, longitude]'  
-        }  
+    coords: {
+        x: { type: Number, required: true },
+        y: { type: Number, required: true },
+        z: { type: Number, required: true },
     },
-    altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
     likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
