@@ -9,7 +9,6 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Maps from '@/pages/Maps.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
-import { useAuthStore } from '@/stores/auth.ts'
 import Bivouacs from './pages/bivouacs/Bivouacs.vue'
 import Settings from './pages/settings/Settings.vue'
 import Signup from './pages/signup/Signup.vue'
@@ -57,15 +56,6 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
-  },
-  {
-    path: '/logout',
-    name: 'Logout',
-    beforeEnter: () => {
-      useAuthStore().logout();
-      return { name: 'Login' };
-    },
-    component: Login
   }
 ];
 

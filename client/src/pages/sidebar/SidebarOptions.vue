@@ -13,6 +13,7 @@ defineProps<{
     title: string
     url: string
     icon?: LucideIcon
+    action?: () => void
   }[]
 }>()
 </script>
@@ -23,7 +24,7 @@ defineProps<{
       <div v-for="item in items" :key="item.title">
         <RouterLink :to="item.url">
           <SidebarMenuItem>
-            <SidebarMenuButton :tooltip="item.title">
+            <SidebarMenuButton :tooltip="item.title" @click="item.action && item.action()">
               <component 
                 :is="item.icon" 
                 v-if="item.icon"
