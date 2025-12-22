@@ -3,10 +3,9 @@ import type { LucideIcon } from "lucide-vue-next";
 
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarMenuItem
 } from '@/components/ui/sidebar';
 
 defineProps<{
@@ -20,14 +19,19 @@ defineProps<{
 
 <template>
   <SidebarGroup>
-    <SidebarGroupLabel>Platform</SidebarGroupLabel>
     <SidebarMenu>
       <div v-for="item in items" :key="item.title">
         <RouterLink :to="item.url">
           <SidebarMenuItem>
             <SidebarMenuButton :tooltip="item.title">
-              <component :is="item.icon" v-if="item.icon"/>
-              <span>{{ item.title }}</span>
+              <component 
+                :is="item.icon" 
+                v-if="item.icon"
+                :class="[item.title === 'Logout' ? 'text-red-500' : 'text-black']"
+              />
+              <span
+                :class="[item.title === 'Logout' ? 'text-red-500' : 'text-black']"
+              >{{ item.title }}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </RouterLink>

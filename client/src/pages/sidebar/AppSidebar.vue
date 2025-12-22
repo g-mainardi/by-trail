@@ -5,13 +5,14 @@ import AppInfo from '@/pages/sidebar/AppInfo.vue'
 import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue'
 import SidebarUser from '@/pages/sidebar/SidebarUser.vue'
 import {
+  Bell,
   LogOutIcon,
   Map,
   MountainSnow,
   Route,
   Settings,
   TentTree,
-  UserRound,
+  UserRound
 } from "lucide-vue-next"
 
 import {
@@ -28,11 +29,6 @@ const props = withDefaults(defineProps<SidebarProps>(), {
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   appInfo: [
     {
       name: "By Trail",
@@ -43,7 +39,7 @@ const data = {
   sidebarOptions: [
     {
       title: "Mappe",
-      url: "#",
+      url: "/maps",
       icon: Map,
     },
     {
@@ -62,7 +58,12 @@ const data = {
       icon: UserRound,
     },
     {
-      title: "Settings",
+      title: 'Notifiche',
+      url: "#",
+      icon: Bell,
+    },
+    {
+      title: "Impostazioni",
       url: "/settings",
       icon: Settings,
     },
@@ -80,12 +81,15 @@ const data = {
     <SidebarHeader>
       <AppInfo :appInfo="data.appInfo" />
     </SidebarHeader>
+
     <SidebarContent>
       <SidebarOptions :items="data.sidebarOptions" />
     </SidebarContent>
+
     <SidebarFooter>
-      <SidebarUser :user="data.user" />
+      <SidebarUser />
     </SidebarFooter>
+    
     <SidebarRail />
   </Sidebar>
 </template>
