@@ -11,6 +11,7 @@ const userSchema = new Schema({
     creationDate: { type: Date, default: Date.now },
     favRegions: { type: [String], default: [] },
     status: { type: String, enum: ['active', 'banned'], default: 'active' },
+    favoritesBivouacs: { type: [mongoose.Schema.Types.ObjectId], ref: 'Bivouac', default: [] },
 });
 
 const adminSchema = new Schema({
@@ -20,7 +21,7 @@ const adminSchema = new Schema({
     creationDate: { type: Date, default: Date.now },
 });
 
-const bivaccoSchema = new Schema({
+const bivouacSchema = new Schema({
     name: { type: String, required: true },
     region: { type: String, required: true },
     mountainRange: { type: String, required: true },
@@ -49,7 +50,7 @@ const imageSchema = new Schema({
 
 const favBivaccoSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    bivacco: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivacco', required: true },
+    bivouac: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivouac', required: true },
 });
 
 const favTrailSchema = new Schema({
@@ -59,7 +60,7 @@ const favTrailSchema = new Schema({
 
 const reservationSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    bivacco: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivacco', required: true },
+    bivouac: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivouac', required: true },
     reservedPlaces: { type: Number, required: true },
     reservationDate: { type: Date, default: Date.now },
 });
@@ -83,7 +84,7 @@ const notifySchema = new Schema({
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
 const Admin = mongoose.model('Admin', adminSchema);
-const Bivacco = mongoose.model('Bivacco', bivaccoSchema);
+const Bivouac = mongoose.model('Bivouac', bivouacSchema);
 const Trail = mongoose.model('Trail', trailSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivacco = mongoose.model('FavBivacco', favBivaccoSchema);
@@ -93,4 +94,4 @@ const Setting = mongoose.model('Setting', settingSchema);
 const Notify = mongoose.model('Notify', notifySchema);
 
 
-export { Admin, Bivacco, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Trail, User };
+export { Admin, Bivouac, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Trail, User };

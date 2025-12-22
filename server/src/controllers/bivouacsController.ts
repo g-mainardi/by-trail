@@ -1,4 +1,4 @@
-import { Bivacco, User } from '../models/models.js';
+import { Bivouac, User } from '../models/models.js';
 
 function isTokenValid(token: string): Promise<boolean> {
   return User.findOne({ apiToken: token })
@@ -14,7 +14,7 @@ export const fetchBivouacs = async (req: any, res: any) => {
     if (!isTokenValid(token)) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
-    const bivouacs = await Bivacco.find().limit(DEFAULT_SIZE_LIMIT).exec();
+    const bivouacs = await Bivouac.find().limit(DEFAULT_SIZE_LIMIT).exec();
     if (!bivouacs) {
       return res.status(404).json({ message: 'No bivouacs found' });
     }
