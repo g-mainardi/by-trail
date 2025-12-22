@@ -9,7 +9,7 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     creationDate: { type: Date, default: Date.now },
-    favRegions: { type: [String], default: [] }, 
+    favRegions: { type: [String], default: [] },
     status: { type: String, enum: ['active', 'banned'], default: 'active' },
 });
 
@@ -26,7 +26,7 @@ const bivaccoSchema = new Schema({
     mountainRange: { type: String, required: true },
     altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
-    likes: { type: Number , default: 0, min: 0 },
+    likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
 });
 
@@ -49,7 +49,7 @@ const imageSchema = new Schema({
 
 const favBivaccoSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    bivacco: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivacco', required: true }, 
+    bivacco: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivacco', required: true },
 });
 
 const favTrailSchema = new Schema({
@@ -72,11 +72,11 @@ const settingSchema = new Schema({
 
 const notifySchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    title: { type: String , required: true },
+    title: { type: String, required: true },
     message: { type: String, required: true },
     date: { type: Date, default: Date.now },
     read: { type: Boolean, default: false },
-    referenceUrl: { type: String }, 
+    referenceUrl: { type: String },
 });
 
 
@@ -90,7 +90,7 @@ const FavBivacco = mongoose.model('FavBivacco', favBivaccoSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
-const Notify = mongoose.model('Notify', notifySchema);  
+const Notify = mongoose.model('Notify', notifySchema);
 
 
-export { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify };
+export { Admin, Bivacco, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Trail, User };

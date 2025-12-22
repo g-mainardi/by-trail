@@ -16,20 +16,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Toggle } from '@/components/ui/toggle';
-import { Bed as BedIcon, Calendar as CalendarIcon, Heart as HeartIcon, Mountain as MountainIcon, Settings2Icon, Toilet as ToiletIcon } from 'lucide-vue-next';
+import { Bed as BedIcon, Mountain as MountainIcon, Settings2Icon } from 'lucide-vue-next';
 import { useI18n } from "vue-i18n";
+import type { Filter } from './Bivouacs.vue';
 const { t } = useI18n()
 
 defineProps<{
   filters: {
-    desiredBeds: number;
-    withToiletsOnly: boolean;
-    favoritesOnly: boolean;
-    minAltitude: number;
-    maxAltitude: number;
-    onlyOpen: boolean;
-  };
+    minDesiredBeds: Filter;
+    altitudeFilter: Filter;
+  }
 }>();
 </script>
 
@@ -51,12 +47,12 @@ defineProps<{
       <!-- Filter options -->
       <div class="flex flex-col px-4">
 
-        <div class="altitude-label flex items-center gap-2 mb-2">
-          <BedIcon :fill="filters.desiredBeds >= 1 ? 'green' : 'none'" :color="filters.desiredBeds >= 1 ? 'green' : 'currentColor'" />
+        <div class="beds-label flex items-center gap-2 mb-2">
+          <BedIcon :fill="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'none'" :color="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'currentColor'" />
           {{ t('set_minimum_beds') }}
         </div>
         <div class="beds-filter flex items-center gap-2">
-          <NumberField id="beds" :default-value="0" :min="0" v-model="filters.desiredBeds" class="w-full">
+          <NumberField id="beds" :default-value="0" :min="0" v-model="filters.minDesiredBeds.currentValue" class="w-full">
             <NumberFieldContent>
               <NumberFieldDecrement />
               <NumberFieldInput />
@@ -67,46 +63,41 @@ defineProps<{
 
         <Separator orientation="horizontal" class="my-4" />
 
-        <Toggle variant="outline" aria-label="With toilets only" v-model="filters.withToiletsOnly" class="w-full">
+        <!-- <Toggle variant="outline" aria-label="With toilets only" v-model="filters.withToiletsOnly" class="w-full">
           <ToiletIcon :fill="filters.withToiletsOnly ? 'blue' : 'none'" :color="filters.withToiletsOnly ? 'blue' : 'currentColor'" />
           {{ t('with_toilets_only') }}
-        </Toggle>
+        </Toggle> -->
 
-        <Separator orientation="horizontal" class="my-4"/>
-
-        <Toggle variant="outline" aria-label="Favorites only" v-model="filters.favoritesOnly" class="w-full">
+        <!-- <Toggle variant="outline" aria-label="Favorites only" v-model="filters.favoritesOnly" class="w-full">
           <HeartIcon :fill="filters.favoritesOnly ? 'red' : 'none'" :color="filters.favoritesOnly ? 'red' : 'currentColor'" />
           {{ t('favorites_only') }}
-        </Toggle>
-
-        <Separator orientation="horizontal" class="my-4"/>
+        </Toggle> -->
 
         <div class="altitude-label flex items-center gap-2 mb-2">
-          <MountainIcon :fill="(filters.minAltitude > 0 || filters.maxAltitude < 5000) ? 'purple' : 'none'" :color="(filters.minAltitude > 0 || filters.maxAltitude < 5000) ? 'purple' : 'currentColor'" />
+          <MountainIcon :fill="(filters.altitudeFilter.currentValue.min > 0 || filters.altitudeFilter.currentValue.max < 5000) ? 'purple' : 'none'" />
           {{ t('set_altitude_range') }}
         </div>
+
         <div class="altitude-filter flex items-center gap-2">
-          <NumberField id="altitude-min" :default-value="0" :min="0" :max="5000" v-model="filters.minAltitude">
+          <NumberField id="altitude-min" :default-value="0" :min="0" :max="5000" v-model="filters.altitudeFilter.currentValue.min" class="w-full">
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
           </NumberField>
           -
-          <NumberField id="altitude-max" :default-value="5000" :min="0" :max="5000" v-model="filters.maxAltitude">
+          <NumberField id="altitude-max" :default-value="5000" :min="0" :max="5000" v-model="filters.altitudeFilter.currentValue.max" class="w-full">
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
           </NumberField>
         </div>
 
-        <Separator orientation="horizontal" class="my-4"/>
-
-        <Toggle variant="outline" aria-label="Only open" v-model="filters.onlyOpen" class="w-full">
+        <Separator orientation="horizontal" class="my-4" />
+        
+        <!-- <Toggle variant="outline" aria-label="Only open" v-model="filters.onlyOpen" class="w-full">
           <CalendarIcon :fill="filters.onlyOpen ? 'orange' : 'none'" :color="filters.onlyOpen ? 'orange' : 'currentColor'" />
           {{ t('only_open') }}
-        </Toggle>
-
-        <Separator orientation="horizontal" class="my-4" />
+        </Toggle> -->
 
         <Button variant="secondary" @click="$emit('reset')" class="w-full">{{ t('reset') }}</Button>
       </div>
