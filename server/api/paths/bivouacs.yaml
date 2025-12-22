@@ -1,0 +1,53 @@
+/bivouacs/list:
+  post:
+    summary: Retrieve a list of bivouacs with optional filtering and pagination
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: User authentication token (mandatory)
+              options:
+                type: object
+                description: Filtering options
+                properties:
+                  region:
+                    type: string
+                    description: Filter bivouacs by region name
+                  favoritesOnly:
+                    type: boolean
+                    description: If true, only return favorite bivouacs
+                  sortByLikes:
+                    type: string
+                    enum: [asc, desc]
+                    description: Sort bivouacs by likes in ascending or descending order
+                  pageSize:
+                    type: integer
+                    description: Number of bivouacs to return per page
+                    default: 50
+              nextPage:
+                type: string
+                format: uuid
+                description: Identifier for the next page of results (for pagination)
+            required:
+              - token
+    responses:
+      "200":
+        description: A list of bivouacs with pagination info
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bivouacs:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Bivouac"
+                nextPage:
+                  type: string
+                  format: uuid
+                  description: Identifier for the next page of results (if more results are available)

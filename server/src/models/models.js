@@ -9,8 +9,9 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     creationDate: { type: Date, default: Date.now },
-    favRegions: { type: [String], default: [] }, 
+    favRegions: { type: [String], default: [] },
     status: { type: String, enum: ['active', 'banned'], default: 'active' },
+    favoritesBivouacs: { type: [mongoose.Schema.Types.ObjectId], ref: 'Bivouac', default: [] },
 });
 
 const adminSchema = new Schema({
@@ -20,24 +21,18 @@ const adminSchema = new Schema({
     creationDate: { type: Date, default: Date.now },
 });
 
-const bivaccoSchema = new Schema({
+const bivouacSchema = new Schema({
     name: { type: String, required: true },
     region: { type: String, required: true },
     mountainRange: { type: String, required: true },
     comune: { type: String, required: true },
-    coords: { 
-        type: [Number], // Expecting [lat, long]
-        required: true, // Remember for later: industry standard for MongoDB is GeoJSON
-        validate: { 
-            validator: function(arr) {  
-                return Array.isArray(arr) && arr.length === 2;  
-            },  
-            message: 'Coordinates must be [latitude, longitude]'  
-        }  
+    coords: {
+        latitude: { type: Number, required: true },
+        longitude: { type: Number, required: true },
+        altitude: { type: Number, required: true },
     },
-    altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
-    likes: { type: Number , default: 0, min: 0 },
+    likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
 });
 
@@ -60,7 +55,7 @@ const imageSchema = new Schema({
 
 const favBivaccoSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    bivacco: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivacco', required: true }, 
+    bivouac: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivouac', required: true },
 });
 
 const favTrailSchema = new Schema({
@@ -70,7 +65,7 @@ const favTrailSchema = new Schema({
 
 const reservationSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    bivacco: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivacco', required: true },
+    bivouac: { type: mongoose.Schema.Types.ObjectId, ref: 'Bivouac', required: true },
     reservedPlaces: { type: Number, required: true },
     reservationDate: { type: Date, default: Date.now },
 });
@@ -83,25 +78,25 @@ const settingSchema = new Schema({
 
 const notifySchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    title: { type: String , required: true },
+    title: { type: String, required: true },
     message: { type: String, required: true },
     date: { type: Date, default: Date.now },
     read: { type: Boolean, default: false },
-    referenceUrl: { type: String }, 
+    referenceUrl: { type: String },
 });
 
 
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
 const Admin = mongoose.model('Admin', adminSchema);
-const Bivacco = mongoose.model('Bivacco', bivaccoSchema);
+const Bivouac = mongoose.model('Bivouac', bivouacSchema);
 const Trail = mongoose.model('Trail', trailSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivacco = mongoose.model('FavBivacco', favBivaccoSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
-const Notify = mongoose.model('Notify', notifySchema);  
+const Notify = mongoose.model('Notify', notifySchema);
 
 
-export { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify };
+export { Admin, Bivouac, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Trail, User };

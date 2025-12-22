@@ -1,4 +1,4 @@
-import { HttpHelper } from '@/stores/httpHelper';
+import { HttpHelper } from '@/stores/utility/httpHelper';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -36,12 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     isLoading.value = true;
     try {
-      const res = await fetch('/api/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${token.value}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const res = await httpHelper.get('/users/profile');
 
       if (!res.ok) {
         // If token is invalid (401), force logout
@@ -73,15 +68,7 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
 
     try {
-      const res = await fetch('/api/users/profile', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token.value}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updateData),
-      });
-
+      const res = await httpHelper.put('/users/profile', updateData);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || 'Update failed');

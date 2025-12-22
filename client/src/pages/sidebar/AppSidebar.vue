@@ -6,13 +6,13 @@ import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue'
 import SidebarUser from '@/pages/sidebar/SidebarUser.vue'
 import {
   Bell,
-  LogOut,
+  LogOutIcon,
   Map,
   MountainSnow,
   Route,
   Settings,
   TentTree,
-  UserRound,
+  UserRound
 } from "lucide-vue-next"
 
 import {
@@ -22,10 +22,16 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import { useAuthStore } from '@/stores/auth.ts'
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: "icon",
 })
+
+const handleLogout = () => {
+  const authStore = useAuthStore();
+  authStore.logout();
+}
 
 // This is sample data.
 const data = {
@@ -41,37 +47,44 @@ const data = {
       title: "Mappe",
       url: "/maps",
       icon: Map,
+      action: () => {}
     },
     {
       title: "Percorsi",
       url: "#",
       icon: Route,
+      action: () => {}
     },
     {
       title: "Bivacchi e Rifugi",
       url: "/bivouacs",
       icon: TentTree,
+      action: () => {}
     },
     {
       title: 'Profilo',
       url: '/profile',
       icon: UserRound,
+      action: () => {}
     },
     {
       title: 'Notifiche',
       url: "#",
       icon: Bell,
+      action: () => {}
     },
     {
       title: "Impostazioni",
       url: "/settings",
       icon: Settings,
+      action: () => {}
     },
     {
       title: "Logout",
       url: "#",
-      icon: LogOut,
-    }
+      icon: LogOutIcon,
+      action: handleLogout
+    },
   ],
 }
 </script>

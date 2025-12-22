@@ -7,9 +7,9 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
-import { ArrowUpRight as ArrowUpRightIcon, Eye as EyeIcon, Heart as HeartIcon } from 'lucide-vue-next';
+import type { Bivouac } from '@/stores/bivouacs';
+import { ArrowUpRight as ArrowUpRightIcon, Eye as EyeIcon } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import type { Bivouac } from './Bivouacs.vue';
 const { t } = useI18n()
 
 const hoodHousePath = new URL('@/assets/trekking_hood_house.png', import.meta.url).href;
@@ -28,20 +28,14 @@ const props = defineProps<{
 const bivouac = props.bivouac;
 
 function getIconPath() {
-  switch (props.bivouac.type) {
-    case 'bivouac': return hoodHousePath;
-    case 'refuge': return mountainHouse;
-    case 'cliff-house': return cliffHouseIcon;
-    case 'tent-site': return tentSiteIcon;
-    default: return hoodHousePath;
-  }
+  return hoodHousePath;
 }
 </script>
 
 <template>
   <Card class="gap-2 p-4">
     <CardTitle class="flex items-center gap-4">
-      <ThiigsIcon :alt="props.bivouac.type + ' icon'" :path="getIconPath()" :size="6" />
+      <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="6" />
       <h1 class="text-2xl font-bold">
         {{ bivouac.name }}
       </h1>
@@ -49,7 +43,7 @@ function getIconPath() {
     <CardContent class="flex flex-col md:flex-row gap-4 justify-between p-0">
       <!-- Description -->
       <span class="description text-sm md:text-base flex-1 flex items-center">
-        {{ bivouac.description }}
+        {{ bivouac.note }}
       </span>
       <div class="icons-wrapper p-2 flex justify-evenly gap-2">
         <div class="icon1 flex flex-col">
@@ -60,7 +54,7 @@ function getIconPath() {
           <ThiigsIcon :path="beds" :size="4" />
           <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
         </div>
-        <div class="icon3 flex flex-col">
+        <!-- <div class="icon3 flex flex-col">
           <ThiigsIcon :path="toilet" :size="4" />
           <span class="text-center font-mono text-sm">
             {{ bivouac.hasToilets ? t('yes') : t('no') }}
@@ -71,7 +65,7 @@ function getIconPath() {
           <span class="text-center font-mono text-sm">
             {{ bivouac.isOpen ? t('open') : t('closed') }}
           </span>
-        </div>
+        </div> -->
       </div>
     </CardContent>
     <CardFooter class="flex gap-2 px-0">
@@ -79,13 +73,13 @@ function getIconPath() {
         <EyeIcon />
         <span class="hidden md:inline">{{ t('view') }}</span>
       </Button>
-      <Button variant="secondary" class="flex-1" @click="$emit('toggle-favorite', bivouac.id)">
+      <!-- <Button variant="secondary" class="flex-1" @click="$emit('toggle-favorite', bivouac._id)">
         <HeartIcon
           :fill="bivouac.favorite ? 'red' : 'none'"
           :color="bivouac.favorite ? 'red' : 'currentColor'"
         />
         <span class="hidden md:inline">{{ t('favorite') }}</span>
-      </Button>
+      </Button> -->
       <Button variant="outline" class="flex-1">
         <ArrowUpRightIcon />
         <span class="hidden md:inline">{{ t('plan') }}</span>

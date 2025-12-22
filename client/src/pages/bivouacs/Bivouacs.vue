@@ -1,69 +1,73 @@
 <script setup lang="ts">
+import { useBivouacStore, type Bivouac, type BivouacResponse } from '@/stores/bivouacs';
 import { computed, ref } from 'vue';
 import BivouacCard from './BivouacCard.vue';
 import FilterBar from './FilterBar.vue';
 
-export interface Bivouac {
-  id: number;
-  name: string;
-  description: string;
-  favorite: boolean;
-  type: 'bivouac' | 'refuge' | 'cliff-house' | 'tent-site';
-  altitude?: number;
-  capacity?: number;
-  hasToilets?: boolean;
-  openDate?: Date;
-  closeDate?: Date;
-  isOpen?: boolean;
-}
+const bivouacStore = useBivouacStore();
+const bivouacsResponse = ref<BivouacResponse>(
+  await bivouacStore.fetchBivouacs().catch(error => {
+    console.error('Error fetching bivouacs:', error);
+    return { bivouacs: [] };
+  })
+);
 
+const bivouacs = ref<Bivouac[]>(bivouacsResponse.value.bivouacs);
 
-let bivouacs = ref<Bivouac[]>([
-  { id: 1, name: 'Bivacco Alpha', description: 'A cozy bivacco in the mountains. This is a great place to relax and enjoy nature.', favorite: true, type: 'bivouac', altitude: 1500, capacity: 10, hasToilets: true, openDate: new Date('2024-06-01'), closeDate: new Date('2024-09-30') },
-  { id: 2, name: 'Rifugio Beta', description: 'A scenic bivacco near the lake. This is a great place to relax and enjoy nature.', favorite: false, type: 'refuge', altitude: 1200, capacity: 20, hasToilets: true },
-  { id: 3, name: 'Rifugio Gamma', description: 'A rustic bivacco in the forest.', favorite: true, type: 'refuge', altitude: 900, capacity: 15, hasToilets: false, openDate: new Date('2024-05-15'), closeDate: new Date('2024-10-15') },
-  { id: 4, name: 'Bivacco Delta', description: 'A modern bivacco with all amenities.', favorite: false, type: 'bivouac', altitude: 1800, capacity: 25, hasToilets: true },
-  { id: 5, name: 'Cliff House Epsilon', description: 'A cliff-side bivacco with stunning views.', favorite: false, type: 'cliff-house', altitude: 2000, capacity: 8, hasToilets: false },
-  { id: 6, name: 'Tent Site Zeta', description: 'A spacious tent site surrounded by nature.', favorite: true, type: 'tent-site', altitude: 1100, capacity: 30, hasToilets: true },
-  { id: 7, name: 'Bivacco Eta', description: 'A hidden gem bivacco in the hills.', favorite: false, type: 'bivouac', altitude: 1300, capacity: 12, hasToilets: false },
-  { id: 8, name: 'Rifugio Theta', description: 'A charming bivacco with friendly staff.', favorite: true, type: 'refuge', altitude: 1000, capacity: 18, hasToilets: true }
-]);
-
-bivouacs.value.forEach(bivouac => {
-  bivouac.isOpen = isOpen(bivouac.openDate!, bivouac.closeDate!);
-});
-
-function isOpen(openDate: Date, closeDate: Date): boolean {
-  const today = new Date();
-  if (!openDate || !closeDate) {
-    return true; // Always open if no dates defined
+async function fetchNextPage() {  
+  if (!bivouacsResponse.value.nextPage) {  
+    return;  
   }
-  return today >= openDate && today <= closeDate;
+  try {  
+    const response = await bivouacStore.fetchBivouacs({}, bivouacsResponse.value.nextPage);  
+    bivouacs.value.push(...response.bivouacs);
+    bivouacsResponse.value.nextPage = response.nextPage;  
+  } catch (error) {  
+    console.error('Error fetching next page of bivouacs:', error);  
+  }  
 }
 
 function toggleFavorite(bivouacId: number) {
-  const bivouac = bivouacs.value.find(b => b.id === bivouacId);
-  if (bivouac) {
-    bivouac.favorite = !bivouac.favorite;
-  }
+  // TODO
+  console.log('Not implemented yet: toggleFavorite for bivouacId', bivouacId);
 }
 
+export interface Filter {
+  currentValue?: any;
+  default: any;
+  predicate: (bivouac: Bivouac, value: any) => boolean;
+}
+
+const minDesiredBeds: Filter = {
+  currentValue: 0,
+  default: 0,
+  predicate: (bivouac: Bivouac, value: any) => {
+    return bivouac.capacity !== undefined ? bivouac.capacity >= value : true;
+  },
+};
+
+const altitudeFilter: Filter = {
+  currentValue: { min: 0, max: 10000 },
+  default: { min: 0, max: 10000 },
+  predicate: (bivouac: Bivouac, value: any) => {
+    const altitude = bivouac.coords?.altitude;
+    if (altitude !== undefined) {
+      return altitude >= value.min 
+        && altitude <= value.max;
+    }
+    return true;
+  },
+};
+
 const filters = ref({
-  desiredBeds: 0,
-  withToiletsOnly: false,
-  favoritesOnly: false,
-  minAltitude: 0,
-  maxAltitude: 5000,
-  onlyOpen: false,
-});
+  minDesiredBeds: minDesiredBeds,
+  altitudeFilter: altitudeFilter,
+})
 
 function resetFilters() {
-  filters.value.desiredBeds = 0;
-  filters.value.withToiletsOnly = false;
-  filters.value.favoritesOnly = false;
-  filters.value.minAltitude = 0;
-  filters.value.maxAltitude = 5000;
-  filters.value.onlyOpen = false;
+  Object.values(filters.value).forEach(filter => {
+    filter.currentValue = JSON.parse(JSON.stringify(filter.default));
+  });
 }
 
 /**
@@ -73,27 +77,7 @@ function resetFilters() {
  */
 const filteredBivouacs = computed(() => {
   return bivouacs.value.filter(bivouac => {
-    if (bivouac.capacity !== undefined && bivouac.capacity < filters.value.desiredBeds) {
-      return false;
-    }
-
-    if (filters.value.withToiletsOnly && !bivouac.hasToilets) {
-      return false;
-    }
-
-    if (filters.value.favoritesOnly && !bivouac.favorite) {
-      return false;
-    }
-
-    if (bivouac.altitude !== undefined) {
-      if (bivouac.altitude < filters.value.minAltitude || bivouac.altitude > filters.value.maxAltitude) {
-        return false;
-      }
-    }
-    if (filters.value.onlyOpen) {
-      return bivouac.isOpen;
-    }
-    return true;
+    return Object.values(filters.value).every(filter => filter.predicate(bivouac, filter.currentValue));
   });
 });
 </script>
@@ -102,7 +86,7 @@ const filteredBivouacs = computed(() => {
   <div class="bar flex items-center">
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
-  <div v-for="bivouac in filteredBivouacs" :key="bivouac.id">
+  <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
     <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
   </div>
 </template>

@@ -13,11 +13,21 @@ const center = ref([46.3133334, 11.9787921]);
 const bivaccos = ref([
   {
     name: 'Bivacco Bedin',
-    coords: [46.3133334, 11.9787921],
+    // coords: [46.3133334, 11.9787921],
+    coords: {
+      x: 46.3133334,
+      y: 11.9787921,
+      z: 2000
+    }
   },
   {
     name: 'Bivacco Giacomelli alla Madonnina',
-    coords: [45.9710000, 11.1860000],
+    // coords: [45.9710000, 11.1860000],
+    coords: {
+      x: 45.9710000,
+      y: 11.1860000,
+      z: 1800
+    }
   }
 ]);
 const iconUrl = bivaccoIcon;
@@ -32,7 +42,7 @@ const iconSize = [25, 25];
     >
     </l-tile-layer>
 
-    <l-marker v-for="bivacco in bivaccos" :key="bivacco.name" :lat-lng="bivacco.coords">
+    <l-marker v-for="bivacco in bivaccos" :key="bivacco.name" :lat-lng="[bivacco.coords.x, bivacco.coords.y]">
       <l-icon
         :icon-url="iconUrl"
         :icon-size="iconSize"  
