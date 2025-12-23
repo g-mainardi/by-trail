@@ -2,6 +2,7 @@
 import bivaccoIcon from '@/assets/bivacco.png'; /* @attribution: <a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a> */
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import { LIcon, LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet';
+import { useDebounceFn } from '@vueuse/core';
 import type { LatLng, Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ref } from 'vue';
@@ -19,22 +20,24 @@ const onMapReady = (map: Map) => {
   logBounds();
 };
 
-const logBounds = () => {
+const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
+  try {
+    bivouacs.value = await useBivouacStore().fetchMapBivouacs(northWest, southEast);
+  } catch (error) {
+    console.error('Error fetching map bivouacs:', error);
+  }
+};
+
+const debouncedFetchBivouacs = useDebounceFn(() => {
   if (!mapRef.value) return;
   const bounds = mapRef.value.getBounds();
   const northWest = bounds.getNorthWest();
   const southEast = bounds.getSouthEast();
   fetchMapBivouacs(northWest, southEast);
-};
+}, 500);
 
-const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
-  try {
-    await useBivouacStore()
-      .fetchMapBivouacs(northWest, southEast)
-      .then((res) => { bivouacs.value = res; });
-  } catch (error) {
-    console.error('Error fetching map bivouacs:', error);
-  }
+const logBounds = () => {
+  debouncedFetchBivouacs();
 };
 </script>
 

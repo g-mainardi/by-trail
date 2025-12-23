@@ -32,7 +32,7 @@ export interface Bivouac {
   name: string;
   region: string;
   mountainRange: string;
-  comune?: string;
+  comune: string;
   coords: {
     latitude: number;
     longitude: number;
@@ -83,10 +83,10 @@ export const useBivouacStore = defineStore('bivouacs', () => {
       bottomRightCoords: { lat: southEast.lat, lng: southEast.lng }
     };
     const res = await httpHelper.post('/bivouacs/map', body);
-    const data = await res.json();
     if (!res.ok) {
       throw new Error('Failed to fetch map bivouacs');
-    };
+    }
+    const data = await res.json();
     return data.bivouacs as Bivouac[];
   }
 
