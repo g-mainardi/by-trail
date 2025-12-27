@@ -1,10 +1,9 @@
 import fs from 'fs';
 import mongoose from "mongoose";
 import path from 'path';
+import { getDbConfig } from './src/config/db.js';
 
-import { Bivacco, User } from './src/models/models.js';
-
-const MONGO_URI_LOCAL = 'mongodb://localhost:27017/by_trail'
+import { Bivacco, } from './src/models/models.js';
 
 const loadData = (fileName) => {
     try {
@@ -20,16 +19,24 @@ const loadData = (fileName) => {
 
 const seedData = async () => {
     try {
-        await mongoose.connect(MONGO_URI_LOCAL);
+        const { uri, type } = getDbConfig();
 
-        const usersData = loadData('users.json');
+        if (type === 'ATLAS') {
+            console.log("Target: MongoDB Atlas");
+        } else {
+            console.log("Target: Local MongoDB");
+        }
+
+        await mongoose.connect(uri);
+
         const bivaccosData = loadData('bivaccos.json');
 
-        await User.deleteMany({});
-        await Bivacco.deleteMany({});
+        if (!bivaccosData.bivaccos) {
+            throw new Error("JSON files missing 'bivaccos' keys.");
+        }
 
-        const users = await User.insertMany(usersData.users);
-        const bivaccos = await Bivacco.insertMany(bivaccosData.bivaccos);
+        await Bivacco.deleteMany({});
+        await Bivacco.insertMany(bivaccosData.bivaccos);
 
         await mongoose.connection.close();
         process.exit(0);

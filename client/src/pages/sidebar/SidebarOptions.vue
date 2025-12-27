@@ -13,6 +13,7 @@ defineProps<{
     title: string
     url: string
     icon?: LucideIcon
+    color?: string
     action?: () => void
   }[]
 }>()
@@ -28,11 +29,9 @@ defineProps<{
               <component 
                 :is="item.icon" 
                 v-if="item.icon"
-                :class="[item.title === 'Logout' ? 'text-red-500' : 'text-black']"
+                :class="item.color || 'text-black'"
               />
-              <span
-                :class="[item.title === 'Logout' ? 'text-red-500' : 'text-black']"
-              >{{ item.title }}</span>
+              <span :class="item.color || 'text-black'">{{ item.title }}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </RouterLink>
