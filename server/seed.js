@@ -1,23 +1,9 @@
 import fs from 'fs';
 import mongoose from "mongoose";
 import path from 'path';
+import { getDbConfig } from './src/config/db.js';
 
 import { Bivacco, } from './src/models/models.js';
-
-const getMongoURI = () => {
-    
-    console.log("USE_ATLAS is:", process.env.USE_ATLAS);
-    const withAtlas = process.env.USE_ATLAS === "true";
-    const secretPath = process.env.MONGO_URI_FILE;
-
-    if (withAtlas && secretPath && fs.existsSync(secretPath)) {
-        console.log("Target: MongoDB Atlas");
-        return fs.readFileSync(secretPath, 'utf8').trim();
-    }
-    
-    console.log("Target: Local MongoDB");
-    return process.env.MONGO_URI_LOCAL;
-}
 
 const loadData = (fileName) => {
     try {
@@ -33,7 +19,14 @@ const loadData = (fileName) => {
 
 const seedData = async () => {
     try {
-        const uri = getMongoURI();
+        const { uri, type } = getDbConfig();
+
+        if (type === 'ATLAS') {
+            console.log("Target: MongoDB Atlas");
+        } else {
+            console.log("Target: Local MongoDB");
+        }
+
         await mongoose.connect(uri);
 
         const bivaccosData = loadData('bivaccos.json');
