@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth.ts'
+import { useI18n } from 'vue-i18n';
+
 import type { SidebarProps } from '@/components/ui/sidebar'
 
 import AppInfo from '@/pages/sidebar/AppInfo.vue'
@@ -22,7 +26,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { useAuthStore } from '@/stores/auth.ts'
+
+const { t } = useI18n();
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: "icon",
@@ -34,7 +39,7 @@ const handleLogout = () => {
 }
 
 // This is sample data.
-const data = {
+const data = computed(() => ({
   appInfo: [
     {
       name: "By Trail",
@@ -44,49 +49,50 @@ const data = {
   ],
   sidebarOptions: [
     {
-      title: "Mappe",
+      title: t("maps"),
       url: "/maps",
       icon: Map,
       action: () => {}
     },
     {
-      title: "Percorsi",
+      title: t("routes"),
       url: "#",
       icon: Route,
       action: () => {}
     },
     {
-      title: "Bivacchi e Rifugi",
+      title: t("bivouacs"),
       url: "/bivouacs",
       icon: TentTree,
       action: () => {}
     },
     {
-      title: 'Profilo',
+      title: t("profile"),
       url: '/profile',
       icon: UserRound,
       action: () => {}
     },
     {
-      title: 'Notifiche',
+      title: t("notifications"),
       url: "#",
       icon: Bell,
       action: () => {}
     },
     {
-      title: "Impostazioni",
+      title: t("settings"),
       url: "/settings",
       icon: Settings,
       action: () => {}
     },
     {
-      title: "Logout",
+      title: t("logout"),
       url: "#",
       icon: LogOutIcon,
-      action: handleLogout
+      color: "text-red-500",
+      action: handleLogout,
     },
   ],
-}
+}));
 </script>
 
 <template>
@@ -106,3 +112,35 @@ const data = {
     <SidebarRail />
   </Sidebar>
 </template>
+
+<i18n>
+{
+  "en": {
+    "maps": "Maps",
+    "routes": "Routes",
+    "bivouacs": "Bivouacs & Shelters",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "it": {
+    "maps": "Mappe",
+    "routes": "Percorsi",
+    "bivouacs": "Bivacchi e Rifugi",
+    "profile": "Profilo",
+    "notifications": "Notifiche",
+    "settings": "Impostazioni",
+    "logout": "Esci"
+  },
+  "es": {
+    "maps": "Mapas",
+    "routes": "Rutas",
+    "bivouacs": "Vivacs y Refugios",
+    "profile": "Perfil",
+    "notifications": "Notificaciones",
+    "settings": "Ajustes",
+    "logout": "Cerrar sesión"
+  }
+}
+</i18n>

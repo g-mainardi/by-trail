@@ -6,7 +6,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import App from '@/App.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-import Maps from '@/pages/Maps.vue'
+import Maps from '@/pages/maps/Maps.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
 import Bivouacs from './pages/bivouacs/Bivouacs.vue'
