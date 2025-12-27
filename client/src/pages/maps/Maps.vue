@@ -1,48 +1,67 @@
-<script lang="ts">
-export const description = "Map displaying bivaccos and trails icons"
-</script>
-
 <script setup lang="ts">
 import bivaccoIcon from '@/assets/bivacco.png'; /* @attribution: <a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a> */
+import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import { LIcon, LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet';
+import { useDebounceFn } from '@vueuse/core';
+import type { LatLng, Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ref } from 'vue';
 
-const zoom = ref(13);
-const center = ref([46.3133334, 11.9787921]);
-const bivaccos = ref([
-  {
-    name: 'Bivacco Bedin',
-    // coords: [46.3133334, 11.9787921],
-    coords: {
-      x: 46.3133334,
-      y: 11.9787921,
-      z: 2000
-    }
-  },
-  {
-    name: 'Bivacco Giacomelli alla Madonnina',
-    // coords: [45.9710000, 11.1860000],
-    coords: {
-      x: 45.9710000,
-      y: 11.1860000,
-      z: 1800
-    }
-  }
-]);
+const zoom = ref(6);
+const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
+
+const bivouacs = ref<Bivouac[]>([]);
 const iconUrl = bivaccoIcon;
-const iconSize = [25, 25];
+const iconSize: [number, number] = [25, 25];
+
+const mapRef = ref<Map | null>(null);
+const onMapReady = (map: Map) => {
+  mapRef.value = map;
+  logBounds();
+};
+
+const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
+  try {
+    bivouacs.value = await useBivouacStore().fetchMapBivouacs(northWest, southEast);
+  } catch (error) {
+    console.error('Error fetching map bivouacs:', error);
+  }
+};
+
+const debouncedFetchBivouacs = useDebounceFn(() => {
+  if (!mapRef.value) return;
+  const bounds = mapRef.value.getBounds();
+  const northWest = bounds.getNorthWest();
+  const southEast = bounds.getSouthEast();
+  fetchMapBivouacs(northWest, southEast);
+}, 500);
+
+const logBounds = () => {
+  debouncedFetchBivouacs();
+};
 </script>
 
 <template>
-  <l-map v-model:zoom="zoom" :center="center" :useGlobalLeaflet="false" class="w-full h-full z-0">
+  <l-map 
+    v-model:zoom="zoom" 
+    v-model:center="center"
+    :useGlobalLeaflet="false" 
+    class="w-full h-full z-0"
+    @ready="onMapReady"
+    @update:zoom="logBounds"
+    @update:center="logBounds"
+  >
     <l-tile-layer
       url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=ab8e9f716fab4870bb4378fa9dc9d11c"
       attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
     >
     </l-tile-layer>
 
-    <l-marker v-for="bivacco in bivaccos" :key="bivacco.name" :lat-lng="[bivacco.coords.x, bivacco.coords.y]">
+    <l-marker 
+      v-for="bivacco in bivouacs" 
+      :key="bivacco._id" 
+      :lat-lng="[bivacco.coords.latitude, bivacco.coords.longitude]"
+    >
       <l-icon
         :icon-url="iconUrl"
         :icon-size="iconSize"  

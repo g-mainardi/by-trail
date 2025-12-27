@@ -1,4 +1,5 @@
 import { HttpHelper } from '@/stores/utility/httpHelper';
+import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -12,11 +13,12 @@ type UUID = string;
 //   region: string;
 //   type: 'bivouac' | 'refuge';
 //   mountainRange?: string; // ???
+//   comune: string;
 //   position: {
 //     latitude: number;
 //     longitude: number;
-//     altitude: number;
 //   }
+//   altitude: number;
 //   capacity: number;
 //   openDate?: Date;
 //   closeDate?: Date;
@@ -31,11 +33,12 @@ export interface Bivouac {
   name: string;
   region: string;
   mountainRange: string;
+  comune: string;
   coords: {
-    latitude: Number,
-    longitude: Number,
-    altitude: Number,
+    latitude: number;
+    longitude: number;
   }
+  altitude: number;
   capacity: number;
   likes: number;
   note?: string;
@@ -74,6 +77,20 @@ export const useBivouacStore = defineStore('bivouacs', () => {
     return data as BivouacResponse;
   }
 
-  return { fetchBivouacs };
+  async function fetchMapBivouacs(northWest: LatLng, southEast: LatLng):
+    Promise<Bivouac[]> {
+    const body = {
+      topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
+      bottomRightCoords: { lat: southEast.lat, lng: southEast.lng }
+    };
+    const res = await httpHelper.post('/bivouacs/map', body);
+    if (!res.ok) {
+      throw new Error('Failed to fetch map bivouacs');
+    }
+    const data = await res.json();
+    return data.bivouacs as Bivouac[];
+  }
+
+  return { fetchBivouacs, fetchMapBivouacs };
 
 });
