@@ -50,7 +50,7 @@ const altitudeFilter: Filter = {
   currentValue: { min: 0, max: 10000 },
   default: { min: 0, max: 10000 },
   predicate: (bivouac: Bivouac, value: any) => {
-    const altitude = bivouac.coords?.altitude;
+    const altitude = bivouac.altitude;
     if (altitude !== undefined) {
       return altitude >= value.min 
         && altitude <= value.max;

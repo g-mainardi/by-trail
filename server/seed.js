@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import path from 'path';
 import { getDbConfig } from './src/config/db.js';
 
-import { Bivacco, } from './src/models/models.js';
+import { Bivouac } from './src/models/models.js';
 
 const loadData = (fileName) => {
     try {
@@ -29,14 +29,14 @@ const seedData = async () => {
 
         await mongoose.connect(uri);
 
-        const bivaccosData = loadData('bivaccos.json');
+        const bivouacsData = loadData('bivaccos.json');
 
-        if (!bivaccosData.bivaccos) {
-            throw new Error("JSON files missing 'bivaccos' keys.");
+        if (!bivouacsData.bivouacs) {
+            throw new Error("JSON files missing 'bivouacs' keys.");
         }
 
-        await Bivacco.deleteMany({});
-        await Bivacco.insertMany(bivaccosData.bivaccos);
+        await Bivouac.deleteMany({});
+        await Bivouac.insertMany(bivouacsData.bivouacs);
 
         await mongoose.connection.close();
         process.exit(0);

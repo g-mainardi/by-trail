@@ -7,8 +7,8 @@ import type { LatLng, Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ref } from 'vue';
 
-const zoom = ref(7);
-const center = ref<[number, number]>([45.0703, 7.6869]); // Turin
+const zoom = ref(6);
+const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 
 const bivouacs = ref<Bivouac[]>([]);
 const iconUrl = bivaccoIcon;

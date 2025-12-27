@@ -13,11 +13,12 @@ type UUID = string;
 //   region: string;
 //   type: 'bivouac' | 'refuge';
 //   mountainRange?: string; // ???
+//   comune: string;
 //   position: {
 //     latitude: number;
 //     longitude: number;
-//     altitude: number;
 //   }
+//   altitude: number;
 //   capacity: number;
 //   openDate?: Date;
 //   closeDate?: Date;
@@ -36,8 +37,8 @@ export interface Bivouac {
   coords: {
     latitude: number;
     longitude: number;
-    altitude: number;
   }
+  altitude: number;
   capacity: number;
   likes: number;
   note?: string;
