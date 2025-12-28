@@ -1,8 +1,9 @@
-import express from 'express'
 import cors from 'cors';
+import express from 'express';
 import connectDB from './src/config/db.js';
-import { mainRoutes } from './src/routes/mainRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
+import bivouacsRoutes from './src/routes/bivouacsRoutes.ts';
+import { mainRoutes } from './src/routes/mainRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
 
 // Environment variables setup
@@ -31,6 +32,7 @@ app.use(cors({
 app.use('/api', mainRoutes);      // Public/Generic routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
+app.use('/api/bivouacs', bivouacsRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server listening at: http://localhost:${PORT}/`);

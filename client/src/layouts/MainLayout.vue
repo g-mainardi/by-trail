@@ -11,8 +11,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import Spinner from "@/components/ui/spinner/Spinner.vue";
 import AppSidebar from "@/pages/sidebar/AppSidebar.vue";
-import { computed } from 'vue';
+import { computed, Suspense } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -38,10 +39,15 @@ const pageName = computed(() => route.name ? route.name.toString() : 'Home');
         </Breadcrumb>
       </div>
 
-      <Separator orientation="horizontal" />
-
-      <div class="flex flex-1 flex-col gap-4 pt-0">
-         <RouterView />
+      <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <Suspense>
+          <template #default>
+            <RouterView />
+          </template>
+          <template #fallback>
+            <Spinner />
+          </template>
+        </Suspense>
       </div>
     </SidebarInset>
   </SidebarProvider>

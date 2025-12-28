@@ -1,5 +1,4 @@
 import express from 'express';
-import { User, Admin, Bivacco, Trail, Image, FavBivacco, FavTrail, Reservation, Setting, Notify } from '../models/models.js';
 
 export const mainRoutes = express.Router();
 

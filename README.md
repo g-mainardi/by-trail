@@ -56,6 +56,17 @@
         docker compose --profile local-db down -v
         ```
 
+## Database Inizialization
+This project uses a seeding script to populate the database with initial users and bivaccos. The script automatically detects whether to use Local MongoDB or MongoDB Atlas based on your `.env` configuration.
+
+    - Ensure your Docker containers are running
+
+    - Run the seeding script inside the server container:
+        
+        ```bash
+        docker exec -it by-trail-server node seed.js
+        ```
+        
 ## Commit Message Linting
 
 This project uses Commitlint to enforce conventional commit messages. Make sure to follow the commit message guidelines when making changes.
