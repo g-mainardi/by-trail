@@ -5,7 +5,7 @@ import { LIcon, LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leafl
 import { useDebounceFn } from '@vueuse/core';
 import type { LatLng, Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
@@ -13,6 +13,10 @@ const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 const bivouacs = ref<Bivouac[]>([]);
 const iconUrl = bivaccoIcon;
 const iconSize: [number, number] = [25, 25];
+
+const tileLayerUrl = computed(() => {
+  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`
+})
 
 const mapRef = ref<Map | null>(null);
 const onMapReady = (map: Map) => {
@@ -52,7 +56,7 @@ const logBounds = () => {
     @update:center="logBounds"
   >
     <l-tile-layer
-      url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=ab8e9f716fab4870bb4378fa9dc9d11c"
+      :url="tileLayerUrl"
       attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
     >
     </l-tile-layer>
