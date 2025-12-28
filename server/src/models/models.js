@@ -76,12 +76,17 @@ const settingSchema = new Schema({
     language: { type: String, default: 'en' },
 });
 
-const notifySchema = new Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    title: { type: String, required: true },
-    message: { type: String, required: true },
-    date: { type: Date, default: Date.now },
-    read: { type: Boolean, default: false },
+const notificationSchema = new Schema({
+    recipient: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    type: { type: String, enum: ['bivouac_reservation', 'bivouac_update', 'route_reservation'], required: true },
+    data: { // flexible container: stores any structure
+        type: mongoose.Schema.Types.Mixed, // allows any JSON object
+        required: true 
+    },
+    title: { type: String },
+    body: { type: String },
+    createdAt: { type: Date, default: Date.now },
+    isRead: { type: Boolean, default: false },
     referenceUrl: { type: String },
 });
 
@@ -96,7 +101,7 @@ const FavBivacco = mongoose.model('FavBivacco', favBivaccoSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
-const Notify = mongoose.model('Notify', notifySchema);
+const Notify = mongoose.model('Notify', notificationSchema);
 
 
 export { Admin, Bivouac, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Trail, User };
