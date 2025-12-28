@@ -2,21 +2,29 @@
 
 ## Setup and Run
 
-1. (to run with remote DB) Set up Docker secret for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:
+1. Setup secrets files by creating a directory named `secrets/` in the project root and adding the following files:
 
-    ```text
-   mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0    
-   ```
+    - (to run with remote DB) `mongo_atlas_uri.txt` for MongoDB Atlas with a valid URI connection string:
 
-2. Set up Docker secret for JWT secret by creating a file named `jwt_secret.txt` in the same `secrets/` directory with a strong secret key:
+        ```text
+        mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0    
+        ```
 
-    ```text
-   your_strong_jwt_secret_key_here
-   ```
+    - `jwt_secret.txt` for JWT with a strong secret key:
 
-3. Copy `.env.example`, rename it to `.env` and modify it as needed, or else default values will be used.
+        ```text
+        your_strong_jwt_secret_key_here
+        ```
 
-4. Start the application using Docker Compose:
+    - `thunderforest_map_key.txt` for Thunderforest Map with a valid API key:
+
+        ```text
+        your_thunderforest_map_api_key_here
+        ```
+
+2. Copy `.env.example`, rename it to `.env` and modify it as needed, or else default values will be used.
+
+3. Start the application using Docker Compose:
 
     - Remote (with `USE_ATLAS=true`)
 
@@ -30,11 +38,11 @@
         docker compose --profile local-db up -d
         ```
 
-5. Access:
+4. Access:
    - Local Database structure at [http://localhost:8081](http://localhost:8081).
    - Main Application at the port you have specified (default is '5173') [http://localhost:5173](http://localhost:5173).
 
-6. To stop services and delete volumes, run:
+5. To stop services and delete volumes, run:
 
     - Remote (with `USE_ATLAS=true`)
 
