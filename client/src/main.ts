@@ -6,9 +6,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import App from '@/App.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-import Maps from '@/pages/maps/Maps.vue'
 import Login from '@/pages/login/Login.vue'
+import Maps from '@/pages/maps/Maps.vue'
 import Profile from '@/pages/profile/Profile.vue'
+import Admin from './pages/admin/Admin.vue'
 import Bivouacs from './pages/bivouacs/Bivouacs.vue'
 import Settings from './pages/settings/Settings.vue'
 import Signup from './pages/signup/Signup.vue'
@@ -44,6 +45,11 @@ const routes = [
         path: 'settings',
         name: "Settings",
         component: Settings
+      },
+      {
+        path: 'admin',
+        name: "Admin",
+        component: Admin
       }
     ]
   },
