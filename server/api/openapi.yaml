@@ -7,7 +7,10 @@ info:
 
     Useful links:
     - [The By Trail repository](https://github.com/g-mainardi/by-trail)
-  version: 1.0.0
+
+    Note: authenticated users are identified via a JWT token passed in the
+    `Authorization` header as a Bearer token and their requests are handled first by an authentication middleware.
+  version: 1.0.1
 servers:
   - url: http://localhost:8080
     description: Local Docker Server
