@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "joshbolduc.commitlint",
-        "github.vscode-pull-request-github"
+        "github.vscode-pull-request-github",
+        "esbenp.prettier-vscode"
     ]
 }
