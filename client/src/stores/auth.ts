@@ -106,7 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = data.user;
       isAdmin.value = data.user.isAdmin;
 
-      // isAdmin.value = data.user.isAdmin;
+      localStorage.setItem('isAdmin', JSON.stringify(isAdmin.value));
       httpHelper.setToken(data.token);
 
       localStorage.setItem('token', token.value || '');

@@ -112,8 +112,7 @@ export const login = async (req, res) => {
             { expiresIn: '24h' }
         );
 
-        const isAdmin = await Admin.findOne({ email: user.email }) ? true : false;
-        console.log(`User ${email} admin status: ${isAdmin}`);
+        const isAdmin = !!(await Admin.findOne({ email: user.email }));
 
         // 5. Send response
         res.json({
