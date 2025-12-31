@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import { User } from '../models/models.js';
+import { Admin, User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
 
 let JWT_SECRET;
@@ -112,6 +112,8 @@ export const login = async (req, res) => {
             { expiresIn: '24h' }
         );
 
+        const isAdmin = !!(await Admin.findOne({ email: user.email }));
+
         // 5. Send response
         res.json({
             token,
@@ -119,7 +121,8 @@ export const login = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                favRegions: user.favRegions
+                favRegions: user.favRegions,
+                isAdmin: isAdmin
             }
         });
 

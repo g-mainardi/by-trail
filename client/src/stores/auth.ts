@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 // --- Interfaces ---
 
 // Matches the User model fields we expose
-interface User {
+export interface User {
   _id?: string; // Optional because sometimes Mongo uses _id, sometimes id
   id?: string;
   name: string;
@@ -16,12 +16,12 @@ interface User {
 
 export const useAuthStore = defineStore('auth', () => {
 
-
   // --- State ---
   const router = useRouter();
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
   const token = ref<string | null>(localStorage.getItem('token'));
+  const isAdmin = ref<boolean>(false);
   const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
   const error = ref<string | null>(null);
   const isLoading = ref(false);
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = data.user;
 
       // Update localStorage to keep it somewhat in sync
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('user', JSON.stringify(user.value));
 
       return true;
     } catch (err: any) {
@@ -104,10 +104,13 @@ export const useAuthStore = defineStore('auth', () => {
       // Save critical auth data
       token.value = data.token;
       user.value = data.user;
+      isAdmin.value = data.user.isAdmin;
+
+      localStorage.setItem('isAdmin', JSON.stringify(isAdmin.value));
       httpHelper.setToken(data.token);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', token.value || '');
+      localStorage.setItem('user', JSON.stringify(user.value));
 
       // FETCH FULL PROFILE NOW
       const profileSuccess = await fetchProfile();
@@ -205,5 +208,5 @@ export const useAuthStore = defineStore('auth', () => {
     console.error(message);
   };
 
-  return { token, user, error, isLoading, isAccountDeleteFailed, accountDeleteMessage, login, signup, logout, deleteAccount, fetchProfile, updateProfile };
+  return { token, user, isAdmin, error, isLoading, isAccountDeleteFailed, accountDeleteMessage, login, signup, logout, deleteAccount, fetchProfile, updateProfile };
 });

@@ -33,42 +33,42 @@ function getIconPath() {
 </script>
 
 <template>
-  <Card class="gap-2 p-4">
+  <Card class="gap-4 p-4">
     <CardTitle class="flex items-center gap-4">
       <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="6" />
+
       <h1 class="text-2xl font-bold">
         {{ bivouac.name }}
       </h1>
+
+      <div class="icons-wrapper ml-auto flex justify-evenly gap-4">
+        <div class="icon1 flex flex-col">
+          <ThiigsIcon :path="mountain" :size="4" />
+          <span class="text-center font-mono text-sm">
+            {{ bivouac.altitude }}
+          </span>
+        </div>
+
+        <div class="icon2 flex flex-col">
+          <ThiigsIcon :path="beds" :size="4" />
+          <span class="text-center font-mono text-sm">
+            {{ bivouac.capacity }}
+          </span>
+        </div>
+      </div>
     </CardTitle>
     <CardContent class="flex flex-col md:flex-row gap-4 justify-between p-0">
       <!-- Description -->
       <span class="description text-sm md:text-base flex-1 flex items-center">
-        {{ bivouac.note }}
+        <span v-if="!bivouac.note">
+          {{ t('no_description_available') }}
+        </span>
+        <span v-else>
+          {{ bivouac.note }}
+        </span>
       </span>
-      <div class="icons-wrapper p-2 flex justify-evenly gap-2">
-        <div class="icon1 flex flex-col">
-        <ThiigsIcon :path="mountain" :size="4" />
-          <span class="text-center font-mono text-sm">{{ bivouac.altitude }}</span>
-        </div>
-        <div class="icon2 flex flex-col">
-          <ThiigsIcon :path="beds" :size="4" />
-          <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
-        </div>
-        <!-- <div class="icon3 flex flex-col">
-          <ThiigsIcon :path="toilet" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.hasToilets ? t('yes') : t('no') }}
-          </span>
-        </div>
-        <div class="icon4 flex flex-col">
-          <ThiigsIcon :path="calendar" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.isOpen ? t('open') : t('closed') }}
-          </span>
-        </div> -->
-      </div>
     </CardContent>
-    <CardFooter class="flex gap-2 px-0">
+    <CardFooter class="flex gap-4 px-0">
       <Button class="flex-1">
         <EyeIcon />
         <span class="hidden md:inline">{{ t('view') }}</span>
@@ -98,7 +98,8 @@ function getIconPath() {
     "yes": "Yes",
     "no": "No",
     "open": "Open",
-    "closed": "Closed"
+    "closed": "Closed",
+    "no_description_available": "No description available"
   },
   "it": {
     "view": "Visualizza",
@@ -107,7 +108,8 @@ function getIconPath() {
     "yes": "Sì",
     "no": "No",
     "open": "Aperto",
-    "closed": "Chiuso"
+    "closed": "Chiuso",
+    "no_description_available": "Nessuna descrizione disponibile"
   },
   "es": {
     "view": "Ver",
@@ -116,7 +118,8 @@ function getIconPath() {
     "yes": "Sí",
     "no": "No",
     "open": "Abierto",
-    "closed": "Cerrado"
+    "closed": "Cerrado",
+    "no_description_available": "No hay descripción disponible"
   }
 }
 </i18n>

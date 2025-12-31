@@ -14,6 +14,7 @@ defineProps<{
     url: string
     icon?: LucideIcon
     color?: string
+    condition?: boolean
     action?: () => void
   }[]
 }>()
@@ -22,7 +23,7 @@ defineProps<{
 <template>
   <SidebarGroup>
     <SidebarMenu>
-      <div v-for="item in items" :key="item.title">
+      <div v-for="item in items.filter(item => item.condition !== false)" :key="item.title">
         <RouterLink :to="item.url">
           <SidebarMenuItem>
             <SidebarMenuButton :tooltip="item.title" @click="item.action && item.action()">

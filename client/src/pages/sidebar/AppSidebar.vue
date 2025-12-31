@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useAuthStore } from '@/stores/auth.ts'
-import { useI18n } from 'vue-i18n';
-
-import type { SidebarProps } from '@/components/ui/sidebar'
-
-import AppInfo from '@/pages/sidebar/AppInfo.vue'
-import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue'
-import SidebarUser from '@/pages/sidebar/SidebarUser.vue'
+import type { SidebarProps } from '@/components/ui/sidebar';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from '@/components/ui/sidebar';
+import AppInfo from '@/pages/sidebar/AppInfo.vue';
+import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue';
+import SidebarUser from '@/pages/sidebar/SidebarUser.vue';
+import { useAuthStore } from '@/stores/auth.ts';
 import {
   Bell,
   LogOutIcon,
@@ -15,28 +18,27 @@ import {
   MountainSnow,
   Route,
   Settings,
+  ShieldUser,
   TentTree,
   UserRound
-} from "lucide-vue-next"
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar'
-
+} from "lucide-vue-next";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: "icon",
 })
 
+const authStore = useAuthStore();
+
 const handleLogout = () => {
-  const authStore = useAuthStore();
   authStore.logout();
 }
+
+const isAdmin = computed(() => {
+  return authStore.isAdmin;
+});
 
 // This is sample data.
 const data = computed(() => ({
@@ -52,37 +54,37 @@ const data = computed(() => ({
       title: t("maps"),
       url: "/maps",
       icon: Map,
-      action: () => {}
     },
     {
       title: t("routes"),
       url: "#",
       icon: Route,
-      action: () => {}
     },
     {
       title: t("bivouacs"),
       url: "/bivouacs",
       icon: TentTree,
-      action: () => {}
     },
     {
       title: t("profile"),
       url: '/profile',
       icon: UserRound,
-      action: () => {}
     },
     {
       title: t("notifications"),
       url: "#",
       icon: Bell,
-      action: () => {}
     },
     {
       title: t("settings"),
       url: "/settings",
       icon: Settings,
-      action: () => {}
+    },
+    {
+      title: t("admin"),
+      url: "/admin",
+      icon: ShieldUser,
+      condition: isAdmin.value,
     },
     {
       title: t("logout"),
@@ -90,7 +92,7 @@ const data = computed(() => ({
       icon: LogOutIcon,
       color: "text-red-500",
       action: handleLogout,
-    },
+    }
   ],
 }));
 </script>
@@ -122,6 +124,7 @@ const data = computed(() => ({
     "profile": "Profile",
     "notifications": "Notifications",
     "settings": "Settings",
+    "admin": "Admin",
     "logout": "Logout"
   },
   "it": {
@@ -131,6 +134,7 @@ const data = computed(() => ({
     "profile": "Profilo",
     "notifications": "Notifiche",
     "settings": "Impostazioni",
+    "admin": "Amministratore",
     "logout": "Esci"
   },
   "es": {
@@ -140,6 +144,7 @@ const data = computed(() => ({
     "profile": "Perfil",
     "notifications": "Notificaciones",
     "settings": "Ajustes",
+    "admin": "Administrador",
     "logout": "Cerrar sesión"
   }
 }
