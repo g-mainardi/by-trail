@@ -4,7 +4,7 @@
       - Users
     summary: Retrieve a list of users
     responses:
-      "200":
+      '200':
         description: A list of users
         content:
           application/json:
@@ -18,5 +18,5 @@
                   email:
                     type: string
                     format: email
-      "500":
+      '500':
         description: Internal server error

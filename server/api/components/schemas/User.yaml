@@ -22,9 +22,9 @@ properties:
     description: |
       A list of region identifiers that the user finds interesting. Each string should be a region name. This allows users to bookmark or follow specific geographic regions.
     example:
-      - "Emilia-Romagna"
-      - "Toscana"
-      - "Sicilia"
+      - 'Emilia-Romagna'
+      - 'Toscana'
+      - 'Sicilia'
   status:
     type: string
     enum:

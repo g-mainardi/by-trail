@@ -20,21 +20,21 @@ import {
   Settings,
   ShieldUser,
   TentTree,
-  UserRound
-} from "lucide-vue-next";
+  UserRound,
+} from 'lucide-vue-next';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const props = withDefaults(defineProps<SidebarProps>(), {
-  collapsible: "icon",
-})
+  collapsible: 'icon',
+});
 
 const authStore = useAuthStore();
 
 const handleLogout = () => {
   authStore.logout();
-}
+};
 
 const isAdmin = computed(() => {
   return authStore.isAdmin;
@@ -44,55 +44,55 @@ const isAdmin = computed(() => {
 const data = computed(() => ({
   appInfo: [
     {
-      name: "By Trail",
+      name: 'By Trail',
       logo: MountainSnow,
-      slogan: "You are what you discover",
+      slogan: 'You are what you discover',
     },
   ],
   sidebarOptions: [
     {
-      title: t("maps"),
-      url: "/maps",
+      title: t('maps'),
+      url: '/maps',
       icon: Map,
     },
     {
-      title: t("routes"),
-      url: "#",
+      title: t('routes'),
+      url: '#',
       icon: Route,
     },
     {
-      title: t("bivouacs"),
-      url: "/bivouacs",
+      title: t('bivouacs'),
+      url: '/bivouacs',
       icon: TentTree,
     },
     {
-      title: t("profile"),
+      title: t('profile'),
       url: '/profile',
       icon: UserRound,
     },
     {
-      title: t("notifications"),
-      url: "#",
+      title: t('notifications'),
+      url: '#',
       icon: Bell,
     },
     {
-      title: t("settings"),
-      url: "/settings",
+      title: t('settings'),
+      url: '/settings',
       icon: Settings,
     },
     {
-      title: t("admin"),
-      url: "/admin",
+      title: t('admin'),
+      url: '/admin',
       icon: ShieldUser,
       condition: isAdmin.value,
     },
     {
-      title: t("logout"),
-      url: "#",
+      title: t('logout'),
+      url: '#',
       icon: LogOutIcon,
-      color: "text-red-500",
+      color: 'text-red-500',
       action: handleLogout,
-    }
+    },
   ],
 }));
 </script>
@@ -110,7 +110,7 @@ const data = computed(() => ({
     <SidebarFooter>
       <SidebarUser />
     </SidebarFooter>
-    
+
     <SidebarRail />
   </Sidebar>
 </template>

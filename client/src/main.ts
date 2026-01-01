@@ -1,24 +1,24 @@
-import '@/assets/style.css'
-import { createPinia } from 'pinia'
-import { createApp } from 'vue'
-import { createI18n } from 'vue-i18n'
-import { createRouter, createWebHistory } from 'vue-router'
+import '@/assets/style.css';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+import { createI18n } from 'vue-i18n';
+import { createRouter, createWebHistory } from 'vue-router';
 
-import App from '@/App.vue'
-import MainLayout from '@/layouts/MainLayout.vue'
-import Login from '@/pages/login/Login.vue'
-import Maps from '@/pages/maps/Maps.vue'
-import Profile from '@/pages/profile/Profile.vue'
-import Admin from './pages/admin/Admin.vue'
-import Bivouacs from './pages/bivouacs/Bivouacs.vue'
-import Settings from './pages/settings/Settings.vue'
-import Signup from './pages/signup/Signup.vue'
+import App from '@/App.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
+import Login from '@/pages/login/Login.vue';
+import Maps from '@/pages/maps/Maps.vue';
+import Profile from '@/pages/profile/Profile.vue';
+import Admin from './pages/admin/Admin.vue';
+import Bivouacs from './pages/bivouacs/Bivouacs.vue';
+import Settings from './pages/settings/Settings.vue';
+import Signup from './pages/signup/Signup.vue';
 
 const i18n = createI18n({
   legacy: false,
   locale: 'it',
-  fallbackLocale: 'en'
-})
+  fallbackLocale: 'en',
+});
 
 const routes = [
   {
@@ -29,66 +29,70 @@ const routes = [
       {
         path: 'maps',
         name: 'Maps',
-        component: Maps
+        component: Maps,
       },
       {
         path: 'profile',
-        name: "Profile",
-        component: Profile
+        name: 'Profile',
+        component: Profile,
       },
       {
         path: 'bivouacs',
-        name: "Bivouacs",
-        component: Bivouacs
+        name: 'Bivouacs',
+        component: Bivouacs,
       },
       {
         path: 'settings',
-        name: "Settings",
-        component: Settings
+        name: 'Settings',
+        component: Settings,
       },
       {
         path: 'admin',
-        name: "Admin",
-        component: Admin
-      }
-    ]
+        name: 'Admin',
+        component: Admin,
+      },
+    ],
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
-  }
+    component: Signup,
+  },
 ];
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
-})
-
+});
 
 // Navigation guard to protect routes that require authentication
-const isAuthenticated = (): boolean => { return !!localStorage.getItem('token') };
+const isAuthenticated = (): boolean => {
+  return !!localStorage.getItem('token');
+};
 
 // Apply the navigation guard
 router.beforeEach((to, _from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated()) {
+  if (
+    to.matched.some((record) => record.meta.requiresAuth) &&
+    !isAuthenticated()
+  ) {
     next({ name: 'Login' });
   } else {
     next();
   }
 });
 
-const app = createApp(App)
-const pinia = createPinia()
+const app = createApp(App);
+const pinia = createPinia();
 
 // Install plugins
-app.use(router)
-app.use(pinia)
-app.use(i18n)
+app.use(router);
+app.use(pinia);
+app.use(i18n);
 
-app.mount('#app')
+app.mount('#app');

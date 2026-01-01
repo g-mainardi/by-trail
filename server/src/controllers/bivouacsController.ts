@@ -30,15 +30,21 @@ export const fetchMapBivouacs = async (req: Request, res: Response) => {
     typeof bottomRightCoords.lng !== 'number'
   ) {
     return res.status(400).json({
-      error: 'Invalid or missing coordinates. Expected topLeftCoords and bottomRightCoords with numeric lat and lng.',
+      error:
+        'Invalid or missing coordinates. Expected topLeftCoords and bottomRightCoords with numeric lat and lng.',
     });
   }
   try {
-    const bivouacs = await Bivouac.
-      find({
-        'coords.latitude': { $gte: bottomRightCoords.lat, $lte: topLeftCoords.lat },
-        'coords.longitude': { $gte: topLeftCoords.lng, $lte: bottomRightCoords.lng }
-      }).exec();
+    const bivouacs = await Bivouac.find({
+      'coords.latitude': {
+        $gte: bottomRightCoords.lat,
+        $lte: topLeftCoords.lat,
+      },
+      'coords.longitude': {
+        $gte: topLeftCoords.lng,
+        $lte: bottomRightCoords.lng,
+      },
+    }).exec();
     if (!bivouacs || bivouacs.length === 0) {
       return res.status(200).json({ bivouacs: [] });
     }

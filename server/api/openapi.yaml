@@ -31,14 +31,14 @@ tags:
 paths:
   # Authentication
   /auth/login:
-    $ref: "./paths/authentication.yaml#/~1login"
+    $ref: './paths/authentication.yaml#/~1login'
   /auth/signup:
-    $ref: "./paths/authentication.yaml#/~1signup"
+    $ref: './paths/authentication.yaml#/~1signup'
   /auth/delete:
-    $ref: "./paths/authentication.yaml#/~1delete"
+    $ref: './paths/authentication.yaml#/~1delete'
   # Users
   /users:
-    $ref: "./paths/users.yaml#/~1users"
+    $ref: './paths/users.yaml#/~1users'
   # Bivacchi
 
   # Trails
@@ -52,4 +52,4 @@ paths:
 components:
   schemas:
     User:
-      $ref: "./components/schemas/User.yaml"
+      $ref: './components/schemas/User.yaml'

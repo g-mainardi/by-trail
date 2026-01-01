@@ -1,85 +1,89 @@
 <script setup lang="ts">
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle
-} from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { useAuthStore } from '@/stores/auth'
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { useAuthStore } from '@/stores/auth';
 import { AlertCircle } from 'lucide-vue-next'; // Import Error Icon
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { RouterLink } from 'vue-router'
-const { t } = useI18n()
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { RouterLink } from 'vue-router';
+const { t } = useI18n();
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
 // Reactive state for form inputs
-const name = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const validationError = ref<string | null>(null) // Local error (e.g. passwords do not match)
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const validationError = ref<string | null>(null); // Local error (e.g. passwords do not match)
 
 const handleSignup = async () => {
   // Resets previous validation error
-  validationError.value = null
-  
+  validationError.value = null;
+
   // Prevent empty submission
-  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
-    validationError.value = t('signup_fill_all_fields')
-    return
+  if (
+    !name.value ||
+    !email.value ||
+    !password.value ||
+    !confirmPassword.value
+  ) {
+    validationError.value = t('signup_fill_all_fields');
+    return;
   }
 
   // Check password
   if (password.value !== confirmPassword.value) {
-    validationError.value = t('signup_passwords_do_not_match')
-    return
+    validationError.value = t('signup_passwords_do_not_match');
+    return;
   }
-    // Password complexity validation
+  // Password complexity validation
   if (
     password.value.length < 8 ||
     !/[A-Z]/.test(password.value) ||
     !/[a-z]/.test(password.value) ||
     !/[0-9]/.test(password.value)
   ) {
-    validationError.value = t('signup_passwords_requirements')
-    return
+    validationError.value = t('signup_passwords_requirements');
+    return;
   }
 
   // Call backend through Pinia store
-  await authStore.signup(name.value, email.value, password.value)
-}
+  await authStore.signup(name.value, email.value, password.value);
+};
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>{{ t("signup") }}</CardTitle>
+      <CardTitle>{{ t('signup') }}</CardTitle>
       <CardDescription>
-        {{ t("description") }}
+        {{ t('description') }}
       </CardDescription>
     </CardHeader>
     <CardContent>
       <form @submit.prevent="handleSignup">
-
-        <Alert v-if="validationError || authStore.error" variant="destructive" class="mb-6">
+        <Alert
+          v-if="validationError || authStore.error"
+          variant="destructive"
+          class="mb-6"
+        >
           <AlertCircle class="h-4 w-4" />
-          <AlertTitle>{{t("error")}}</AlertTitle>
+          <AlertTitle>{{ t('error') }}</AlertTitle>
           <AlertDescription>
             {{ validationError || authStore.error }}
           </AlertDescription>
@@ -88,19 +92,19 @@ const handleSignup = async () => {
         <FieldGroup>
           <Field>
             <FieldLabel for="name">
-              {{ t("name") }}
+              {{ t('name') }}
             </FieldLabel>
-            <Input 
-              id="name" 
+            <Input
+              id="name"
               v-model="name"
-              type="text" 
-              :placeholder="t('name_placeholder')" 
+              type="text"
+              :placeholder="t('name_placeholder')"
               required
-             />
+            />
           </Field>
           <Field>
             <FieldLabel for="email">
-              {{ t("email") }}
+              {{ t('email') }}
             </FieldLabel>
             <Input
               id="email"
@@ -110,38 +114,42 @@ const handleSignup = async () => {
               required
             />
             <FieldDescription>
-              {{ t("email_description") }}
+              {{ t('email_description') }}
             </FieldDescription>
           </Field>
           <Field>
             <FieldLabel for="password">
-              {{ t("password") }}
+              {{ t('password') }}
             </FieldLabel>
-            <Input 
-              id="password" 
-              v-model="password"
-              type="password" 
-              required />
-            <FieldDescription>{{ t("password_description") }}</FieldDescription>
+            <Input id="password" v-model="password" type="password" required />
+            <FieldDescription>{{ t('password_description') }}</FieldDescription>
           </Field>
           <Field>
             <FieldLabel for="confirm-password">
-              {{ t("confirm_password") }}
+              {{ t('confirm_password') }}
             </FieldLabel>
-            <Input 
-              id="confirm-password" 
+            <Input
+              id="confirm-password"
               v-model="confirmPassword"
-              type="password" 
-              required />
-            <FieldDescription>{{ t("confirm_password_description") }}</FieldDescription>
+              type="password"
+              required
+            />
+            <FieldDescription>{{
+              t('confirm_password_description')
+            }}</FieldDescription>
           </Field>
           <FieldGroup>
             <Field>
               <Button type="submit" :disabled="authStore.isLoading">
-                {{ authStore.isLoading ? t("creating_account") : t("create_account") }}
+                {{
+                  authStore.isLoading
+                    ? t('creating_account')
+                    : t('create_account')
+                }}
               </Button>
               <FieldDescription class="px-6 text-center">
-                {{ t("have_account") }} <RouterLink to="/login">{{ t("log_in") }}</RouterLink>
+                {{ t('have_account') }}
+                <RouterLink to="/login">{{ t('log_in') }}</RouterLink>
               </FieldDescription>
             </Field>
           </FieldGroup>

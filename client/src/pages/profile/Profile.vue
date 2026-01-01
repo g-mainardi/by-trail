@@ -8,7 +8,14 @@ import { useI18n } from 'vue-i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Check, ChevronsUpDown, X } from 'lucide-vue-next'; // Icons
@@ -36,22 +43,38 @@ const { t } = useI18n();
 
 // --- Constants ---
 const ITALIAN_REGIONS = [
-  "Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna",
-  "Friuli-Venezia Giulia", "Lazio", "Liguria", "Lombardia", "Marche",
-  "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana",
-  "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"
+  'Abruzzo',
+  'Basilicata',
+  'Calabria',
+  'Campania',
+  'Emilia-Romagna',
+  'Friuli-Venezia Giulia',
+  'Lazio',
+  'Liguria',
+  'Lombardia',
+  'Marche',
+  'Molise',
+  'Piemonte',
+  'Puglia',
+  'Sardegna',
+  'Sicilia',
+  'Toscana',
+  'Trentino-Alto Adige',
+  'Umbria',
+  "Valle d'Aosta",
+  'Veneto',
 ];
 
 // --- Form Local State ---
 const formData = ref({
   name: '',
   email: '',
-  favRegions: [] as string[]
+  favRegions: [] as string[],
 });
 
 const feedbackMessage = ref('');
 const isError = ref(false);
-const openRegions = ref(false); // Popover state  
+const openRegions = ref(false); // Popover state
 
 // --- Init Data ---
 onMounted(async () => {
@@ -63,7 +86,9 @@ onMounted(async () => {
     formData.value.name = user.value.name;
     formData.value.email = user.value.email;
     // Create a copy of the array to avoid direct mutation of store state
-    formData.value.favRegions = user.value.favRegions ? [...user.value.favRegions] : []; 
+    formData.value.favRegions = user.value.favRegions
+      ? [...user.value.favRegions]
+      : [];
   }
 });
 
@@ -81,7 +106,9 @@ const toggleRegion = (region: string) => {
 
 // --- Logic: Remove Tag (Remove from Badge) ---
 const removeRegion = (region: string) => {
-  formData.value.favRegions = formData.value.favRegions.filter((r) => r !== region);
+  formData.value.favRegions = formData.value.favRegions.filter(
+    (r) => r !== region
+  );
 };
 
 // --- Handle Save ---
@@ -92,35 +119,36 @@ const handleSave = async () => {
   // 1. Prepare payload
   const payload = {
     name: formData.value.name,
-    favRegions: formData.value.favRegions
+    favRegions: formData.value.favRegions,
   };
 
   // 2. Call store action to update profile
   const success = await authStore.updateProfile(payload);
   if (success) {
-    feedbackMessage.value = t("profile_update_success");
-    //todo applyTheme(payload.darkMode); 
+    feedbackMessage.value = t('profile_update_success');
+    //todo applyTheme(payload.darkMode);
   } else {
     isError.value = true;
-    feedbackMessage.value = t("profile_update_error");
+    feedbackMessage.value = t('profile_update_error');
   }
 };
 </script>
 
 <template>
   <div class="container max-w-2xl py-10 mx-auto">
-    
     <div class="mb-8 text-center">
-      <h1 class="text-3xl font-bold tracking-tight">{{t("your_profile")}}</h1>
-      <p class="text-muted-foreground">{{ t("handle_info_preferences") }}</p>
+      <h1 class="text-3xl font-bold tracking-tight">{{ t('your_profile') }}</h1>
+      <p class="text-muted-foreground">{{ t('handle_info_preferences') }}</p>
     </div>
 
     <Card>
       <CardHeader class="flex flex-row items-center gap-4">
         <Avatar class="w-16 h-16 border-2 cursor-pointer border-primary">
-          <AvatarFallback>{{ user?.name?.charAt(0).toUpperCase() }}</AvatarFallback>
+          <AvatarFallback>{{
+            user?.name?.charAt(0).toUpperCase()
+          }}</AvatarFallback>
         </Avatar>
-        
+
         <div>
           <CardTitle>{{ user?.name }}</CardTitle>
           <CardDescription>{{ user?.email }}</CardDescription>
@@ -128,28 +156,46 @@ const handleSave = async () => {
       </CardHeader>
 
       <CardContent class="space-y-6">
-        
-        <div v-if="feedbackMessage" 
-             :class="cn('p-3 text-sm rounded-md', isError ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600')">
+        <div
+          v-if="feedbackMessage"
+          :class="
+            cn(
+              'p-3 text-sm rounded-md',
+              isError
+                ? 'bg-red-100 text-red-600'
+                : 'bg-green-100 text-green-600'
+            )
+          "
+        >
           {{ feedbackMessage }}
         </div>
 
         <form @submit.prevent="handleSave" class="space-y-4">
-          
           <div class="space-y-2">
-            <Label for="name">{{ t("complete_name") }}</Label>
-            <Input id="name" v-model="formData.name" :placeholder="t('your_name')" />
+            <Label for="name">{{ t('complete_name') }}</Label>
+            <Input
+              id="name"
+              v-model="formData.name"
+              :placeholder="t('your_name')"
+            />
           </div>
 
           <div class="space-y-2">
             <Label for="email">Email</Label>
-            <Input id="email" v-model="formData.email" disabled class="bg-muted" />
-            <p class="text-[0.8rem] text-muted-foreground">{{t("unmodifiable_email")}}</p>
+            <Input
+              id="email"
+              v-model="formData.email"
+              disabled
+              class="bg-muted"
+            />
+            <p class="text-[0.8rem] text-muted-foreground">
+              {{ t('unmodifiable_email') }}
+            </p>
           </div>
 
           <div class="space-y-3">
-            <Label>{{ t("preferred_regions") }}</Label>
-            
+            <Label>{{ t('preferred_regions') }}</Label>
+
             <Popover v-model:open="openRegions">
               <PopoverTrigger as-child>
                 <Button
@@ -158,11 +204,14 @@ const handleSave = async () => {
                   :aria-expanded="openRegions"
                   class="justify-between w-full"
                 >
-                  <span class="text-muted-foreground" v-if="formData.favRegions.length === 0">
-                    {{ t("select_regions") }}
+                  <span
+                    class="text-muted-foreground"
+                    v-if="formData.favRegions.length === 0"
+                  >
+                    {{ t('select_regions') }}
                   </span>
                   <span class="text-foreground" v-else>
-                     {{ formData.favRegions.length }} {{ t("selected_regions") }}
+                    {{ formData.favRegions.length }} {{ t('selected_regions') }}
                   </span>
                   <ChevronsUpDown class="w-4 h-4 ml-2 opacity-50 shrink-0" />
                 </Button>
@@ -170,7 +219,7 @@ const handleSave = async () => {
               <PopoverContent class="w-full p-0">
                 <Command>
                   <CommandInput :placeholder="t('search_region')" />
-                  <CommandEmpty>{{t("no_region_found")}}</CommandEmpty>
+                  <CommandEmpty>{{ t('no_region_found') }}</CommandEmpty>
                   <CommandList>
                     <CommandGroup>
                       <CommandItem
@@ -180,10 +229,14 @@ const handleSave = async () => {
                         @select="() => toggleRegion(region)"
                       >
                         <Check
-                          :class="cn(
-                            'mr-2 h-4 w-4',
-                            formData.favRegions.includes(region) ? 'opacity-100' : 'opacity-0'
-                          )"
+                          :class="
+                            cn(
+                              'mr-2 h-4 w-4',
+                              formData.favRegions.includes(region)
+                                ? 'opacity-100'
+                                : 'opacity-0'
+                            )
+                          "
                         />
                         {{ region }}
                       </CommandItem>
@@ -194,14 +247,14 @@ const handleSave = async () => {
             </Popover>
 
             <div class="flex flex-wrap gap-2 mt-2">
-              <Badge 
-                v-for="region in formData.favRegions" 
-                :key="region" 
+              <Badge
+                v-for="region in formData.favRegions"
+                :key="region"
                 variant="secondary"
                 class="flex items-center gap-1 px-3 py-1"
               >
                 {{ region }}
-                <button 
+                <button
                   type="button"
                   class="ml-1 rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   @click.prevent.stop="removeRegion(region)"
@@ -211,14 +264,13 @@ const handleSave = async () => {
               </Badge>
             </div>
           </div>
-
         </form>
       </CardContent>
 
       <CardFooter class="flex justify-end border-t pt-6">
         <Button @click="handleSave" :disabled="isLoading">
-          <span v-if="isLoading">{{t("saving")}}</span>
-          <span v-else>{{t("save_modifications")}}</span>
+          <span v-if="isLoading">{{ t('saving') }}</span>
+          <span v-else>{{ t('save_modifications') }}</span>
         </Button>
       </CardFooter>
     </Card>

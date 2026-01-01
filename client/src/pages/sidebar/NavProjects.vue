@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import type { LucideIcon } from "lucide-vue-next"
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-vue-next"
+import type { LucideIcon } from 'lucide-vue-next';
+import { Folder, Forward, MoreHorizontal, Trash2 } from 'lucide-vue-next';
 
 import {
   DropdownMenu,
@@ -13,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,17 +17,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
 defineProps<{
   projects: {
-    name: string
-    url: string
-    icon: LucideIcon
-  }[]
-}>()
+    name: string;
+    url: string;
+    icon: LucideIcon;
+  }[];
+}>();
 
-const { isMobile } = useSidebar()
+const { isMobile } = useSidebar();
 </script>
 
 <template>

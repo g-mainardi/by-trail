@@ -7,39 +7,37 @@ import Input from '@/components/ui/input/Input.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n()
+const { t } = useI18n();
 
-const password = ref('')
-const authStore = useAuthStore()
-const email = authStore.user?.email || ''
+const password = ref('');
+const authStore = useAuthStore();
+const email = authStore.user?.email || '';
 
 const handleDeleteAccount = async () => {
   if (!password.value) return;
   await authStore.deleteAccount(email, password.value);
-}
+};
 </script>
 
 <template>
   <form @submit.prevent="handleDeleteAccount">
     <FieldGroup class="w-full">
       <Field>
-        <FieldLabel>
-          Email
-        </FieldLabel>
+        <FieldLabel> Email </FieldLabel>
         <span class="font-bold"> {{ email }} </span>
         <FieldLabel for="password">
-          {{ t("password_label") }}
+          {{ t('password_label') }}
         </FieldLabel>
-        <Input 
+        <Input
           id="password"
-          type="password" 
+          type="password"
           placeholder="Insert your password"
           v-model="password"
-          required 
+          required
         />
       </Field>
       <Button type="submit" variant="destructive">
-        {{ t("delete_account_button") }}
+        {{ t('delete_account_button') }}
       </Button>
     </FieldGroup>
   </form>

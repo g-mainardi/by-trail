@@ -2,7 +2,7 @@
 import SelectLanguage from '@/components/ui/select/SelectLanguage.vue';
 import { useI18n } from 'vue-i18n';
 import SectionTitle from '../account/SectionTitle.vue';
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <template>

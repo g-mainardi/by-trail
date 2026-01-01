@@ -11,7 +11,11 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <Select class="w-[180px]" v-model="$i18n.locale" :aria-label="t('selectLanguage')">
+  <Select
+    class="w-[180px]"
+    v-model="$i18n.locale"
+    :aria-label="t('selectLanguage')"
+  >
     <SelectTrigger class="mt-6 bg-white text-black">
       <SelectValue />
     </SelectTrigger>
@@ -25,7 +29,7 @@ const { t } = useI18n();
         Italiano
       </SelectItem>
       <SelectItem value="es">
-        <span role="img" aria-label="Spanish, Spain flag">🇪🇸</span> 
+        <span role="img" aria-label="Spanish, Spain flag">🇪🇸</span>
         Español
       </SelectItem>
     </SelectContent>

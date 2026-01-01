@@ -36,7 +36,7 @@
             required:
               - token
     responses:
-      "200":
+      '200':
         description: A list of bivouacs with pagination info
         content:
           application/json:
@@ -46,7 +46,7 @@
                 bivouacs:
                   type: array
                   items:
-                    $ref: "#/components/schemas/Bivouac"
+                    $ref: '#/components/schemas/Bivouac'
                 nextPage:
                   type: string
                   format: uuid

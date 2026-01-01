@@ -6,24 +6,23 @@ import Alerts from './Alerts.vue';
 import Bivouacs from './Bivouacs.vue';
 import Paths from './Paths.vue';
 import Users from './Users.vue';
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <template>
   <Tabs default-value="users">
-
     <TabsList>
       <TabsTrigger value="users">
-        {{ t("tab_users") }}
+        {{ t('tab_users') }}
       </TabsTrigger>
       <TabsTrigger value="bivouacs">
-        {{ t("tab_bivouacs") }}
+        {{ t('tab_bivouacs') }}
       </TabsTrigger>
       <TabsTrigger value="paths">
-        {{ t("tab_paths") }}
+        {{ t('tab_paths') }}
       </TabsTrigger>
       <TabsTrigger value="alerts">
-        {{ t("tab_alerts") }}
+        {{ t('tab_alerts') }}
       </TabsTrigger>
     </TabsList>
 
@@ -39,7 +38,7 @@ const { t } = useI18n()
       </Card>
     </TabsContent>
 
-    <TabsContent value="paths">  
+    <TabsContent value="paths">
       <Card class="container">
         <Paths />
       </Card>
@@ -50,7 +49,6 @@ const { t } = useI18n()
         <Alerts />
       </Card>
     </TabsContent>
-
   </Tabs>
 </template>
 
@@ -78,7 +76,7 @@ const { t } = useI18n()
 </i18n>
 
 <style scoped>
-  .container {
-    padding: 1rem; /* = p-4 */
-  }
+.container {
+  padding: 1rem; /* = p-4 */
+}
 </style>

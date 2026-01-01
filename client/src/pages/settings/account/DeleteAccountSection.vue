@@ -12,9 +12,13 @@ const auth = useAuthStore();
 <template>
   <SectionTitle :title="t('delete_account_title')" />
   <DeleteAccountForm />
-  <Alert variant="destructive" v-if="auth.isAccountDeleteFailed" class="mt-2 w-[50%]">
+  <Alert
+    variant="destructive"
+    v-if="auth.isAccountDeleteFailed"
+    class="mt-2 w-[50%]"
+  >
     <AlertCircleIcon />
-    <AlertTitle>{{ t("delete_account_failed") }}</AlertTitle>
+    <AlertTitle>{{ t('delete_account_failed') }}</AlertTitle>
     <AlertDescription>Server: {{ auth.accountDeleteMessage }}</AlertDescription>
   </Alert>
 </template>

@@ -8,7 +8,6 @@ on:
   pull_request:
     branches:
       - main
-  
 
 jobs:
   docker-smoke-test:
@@ -24,12 +23,12 @@ jobs:
         run: |
           mkdir -p secrets
           echo "${{ secrets.CI_MONGO_URI }}" > secrets/mongo_atlas_uri.txt
-      
+
       # Create a dummy JWT secret file (using GitHub Secrets)
       - name: Create Dummy JWT Secret
         run: |
           echo "${{ secrets.JWT_SECRET }}" > secrets/jwt_secret.txt
-      
+
       # Create a dummy Thunderforest API key secret file (using GitHub Secrets)
       - name: Create Dummy Thunderforest API Key Secret
         run: |

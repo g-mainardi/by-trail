@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { useBivouacStore, type Bivouac, type BivouacResponse } from '@/stores/bivouacs';
+import {
+  useBivouacStore,
+  type Bivouac,
+  type BivouacResponse,
+} from '@/stores/bivouacs';
 import { computed, ref } from 'vue';
 import BivouacCard from './BivouacCard.vue';
 import FilterBar from './FilterBar.vue';
 
 const bivouacStore = useBivouacStore();
 const bivouacsResponse = ref<BivouacResponse>(
-  await bivouacStore.fetchBivouacs().catch(error => {
+  await bivouacStore.fetchBivouacs().catch((error) => {
     console.error('Error fetching bivouacs:', error);
     return { bivouacs: [] };
   })
@@ -14,17 +18,20 @@ const bivouacsResponse = ref<BivouacResponse>(
 
 const bivouacs = ref<Bivouac[]>(bivouacsResponse.value.bivouacs);
 
-async function fetchNextPage() {  
-  if (!bivouacsResponse.value.nextPage) {  
-    return;  
+async function fetchNextPage() {
+  if (!bivouacsResponse.value.nextPage) {
+    return;
   }
-  try {  
-    const response = await bivouacStore.fetchBivouacs({}, bivouacsResponse.value.nextPage);  
+  try {
+    const response = await bivouacStore.fetchBivouacs(
+      {},
+      bivouacsResponse.value.nextPage
+    );
     bivouacs.value.push(...response.bivouacs);
-    bivouacsResponse.value.nextPage = response.nextPage;  
-  } catch (error) {  
-    console.error('Error fetching next page of bivouacs:', error);  
-  }  
+    bivouacsResponse.value.nextPage = response.nextPage;
+  } catch (error) {
+    console.error('Error fetching next page of bivouacs:', error);
+  }
 }
 
 function toggleFavorite(bivouacId: number) {
@@ -52,8 +59,7 @@ const altitudeFilter: Filter = {
   predicate: (bivouac: Bivouac, value: any) => {
     const altitude = bivouac.altitude;
     if (altitude !== undefined) {
-      return altitude >= value.min 
-        && altitude <= value.max;
+      return altitude >= value.min && altitude <= value.max;
     }
     return true;
   },
@@ -62,22 +68,24 @@ const altitudeFilter: Filter = {
 const filters = ref({
   minDesiredBeds: minDesiredBeds,
   altitudeFilter: altitudeFilter,
-})
+});
 
 function resetFilters() {
-  Object.values(filters.value).forEach(filter => {
+  Object.values(filters.value).forEach((filter) => {
     filter.currentValue = JSON.parse(JSON.stringify(filter.default));
   });
 }
 
 /**
  * Computed property that filters the list of bivouacs based on user-selected criteria.
- * 
+ *
  * @returns {Bivouac[]} Array of filtered bivouac objects that match all active filter criteria
  */
 const filteredBivouacs = computed(() => {
-  return bivouacs.value.filter(bivouac => {
-    return Object.values(filters.value).every(filter => filter.predicate(bivouac, filter.currentValue));
+  return bivouacs.value.filter((bivouac) => {
+    return Object.values(filters.value).every((filter) =>
+      filter.predicate(bivouac, filter.currentValue)
+    );
   });
 });
 </script>

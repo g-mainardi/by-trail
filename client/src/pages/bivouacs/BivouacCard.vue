@@ -1,28 +1,36 @@
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
 import type { Bivouac } from '@/stores/bivouacs';
-import { ArrowUpRight as ArrowUpRightIcon, Eye as EyeIcon } from 'lucide-vue-next';
+import {
+  ArrowUpRight as ArrowUpRightIcon,
+  Eye as EyeIcon,
+} from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n()
+const { t } = useI18n();
 
-const hoodHousePath = new URL('@/assets/trekking_hood_house.png', import.meta.url).href;
-const mountainHouse = new URL('@/assets/trekking_mountain_house.png', import.meta.url).href;
-const tentSiteIcon = new URL('@/assets/trekking_tent.png', import.meta.url).href;
-const cliffHouseIcon = new URL('@/assets/trekking_cliff_house.png', import.meta.url).href;
+const hoodHousePath = new URL(
+  '@/assets/trekking_hood_house.png',
+  import.meta.url
+).href;
+const mountainHouse = new URL(
+  '@/assets/trekking_mountain_house.png',
+  import.meta.url
+).href;
+const tentSiteIcon = new URL('@/assets/trekking_tent.png', import.meta.url)
+  .href;
+const cliffHouseIcon = new URL(
+  '@/assets/trekking_cliff_house.png',
+  import.meta.url
+).href;
 const mountain = new URL('@/assets/mountain.png', import.meta.url).href;
 const beds = new URL('@/assets/beds.png', import.meta.url).href;
 const toilet = new URL('@/assets/toilet.png', import.meta.url).href;
 const calendar = new URL('@/assets/calendar.png', import.meta.url).href;
 
 const props = defineProps<{
-  bivouac: Bivouac
+  bivouac: Bivouac;
 }>();
 
 const bivouac = props.bivouac;
@@ -85,7 +93,6 @@ function getIconPath() {
         <span class="hidden md:inline">{{ t('plan') }}</span>
       </Button>
     </CardFooter>
-
   </Card>
 </template>
 

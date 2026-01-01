@@ -7,7 +7,9 @@ defineProps<{
 </script>
 
 <template>
-  <h1 class="scroll-m-20 text-left text-6 font-bold tracking-tight text-balance">
+  <h1
+    class="scroll-m-20 text-left text-6 font-bold tracking-tight text-balance"
+  >
     {{ title }}
   </h1>
   <Separator orientation="horizontal" class="mb-4" />

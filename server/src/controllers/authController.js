@@ -6,167 +6,178 @@ import { getSecret } from '../utils/secrets.js';
 
 let JWT_SECRET;
 try {
-    JWT_SECRET = getSecret('JWT_SECRET', 'JWT_SECRET');
+  JWT_SECRET = getSecret('JWT_SECRET', 'JWT_SECRET');
 } catch (error) {
-    console.error(error.message);
-    process.exit(1);
+  console.error(error.message);
+  process.exit(1);
 }
 
 // --- REGISTER LOGIC ---
 export const signup = async (req, res) => {
-    try {
-        const { name, email, password, favRegions } = req.body;
+  try {
+    const { name, email, password, favRegions } = req.body;
 
-        // 1. Basic Validation
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: 'Please fill in all required fields' });
-        }
-
-        // 2. Validate email format
-        if (!validator.isEmail(email)) {
-            return res.status(400).json({ message: 'Please provide a valid email address' });
-        }
-
-        // 3. Validate password strength
-        if (password.length < 8) {
-            return res.status(400).json({ message: 'Password must be at least 8 characters long' });
-        }
-        if (!validator.isStrongPassword(password, {
-            minLength: 8,
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1,
-            minSymbols: 0
-        })) {
-            return res.status(400).json({
-                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-            });
-        }
-
-        // 4. Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email already registered' });
-        }
-
-        // 5. Hash the password
-        const salt = await bcrypt.genSalt(12);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // 6. Create new User with your specific schema fields
-        const newUser = new User({
-            name,
-            email: validator.normalizeEmail(email), // Normalize email
-            password: hashedPassword,
-            favRegions: favRegions || [], // Optional
-            status: 'active' // Default status
-        });
-
-        // 7. Save user to database
-        const savedUser = await newUser.save();
-        if (!savedUser) {
-            return res.status(500).json({ message: 'Error saving user to database' });
-        }
-        res.status(201).json({ message: 'User registered successfully!' });
-
-    } catch (error) {
-        console.error('Signup Error:', error);
-        res.status(500).json({ message: 'Server error during signup' });
+    // 1. Basic Validation
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Please fill in all required fields' });
     }
+
+    // 2. Validate email format
+    if (!validator.isEmail(email)) {
+      return res
+        .status(400)
+        .json({ message: 'Please provide a valid email address' });
+    }
+
+    // 3. Validate password strength
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ message: 'Password must be at least 8 characters long' });
+    }
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 0,
+      })
+    ) {
+      return res.status(400).json({
+        message:
+          'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+      });
+    }
+
+    // 4. Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already registered' });
+    }
+
+    // 5. Hash the password
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // 6. Create new User with your specific schema fields
+    const newUser = new User({
+      name,
+      email: validator.normalizeEmail(email), // Normalize email
+      password: hashedPassword,
+      favRegions: favRegions || [], // Optional
+      status: 'active', // Default status
+    });
+
+    // 7. Save user to database
+    const savedUser = await newUser.save();
+    if (!savedUser) {
+      return res.status(500).json({ message: 'Error saving user to database' });
+    }
+    res.status(201).json({ message: 'User registered successfully!' });
+  } catch (error) {
+    console.error('Signup Error:', error);
+    res.status(500).json({ message: 'Server error during signup' });
+  }
 };
 
 // --- LOGIN LOGIC ---
 export const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-        // 1. Find user and explicitly select the password field
-        // This is crucial if your schema has { select: false } on password
-        const user = await User.findOne({ email }).select('+password');
-        if (!user) {
-            return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        // --- DEFENSIVE CHECK ---
-        // Prevents server crash (500) if the user record is corrupted (missing password)
-        if (!user.password) {
-            console.error(`Error: User ${email} has no password field in DB.`);
-            return res.status(400).json({ message: 'There was a problem with your account. Please contact support at support@example.com.' });
-        }
-
-        // 2. Check if user is banned
-        if (user.status === 'banned') {
-            return res.status(403).json({ message: 'Invalid credentials' });
-        }
-
-        // 3. Validate password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        // 4. Generate JWT Token
-        const token = jwt.sign(
-            { id: user._id, email: user.email },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-        );
-
-        const isAdmin = !!(await Admin.findOne({ email: user.email }));
-
-        // 5. Send response
-        res.json({
-            token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                favRegions: user.favRegions,
-                isAdmin: isAdmin
-            }
-        });
-
-    } catch (error) {
-        console.error('Login Error:', error);
-        res.status(500).json({ message: 'Server error during login' });
+    // 1. Find user and explicitly select the password field
+    // This is crucial if your schema has { select: false } on password
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
+
+    // --- DEFENSIVE CHECK ---
+    // Prevents server crash (500) if the user record is corrupted (missing password)
+    if (!user.password) {
+      console.error(`Error: User ${email} has no password field in DB.`);
+      return res.status(400).json({
+        message:
+          'There was a problem with your account. Please contact support at support@example.com.',
+      });
+    }
+
+    // 2. Check if user is banned
+    if (user.status === 'banned') {
+      return res.status(403).json({ message: 'Invalid credentials' });
+    }
+
+    // 3. Validate password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // 4. Generate JWT Token
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+      expiresIn: '24h',
+    });
+
+    const isAdmin = !!(await Admin.findOne({ email: user.email }));
+
+    // 5. Send response
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        favRegions: user.favRegions,
+        isAdmin: isAdmin,
+      },
+    });
+  } catch (error) {
+    console.error('Login Error:', error);
+    res.status(500).json({ message: 'Server error during login' });
+  }
 };
 
 export const deleteAccount = async (req, res) => {
-    const { email, password } = req.body;
-    // Input validation: check for missing or empty email/password
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required.' });
+  const { email, password } = req.body;
+  // Input validation: check for missing or empty email/password
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
+  }
+  try {
+    // 1. Find user by email
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
-    try {
-        // 1. Find user by email
-        const user = await User.findOne({ email }).select('+password');
-        if (!user) {
-            return res.status(400).json({ error: 'Invalid credentials' });
-        }
 
-        // --- DEFENSIVE CHECK ---
-        // Prevents server crash (500) if the user record is corrupted (missing password)
-        if (!user.password) {
-            console.error(`Error: User ${email} has no password field in DB.`);
-            return res.status(400).json({ error: 'There was a problem with your account. Please contact support at support@example.com.' });
-        }
-
-        // 2. Validate password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid credentials' });
-        }
-
-        // 3. Delete user account
-        let result = await User.deleteOne({ _id: user._id });
-        if (result.deletedCount === 1) {
-            res.status(200).json({ message: 'Account deleted successfully' });
-        } else {
-            res.status(500).json({ error: 'Error deleting account' });
-        }
-    } catch (error) {
-        console.error('Delete Account Error:', error);
-        res.status(500).json({ error: 'Server error during account deletion' });
+    // --- DEFENSIVE CHECK ---
+    // Prevents server crash (500) if the user record is corrupted (missing password)
+    if (!user.password) {
+      console.error(`Error: User ${email} has no password field in DB.`);
+      return res.status(400).json({
+        error:
+          'There was a problem with your account. Please contact support at support@example.com.',
+      });
     }
-}
+
+    // 2. Validate password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    // 3. Delete user account
+    let result = await User.deleteOne({ _id: user._id });
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: 'Account deleted successfully' });
+    } else {
+      res.status(500).json({ error: 'Error deleting account' });
+    }
+  } catch (error) {
+    console.error('Delete Account Error:', error);
+    res.status(500).json({ error: 'Server error during account deletion' });
+  }
+};

@@ -8,7 +8,7 @@ Inside each file there may be multiple endpoints,
 you can reference a specific endpoint using this syntax:
 
 ```yaml
-$ref: "./paths/filename.yaml#/~1endpointPath"
+$ref: './paths/filename.yaml#/~1endpointPath'
 ```
 
 Where:

@@ -15,14 +15,15 @@ export interface User {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-
   // --- State ---
   const router = useRouter();
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
   const token = ref<string | null>(localStorage.getItem('token'));
   const isAdmin = ref<boolean>(false);
-  const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  const user = ref<User | null>(
+    JSON.parse(localStorage.getItem('user') || 'null')
+  );
   const error = ref<string | null>(null);
   const isLoading = ref(false);
   const httpHelper = new HttpHelper('/api', token.value || undefined);
@@ -140,7 +141,12 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   // 5. Signup
-  const signup = async (name: string, email: string, signupPassword: string, favRegions: string[] = []) => {
+  const signup = async (
+    name: string,
+    email: string,
+    signupPassword: string,
+    favRegions: string[] = []
+  ) => {
     isLoading.value = true;
     error.value = null;
 
@@ -149,7 +155,7 @@ export const useAuthStore = defineStore('auth', () => {
         name,
         email,
         password: signupPassword,
-        favRegions
+        favRegions,
       };
       const res = await httpHelper.post('/auth/signup', body);
       const data = await res.json();
@@ -163,7 +169,7 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = err.message;
       return false;
     } finally {
-      console.log("Account creation process finished.");
+      console.log('Account creation process finished.');
       isLoading.value = false;
     }
   };
@@ -191,7 +197,7 @@ export const useAuthStore = defineStore('auth', () => {
       return false;
     } finally {
       isLoading.value = false;
-    };
+    }
   };
 
   function clearAuthenticationStore() {
@@ -201,12 +207,26 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = false;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-  };
+  }
 
   function log(message: string) {
     error.value = message;
     console.error(message);
-  };
+  }
 
-  return { token, user, isAdmin, error, isLoading, isAccountDeleteFailed, accountDeleteMessage, login, signup, logout, deleteAccount, fetchProfile, updateProfile };
+  return {
+    token,
+    user,
+    isAdmin,
+    error,
+    isLoading,
+    isAccountDeleteFailed,
+    accountDeleteMessage,
+    login,
+    signup,
+    logout,
+    deleteAccount,
+    fetchProfile,
+    updateProfile,
+  };
 });

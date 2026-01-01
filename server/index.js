@@ -20,20 +20,24 @@ connectDB();
 
 // Validate CLIENT_ORIGIN to prevent security vulnerabilities
 if (CLIENT_ORIGIN === '*') {
-    throw new Error('CLIENT_ORIGIN cannot be a wildcard (*) when credentials are enabled');
+  throw new Error(
+    'CLIENT_ORIGIN cannot be a wildcard (*) when credentials are enabled'
+  );
 }
 
-app.use(cors({
+app.use(
+  cors({
     origin: CLIENT_ORIGIN,
     credentials: true,
-}));
+  })
+);
 
 // Routes
-app.use('/api', mainRoutes);      // Public/Generic routes
+app.use('/api', mainRoutes); // Public/Generic routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Server listening at: http://localhost:${PORT}/`);
+  console.log(`Server listening at: http://localhost:${PORT}/`);
 });

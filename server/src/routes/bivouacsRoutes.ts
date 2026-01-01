@@ -1,5 +1,8 @@
 import express from 'express';
-import { fetchBivouacs, fetchMapBivouacs } from '../controllers/bivouacsController.ts';
+import {
+  fetchBivouacs,
+  fetchMapBivouacs,
+} from '../controllers/bivouacsController.ts';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

@@ -16,16 +16,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Bed as BedIcon, Mountain as MountainIcon, Settings2Icon } from 'lucide-vue-next';
-import { useI18n } from "vue-i18n";
+import {
+  Bed as BedIcon,
+  Mountain as MountainIcon,
+  Settings2Icon,
+} from 'lucide-vue-next';
+import { useI18n } from 'vue-i18n';
 import type { Filter } from './Bivouacs.vue';
-const { t } = useI18n()
+const { t } = useI18n();
 
 defineProps<{
   filters: {
     minDesiredBeds: Filter;
     altitudeFilter: Filter;
-  }
+  };
 }>();
 </script>
 
@@ -43,16 +47,28 @@ defineProps<{
           {{ t('bar_description') }}
         </SheetDescription>
       </SheetHeader>
-      
+
       <!-- Filter options -->
       <div class="flex flex-col px-4">
-
         <div class="beds-label flex items-center gap-2 mb-2">
-          <BedIcon :fill="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'none'" :color="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'currentColor'" />
+          <BedIcon
+            :fill="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'none'"
+            :color="
+              filters.minDesiredBeds.currentValue >= 1
+                ? 'green'
+                : 'currentColor'
+            "
+          />
           {{ t('set_minimum_beds') }}
         </div>
         <div class="beds-filter flex items-center gap-2">
-          <NumberField id="beds" :default-value="0" :min="0" v-model="filters.minDesiredBeds.currentValue" class="w-full">
+          <NumberField
+            id="beds"
+            :default-value="0"
+            :min="0"
+            v-model="filters.minDesiredBeds.currentValue"
+            class="w-full"
+          >
             <NumberFieldContent>
               <NumberFieldDecrement />
               <NumberFieldInput />
@@ -74,18 +90,41 @@ defineProps<{
         </Toggle> -->
 
         <div class="altitude-label flex items-center gap-2 mb-2">
-          <MountainIcon :fill="(filters.altitudeFilter.currentValue.min > filters.altitudeFilter.default.min || filters.altitudeFilter.currentValue.max < filters.altitudeFilter.default.max) ? 'purple' : 'none'" />
+          <MountainIcon
+            :fill="
+              filters.altitudeFilter.currentValue.min >
+                filters.altitudeFilter.default.min ||
+              filters.altitudeFilter.currentValue.max <
+                filters.altitudeFilter.default.max
+                ? 'purple'
+                : 'none'
+            "
+          />
           {{ t('set_altitude_range') }}
         </div>
 
         <div class="altitude-filter flex items-center gap-2">
-          <NumberField id="altitude-min" :default-value="filters.altitudeFilter.default.min" :min="filters.altitudeFilter.default.min" :max="filters.altitudeFilter.default.max" v-model="filters.altitudeFilter.currentValue.min" class="w-full">
+          <NumberField
+            id="altitude-min"
+            :default-value="filters.altitudeFilter.default.min"
+            :min="filters.altitudeFilter.default.min"
+            :max="filters.altitudeFilter.default.max"
+            v-model="filters.altitudeFilter.currentValue.min"
+            class="w-full"
+          >
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
           </NumberField>
           -
-          <NumberField id="altitude-max" :default-value="filters.altitudeFilter.default.max" :min="filters.altitudeFilter.default.min" :max="filters.altitudeFilter.default.max" v-model="filters.altitudeFilter.currentValue.max" class="w-full">
+          <NumberField
+            id="altitude-max"
+            :default-value="filters.altitudeFilter.default.max"
+            :min="filters.altitudeFilter.default.min"
+            :max="filters.altitudeFilter.default.max"
+            v-model="filters.altitudeFilter.currentValue.max"
+            class="w-full"
+          >
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
@@ -93,13 +132,15 @@ defineProps<{
         </div>
 
         <Separator orientation="horizontal" class="my-4" />
-        
+
         <!-- <Toggle variant="outline" aria-label="Only open" v-model="filters.onlyOpen" class="w-full">
           <CalendarIcon :fill="filters.onlyOpen ? 'orange' : 'none'" :color="filters.onlyOpen ? 'orange' : 'currentColor'" />
           {{ t('only_open') }}
         </Toggle> -->
 
-        <Button variant="destructive" @click="$emit('reset')" class="w-full">{{ t('reset') }}</Button>
+        <Button variant="destructive" @click="$emit('reset')" class="w-full">{{
+          t('reset')
+        }}</Button>
       </div>
     </SheetContent>
   </Sheet>
