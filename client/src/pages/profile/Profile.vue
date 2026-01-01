@@ -127,7 +127,7 @@ const handleSave = async () => {
     "profile_update_success": "Profile updated successfully.",
     "profile_update_error": "An error occurred while updating your profile.",
     "saving": "Saving...",
-    "save_modifications": "Save Changes",
+    "save_modifications": "Save Changes"
   },
   "it": {
     "your_profile": "Il Tuo Profilo",
@@ -135,7 +135,7 @@ const handleSave = async () => {
     "profile_update_success": "Profilo aggiornato con successo.",
     "profile_update_error": "Si è verificato un errore durante l'aggiornamento del profilo.",
     "saving": "Salvataggio...",
-    "save_modifications": "Salva Modifiche",
+    "save_modifications": "Salva Modifiche"
   },
   "es": {
     "your_profile": "Tu Perfil",
@@ -143,7 +143,7 @@ const handleSave = async () => {
     "profile_update_success": "Perfil actualizado con éxito.",
     "profile_update_error": "Ocurrió un error al actualizar tu perfil.",
     "saving": "Guardando...",
-    "save_modifications": "Guardar Modificaciones",
+    "save_modifications": "Guardar Modificaciones"
   }
 }
 </i18n>
