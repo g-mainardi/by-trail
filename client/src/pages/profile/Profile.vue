@@ -99,7 +99,7 @@ const handleSave = async () => {
         <ProfilePersonalData
           v-model="formData.name"
           :email="formData.email"
-          :name="user?.name || ''"
+          :readOnlyFullName="user?.name || ''"
         />
       </div>
 

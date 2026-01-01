@@ -5,7 +5,13 @@ import { useI18n } from 'vue-i18n';
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Check, ChevronsUpDown, X } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
@@ -31,21 +37,40 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['update:modelValue']);
-const openRegions = ref(false); // Popover state  
+const openRegions = ref(false); // Popover state
 
 // --- Constants ---
 const ITALIAN_REGIONS = [
-  "Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna",
-  "Friuli-Venezia Giulia", "Lazio", "Liguria", "Lombardia", "Marche",
-  "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana",
-  "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"
+  'Abruzzo',
+  'Basilicata',
+  'Calabria',
+  'Campania',
+  'Emilia-Romagna',
+  'Friuli-Venezia Giulia',
+  'Lazio',
+  'Liguria',
+  'Lombardia',
+  'Marche',
+  'Molise',
+  'Piemonte',
+  'Puglia',
+  'Sardegna',
+  'Sicilia',
+  'Toscana',
+  'Trentino-Alto Adige',
+  'Umbria',
+  "Valle d'Aosta",
+  'Veneto',
 ];
 
 // --- Logic: Toggle Region (Add/Remove from Popover) ---
 const toggleRegion = (region: string) => {
   const current = [...props.modelValue];
   if (current.includes(region)) {
-    emit('update:modelValue', current.filter((r) => r !== region));
+    emit(
+      'update:modelValue',
+      current.filter((r) => r !== region)
+    );
   } else {
     current.push(region);
     emit('update:modelValue', current);
@@ -57,44 +82,48 @@ const removeRegion = (region: string) => {
   const current = props.modelValue.filter((r) => r !== region);
   emit('update:modelValue', current);
 };
-
 </script>
 
 <template>
   <Card class="h-full border-none shadow-md">
     <CardHeader>
-      <CardTitle>{{ t("preferred_regions") }}</CardTitle>
-      <CardDescription>{{ t("personalize_trekking") }}</CardDescription>
+      <CardTitle>{{ t('preferred_regions') }}</CardTitle>
+      <CardDescription>{{ t('personalize_trekking') }}</CardDescription>
     </CardHeader>
     <CardContent class="space-y-4">
-      
       <div class="flex flex-col gap-4">
-        <Label class="text-base">{{ t("select_regions") }}</Label>
-        
+        <Label class="text-base">{{ t('select_regions') }}</Label>
+
         <Popover v-model:open="openRegions">
           <PopoverTrigger as-child>
             <Button
-              type="button" 
+              type="button"
               variant="outline"
               role="combobox"
               :aria-expanded="openRegions"
               class="justify-between w-full h-12 px-4 text-left"
             >
-              <span class="text-muted-foreground" v-if="modelValue.length === 0">
-                {{ t("select_regions") }}
+              <span
+                class="text-muted-foreground"
+                v-if="modelValue.length === 0"
+              >
+                {{ t('select_regions') }}
               </span>
               <span class="text-foreground" v-else>
-                 {{ modelValue.length }} {{ t("selected_regions") }}
+                {{ modelValue.length }} {{ t('selected_regions') }}
               </span>
               <ChevronsUpDown class="w-4 h-4 ml-2 opacity-50 shrink-0" />
             </Button>
           </PopoverTrigger>
 
-          <PopoverContent class="w-[--radix-popover-trigger-width] p-0 z-50" align="start">
+          <PopoverContent
+            class="w-[--radix-popover-trigger-width] p-0 z-50"
+            align="start"
+          >
             <Command>
               <CommandInput :placeholder="t('search_region')" />
-              <CommandEmpty>{{ t("no_region_found") }}</CommandEmpty>
-              
+              <CommandEmpty>{{ t('no_region_found') }}</CommandEmpty>
+
               <CommandList class="max-h-[300px] overflow-y-auto">
                 <CommandGroup>
                   <CommandItem
@@ -105,10 +134,14 @@ const removeRegion = (region: string) => {
                     class="cursor-pointer"
                   >
                     <Check
-                      :class="cn(
-                        'mr-2 h-4 w-4 transition-opacity',
-                        modelValue.includes(region) ? 'opacity-100' : 'opacity-0'
-                      )"
+                      :class="
+                        cn(
+                          'mr-2 h-4 w-4 transition-opacity',
+                          modelValue.includes(region)
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                        )
+                      "
                     />
                     {{ region }}
                   </CommandItem>
@@ -119,18 +152,21 @@ const removeRegion = (region: string) => {
         </Popover>
 
         <div class="min-h-[100px] p-4 border rounded-lg bg-muted/20">
-          <p v-if="modelValue.length === 0" class="text-sm italic text-muted-foreground">
-            {{t("no_region_found")}}
+          <p
+            v-if="modelValue.length === 0"
+            class="text-sm italic text-muted-foreground"
+          >
+            {{ t('no_region_selected') }}
           </p>
           <div v-else class="flex flex-wrap gap-2">
-            <Badge 
-              v-for="region in modelValue" 
-              :key="region" 
+            <Badge
+              v-for="region in modelValue"
+              :key="region"
               variant="secondary"
               class="flex items-center gap-1 px-3 py-1.5 text-sm transition-all hover:text-red-500"
             >
               {{ region }}
-              <button 
+              <button
                 type="button"
                 class="ml-1 rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 @click.prevent.stop="removeRegion(region)"
@@ -141,7 +177,6 @@ const removeRegion = (region: string) => {
           </div>
         </div>
       </div>
-
     </CardContent>
   </Card>
 </template>
@@ -154,7 +189,8 @@ const removeRegion = (region: string) => {
     "select_regions": "Select regions...",
     "selected_regions": "regions selected",
     "search_region": "Search region...",
-    "no_region_found": "No region found."
+    "no_region_found": "No region found.",
+    "no_region_selected": "No region selected."
   },
   "it": {
     "preferred_regions": "Regioni Preferite",
@@ -162,7 +198,8 @@ const removeRegion = (region: string) => {
     "select_regions": "Seleziona regioni...",
     "selected_regions": "regioni selezionate",
     "search_region": "Cerca regione...",
-    "no_region_found": "Nessuna regione trovata."
+    "no_region_found": "Nessuna regione trovata.",
+    "no_region_selected": "Nessuna regione selezionata."
   },
   "es": {
     "preferred_regions": "Regiones Preferidas",
@@ -170,7 +207,8 @@ const removeRegion = (region: string) => {
     "select_regions": "Seleccionar regiones...",
     "selected_regions": "regiones seleccionadas",
     "search_region": "Buscar región...",
-    "no_region_found": "No se encontró ninguna región."
+    "no_region_found": "No se encontró ninguna región.",
+    "no_region_selected": "Ninguna región seleccionada."
   }
 }
 </i18n>

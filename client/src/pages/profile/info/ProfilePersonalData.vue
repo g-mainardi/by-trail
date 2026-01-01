@@ -4,7 +4,13 @@ import { useI18n } from 'vue-i18n';
 // --- UI Components ---
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 
@@ -13,44 +19,54 @@ const { t } = useI18n();
 const props = defineProps<{
   email: string;
   modelValue: string;
-  name: string;
+  readOnlyFullName: string;
 }>();
 
 const emit = defineEmits(['update:modelValue']);
-
 </script>
 
 <template>
   <Card class="h-full border-none shadow-md">
     <CardHeader>
-      <CardTitle>{{ t("personal_data") }}</CardTitle>
-      <CardDescription>{{t("personal_data_description")}}</CardDescription>
+      <CardTitle>{{ t('personal_data') }}</CardTitle>
+      <CardDescription>{{ t('personal_data_description') }}</CardDescription>
     </CardHeader>
     <CardContent class="space-y-6">
-
-      <div class="flex flex-col items-center justify-center gap-4 py-4 sm:flex-row sm:justify-start">
-          <Avatar class="w-24 h-24 border-4 border-muted">
-          <AvatarFallback class="text-2xl">{{ name?.charAt(0).toUpperCase() }}</AvatarFallback>
-          </Avatar>
-          <div class="text-center sm:text-left">
-          <h3 class="text-lg font-medium">{{ name || t("username_placeholder") }}</h3>
+      <div
+        class="flex flex-col items-center justify-center gap-4 py-4 sm:flex-row sm:justify-start"
+      >
+        <Avatar class="w-24 h-24 border-4 border-muted">
+          <AvatarFallback class="text-2xl">{{
+            readOnlyFullName?.charAt(0).toUpperCase()
+          }}</AvatarFallback>
+        </Avatar>
+        <div class="text-center sm:text-left">
+          <h3 class="text-lg font-medium">
+            {{ readOnlyFullName || t('username_placeholder') }}
+          </h3>
           <p class="text-sm text-muted-foreground">{{ email }}</p>
-          </div>
+        </div>
       </div>
 
       <Separator class="my-4" />
 
       <div class="space-y-2">
-          <Label for="name">{{ t("your_name") }}</Label>
-          <Input id="name" :model-value="modelValue" @update:model-value="val => emit('update:modelValue', val)" class="h-10" />
+        <Label for="name">{{ t('your_name') }}</Label>
+        <Input
+          id="name"
+          :model-value="modelValue"
+          @update:model-value="(val) => emit('update:modelValue', val)"
+          class="h-10"
+        />
       </div>
 
       <div class="space-y-2">
-          <Label for="email">Email</Label>
-          <Input id="email" :model-value="email" @update:model-value="val => emit('update:modelValue', val)" disabled class="bg-muted/50" />
-          <p class="text-[0.8rem] text-muted-foreground">{{t("unmodifiable_email")}}</p>
+        <Label for="email">Email</Label>
+        <Input id="email" :model-value="email" disabled class="bg-muted/50" />
+        <p class="text-[0.8rem] text-muted-foreground">
+          {{ t('unmodifiable_email') }}
+        </p>
       </div>
-
     </CardContent>
   </Card>
 </template>
