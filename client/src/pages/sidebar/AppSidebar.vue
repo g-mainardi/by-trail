@@ -12,6 +12,7 @@ import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue';
 import SidebarUser from '@/pages/sidebar/SidebarUser.vue';
 import { useAuthStore } from '@/stores/auth.ts';
 import {
+  Activity,
   Bell,
   LogOutIcon,
   Map,
@@ -69,6 +70,11 @@ const data = computed(() => ({
       icon: UserRound,
     },
     {
+      title: t('activities'),
+      url: '/activities',
+      icon: Activity,
+    },
+    {
       title: t('notifications'),
       url: '#',
       icon: Bell,
@@ -120,6 +126,7 @@ const data = computed(() => ({
     "routes": "Routes",
     "bivouacs": "Bivouacs & Shelters",
     "profile": "Profile",
+    "activities": "Activities",
     "notifications": "Notifications",
     "settings": "Settings",
     "admin": "Admin",
@@ -130,6 +137,7 @@ const data = computed(() => ({
     "routes": "Percorsi",
     "bivouacs": "Bivacchi e Rifugi",
     "profile": "Profilo",
+    "activities": "Attività",
     "notifications": "Notifiche",
     "settings": "Impostazioni",
     "admin": "Amministratore",
@@ -140,6 +148,7 @@ const data = computed(() => ({
     "routes": "Rutas",
     "bivouacs": "Vivacs & Refugios",
     "profile": "Perfil",
+    "activities": "Actividades",
     "notifications": "Notificaciones",
     "settings": "Ajustes",
     "admin": "Administrador",
