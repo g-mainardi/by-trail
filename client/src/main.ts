@@ -15,6 +15,7 @@ import MainLayout from '@/layouts/MainLayout.vue';
 import Login from '@/pages/login/Login.vue';
 import Maps from '@/pages/maps/Maps.vue';
 import Profile from '@/pages/profile/Profile.vue';
+import Activities from '@/pages/activities/Activities.vue';
 import Admin from './pages/admin/Admin.vue';
 import Bivouac from './pages/bivouac/Bivouac.vue';
 import Bivouacs from './pages/bivouacs/Bivouacs.vue';
@@ -44,6 +45,11 @@ const routes = [
         path: 'profile',
         name: 'Profile',
         component: Profile,
+      },
+      {
+        path: 'activities',
+        name: 'Activities',
+        component: Activities,
       },
       {
         path: 'bivouacs',
