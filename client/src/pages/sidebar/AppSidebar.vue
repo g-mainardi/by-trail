@@ -38,7 +38,6 @@ const handleLogout = () => {
   authStore.logout();
 }
 
-// This is sample data.
 const data = computed(() => ({
   appInfo: [
     {
@@ -56,7 +55,7 @@ const data = computed(() => ({
     },
     {
       title: t("routes"),
-      url: "#",
+      url: "/routes",
       icon: Route,
       action: () => {}
     },

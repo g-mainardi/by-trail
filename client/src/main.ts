@@ -10,6 +10,7 @@ import Maps from '@/pages/maps/Maps.vue'
 import Login from '@/pages/login/Login.vue'
 import Profile from '@/pages/profile/Profile.vue'
 import Bivouacs from './pages/bivouacs/Bivouacs.vue'
+import Routes from './pages/routes/Routes.vue'
 import Settings from './pages/settings/Settings.vue'
 import Signup from './pages/signup/Signup.vue'
 
@@ -31,14 +32,19 @@ const routes = [
         component: Maps
       },
       {
-        path: 'profile',
-        name: "Profile",
-        component: Profile
+        path: 'routes',
+        name: "Routes",
+        component: Routes
       },
       {
         path: 'bivouacs',
         name: "Bivouacs",
         component: Bivouacs
+      },
+      {
+        path: 'profile',
+        name: "Profile",
+        component: Profile
       },
       {
         path: 'settings',
