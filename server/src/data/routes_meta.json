@@ -1,0 +1,14 @@
+{
+    "routes": [
+        {
+            "title": "Pradimezzo - Bivacco Bedin",
+            "region": ["Veneto"],
+            "difficulty": "EE",
+            "distance": 13.1,
+            "ascent": 1916,
+            "descent": 1916,
+            "duration": 390,
+            "gpxFile": "pradimezzo_bivacco_bedin.gpx"
+        }
+    ]
+}

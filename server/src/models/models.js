@@ -36,17 +36,31 @@ const bivouacSchema = new Schema({
     note: { type: String },
 });
 
-const trailSchema = new Schema({
-    name: { type: String, required: true },
-    region: { type: String, required: true },
-    city: { type: String, required: true },
-    distance: { type: Number, required: true },
+const routeSchema = new Schema({
+    title: { type: String, required: true },
+    region: { type: [String], required: true },
+    // T (Turistico, facile), E (Escursionistico, per esperti), EE (Escursioniti Esperti, terreni impervi), EEA (Escursionisti Esperti con Attrezzatura, vie ferrate)
     difficulty: { type: String, required: true },
+    distance: { type: Number, required: true },
     ascent: { type: Number, required: true },
     descent: { type: Number, required: true },
     duration: { type: Number, required: true },
     likes: { type: Number, default: 0, min: 0 },
-})
+    path: {
+        type: {
+            type: String,
+            enum: ['LineString', 'MultiLineString'],
+            required: true,
+        },
+        coordinates: {
+            type: [[Number]],
+            required: true
+        }
+    }
+}, { timestamps: true });
+
+// Create a 2dsphere index for Geospatial queries 
+routeSchema.index({ path: '2dsphere' });
 
 const imageSchema = new Schema({
     url: { type: String },
@@ -95,7 +109,7 @@ const notificationSchema = new Schema({
 const User = mongoose.model('User', userSchema);
 const Admin = mongoose.model('Admin', adminSchema);
 const Bivouac = mongoose.model('Bivouac', bivouacSchema);
-const Trail = mongoose.model('Trail', trailSchema);
+const Route = mongoose.model('Route', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivacco = mongoose.model('FavBivacco', favBivaccoSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
@@ -104,4 +118,4 @@ const Setting = mongoose.model('Setting', settingSchema);
 const Notify = mongoose.model('Notify', notificationSchema);
 
 
-export { Admin, Bivouac, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Trail, User };
+export { Admin, Bivouac, FavBivacco, FavTrail, Image, Notify, Reservation, Setting, Route, User };
