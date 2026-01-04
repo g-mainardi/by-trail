@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import { Admin, User } from '../models/models.js';
-import { getSecret } from '../utils/secrets.js';
+import { User } from '../models/models.ts';
+import { getSecret } from '../utils/secrets.ts';
 
 let JWT_SECRET;
 try {
@@ -69,6 +69,7 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       favRegions: favRegions || [], // Optional
       status: 'active', // Default status
+      type: 'user', // Default type
     });
 
     // 7. Save user to database
@@ -121,8 +122,6 @@ export const login = async (req, res) => {
       expiresIn: '24h',
     });
 
-    const isAdmin = !!(await Admin.findOne({ email: user.email }));
-
     // 5. Send response
     res.json({
       token,
@@ -131,7 +130,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         favRegions: user.favRegions,
-        isAdmin: isAdmin,
+        type: user.type,
       },
     });
   } catch (error) {

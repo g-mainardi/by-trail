@@ -36,9 +36,7 @@ const handleLogout = () => {
   authStore.logout();
 };
 
-const isAdmin = computed(() => {
-  return authStore.isAdmin;
-});
+const isAdmin = computed(() => authStore.user?.type === 'admin');
 
 // This is sample data.
 const data = computed(() => ({

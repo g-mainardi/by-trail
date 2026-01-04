@@ -1,4 +1,4 @@
-import { User, Setting } from '../models/models.js';
+import { Setting, User } from '../models/models.ts';
 
 /**
  * GET /api/users/profile
@@ -25,6 +25,7 @@ export const getProfile = async (req, res) => {
         email: user.email,
         favRegions: user.favRegions,
         creationDate: user.creationDate,
+        type: user.type,
       },
     });
   } catch (error) {
