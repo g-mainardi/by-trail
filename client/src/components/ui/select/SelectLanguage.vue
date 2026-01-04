@@ -7,13 +7,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
+const { t, locale } = useI18n();
+
+const changeLanguage = (newLocale: string | null) => {
+  if (!newLocale) return;
+  locale.value = newLocale;
+  localStorage.setItem('locale', newLocale);
+};
 </script>
 
 <template>
   <Select
     class="w-[180px]"
     v-model="$i18n.locale"
+    @update:model-value="(val) => changeLanguage(val as string)"
     :aria-label="t('selectLanguage')"
   >
     <SelectTrigger class="mt-6 bg-white text-black">

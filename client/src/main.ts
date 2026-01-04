@@ -14,9 +14,10 @@ import Bivouacs from './pages/bivouacs/Bivouacs.vue';
 import Settings from './pages/settings/Settings.vue';
 import Signup from './pages/signup/Signup.vue';
 
+const savedLocale = localStorage.getItem('locale') || 'en';
 const i18n = createI18n({
   legacy: false,
-  locale: 'it',
+  locale: savedLocale,
   fallbackLocale: 'en',
 });
 
