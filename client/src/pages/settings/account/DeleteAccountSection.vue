@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import H1 from '@/layouts/typography/H1.vue';
 import { useAuthStore } from '@/stores/auth';
 import { AlertCircleIcon } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import DeleteAccountForm from './DeleteAccountForm.vue';
-import SectionTitle from './SectionTitle.vue';
 const { t } = useI18n();
 const auth = useAuthStore();
 </script>
 
 <template>
-  <SectionTitle :title="t('delete_account_title')" />
+  <H1 :text="t('delete_account_title')" class="mb-6" />
   <DeleteAccountForm />
   <Alert
     variant="destructive"

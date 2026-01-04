@@ -118,7 +118,7 @@ const data = computed(() => ({
   "en": {
     "maps": "Maps",
     "routes": "Routes",
-    "bivouacs": "Bivouacs & Shelters",
+    "bivouacs": "Bivouacs e Shelters",
     "profile": "Profile",
     "notifications": "Notifications",
     "settings": "Settings",

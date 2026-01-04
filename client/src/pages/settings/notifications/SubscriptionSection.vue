@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import H1 from '@/layouts/typography/H1.vue';
 import { useI18n } from 'vue-i18n';
-import SectionTitle from '../account/SectionTitle.vue';
 const { t } = useI18n();
 </script>
 
 <template>
-  <SectionTitle :title="t('subscription')" />
-  <div class="flex items-center space-x-2 mb-4">
+  <H1 :text="t('subscription')" />
+  <div class="flex items-center space-x-2 mt-6 mb-4">
     <Switch id="new-bivouacs" />
     <Label for="new-bivouacs">{{ t('get_updates_new_bivouacs') }}</Label>
   </div>
-  <div class="flex items-center space-x-2 mb-4">
+  <div class="flex items-center space-x-2 mb-2">
     <Switch id="new-routes" />
     <Label for="new-routes">{{ t('get_updates_new_routes') }}</Label>
   </div>

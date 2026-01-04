@@ -2,10 +2,16 @@
 import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
+import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
   ArrowUpRight as ArrowUpRightIcon,
+  Bed as BedIcon,
   Eye as EyeIcon,
+  MapPin as MapPinIcon,
+  Mountain as MountainIcon,
+  ThumbsUp as ThumbsUpIcon,
+  Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
@@ -14,20 +20,6 @@ const hoodHousePath = new URL(
   '@/assets/trekking_hood_house.png',
   import.meta.url
 ).href;
-const mountainHouse = new URL(
-  '@/assets/trekking_mountain_house.png',
-  import.meta.url
-).href;
-const tentSiteIcon = new URL('@/assets/trekking_tent.png', import.meta.url)
-  .href;
-const cliffHouseIcon = new URL(
-  '@/assets/trekking_cliff_house.png',
-  import.meta.url
-).href;
-const mountain = new URL('@/assets/mountain.png', import.meta.url).href;
-const beds = new URL('@/assets/beds.png', import.meta.url).href;
-const toilet = new URL('@/assets/toilet.png', import.meta.url).href;
-const calendar = new URL('@/assets/calendar.png', import.meta.url).href;
 
 const props = defineProps<{
   bivouac: Bivouac;
@@ -41,33 +33,37 @@ function getIconPath() {
 </script>
 
 <template>
-  <Card class="gap-4 p-4">
-    <CardTitle class="flex items-center gap-4">
-      <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="6" />
+  <Card class="gap-0 p-4">
+    <CardTitle class="flex flex-col md:flex-row md:items-center gap-4">
+      <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
 
-      <h1 class="text-2xl font-bold">
-        {{ bivouac.name }}
-      </h1>
+      <H2 :text="bivouac.name" />
 
-      <div class="icons-wrapper ml-auto flex justify-evenly gap-4">
-        <div class="icon1 flex flex-col">
-          <ThiigsIcon :path="mountain" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.altitude }}
-          </span>
-        </div>
-
-        <div class="icon2 flex flex-col">
-          <ThiigsIcon :path="beds" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.capacity }}
-          </span>
-        </div>
+      <div
+        class="icons-wrapper flex flex-wrap gap-4 md:ml-auto justify-start md:justify-evenly px-2"
+      >
+        <MountainIcon />
+        <span class="flex items-center justify-center">
+          {{ bivouac.altitude }}
+        </span>
+        <BedIcon />
+        <span class="flex items-center justify-center">
+          {{ bivouac.capacity }}
+        </span>
+        <ToiletIcon />
+        <span class="flex items-center justify-center"> N/A </span>
+        <MapPinIcon />
+        <span class="flex items-center justify-center"> N/A </span>
+        <ThumbsUpIcon />
+        <span class="flex items-center justify-center">
+          {{ bivouac.likes }}
+        </span>
       </div>
     </CardTitle>
-    <CardContent class="flex flex-col md:flex-row gap-4 justify-between p-0">
-      <!-- Description -->
-      <span class="description text-sm md:text-base flex-1 flex items-center">
+    <CardContent class="flex flex-col md:flex-row gap-4 p-0">
+      <span
+        class="description text-sm md:text-base flex-1 flex items-center px-2"
+      >
         <span v-if="!bivouac.note">
           {{ t('no_description_available') }}
         </span>
@@ -75,24 +71,17 @@ function getIconPath() {
           {{ bivouac.note }}
         </span>
       </span>
-    </CardContent>
-    <CardFooter class="flex gap-4 px-0">
-      <Button class="flex-1">
-        <EyeIcon />
-        <span class="hidden md:inline">{{ t('view') }}</span>
+
+      <Button class="self-center">
+        <EyeIcon /> <span class="hidden md:inline">{{ t('view') }}</span>
       </Button>
-      <!-- <Button variant="secondary" class="flex-1" @click="$emit('toggle-favorite', bivouac._id)">
-        <HeartIcon
-          :fill="bivouac.favorite ? 'red' : 'none'"
-          :color="bivouac.favorite ? 'red' : 'currentColor'"
-        />
-        <span class="hidden md:inline">{{ t('favorite') }}</span>
-      </Button> -->
-      <Button variant="outline" class="flex-1">
+
+      <Button variant="outline" class="self-center">
         <ArrowUpRightIcon />
         <span class="hidden md:inline">{{ t('plan') }}</span>
       </Button>
-    </CardFooter>
+    </CardContent>
+    <CardFooter class="px-0"> </CardFooter>
   </Card>
 </template>
 
