@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import CardFooter from '@/components/ui/card/CardFooter.vue';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
@@ -6,6 +7,7 @@ import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
   Bed as BedIcon,
+  Eye,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   ThumbsUp as ThumbsUpIcon,
@@ -55,7 +57,7 @@ function getIconPath() {
       </span>
     </CardContent>
 
-    <CardFooter class="px-0 flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
+    <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
       <div class="icon-with-text">
         <MountainIcon />
         <span class="">
@@ -82,6 +84,13 @@ function getIconPath() {
           {{ bivouac.likes }}
         </span>
       </div>
+    </div>
+
+    <CardFooter class="px-0">
+      <Button class="w-full">
+        <Eye :size="4" />
+        {{ t('plan') }}
+      </Button>
     </CardFooter>
   </Card>
 </template>
