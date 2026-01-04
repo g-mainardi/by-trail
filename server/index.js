@@ -5,6 +5,7 @@ import { initSocket } from './src/config/socket.js';
 import connectDB from './src/config/db.js';
 import authRoutes from './src/routes/authRoutes.js';
 import bivouacsRoutes from './src/routes/bivouacsRoutes.ts';
+import routesRoutes from './src/routes/routesRoutes.ts';
 import { mainRoutes } from './src/routes/mainRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
 
@@ -39,6 +40,7 @@ app.use('/api', mainRoutes);      // Public/Generic routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
+app.use('/api/routes', routesRoutes)
 
 httpServer.listen(PORT, () => {
     console.log(`Server listening at: http://localhost:${PORT}/`);

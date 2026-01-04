@@ -16,24 +16,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Bed as BedIcon, Mountain as MountainIcon, Settings2Icon } from 'lucide-vue-next';
+import { Clock as ClockIcon, TrendingUp as TrendingUpIcon, Settings2Icon, Check as CheckIcon } from 'lucide-vue-next';
 import { useI18n } from "vue-i18n";
 import type { Filter } from './Routes.vue';
 const { t } = useI18n()
 
 defineProps<{
   filters: {
-    minDesiredBeds: Filter;
-    altitudeFilter: Filter;
+    maxDuration: Filter;
+    difficulty: Filter;
   }
 }>();
+
+const difficulties = ['All', 'T', 'E', 'EE', 'EEA'];
 </script>
 
 <template>
   <Sheet>
     <SheetTrigger>
       <Button variant="outline" aria-label="Filter options">
-        <Settings2Icon /> {{ t('filters') }}
+        <Settings2Icon class=""mr-2 h-4 w-4/> {{ t('filters') }}
       </Button>
     </SheetTrigger>
     <SheetContent>
@@ -45,14 +47,14 @@ defineProps<{
       </SheetHeader>
       
       <!-- Filter options -->
-      <div class="flex flex-col px-4">
+      <div class="flex flex-col px-4 mt-6">
 
-        <div class="beds-label flex items-center gap-2 mb-2">
-          <BedIcon :fill="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'none'" :color="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'currentColor'" />
-          {{ t('set_minimum_beds') }}
+        <div class="duration-label flex items-center gap-2 mb-2">
+          <ClockIcon :class="filters.maxDuration.currentValue < filters.maxDuration.default ? 'text-green-600' : ''" />
+          {{ t('max_duration') }}
         </div>
-        <div class="beds-filter flex items-center gap-2">
-          <NumberField id="beds" :default-value="0" :min="0" v-model="filters.minDesiredBeds.currentValue" class="w-full">
+        <div class="duration-filter flex items-center gap-2">
+          <NumberField id="duration" :default-value="24" :min="1" v-model="filters.maxDuration.currentValue" class="w-full">
             <NumberFieldContent>
               <NumberFieldDecrement />
               <NumberFieldInput />
@@ -60,6 +62,7 @@ defineProps<{
             </NumberFieldContent>
           </NumberField>
         </div>
+        <p class="text-xs text-muted-foreground mt-1 text-right">{{ t('hours') }}</p>
 
         <Separator orientation="horizontal" class="my-4" />
 
@@ -73,24 +76,23 @@ defineProps<{
           {{ t('favorites_only') }}
         </Toggle> -->
 
-        <div class="altitude-label flex items-center gap-2 mb-2">
-          <MountainIcon :fill="(filters.altitudeFilter.currentValue.min > filters.altitudeFilter.default.min || filters.altitudeFilter.currentValue.max < filters.altitudeFilter.default.max) ? 'purple' : 'none'" />
-          {{ t('set_altitude_range') }}
+        <div class="difficulty-label flex items-center gap-2 mb-2">
+          <TrendingUpIcon class="h-4 w-4" :class="filters.difficulty.currentValue !== 'All' ? 'text-purple-600' : ''" />
+          {{ t('difficulty') }}
         </div>
 
-        <div class="altitude-filter flex items-center gap-2">
-          <NumberField id="altitude-min" :default-value="filters.altitudeFilter.default.min" :min="filters.altitudeFilter.default.min" :max="filters.altitudeFilter.default.max" v-model="filters.altitudeFilter.currentValue.min" class="w-full">
-            <NumberFieldContent>
-              <NumberFieldInput />
-            </NumberFieldContent>
-          </NumberField>
-          -
-          <NumberField id="altitude-max" :default-value="filters.altitudeFilter.default.max" :min="filters.altitudeFilter.default.min" :max="filters.altitudeFilter.default.max" v-model="filters.altitudeFilter.currentValue.max" class="w-full">
-            <NumberFieldContent>
-              <NumberFieldInput />
-            </NumberFieldContent>
-          </NumberField>
+        <div class="grid grid-cols-5 gap-2">
+          <button 
+            v-for="diff in difficulties" 
+            :key="diff"
+            @click="filters.difficulty.currentValue = diff"
+            class="flex items-center justify-center rounded-md border p-2 text-sm transition-colors hover:bg-accent"
+            :class="filters.difficulty.currentValue === diff ? 'bg-primary text-primary-foreground border-primary' : 'bg-background'"
+          >
+            {{ diff === 'All' ? t('all') : diff }}
+          </button>
         </div>
+        <p class="text-xs text-muted-foreground mt-2">T (Tourist), E (Hiker), EE (Expert), EEA (Equipped)</p>
 
         <Separator orientation="horizontal" class="my-4" />
         
@@ -106,35 +108,32 @@ defineProps<{
 </template>
 
 <i18n>
-  {
-    en: {
+ {
+    "en": {
       "filters": "Filters",
-      "bar_description": "Use the filters below to narrow down your search for bivouacs.",
-      "with_toilets_only": "With Toilets Only",
-      "favorites_only": "Favorites Only",
-      "only_open": "Only Open",
-      "set_minimum_beds": "Set minimum beds:",
-      "set_altitude_range": "Set Altitude Range:",
-      "reset": "Reset"
+      "bar_description": "Filter routes by duration and difficulty.",
+      "max_duration": "Max Duration",
+      "difficulty": "Difficulty",
+      "hours": "Hours",
+      "all": "All",
+      "reset": "Reset Filters"
     },
-    it: {
+    "it": {
       "filters": "Filtri",
-      "bar_description": "Usa i filtri qui sotto per restringere la ricerca dei bivacchi.",
-      "with_toilets_only": "Solo con servizi igienici",
-      "favorites_only": "Solo Preferiti",
-      "only_open": "Solo Aperto",
-      "set_minimum_beds": "Imposta letti minimi:",
-      "set_altitude_range": "Imposta intervallo di altitudine:",
+      "bar_description": "Filtra i percorsi per durata e difficoltà.",
+      "max_duration": "Durata Massima",
+      "difficulty": "Difficoltà",
+      "hours": "Ore",
+      "all": "Tutti",
       "reset": "Reimposta"
     },
-    es: {
+    "es": {
       "filters": "Filtros",
-      "bar_description": "Utiliza los filtros a continuación para reducir tu búsqueda de bivouacs.",
-      "with_toilets_only": "Solo con baños",
-      "favorites_only": "Solo Favoritos",
-      "only_open": "Solo Abierto",
-      "set_minimum_beds": "Establecer camas mínimas:",
-      "set_altitude_range": "Establecer rango de altitud:",
+      "bar_description": "Filtrar rutas por duración y dificultad.",
+      "max_duration": "Duración Máxima",
+      "difficulty": "Dificultad",
+      "hours": "Horas",
+      "all": "Todos",
       "reset": "Reiniciar"
     }
   }

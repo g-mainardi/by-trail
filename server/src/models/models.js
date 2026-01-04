@@ -46,6 +46,7 @@ const routeSchema = new Schema({
     descent: { type: Number, required: true },
     duration: { type: Number, required: true },
     likes: { type: Number, default: 0, min: 0 },
+    note: { type: String },
     path: {
         type: {
             type: String,

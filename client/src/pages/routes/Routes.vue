@@ -1,67 +1,70 @@
 <script setup lang="ts">
-import { useBivouacStore, type Bivouac, type BivouacResponse } from '@/stores/bivouacs';
+import { useRouteStore, type TrekkingRoute, type RouteResponse } from '@/stores/routes';
 import { computed, ref } from 'vue';
-import BivouacCard from './RouteCard.vue';
+import RouteCard from './RouteCard.vue';
 import FilterBar from './FilterBar.vue';
 
-const bivouacStore = useBivouacStore();
-const bivouacsResponse = ref<BivouacResponse>(
-  await bivouacStore.fetchBivouacs().catch(error => {
-    console.error('Error fetching bivouacs:', error);
-    return { bivouacs: [] };
+const routeStore = useRouteStore();
+
+const routesResponse = ref<RouteResponse>(
+  await routeStore.fetchRoutes().catch(error => {
+    console.error('Error fetching routes:', error);
+    return { routes: [] };
   })
 );
 
-const bivouacs = ref<Bivouac[]>(bivouacsResponse.value.bivouacs);
+console.log("Raw Routes from Server:", routesResponse.value.routes);
+
+const routes = ref<TrekkingRoute[]>(routesResponse.value.routes);
 
 async function fetchNextPage() {  
-  if (!bivouacsResponse.value.nextPage) {  
-    return;  
-  }
+  if (!routesResponse.value.nextPage) return;
+
   try {  
-    const response = await bivouacStore.fetchBivouacs({}, bivouacsResponse.value.nextPage);  
-    bivouacs.value.push(...response.bivouacs);
-    bivouacsResponse.value.nextPage = response.nextPage;  
+    const response = await routeStore.fetchRoutes();  
+    routes.value.push(...response.routes);
+    routesResponse.value.nextPage = response.nextPage;  
   } catch (error) {  
-    console.error('Error fetching next page of bivouacs:', error);  
+    console.error('Error fetching next page of routes:', error);  
   }  
 }
 
-function toggleFavorite(bivouacId: number) {
+function toggleFavorite(routeId: number) {
   // TODO
-  console.log('Not implemented yet: toggleFavorite for bivouacId', bivouacId);
+  console.log('Not implemented yet: toggleFavorite for routeId', routeId);
 }
 
 export interface Filter {
   currentValue?: any;
   default: any;
-  predicate: (bivouac: Bivouac, value: any) => boolean;
+  predicate: (route: TrekkingRoute, value: any) => boolean;
 }
 
-const minDesiredBeds: Filter = {
-  currentValue: 0,
-  default: 0,
-  predicate: (bivouac: Bivouac, value: any) => {
-    return bivouac.capacity !== undefined ? bivouac.capacity >= value : true;
-  },
-};
-
-const altitudeFilter: Filter = {
-  currentValue: { min: 0, max: 10000 },
-  default: { min: 0, max: 10000 },
-  predicate: (bivouac: Bivouac, value: any) => {
-    const altitude = bivouac.altitude;
-    if (altitude !== undefined) {
-      return altitude >= value.min 
-        && altitude <= value.max;
+// Filter 1: Max Duration
+const maxDurationFilter: Filter = {
+  currentValue: 24,
+  default: 24,
+  predicate: (route: TrekkingRoute, value: any) => {
+    if (route.duration !== undefined) {
+      return (route.duration / 60) <= value;
     }
     return true;
   },
 };
 
+// Filter 2: Difficulty
+const difficultyFilter: Filter = {
+  currentValue: 'All',
+  default: 'All',
+  predicate: (route: TrekkingRoute, value: any) => {
+    if (value === 'All') return true; 
+      return route.difficulty === value;
+  },
+};
+
 const filters = ref({
-  minDesiredBeds: minDesiredBeds,
-  altitudeFilter: altitudeFilter,
+  maxDuration: maxDurationFilter,
+  difficulty: difficultyFilter,
 })
 
 function resetFilters() {
@@ -71,13 +74,13 @@ function resetFilters() {
 }
 
 /**
- * Computed property that filters the list of bivouacs based on user-selected criteria.
+ * Computed property that filters the list of routes based on user-selected criteria.
  * 
- * @returns {Bivouac[]} Array of filtered bivouac objects that match all active filter criteria
+ * @returns {Route[]} Array of filtered bivouac objects that match all active filter criteria
  */
-const filteredBivouacs = computed(() => {
-  return bivouacs.value.filter(bivouac => {
-    return Object.values(filters.value).every(filter => filter.predicate(bivouac, filter.currentValue));
+const filteredRoutes = computed(() => {
+  return routes.value.filter(route => {
+    return Object.values(filters.value).every(filter => filter.predicate(route, filter.currentValue));
   });
 });
 </script>
@@ -86,7 +89,16 @@ const filteredBivouacs = computed(() => {
   <div class="bar flex items-center">
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
-  <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
-    <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
+
+  <div v-if="filteredRoutes.length > 0" class="grid-container">
+    <div v-for="route in filteredRoutes" :key="route._id">
+      <RouteCard :route="route" @toggle-favorite="toggleFavorite" />
+    </div>
   </div>
+
+  <div v-else class="no-results">
+    <p>No routes found matching your criteria.</p>
+  </div>
+
+  <button v-if="routesResponse.nextPage" @click="fetchNextPage">Load More</button>
 </template>
