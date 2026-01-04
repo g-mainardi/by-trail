@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import { User } from '../models/models.ts';
@@ -8,12 +9,12 @@ let JWT_SECRET;
 try {
   JWT_SECRET = getSecret('JWT_SECRET', 'JWT_SECRET');
 } catch (error) {
-  console.error(error.message);
+  console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 }
 
 // --- REGISTER LOGIC ---
-export const signup = async (req, res) => {
+export const signup = async (req: Request, res: Response) => {
   try {
     const { name, email, password, favRegions } = req.body;
 
@@ -85,7 +86,7 @@ export const signup = async (req, res) => {
 };
 
 // --- LOGIN LOGIC ---
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -139,7 +140,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const deleteAccount = async (req, res) => {
+export const deleteAccount = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   // Input validation: check for missing or empty email/password
   if (!email || !password) {

@@ -1,13 +1,18 @@
+import type { Request, Response } from 'express';
 import { Setting, User } from '../models/models.ts';
+
+interface AuthRequest extends Request {
+  user?: { id: string };
+}
 
 /**
  * GET /api/users/profile
  * Retrieve full profile: User data + Settings
  */
-export const getProfile = async (req, res) => {
+export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     // req.user.id comes from the middleware that decodes the token
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
     // 1. Fetch User (without password)
     const user = await User.findById(userId).select('-password');
@@ -38,9 +43,9 @@ export const getProfile = async (req, res) => {
  * PUT /api/users/profile
  * Update user profile and settings
  */
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
     const { name, favRegions, darkMode, language } = req.body;
 
     // todo No email or password updates allowed here => dedicated routes needed
