@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import CardFooter from '@/components/ui/card/CardFooter.vue';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
-  ArrowUpRight as ArrowUpRightIcon,
   Bed as BedIcon,
-  Eye as EyeIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   ThumbsUp as ThumbsUpIcon,
@@ -33,37 +31,21 @@ function getIconPath() {
 </script>
 
 <template>
-  <Card class="gap-0 p-4">
-    <CardTitle class="flex flex-col md:flex-row md:items-center gap-4">
-      <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
+  <Card class="p-4 gap-2">
+    <RouterLink
+      :to="`/bivouacs/${bivouac._id}`"
+      aria-label="View Bivouac Details"
+    >
+      <CardTitle class="flex flex-row items-center gap-4">
+        <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
+        <H2 :text="bivouac.name" />
+      </CardTitle>
+    </RouterLink>
 
-      <H2 :text="bivouac.name" />
-
-      <div
-        class="icons-wrapper flex flex-wrap gap-4 md:ml-auto justify-start md:justify-evenly px-2"
-      >
-        <MountainIcon />
-        <span class="flex items-center justify-center">
-          {{ bivouac.altitude }}
-        </span>
-        <BedIcon />
-        <span class="flex items-center justify-center">
-          {{ bivouac.capacity }}
-        </span>
-        <ToiletIcon />
-        <span class="flex items-center justify-center"> N/A </span>
-        <MapPinIcon />
-        <span class="flex items-center justify-center"> N/A </span>
-        <ThumbsUpIcon />
-        <span class="flex items-center justify-center">
-          {{ bivouac.likes }}
-        </span>
-      </div>
-    </CardTitle>
-    <CardContent class="flex flex-col md:flex-row gap-4 p-0">
-      <span
-        class="description text-sm md:text-base flex-1 flex items-center px-2"
-      >
+    <CardContent
+      class="px-0 flex flex-col md:flex-row md:items-center md:justify-between"
+    >
+      <span class="">
         <span v-if="!bivouac.note">
           {{ t('no_description_available') }}
         </span>
@@ -71,19 +53,46 @@ function getIconPath() {
           {{ bivouac.note }}
         </span>
       </span>
-
-      <Button class="self-center">
-        <EyeIcon /> <span class="hidden md:inline">{{ t('view') }}</span>
-      </Button>
-
-      <Button variant="outline" class="self-center">
-        <ArrowUpRightIcon />
-        <span class="hidden md:inline">{{ t('plan') }}</span>
-      </Button>
     </CardContent>
-    <CardFooter class="px-0"> </CardFooter>
+
+    <CardFooter class="px-0 flex flex-wrap gap-x-4 gap-y-2">
+      <div class="icon-with-text">
+        <MountainIcon />
+        <span class="">
+          {{ bivouac.altitude }}
+        </span>
+      </div>
+      <div class="icon-with-text">
+        <BedIcon />
+        <span class="">
+          {{ bivouac.capacity }}
+        </span>
+      </div>
+      <div class="icon-with-text">
+        <ToiletIcon />
+        <span class=""> N/A </span>
+      </div>
+      <div class="icon-with-text">
+        <MapPinIcon />
+        <span class=""> N/A </span>
+      </div>
+      <div class="icon-with-text">
+        <ThumbsUpIcon />
+        <span class="">
+          {{ bivouac.likes }}
+        </span>
+      </div>
+    </CardFooter>
   </Card>
 </template>
+
+<style scoped>
+.icon-with-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+</style>
 
 <i18n>
 {

@@ -94,12 +94,14 @@ const filteredBivouacs = computed(() => {
 </script>
 
 <template>
-  <H1 :text="t('bivouacs')" />
-  <div class="flex justify-end">
+  <div class="flex flex-row justify-between">
+    <H1 :text="t('bivouacs')" />
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
-  <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
-    <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
+      <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
+    </div>
   </div>
 </template>
 
