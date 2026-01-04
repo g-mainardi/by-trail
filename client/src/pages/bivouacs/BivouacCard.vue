@@ -31,7 +31,7 @@ function getIconPath() {
 </script>
 
 <template>
-  <Card class="p-4 gap-2">
+  <Card class="p-4 gap-4">
     <RouterLink
       :to="`/bivouacs/${bivouac._id}`"
       aria-label="View Bivouac Details"
@@ -55,7 +55,7 @@ function getIconPath() {
       </span>
     </CardContent>
 
-    <CardFooter class="px-0 flex flex-wrap gap-x-4 gap-y-2">
+    <CardFooter class="px-0 flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
       <div class="icon-with-text">
         <MountainIcon />
         <span class="">

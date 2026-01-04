@@ -98,7 +98,7 @@ const filteredBivouacs = computed(() => {
     <H1 :text="t('bivouacs')" />
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
       <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
     </div>
