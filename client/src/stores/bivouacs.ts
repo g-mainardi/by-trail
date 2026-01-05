@@ -94,5 +94,14 @@ export const useBivouacStore = defineStore('bivouacs', () => {
     return data.bivouacs as Bivouac[];
   }
 
-  return { fetchBivouacs, fetchMapBivouacs };
+  async function getBivouacById(id: UUID): Promise<Bivouac> {
+    const res = await httpHelper.get(`/bivouacs/${id}`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch bivouac by ID');
+    }
+    const data = await res.json();
+    return data.bivouac as Bivouac;
+  }
+
+  return { fetchBivouacs, fetchMapBivouacs, getBivouacById };
 });

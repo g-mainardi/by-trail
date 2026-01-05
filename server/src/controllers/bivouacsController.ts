@@ -54,3 +54,18 @@ export const fetchMapBivouacs = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const fetchBivouacById = async (req: Request, res: Response) => {
+  const bivouacId = req.params.id;
+
+  try {
+    const bivouac = await Bivouac.findById(bivouacId).exec();
+    if (!bivouac) {
+      return res.status(404).json({ message: 'Bivouac not found' });
+    }
+    return res.status(200).json({ bivouac });
+  } catch (error) {
+    console.error('Error fetching bivouac by ID:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
