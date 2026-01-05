@@ -12,7 +12,6 @@ import {
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
-import InlineCode from '@/layouts/typography/InlineCode.vue';
 import Lead from '@/layouts/typography/Lead.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import {
@@ -66,34 +65,34 @@ onMounted(async () => {
       <CardContent>
         <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
           <div class="icon-with-text">
-            <InlineCode class="icon-with-text">
+            <div class="icon-with-text">
               <MountainIcon />
               {{ t('altitude') }}: {{ bivouac.altitude }} mt
-            </InlineCode>
+            </div>
           </div>
           <div class="icon-with-text">
-            <InlineCode class="icon-with-text">
+            <div class="icon-with-text">
               <BedIcon />
               {{ t('capacity') }}: {{ bivouac.capacity }}
-            </InlineCode>
+            </div>
           </div>
           <div class="icon-with-text">
-            <InlineCode class="icon-with-text">
+            <div class="icon-with-text">
               <ToiletIcon />
               {{ t('toilet') }}: N/A
-            </InlineCode>
+            </div>
           </div>
           <div class="icon-with-text">
-            <InlineCode class="icon-with-text">
+            <div class="icon-with-text">
               <MapPinIcon />
               {{ t('location') }}: N/A
-            </InlineCode>
+            </div>
           </div>
           <div class="icon-with-text">
-            <InlineCode class="icon-with-text">
+            <div class="icon-with-text">
               <ThumbsUpIcon />
               {{ t('likes') }}: {{ bivouac.likes }}
-            </InlineCode>
+            </div>
           </div>
         </div>
       </CardContent>
@@ -129,6 +128,13 @@ onMounted(async () => {
     <CardTitle class="card-title">
       <H2> {{ t('plan') }} </H2>
     </CardTitle>
+    <CardContent>
+      <Lead>
+        Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
+        persone hanno espresso l'intenzione di andare nello stesso bivacco nei
+        vari giorni.
+      </Lead>
+    </CardContent>
   </Card>
 </template>
 
