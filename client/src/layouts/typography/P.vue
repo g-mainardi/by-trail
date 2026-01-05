@@ -1,11 +1,7 @@
-<script setup lang="ts">
-defineProps<{
-  text: string;
-}>();
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <p className="leading-7 not-first:mt-6">
-    {{ text }}
+  <p class="leading-7 not-first:mt-6">
+    <slot />
   </p>
 </template>

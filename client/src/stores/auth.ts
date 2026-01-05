@@ -5,12 +5,12 @@ import { useRouter } from 'vue-router';
 
 // --- Interfaces ---
 
-const UserType = {
+const UserEnum = {
   USER: 'user',
   ADMIN: 'admin',
 } as const;
 
-type UserType = (typeof UserType)[keyof typeof UserType];
+type UserType = (typeof UserEnum)[keyof typeof UserEnum];
 
 // Matches the User model fields we expose
 export interface User {

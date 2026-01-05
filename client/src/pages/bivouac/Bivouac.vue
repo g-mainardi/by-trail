@@ -34,7 +34,11 @@ const props = defineProps<{ id: string }>();
 let bivouac = ref<Bivouac>({} as Bivouac);
 
 onMounted(async () => {
-  bivouac.value = await bivouacStore.getBivouacById(props.id);
+  try {
+    bivouac.value = await bivouacStore.getBivouacById(props.id);
+  } catch (error) {
+    console.error('Error fetching bivouac:', error);
+  }
 });
 </script>
 
@@ -65,34 +69,24 @@ onMounted(async () => {
       <CardContent>
         <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
           <div class="icon-with-text">
-            <div class="icon-with-text">
-              <MountainIcon />
-              {{ t('altitude') }}: {{ bivouac.altitude }} mt
-            </div>
+            <MountainIcon />
+            {{ t('altitude') }}: {{ bivouac.altitude }} mt
           </div>
           <div class="icon-with-text">
-            <div class="icon-with-text">
-              <BedIcon />
-              {{ t('capacity') }}: {{ bivouac.capacity }}
-            </div>
+            <BedIcon />
+            {{ t('capacity') }}: {{ bivouac.capacity }}
           </div>
           <div class="icon-with-text">
-            <div class="icon-with-text">
-              <ToiletIcon />
-              {{ t('toilet') }}: N/A
-            </div>
+            <ToiletIcon />
+            {{ t('toilet') }}: N/A
           </div>
           <div class="icon-with-text">
-            <div class="icon-with-text">
-              <MapPinIcon />
-              {{ t('location') }}: N/A
-            </div>
+            <MapPinIcon />
+            {{ t('location') }}: N/A
           </div>
           <div class="icon-with-text">
-            <div class="icon-with-text">
-              <ThumbsUpIcon />
-              {{ t('likes') }}: {{ bivouac.likes }}
-            </div>
+            <ThumbsUpIcon />
+            {{ t('likes') }}: {{ bivouac.likes }}
           </div>
         </div>
       </CardContent>
@@ -130,9 +124,7 @@ onMounted(async () => {
     </CardTitle>
     <CardContent>
       <Lead>
-        Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
-        persone hanno espresso l'intenzione di andare nello stesso bivacco nei
-        vari giorni.
+        {{ t('explain_plan_functionality') }}
       </Lead>
     </CardContent>
   </Card>
@@ -146,11 +138,6 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-.icon-text {
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
 }
 </style>
 
@@ -166,7 +153,10 @@ onMounted(async () => {
     "toilet": "Toilet",
     "location": "Location",
     "likes": "Likes",
-    "images": "Images"
+    "images": "Images",
+    "explain_plan_functionality": "Here you can express the intention to go to a bivouac and know how many
+        people have expressed the intention to go to the same bivouac on the
+        various days."
   },
   "it": {
     "description": "Descrizione",
@@ -178,7 +168,10 @@ onMounted(async () => {
     "toilet": "Bagno",
     "location": "Posizione",
     "likes": "Mi piace",
-    "images": "Immagini"
+    "images": "Immagini",
+    "explain_plan_functionality": "Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
+        persone hanno espresso l'intenzione di andare nello stesso bivacco nei
+        vari giorni."
   },
   "es": {
     "description": "Descripción",
@@ -190,7 +183,10 @@ onMounted(async () => {
     "toilet": "Baño",
     "location": "Ubicación",
     "likes": "Me gusta",
-    "images": "Imágenes"
+    "images": "Imágenes",
+    "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
+        personas han expresado la intención de ir al mismo bivouac en los
+        varios días."
   }
 }
 </i18n>

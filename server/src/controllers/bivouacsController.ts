@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { Bivouac } from '../models/models.ts';
 
 export const fetchBivouacs = async (req: Request, res: Response) => {
@@ -57,6 +58,10 @@ export const fetchMapBivouacs = async (req: Request, res: Response) => {
 
 export const fetchBivouacById = async (req: Request, res: Response) => {
   const bivouacId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
 
   try {
     const bivouac = await Bivouac.findById(bivouacId).exec();
