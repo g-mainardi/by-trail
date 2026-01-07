@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { getDbConfig } from './src/config/db.js';
 
-import { Bivouac } from './src/models/models.js';
+import { Bivouac } from './src/models/models.ts';
 
-const loadData = (fileName) => {
+const loadData = (fileName: string) => {
   try {
     const filePath = path.join(process.cwd(), 'src', 'data', fileName);
     const rawData = fs.readFileSync(filePath, 'utf-8');
@@ -25,6 +25,10 @@ const seedData = async () => {
       console.log('Target: MongoDB Atlas');
     } else {
       console.log('Target: Local MongoDB');
+    }
+
+    if (!uri) {
+      throw new Error('Database URI is not defined');
     }
 
     await mongoose.connect(uri);

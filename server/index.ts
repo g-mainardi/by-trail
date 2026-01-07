@@ -1,10 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import connectDB from './src/config/db.js';
-import authRoutes from './src/routes/authRoutes.js';
+import authRoutes from './src/routes/authRoutes.ts';
 import bivouacsRoutes from './src/routes/bivouacsRoutes.ts';
-import { mainRoutes } from './src/routes/mainRoutes.js';
-import userRoutes from './src/routes/userRoutes.js';
+import { mainRoutes } from './src/routes/mainRoutes.ts';
+import userRoutes from './src/routes/userRoutes.ts';
 
 // Environment variables setup
 const PORT = process.env.PORT || 3000; // Default port for Express

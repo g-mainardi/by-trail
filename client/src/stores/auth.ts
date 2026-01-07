@@ -5,6 +5,13 @@ import { useRouter } from 'vue-router';
 
 // --- Interfaces ---
 
+const UserEnum = {
+  USER: 'user',
+  ADMIN: 'admin',
+} as const;
+
+type UserType = (typeof UserEnum)[keyof typeof UserEnum];
+
 // Matches the User model fields we expose
 export interface User {
   _id?: string; // Optional because sometimes Mongo uses _id, sometimes id
@@ -12,6 +19,7 @@ export interface User {
   name: string;
   email: string;
   favRegions?: string[];
+  type?: UserType;
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -20,7 +28,6 @@ export const useAuthStore = defineStore('auth', () => {
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
   const token = ref<string | null>(localStorage.getItem('token'));
-  const isAdmin = ref<boolean>(false);
   const user = ref<User | null>(
     JSON.parse(localStorage.getItem('user') || 'null')
   );
@@ -105,9 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
       // Save critical auth data
       token.value = data.token;
       user.value = data.user;
-      isAdmin.value = data.user.isAdmin;
 
-      localStorage.setItem('isAdmin', JSON.stringify(isAdmin.value));
       httpHelper.setToken(data.token);
 
       localStorage.setItem('token', token.value || '');
@@ -174,7 +179,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  // TODO: put the token in the body instead of the email to improve security
   const deleteAccount = async (email: string, password: string) => {
     if (!token.value) return;
     isAccountDeleteFailed.value = false;
@@ -217,7 +221,6 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     token,
     user,
-    isAdmin,
     error,
     isLoading,
     isAccountDeleteFailed,

@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
-import { Bivouac } from '../models/models.js';
+import mongoose from 'mongoose';
+import { Bivouac } from '../models/models.ts';
 
 export const fetchBivouacs = async (req: Request, res: Response) => {
   const DEFAULT_SIZE_LIMIT = 50;
@@ -51,6 +52,25 @@ export const fetchMapBivouacs = async (req: Request, res: Response) => {
     return res.status(200).json({ bivouacs });
   } catch (error) {
     console.error('Error fetching map bivouacs:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const fetchBivouacById = async (req: Request, res: Response) => {
+  const bivouacId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
+
+  try {
+    const bivouac = await Bivouac.findById(bivouacId).exec();
+    if (!bivouac) {
+      return res.status(404).json({ message: 'Bivouac not found' });
+    }
+    return res.status(200).json({ bivouac });
+  } catch (error) {
+    console.error('Error fetching bivouac by ID:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

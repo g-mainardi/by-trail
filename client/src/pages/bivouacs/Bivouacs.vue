@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import H1 from '@/layouts/typography/H1.vue';
 import {
   useBivouacStore,
   type Bivouac,
   type BivouacResponse,
 } from '@/stores/bivouacs';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import BivouacCard from './BivouacCard.vue';
 import FilterBar from './FilterBar.vue';
+const { t } = useI18n();
 
 const bivouacStore = useBivouacStore();
 const bivouacsResponse = ref<BivouacResponse>(
@@ -91,10 +94,27 @@ const filteredBivouacs = computed(() => {
 </script>
 
 <template>
-  <div class="bar flex items-center">
+  <div class="flex flex-row justify-between">
+    <H1 :text="t('bivouacs')" />
     <FilterBar :filters="filters" @reset="resetFilters" />
   </div>
-  <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
-    <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
+      <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
+    </div>
   </div>
 </template>
+
+<i18n>
+  {
+    "en": {
+      "bivouacs": "Bivouacs & Shelters"
+    },
+    "it": {
+      "bivouacs": "Bivacchi & Rifugi"
+    },
+    "es": {
+      "bivouacs": "Vivacs & Refugios"
+    }
+  }
+</i18n>

@@ -16,13 +16,7 @@ const userSchema = new Schema({
     ref: 'Bivouac',
     default: [],
   },
-});
-
-const adminSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false },
-  creationDate: { type: Date, default: Date.now },
+  type: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
 
 const bivouacSchema = new Schema({
@@ -99,7 +93,6 @@ const notifySchema = new Schema({
 
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
-const Admin = mongoose.model('Admin', adminSchema);
 const Bivouac = mongoose.model('Bivouac', bivouacSchema);
 const Trail = mongoose.model('Trail', trailSchema);
 const Image = mongoose.model('Image', imageSchema);
@@ -110,7 +103,6 @@ const Setting = mongoose.model('Setting', settingSchema);
 const Notify = mongoose.model('Notify', notifySchema);
 
 export {
-  Admin,
   Bivouac,
   FavBivacco,
   FavTrail,

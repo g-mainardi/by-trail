@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export const getSecret = (secretName, envVarName) => {
+export const getSecret = (secretName: string, envVarName: string) => {
   const secretPath = process.env[secretName + '_FILE'];
 
   // Primary: check if secret file path is provided and file exists

@@ -10,13 +10,15 @@ import Login from '@/pages/login/Login.vue';
 import Maps from '@/pages/maps/Maps.vue';
 import Profile from '@/pages/profile/Profile.vue';
 import Admin from './pages/admin/Admin.vue';
+import Bivouac from './pages/bivouac/Bivouac.vue';
 import Bivouacs from './pages/bivouacs/Bivouacs.vue';
 import Settings from './pages/settings/Settings.vue';
 import Signup from './pages/signup/Signup.vue';
 
+const savedLocale = localStorage.getItem('locale') || 'en';
 const i18n = createI18n({
   legacy: false,
-  locale: 'it',
+  locale: savedLocale,
   fallbackLocale: 'en',
 });
 
@@ -50,6 +52,12 @@ const routes = [
         path: 'admin',
         name: 'Admin',
         component: Admin,
+      },
+      {
+        path: 'bivouac/:id',
+        name: 'Bivouac',
+        component: Bivouac,
+        props: true,
       },
     ],
   },

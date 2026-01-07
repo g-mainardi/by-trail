@@ -1,19 +1,20 @@
 import bcrypt from 'bcryptjs';
+import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import { Admin, User } from '../models/models.js';
-import { getSecret } from '../utils/secrets.js';
+import { User } from '../models/models.ts';
+import { getSecret } from '../utils/secrets.ts';
 
 let JWT_SECRET;
 try {
   JWT_SECRET = getSecret('JWT_SECRET', 'JWT_SECRET');
 } catch (error) {
-  console.error(error.message);
+  console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 }
 
 // --- REGISTER LOGIC ---
-export const signup = async (req, res) => {
+export const signup = async (req: Request, res: Response) => {
   try {
     const { name, email, password, favRegions } = req.body;
 
@@ -69,6 +70,7 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       favRegions: favRegions || [], // Optional
       status: 'active', // Default status
+      type: 'user', // Default type
     });
 
     // 7. Save user to database
@@ -84,7 +86,7 @@ export const signup = async (req, res) => {
 };
 
 // --- LOGIN LOGIC ---
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -121,8 +123,6 @@ export const login = async (req, res) => {
       expiresIn: '24h',
     });
 
-    const isAdmin = !!(await Admin.findOne({ email: user.email }));
-
     // 5. Send response
     res.json({
       token,
@@ -131,7 +131,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         favRegions: user.favRegions,
-        isAdmin: isAdmin,
+        type: user.type,
       },
     });
   } catch (error) {
@@ -140,7 +140,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const deleteAccount = async (req, res) => {
+export const deleteAccount = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   // Input validation: check for missing or empty email/password
   if (!email || !password) {
