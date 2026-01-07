@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from 'vue-i18n';
+import SavedBivouacs from './tabs/SavedBivouacs.vue';
+import SavedRoutes from './tabs/SavedRoutes.vue';
+import ProposalForm from './tabs/ProposalForm.vue';
+import Card from '@/components/ui/card/Card.vue';
 const { t } = useI18n();
 </script>
 
@@ -31,27 +35,20 @@ const { t } = useI18n();
     </TabsList>
 
     <TabsContent value="routes">
-      <Card class="card">
-        <CardContent class="card-content">
-          <!-- routes content goes here -->
-        </CardContent>
-        <CardFooter> </CardFooter>
+      <Card class="container">
+        <SavedRoutes />
       </Card>
     </TabsContent>
+
     <TabsContent value="bivouacs">
-      <Card class="card">
-        <CardContent class="card-content">
-          <!-- bivouacs content goes here -->
-        </CardContent>
-        <CardFooter> </CardFooter>
+      <Card class="container">
+        <SavedBivouacs />
       </Card>
     </TabsContent>
+
     <TabsContent value="proposal">
-      <Card class="card">
-        <CardContent class="card-content">
-          <!-- proposal content goes here -->
-        </CardContent>
-        <CardFooter> </CardFooter>
+      <Card class="container">
+        <ProposalForm />
       </Card>
     </TabsContent>
   </Tabs>
@@ -81,3 +78,9 @@ const { t } = useI18n();
   }
 }
 </i18n>
+
+<style scoped>
+.container {
+  padding: 1rem; /* = p-4 */
+}
+</style>
