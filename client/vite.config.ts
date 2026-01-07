@@ -1,5 +1,6 @@
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import tailwindcss from '@tailwindcss/vite';
+import VueDevTools from 'vite-plugin-vue-devtools';
 import vue from '@vitejs/plugin-vue';
 import path, { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +29,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      VueDevTools(),
       vue(),
       tailwindcss(),
       VueI18nPlugin({
