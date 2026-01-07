@@ -5,6 +5,7 @@ import SavedBivouacs from './tabs/SavedBivouacs.vue';
 import SavedRoutes from './tabs/SavedRoutes.vue';
 import ProposalForm from './tabs/ProposalForm.vue';
 import Card from '@/components/ui/card/Card.vue';
+import H1 from '@/layouts/typography/H1.vue';
 const { t } = useI18n();
 </script>
 
@@ -13,9 +14,7 @@ const { t } = useI18n();
     class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
   >
     <div>
-      <h1 class="text-3xl font-bold tracking-tight">
-        {{ t('your_activities') }}
-      </h1>
+      <H1 :text="t('your_activities')" />
       <p class="text-muted-foreground">
         {{ t('your_activities_description') }}
       </p>
