@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <p class="leading-7 not-first:mt-6">
+  <p class="text-xl text-muted-foreground">
     <slot />
   </p>
 </template>

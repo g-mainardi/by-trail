@@ -35,12 +35,12 @@ function getIconPath() {
 <template>
   <Card class="p-4 gap-4">
     <RouterLink
-      :to="`/bivouacs/${bivouac._id}`"
+      :to="`/bivouac/${bivouac._id}`"
       aria-label="View Bivouac Details"
     >
       <CardTitle class="flex flex-row items-center gap-4">
         <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
-        <H2 :text="bivouac.name" />
+        <H2>{{ bivouac.name }}</H2>
       </CardTitle>
     </RouterLink>
 

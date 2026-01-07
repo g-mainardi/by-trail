@@ -36,10 +36,15 @@ defineProps<{
 <template>
   <Sheet>
     <SheetTrigger>
-      <Button variant="outline" aria-label="Filter options">
-        <Settings2Icon /> {{ t('filters') }}
+      <Button
+        variant="outline"
+        aria-label="Filter options"
+        class="fixed bottom-4 right-4 z-50 text-lg px-6 py-6"
+      >
+        <Settings2Icon class="w-6 h-6" /> {{ t('filters') }}
       </Button>
     </SheetTrigger>
+
     <SheetContent>
       <SheetHeader>
         <SheetTitle>{{ t('filters') }}</SheetTitle>
