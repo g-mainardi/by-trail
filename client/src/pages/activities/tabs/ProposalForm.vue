@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import H1 from '@/layouts/typography/H1.vue';
 import { useI18n } from 'vue-i18n';
 import { ref, onMounted } from 'vue';
 import { useProposalStore } from '@/stores/proposal';
@@ -82,7 +81,6 @@ const submitProposal = async () => {
 </script>
 
 <template>
-  <H1 :text="t('make_a_proposal')" />
   <form @submit.prevent="submitProposal">
     <Alert
       v-if="isError || proposalStore.error"
@@ -173,7 +171,6 @@ const submitProposal = async () => {
 <i18n>
 {
   "en": {
-    "make_a_proposal": "Make a Proposal",
     "proposal_type_label": "Proposal Type",
     "proposal_type_placeholder": "Select proposal type",
     "proposal_type_route": "Route",
@@ -193,7 +190,6 @@ const submitProposal = async () => {
     "send": "Send"
   },
   "it": {
-    "make_a_proposal": "Fai una Proposta",
     "proposal_type_label": "Tipo di Proposta",
     "proposal_type_placeholder": "Seleziona il tipo di proposta",
     "proposal_type_route": "Percorso",
@@ -213,7 +209,6 @@ const submitProposal = async () => {
     "send": "Invia"
   },
   "es": {
-    "make_a_proposal": "Haz una Propuesta",
     "proposal_type_label": "Tipo de Propuesta",
     "proposal_type_placeholder": "Selecciona el tipo de propuesta",
     "proposal_type_route": "Ruta",
