@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import CardFooter from '@/components/ui/card/CardFooter.vue';
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
