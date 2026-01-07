@@ -24,6 +24,7 @@ const routes = [
   {
     path: '/',
     component: MainLayout, // All the children routes will use this layout
+    redirect: { name: 'Maps' },
     meta: { requiresAuth: true },
     children: [
       {
