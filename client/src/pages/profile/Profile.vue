@@ -28,10 +28,10 @@ const isError = ref(false);
 
 // --- Init Data ---
 onMounted(async () => {
-  // 1. Ensure we have the latest profile
+  // Ensure we have the latest profile
   await authStore.fetchProfile();
 
-  // 2. Populate formData
+  // Populate formData
   if (user.value) {
     formData.value.name = user.value.name;
     formData.value.email = user.value.email;
@@ -47,17 +47,16 @@ const handleSave = async () => {
   feedbackMessage.value = '';
   isError.value = false;
 
-  // 1. Prepare payload
+  // Prepare payload
   const payload = {
     name: formData.value.name,
     favRegions: formData.value.favRegions,
   };
 
-  // 2. Call store action to update profile
+  // Call store action to update profile
   const success = await authStore.updateProfile(payload);
   if (success) {
     feedbackMessage.value = t('profile_update_success');
-    //todo applyTheme(payload.darkMode);
   } else {
     isError.value = true;
     feedbackMessage.value = t('profile_update_error');
