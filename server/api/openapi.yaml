@@ -30,6 +30,8 @@ tags:
     description: Management of hiking trails
   - name: Reservations
     description: Bivouac booking management
+  - name: Proposals
+    description: Route or Bivouac proposals by users
 
 paths:
   # Authentication
@@ -48,6 +50,10 @@ paths:
 
   # Reservations
 
+  # Proposals
+  /proposal:
+    $ref: './paths/proposal.yaml#/~1proposal'
+
   # Alerts
 
   # Admin
@@ -56,3 +62,5 @@ components:
   schemas:
     User:
       $ref: './components/schemas/User.yaml'
+    Proposal:
+      $ref: './components/schemas/Proposal.yaml'
