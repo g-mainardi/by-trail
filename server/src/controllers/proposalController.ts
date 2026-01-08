@@ -33,8 +33,7 @@ export const sendProposal = async (req: ProposalRequest, res: Response) => {
     });
     if (existingProposal) {
       return res.status(400).json({
-        message:
-          'You have already submitted a proposal of this type with this name',
+        message: `You have already submitted a ${type} proposal with subject '${subjectName}' in '${locality}'`,
       });
     }
 
