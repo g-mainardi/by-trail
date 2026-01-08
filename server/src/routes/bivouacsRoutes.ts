@@ -4,7 +4,7 @@ import {
   fetchBivouacs,
   fetchMapBivouacs,
 } from '../controllers/bivouacsController.ts';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.ts';
 
 const router = express.Router();
 
