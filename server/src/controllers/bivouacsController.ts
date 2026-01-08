@@ -74,3 +74,33 @@ export const fetchBivouacById = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const fetchFavoriteBivouacs = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+
+  try {
+    const favorites = await mongoose
+      .model('FavBivouac')
+      .find({ user: userId })
+      .populate('bivouac')
+      .exec();
+
+    const favoriteBivouacs = favorites.map(
+      (fav: any) => fav.bivouac as typeof Bivouac
+    );
+    return res.status(200).json({ bivouacs: favoriteBivouacs || [] });
+  } catch (error) {
+    console.error('Error fetching favorite bivouacs:', error);
+    return res.status(500).json({ error: `Internal server error: ${error}` });
+  }
+};
