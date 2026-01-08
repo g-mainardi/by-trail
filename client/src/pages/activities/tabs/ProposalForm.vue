@@ -97,17 +97,17 @@ const alertConfig = computed(() => {
 </script>
 
 <template>
+  <Alert
+    v-if="feedbackMessage || proposalStore.error"
+    :variant="alertConfig.variant"
+  >
+    <component :is="alertConfig.icon" />
+    <AlertTitle>{{ alertConfig.title }}</AlertTitle>
+    <AlertDescription>
+      {{ feedbackMessage || proposalStore.error }}
+    </AlertDescription>
+  </Alert>
   <form @submit.prevent="submitProposal">
-    <Alert
-      v-if="feedbackMessage || proposalStore.error"
-      :variant="alertConfig.variant"
-    >
-      <component :is="alertConfig.icon" />
-      <AlertTitle>{{ alertConfig.title }}</AlertTitle>
-      <AlertDescription>
-        {{ feedbackMessage || proposalStore.error }}
-      </AlertDescription>
-    </Alert>
     <FieldGroup class="w-half">
       <Field>
         <FieldLabel for="type">
