@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { ref, onMounted } from 'vue';
 import { useProposalStore, type Proposal } from '@/stores/proposal';
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,7 @@ import { SendIcon } from 'lucide-vue-next';
 import Input from '@/components/ui/input/Input.vue';
 import TextArea from '@/components/ui/textarea/Textarea.vue';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-vue-next';
+import { AlertCircle, CheckCircle } from 'lucide-vue-next';
 import { Field, FieldLabel, FieldGroup } from '@/components/ui/field';
 import {
   Select,
@@ -78,17 +79,31 @@ const submitProposal = async () => {
     feedbackMessage.value = `${t('proposal_submit_error')} "${proposalStore.error}"`;
   }
 };
+
+const alertConfig = computed(() => {
+  if (isError.value || proposalStore.error) {
+    return {
+      variant: 'destructive' as const,
+      icon: AlertCircle,
+      title: t('error'),
+    };
+  }
+  return {
+    variant: 'success' as const,
+    icon: CheckCircle,
+    title: t('success'),
+  };
+});
 </script>
 
 <template>
   <form @submit.prevent="submitProposal">
     <Alert
-      v-if="isError || proposalStore.error"
-      variant="destructive"
-      class="mb-6"
+      v-if="feedbackMessage || proposalStore.error"
+      :variant="alertConfig.variant"
     >
-      <AlertCircle class="h-4 w-4" />
-      <AlertTitle>{{ t('error') }}</AlertTitle>
+      <component :is="alertConfig.icon" />
+      <AlertTitle>{{ alertConfig.title }}</AlertTitle>
       <AlertDescription>
         {{ feedbackMessage || proposalStore.error }}
       </AlertDescription>
@@ -177,6 +192,7 @@ const submitProposal = async () => {
     "proposal_type_bivouac": "Bivouac",
     "proposal_submit_success": "Your proposal has been submitted successfully.",
     "error": "Error",
+    "success": "Success",
     "proposal_submit_incomplete": "Please fill in all required fields before submitting the proposal.",
     "proposal_submit_error": "There was an error submitting your proposal:",
     "name": "Name",
@@ -196,6 +212,7 @@ const submitProposal = async () => {
     "proposal_type_bivouac": "Bivacco",
     "proposal_submit_success": "La tua proposta è stata inviata con successo.",
     "error": "Errore",
+    "success": "Successo",
     "proposal_submit_incomplete": "Per favore, compila tutti i campi richiesti prima di inviare la proposta.",
     "proposal_submit_error": "Si è verificato un errore durante l'invio della tua proposta:",
     "name": "Nome",
@@ -215,6 +232,7 @@ const submitProposal = async () => {
     "proposal_type_bivouac": "Bivouac",
     "proposal_submit_success": "Tu propuesta ha sido enviada con éxito.",
     "error": "Error",
+    "success": "Éxito",
     "proposal_submit_incomplete": "Por favor, completa todos los campos requeridos antes de enviar la propuesta.",
     "proposal_submit_error": "Hubo un error al enviar tu propuesta:",
     "name": "Nombre",
