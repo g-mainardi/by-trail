@@ -81,14 +81,15 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (!res.ok) throw new Error(data.message || 'Update failed');
 
-      // Update local state immediately with the response
-      user.value = data.user;
-
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Fetch the latest profile to sync state
+      const profileSuccess = await fetchProfile();
+      if (!profileSuccess) {
+        throw new Error('Failed to load user profile');
+      }
 
       return true;
     } catch (err: any) {
-      console.error(err);
+      console.error('Update Profile Error', err);
       error.value = err.message;
       return false;
     } finally {
