@@ -125,7 +125,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       // Redirect to Home
-      router.push('/maps');
+      router.push('/');
       return true;
     } catch (err: any) {
       console.error(err);
