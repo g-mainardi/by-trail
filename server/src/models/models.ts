@@ -92,9 +92,9 @@ const notifySchema = new Schema({
 });
 
 const proposalSchema = new Schema({
-  email: { type: String, required: true },
+  senderEmail: { type: String, required: true },
   type: { type: String, required: true },
-  name: { type: String, required: true },
+  subjectName: { type: String, required: true },
   description: { type: String, required: true },
   locality: { type: String, required: true },
   submissionDate: { type: Date, default: Date.now },
