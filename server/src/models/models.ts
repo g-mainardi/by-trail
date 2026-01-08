@@ -91,6 +91,15 @@ const notifySchema = new Schema({
   referenceUrl: { type: String },
 });
 
+const proposalSchema = new Schema({
+  email: { type: String, required: true },
+  type: { type: String, required: true },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  locality: { type: String, required: true },
+  submissionDate: { type: Date, default: Date.now },
+});
+
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
 const Bivouac = mongoose.model('Bivouac', bivouacSchema);
@@ -101,6 +110,9 @@ const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
 const Notify = mongoose.model('Notify', notifySchema);
+const Proposal = mongoose.model('Proposal', proposalSchema);
+
+/**************************************** Exports ****************************************/
 
 export {
   Bivouac,
@@ -112,4 +124,5 @@ export {
   Setting,
   Trail,
   User,
+  Proposal,
 };
