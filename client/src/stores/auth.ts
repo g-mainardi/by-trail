@@ -149,6 +149,8 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = () => {
     token.value = null;
     user.value = null;
+    error.value = null;
+    isLoading.value = false;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     router.push('/login');
