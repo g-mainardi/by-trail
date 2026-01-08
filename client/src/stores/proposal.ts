@@ -17,7 +17,7 @@ export const useProposalStore = defineStore('proposal', () => {
     error.value = null;
 
     try {
-      const res = await httpHelper.post('/proposals', proposalData);
+      const res = await httpHelper.post('/proposal', proposalData);
       const data = await res.json();
 
       if (!res.ok)

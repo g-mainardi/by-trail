@@ -19,6 +19,6 @@ const router = express.Router();
 router.use(protect);
 
 // /api/users/proposal
-router.post('/proposal', proposalRateLimiter, sendProposal);
+router.post('/', proposalRateLimiter, sendProposal);
 
 export default router;
