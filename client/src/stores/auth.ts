@@ -88,12 +88,16 @@ export const useAuthStore = defineStore('auth', () => {
       // Fetch the latest profile to sync state (skip nested loading state management)
       const profileSuccess = await fetchProfile(true);
       if (!profileSuccess) {
-        throw new Error('Failed to load user profile');
+        console.warn(
+          'Profile updated on server, but failed to refresh local user state.'
+        );
+        error.value =
+          'Your profile was updated, but we could not refresh your data. Please reload the page.';
       }
 
       return true;
     } catch (err: any) {
-      console.error('Update Profile Error', err);
+      console.error('Update Profile Error:', err);
       error.value = err.message;
       return false;
     } finally {
