@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  type:
+    type: string
+    enum:
+      - route
+      - bivouac
+  senderEmail:
+    type: string
+    format: email
+  subjectName:
+    type: string
+  description:
+    type: string
+  locality:
+    type: string
+required:
+  - id
+  - type
+  - senderEmail
+  - subjectName
+  - description
+  - locality
