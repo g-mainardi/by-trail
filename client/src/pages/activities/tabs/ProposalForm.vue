@@ -75,7 +75,7 @@ const submitProposal = async () => {
     feedbackMessage.value = t('proposal_submit_success');
   } else {
     isError.value = true;
-    feedbackMessage.value = t('proposal_submit_error');
+    feedbackMessage.value = `${t('proposal_submit_error')} "${proposalStore.error}"`;
   }
 };
 </script>
@@ -178,7 +178,7 @@ const submitProposal = async () => {
     "proposal_submit_success": "Your proposal has been submitted successfully.",
     "error": "Error",
     "proposal_submit_incomplete": "Please fill in all required fields before submitting the proposal.",
-    "proposal_submit_error": "There was an error submitting your proposal. Please try again.",
+    "proposal_submit_error": "There was an error submitting your proposal:",
     "name": "Name",
     "route_name": "Route Name",
     "bivouac_name": "Bivouac Name",
@@ -197,7 +197,7 @@ const submitProposal = async () => {
     "proposal_submit_success": "La tua proposta è stata inviata con successo.",
     "error": "Errore",
     "proposal_submit_incomplete": "Per favore, compila tutti i campi richiesti prima di inviare la proposta.",
-    "proposal_submit_error": "Si è verificato un errore durante l'invio della tua proposta. Per favore riprova.",
+    "proposal_submit_error": "Si è verificato un errore durante l'invio della tua proposta:",
     "name": "Nome",
     "route_name": "Nome del Percorso",
     "bivouac_name": "Nome del Bivacco",
@@ -216,7 +216,7 @@ const submitProposal = async () => {
     "proposal_submit_success": "Tu propuesta ha sido enviada con éxito.",
     "error": "Error",
     "proposal_submit_incomplete": "Por favor, completa todos los campos requeridos antes de enviar la propuesta.",
-    "proposal_submit_error": "Hubo un error al enviar tu propuesta. Por favor, inténtalo de nuevo.",
+    "proposal_submit_error": "Hubo un error al enviar tu propuesta:",
     "name": "Nombre",
     "route_name": "Nombre de la Ruta",
     "bivouac_name": "Nombre del Bivouac",
