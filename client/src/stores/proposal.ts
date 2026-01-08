@@ -15,6 +15,7 @@ export interface Proposal {
   type: ProposalType;
   subjectName: string;
   description: string;
+  locality: string;
 }
 
 export const useProposalStore = defineStore('proposal', () => {

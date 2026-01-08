@@ -3,9 +3,9 @@ import { Proposal } from '../models/models.ts';
 
 interface ProposalRequest extends Request {
   body: {
-    email: string;
+    senderEmail: string;
     type: string;
-    name: string;
+    subjectName: string;
     description: string;
     locality: string;
   };
@@ -15,17 +15,22 @@ interface ProposalRequest extends Request {
 // Handle proposal submission
 export const sendProposal = async (req: ProposalRequest, res: Response) => {
   try {
-    const { email, type, name, description, locality } = req.body;
+    const { senderEmail, type, subjectName, description, locality } = req.body;
 
     // Basic Validation
-    if (!email || !type || !name || !description || !locality) {
+    if (!senderEmail || !type || !subjectName || !description || !locality) {
       return res
         .status(400)
         .json({ message: 'Please fill in all required fields' });
     }
 
     // Check if the proposal already exists
-    const existingProposal = await Proposal.findOne({ email, type, name });
+    const existingProposal = await Proposal.findOne({
+      senderEmail,
+      type,
+      subjectName,
+      locality,
+    });
     if (existingProposal) {
       return res.status(400).json({
         message:
@@ -35,9 +40,9 @@ export const sendProposal = async (req: ProposalRequest, res: Response) => {
 
     // Create new proposal with specific schema fields
     const newProposal = new Proposal({
-      email,
+      senderEmail,
       type,
-      name,
+      subjectName,
       description,
       locality,
     });

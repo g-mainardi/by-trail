@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { ref, onMounted } from 'vue';
-import { useProposalStore } from '@/stores/proposal';
+import { useProposalStore, type Proposal } from '@/stores/proposal';
 import { storeToRefs } from 'pinia';
 
 // --- UI Components ---
@@ -28,11 +28,11 @@ const { t } = useI18n();
 
 // --- Form Local State ---
 const formData = ref({
-  email: '',
+  senderEmail: '',
   type: '',
-  name: '',
-  description: '',
   locality: '',
+  subjectName: '',
+  description: '',
 });
 
 const feedbackMessage = ref('');
@@ -40,7 +40,7 @@ const isError = ref(false);
 
 onMounted(async () => {
   await proposalStore.fetchEmail();
-  formData.value.email = email.value || '';
+  formData.value.senderEmail = email.value || '';
 });
 
 // --- Handle Proposal Submission ---
@@ -51,9 +51,9 @@ const submitProposal = async () => {
   // Prevent empty submission
   if (
     !formData.value.type ||
-    !formData.value.name ||
-    !formData.value.description ||
-    !formData.value.locality
+    !formData.value.locality ||
+    !formData.value.subjectName ||
+    !formData.value.description
   ) {
     isError.value = true;
     feedbackMessage.value = t('proposal_submit_incomplete');
@@ -61,12 +61,12 @@ const submitProposal = async () => {
   }
 
   // Prepare payload
-  const payload = {
-    email: formData.value.email,
-    type: formData.value.type,
-    name: formData.value.name,
-    description: formData.value.description,
+  const payload: Proposal = {
+    senderEmail: formData.value.senderEmail,
+    type: formData.value.type as Proposal['type'],
     locality: formData.value.locality,
+    subjectName: formData.value.subjectName,
+    description: formData.value.description,
   };
 
   // Call store action to update profile
@@ -119,7 +119,7 @@ const submitProposal = async () => {
           <FieldLabel for="name">{{ t('name') }} </FieldLabel>
           <Input
             id="name"
-            v-model="formData.name"
+            v-model="formData.subjectName"
             class="h-10"
             required
             :placeholder="
