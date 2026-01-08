@@ -4,6 +4,19 @@ import { storeToRefs } from 'pinia';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+const ProposalEnum = {
+  ROUTE: 'route',
+  BIVOUAC: 'bivouac',
+} as const;
+
+type ProposalType = (typeof ProposalEnum)[keyof typeof ProposalEnum];
+export interface Proposal {
+  senderEmail: string;
+  type: ProposalType;
+  subjectName: string;
+  description: string;
+}
+
 export const useProposalStore = defineStore('proposal', () => {
   const authStore = useAuthStore();
   const { user, isLoading, error, token } = storeToRefs(authStore);
@@ -12,7 +25,7 @@ export const useProposalStore = defineStore('proposal', () => {
   // --- State ---
   const email = ref<string>('');
 
-  const sendProposal = async (proposalData: any) => {
+  const sendProposal = async (proposalData: Proposal) => {
     isLoading.value = true;
     error.value = null;
 
