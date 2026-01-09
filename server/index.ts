@@ -9,9 +9,16 @@ import userRoutes from './src/routes/userRoutes.ts';
 // Environment variables setup
 const PORT = process.env.PORT || 3000; // Default port for Express
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5173'; // Vite default port
-const SWAGGER_ORIGIN = 'http://localhost:8080';
-const whitelist = [CLIENT_ORIGIN, SWAGGER_ORIGIN];
+const SWAGGER_ORIGIN =
+  process.env.SWAGGER_ORIGIN ||
+  (process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8080'
+    : undefined);
+const whitelist = [CLIENT_ORIGIN];
 
+if (SWAGGER_ORIGIN) {
+  whitelist.push(SWAGGER_ORIGIN);
+}
 const app = express();
 
 // Middleware setup
