@@ -10,10 +10,13 @@ info:
 
     Note: authenticated users are identified via a JWT token passed in the
     `Authorization` header as a Bearer token and their requests are handled first by an authentication middleware.
-  version: 1.0.1
+  version: 1.0.2
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:3000/api
     description: Local Docker Server
+
+security:
+  - bearerAuth: []
 
 tags:
   - name: Authentication
@@ -59,6 +62,11 @@ paths:
   # Admin
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # JSON Web Token
   schemas:
     User:
       $ref: './components/schemas/User.yaml'
