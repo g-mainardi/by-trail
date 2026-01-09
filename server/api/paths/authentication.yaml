@@ -1,5 +1,5 @@
 /login:
-  security: []  # Public endpoint, no authentication required
+  security: [] # Public endpoint, no authentication required
   post:
     tags:
       - Authentication
@@ -11,7 +11,7 @@
           schema:
             type: object
             properties:
-              username:
+              email:
                 type: string
                 example: gino@gino.it
               password:
@@ -19,7 +19,7 @@
                 format: password
                 example: Gino1234
             required:
-              - username
+              - email
               - password
     responses:
       '200':
@@ -29,8 +29,22 @@
             schema:
               type: object
               properties:
-                token:
+                token: string
+                user:
+                  id: string
+                  name: string
+                  email: string
+                  favRegions: array<string>
                   type: string
+              example:
+                token: '...long.jwt.token...'
+                user:
+                  id: '695244f63542e2c7bb6df27c'
+                  name: 'Paolo Cannone'
+                  email: 'gino@gino.it'
+                  favRegions: ['Emilia-Romagna', 'Abruzzo']
+                  type: 'admin'
+
       '400':
         description: Bad Request - Invalid input (e.g., missing username or password)
         content:
@@ -62,7 +76,7 @@
                   type: string
 
 /signup:
-  security: []  # Public endpoint, no authentication required
+  security: [] # Public endpoint, no authentication required
   post:
     tags:
       - Authentication
