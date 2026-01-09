@@ -12,19 +12,22 @@ interface ProposalRequest extends Request {
 }
 
 // POST /api/users/proposal
-// Handle proposal submission
 export const sendProposal = async (req: ProposalRequest, res: Response) => {
   try {
     const { senderEmail, type, subjectName, description, locality } = req.body;
 
-    // Basic Validation
-    if (!senderEmail || !type || !subjectName || !description || !locality) {
+    if (!senderEmail) {
+      return res.status(401).json({
+        message: 'Unauthorized: Authentication required (missing email)',
+      });
+    }
+
+    if (!type || !subjectName || !description || !locality) {
       return res
         .status(400)
         .json({ message: 'Please fill in all required fields' });
     }
 
-    // Check if the proposal already exists
     const existingProposal = await Proposal.findOne({
       senderEmail,
       type,
@@ -37,7 +40,6 @@ export const sendProposal = async (req: ProposalRequest, res: Response) => {
       });
     }
 
-    // Create new proposal with specific schema fields
     const newProposal = new Proposal({
       senderEmail,
       type,
@@ -46,7 +48,6 @@ export const sendProposal = async (req: ProposalRequest, res: Response) => {
       locality,
     });
 
-    // Save to database
     const savedProposal = await newProposal.save();
     if (!savedProposal) {
       return res
