@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { Setting, User } from '../models/models.ts';
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   user?: { id: string };
 }
 

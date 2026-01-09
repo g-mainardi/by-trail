@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { AuthRequest } from './userController.ts';
 import mongoose from 'mongoose';
 import { Bivouac } from '../models/models.ts';
 
