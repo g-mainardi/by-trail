@@ -1,0 +1,48 @@
+/bivouacs/favorites:
+  get:
+    summary: Retrieve the list of favorite bivouacs for the authenticated user
+    responses:
+      '200':
+        description: A list of favorite bivouacs
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                favorites:
+                  type: array
+                  items:
+                    $ref: '../components/schemas/Bivouac.yaml'
+      '400':
+        description: Bad Request - Could not retrieve favorites
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+            example:
+              error: 'Invalid user ID format'
+      '401':
+        description: Unauthorized - Authentication token is missing or invalid
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+            example:
+              message: 'User ID missing'
+      '500':
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+            example:
+              error: 'Internal server error'

@@ -57,6 +57,10 @@ paths:
   /proposal:
     $ref: './paths/proposal.yaml#/~1proposal'
 
+  # Favorites
+  /bivouacs/favorites:
+    $ref: './paths/favorites.yaml#/~1bivouacs~1favorites'
+
   # Alerts
 
   # Admin
