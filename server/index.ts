@@ -46,7 +46,8 @@ app.use(
           process.env.NODE_ENV === 'development' &&
           origin &&
           (origin.startsWith('vscode-webview://') ||
-            origin.includes('localhost'))
+            origin.startsWith('http://localhost:') ||
+            origin.startsWith('https://localhost:'))
         ) {
           return callback(null, true);
         }
