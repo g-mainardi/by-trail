@@ -72,3 +72,5 @@ components:
       $ref: './components/schemas/User.yaml'
     Proposal:
       $ref: './components/schemas/Proposal.yaml'
+    Bivouac:
+      $ref: './components/schemas/Bivouac.yaml'
