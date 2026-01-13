@@ -45,6 +45,7 @@ const routeSchema = new Schema({
     ascent: { type: Number, required: true },
     descent: { type: Number, required: true },
     duration: { type: Number, required: true },
+    routeType: { type: String, required: true, enum: ['loop', 'out-and-back', 'point-to-point'] },
     likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
     path: {

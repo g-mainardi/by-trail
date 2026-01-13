@@ -8,6 +8,7 @@
             "ascent": 1916,
             "descent": 1916,
             "duration": 390,
+            "routeType": "point-to-point",
             "gpxFile": "pradimezzo_bivacco_bedin.gpx"
         },
         {
@@ -18,6 +19,7 @@
             "ascent": 582,
             "descent": 582,
             "duration": 385,
+            "routeType": "loop",
             "gpxFile": "lago_di_garda.gpx"
         },
         {
@@ -28,6 +30,7 @@
             "ascent": 392,
             "descent": 392,
             "duration": 192,
+            "routeType": "loop",
             "gpxFile": "tre_cime_lavaredo.gpx"
         }
     ]

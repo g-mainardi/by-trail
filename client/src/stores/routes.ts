@@ -14,6 +14,7 @@ export interface TrekkingRoute {
     ascent: number;
     descent: number;
     duration: number;
+    routeType: string;
     likes: number;
     note?: string;
     path?: {

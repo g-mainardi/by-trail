@@ -12,8 +12,10 @@ import {
   ArrowUpRight as ArrowUpRightIcon, 
   Eye as EyeIcon, 
   Clock as ClockIcon, 
-  TrendingUp as TrendingUpIcon, 
-  Map as MapIcon 
+  TrendingUp as TrendingUpIcon,
+  TrendingDown as TrendingDownIcon, 
+  Map as MapIcon,
+  MapPin as MapPinIcon
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 
@@ -48,7 +50,7 @@ const getDifficultyColor = (diff: string) => {
 </script>
 
 <template>
-  <Card class="gap-2 p-4 h-full flex flex-col justify-between">
+  <Card class="gap-2 p-4 m-4 h-full flex flex-col justify-between">
     <CardTitle class="flex items-start gap-4">
       <div class="p-2 bg-muted rounded-md">
         <ThiigsIcon :alt="'route icon'" :path="routeIcon" :size="6" />
@@ -85,6 +87,14 @@ const getDifficultyColor = (diff: string) => {
         </div>
 
         <div class="flex flex-col items-center justify-center p-1">
+          <div class="flex items-center gap-1 mb-1">
+            <TrendingDownIcon class="h-4 w-4 text-emerald-600" />
+            <span class="text-sm font-mono font-medium">{{ route.descent }}m</span>
+          </div>
+          <span class="text-[10px] text-muted-foreground">{{ t('ascent') }}</span>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-1">
            <div class="flex items-center gap-1 mb-1">
             <ClockIcon class="h-4 w-4 text-amber-600" />
             <span class="text-sm font-mono font-medium">{{ formatDuration(route.duration) }}</span>
@@ -96,6 +106,14 @@ const getDifficultyColor = (diff: string) => {
            <div class="flex items-center gap-1 mb-1">
             <MapIcon class="h-4 w-4 text-blue-600" />
             <span class="text-sm font-mono font-medium">{{ route.distance }}km</span>
+          </div>
+          <span class="text-[10px] text-muted-foreground">{{ t('distance') }}</span>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-1">
+           <div class="flex items-center gap-1 mb-1">
+            <MapPinIcon class="h-4 w-4 text-blue-600" />
+            <span class="text-sm font-mono font-medium">{{ route.routeType }}</span>
           </div>
           <span class="text-[10px] text-muted-foreground">{{ t('distance') }}</span>
         </div>
@@ -122,7 +140,7 @@ const getDifficultyColor = (diff: string) => {
   "en": {
     "view": "Details",
     "plan": "Navigate",
-    "difficulty": "Diff",
+    "difficulty": "Difficulty",
     "ascent": "Ascent",
     "duration": "Time",
     "distance": "Dist"
@@ -130,7 +148,7 @@ const getDifficultyColor = (diff: string) => {
   "it": {
     "view": "Dettagli",
     "plan": "Naviga",
-    "difficulty": "Diff",
+    "difficulty": "Difficoltà",
     "ascent": "Dislivello",
     "duration": "Tempo",
     "distance": "Distanza"
