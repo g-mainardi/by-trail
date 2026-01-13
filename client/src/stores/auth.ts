@@ -39,10 +39,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   // 1. Fetch Profile (The Source of Truth)
   // Call this when the app starts or after login to get fresh data
-  const fetchProfile = async (): Promise<boolean> => {
+  const fetchProfile = async (skipLoadingState = false): Promise<boolean> => {
     if (!token.value) return false;
 
-    isLoading.value = true;
+    if (!skipLoadingState) {
+      isLoading.value = true;
+    }
     try {
       const res = await httpHelper.get('/users/profile');
 
@@ -66,7 +68,9 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = err.message;
       return false;
     } finally {
-      isLoading.value = false;
+      if (!skipLoadingState) {
+        isLoading.value = false;
+      }
     }
   };
 
@@ -81,14 +85,19 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (!res.ok) throw new Error(data.message || 'Update failed');
 
-      // Update local state immediately with the response
-      user.value = data.user;
-
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Fetch the latest profile to sync state (skip nested loading state management)
+      const profileSuccess = await fetchProfile(true);
+      if (!profileSuccess) {
+        console.warn(
+          'Profile updated on server, but failed to refresh local user state.'
+        );
+        error.value =
+          'Your profile was updated, but we could not refresh your data. Please reload the page.';
+      }
 
       return true;
     } catch (err: any) {
-      console.error(err);
+      console.error('Update Profile Error:', err);
       error.value = err.message;
       return false;
     } finally {
@@ -118,14 +127,14 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('token', token.value || '');
       localStorage.setItem('user', JSON.stringify(user.value));
 
-      // FETCH FULL PROFILE NOW
-      const profileSuccess = await fetchProfile();
+      // Fetch the latest profile to sync state (skip nested loading state management)
+      const profileSuccess = await fetchProfile(true);
       if (!profileSuccess) {
         throw new Error('Failed to load user profile');
       }
 
       // Redirect to Home
-      router.push('/maps');
+      router.push('/');
       return true;
     } catch (err: any) {
       console.error(err);
