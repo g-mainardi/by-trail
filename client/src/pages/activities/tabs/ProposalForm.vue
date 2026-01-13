@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 import { useProposalStore, type Proposal } from '@/stores/proposal';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
@@ -23,7 +24,9 @@ import {
 } from '@/components/ui/select';
 
 const proposalStore = useProposalStore();
-const { isLoading, email } = storeToRefs(proposalStore);
+const authStore = useAuthStore();
+const { error, isLoading } = storeToRefs(authStore);
+const { proposalError, isSubmitting, email } = storeToRefs(proposalStore);
 
 const { t } = useI18n();
 
@@ -40,7 +43,7 @@ const feedbackMessage = ref('');
 const isError = ref(false);
 
 onMounted(async () => {
-  await proposalStore.fetchEmail();
+  await authStore.fetchProfile();
   formData.value.senderEmail = email.value || '';
 });
 
@@ -76,12 +79,12 @@ const submitProposal = async () => {
     feedbackMessage.value = t('proposal_submit_success');
   } else {
     isError.value = true;
-    feedbackMessage.value = `${t('proposal_submit_error')} "${proposalStore.error}"`;
+    feedbackMessage.value = `${t('proposal_submit_error')} "${getErrorMessage.value}"`;
   }
 };
 
 const alertConfig = computed(() => {
-  if (isError.value || proposalStore.error) {
+  if (isError.value || getErrorMessage.value) {
     return {
       variant: 'destructive' as const,
       icon: AlertCircle,
@@ -94,17 +97,18 @@ const alertConfig = computed(() => {
     title: t('success'),
   };
 });
+
+const getErrorMessage = computed(() => {
+  return proposalError.value || error.value || '';
+});
 </script>
 
 <template>
-  <Alert
-    v-if="feedbackMessage || proposalStore.error"
-    :variant="alertConfig.variant"
-  >
+  <Alert v-if="feedbackMessage" :variant="alertConfig.variant">
     <component :is="alertConfig.icon" />
     <AlertTitle>{{ alertConfig.title }}</AlertTitle>
     <AlertDescription>
-      {{ feedbackMessage || proposalStore.error }}
+      {{ feedbackMessage }}
     </AlertDescription>
   </Alert>
   <form @submit.prevent="submitProposal">
@@ -170,12 +174,12 @@ const alertConfig = computed(() => {
 
         <Button
           @click="submitProposal"
-          :disabled="isLoading"
+          :disabled="isSubmitting || isLoading"
           size="lg"
           class="w-auto sm:w-auto"
         >
           <SendIcon class="w-4 h-4 mr-2" />
-          <span v-if="isLoading">{{ t('sending') }}</span>
+          <span v-if="isSubmitting || isLoading">{{ t('sending') }}</span>
           <span v-else>{{ t('send') }}</span>
         </Button>
       </FieldGroup>
