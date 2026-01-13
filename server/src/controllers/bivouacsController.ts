@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import type { AuthRequest } from './userController.ts';
 import mongoose from 'mongoose';
-import { Bivouac } from '../models/models.ts';
+import { FavBivouac, Bivouac } from '../models/models.ts';
 
 export const fetchBivouacs = async (req: Request, res: Response) => {
   const DEFAULT_SIZE_LIMIT = 50;
@@ -90,18 +90,14 @@ export const fetchFavoriteBivouacs = async (
   }
 
   try {
-    const favorites = await mongoose
-      .model('FavBivouac')
-      .find({ user: userId })
+    const favorites = await FavBivouac.find({ user: userId })
       .populate('bivouac')
       .exec();
 
-    const favoriteBivouacs = favorites.map(
-      (fav: any) => fav.bivouac as typeof Bivouac
-    );
+    const favoriteBivouacs = favorites.map((fav) => fav.bivouac);
     return res.status(200).json({ bivouacs: favoriteBivouacs || [] });
   } catch (error) {
     console.error('Error fetching favorite bivouacs:', error);
-    return res.status(500).json({ error: `Internal server error: ${error}` });
+    return res.status(500).json({ error: `Internal server error` });
   }
 };
