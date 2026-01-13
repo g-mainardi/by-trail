@@ -5,9 +5,9 @@ import { defineStore } from 'pinia';
 
 export const useFavoriteStore = defineStore('favorites', () => {
   const token = ref<string | null>(localStorage.getItem('token'));
-  const httpHelper = new HttpHelper('/api', token.value || undefined);
 
   async function getFavoriteBivouacs(): Promise<BivouacResponse> {
+    const httpHelper = new HttpHelper('/api', token.value || undefined);
     const res = await httpHelper.get('/bivouacs/favorites');
     const data = await res.json();
     if (!res.ok) {
