@@ -94,10 +94,15 @@ export const fetchFavoriteBivouacs = async (
       .populate('bivouac')
       .exec();
 
-    const favoriteBivouacs = favorites.map((fav) => fav.bivouac);
-    return res.status(200).json({ bivouacs: favoriteBivouacs || [] });
+    var favoriteBivouacs = favorites.map((fav) => fav.bivouac);
+    if (favoriteBivouacs.some((fav) => fav === null)) {
+      console.warn('Orphaned favorite bivouac records found for user:', userId);
+      favoriteBivouacs = favoriteBivouacs.filter((bivouac) => bivouac !== null);
+    }
+
+    return res.status(200).json({ bivouacs: favoriteBivouacs });
   } catch (error) {
     console.error('Error fetching favorite bivouacs:', error);
-    return res.status(500).json({ error: `Internal server error` });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
