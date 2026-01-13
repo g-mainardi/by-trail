@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import type { BivouacResponse } from './bivouacs';
 import { defineStore } from 'pinia';
 
-export const useFavoriteStore = defineStore('bivouacs', () => {
+export const useFavoriteStore = defineStore('favorites', () => {
   const token = ref<string | null>(localStorage.getItem('token'));
   const httpHelper = new HttpHelper('/api', token.value || undefined);
 
