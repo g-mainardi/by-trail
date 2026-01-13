@@ -21,12 +21,13 @@ export interface Proposal {
 export const useProposalStore = defineStore('proposal', () => {
   const authStore = useAuthStore();
   const { user, isLoading, error, token } = storeToRefs(authStore);
-  const httpHelper = new HttpHelper('/api', token.value || undefined);
 
   // --- State ---
   const email = ref<string>('');
 
   const sendProposal = async (proposalData: Proposal) => {
+    const httpHelper = new HttpHelper('/api', token.value || undefined);
+
     isLoading.value = true;
     error.value = null;
 
