@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
+import { ref, type Ref } from 'vue';
 
 import type { Bivouac } from '@/stores/bivouacs';
 import { useFavoriteStore } from '@/stores/favorites';
@@ -10,15 +10,17 @@ import BivouacCard from './BivouacCard.vue';
 const { t } = useI18n();
 
 const favoriteStore = useFavoriteStore();
-const favoriteBivouacsResponse = ref(
-  await favoriteStore.getFavoriteBivouacs().catch((error) => {
-    console.error('Error fetching favorite bivouacs:', error);
-    return { bivouacs: [] };
+
+const favoriteBivouacs: Ref<Bivouac[]> = ref([]);
+
+favoriteStore
+  .getFavoriteBivouacs()
+  .then((bivouacs) => {
+    favoriteBivouacs.value = bivouacs;
   })
-);
-const favoriteBivouacs = ref<Bivouac[]>(
-  favoriteBivouacsResponse.value.bivouacs
-);
+  .catch((error) => {
+    console.error('Error fetching favorite bivouacs:', error);
+  });
 </script>
 
 <template>
