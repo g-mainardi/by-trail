@@ -58,7 +58,7 @@ const difficultyFilter: Filter = {
   default: 'All',
   predicate: (route: TrekkingRoute, value: any) => {
     if (value === 'All') return true; 
-      return route.difficulty === value;
+    return route.difficulty === value;
   },
 };
 

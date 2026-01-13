@@ -3,10 +3,10 @@
         {
             "title": "Pradimezzo - Bivacco Bedin",
             "region": ["Veneto"],
-            "difficulty": "EE",
-            "distance": 13.1,
-            "ascent": 1916,
-            "descent": 1916,
+            "difficulty": "E",
+            "distance": 6.7,
+            "ascent": 1474,
+            "descent": 138,
             "duration": 390,
             "routeType": "point-to-point",
             "gpxFile": "pradimezzo_bivacco_bedin.gpx"
@@ -19,7 +19,7 @@
             "ascent": 582,
             "descent": 582,
             "duration": 385,
-            "routeType": "loop",
+            "routeType": "circular",
             "gpxFile": "lago_di_garda.gpx"
         },
         {
@@ -30,7 +30,7 @@
             "ascent": 392,
             "descent": 392,
             "duration": 192,
-            "routeType": "loop",
+            "routeType": "circular",
             "gpxFile": "tre_cime_lavaredo.gpx"
         }
     ]

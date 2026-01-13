@@ -32,7 +32,7 @@ function formatDuration(minutes: number): string {
   if (!minutes) return '-';
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  return `${h}h : ${m}min`
+  return `${h}h : ${m}m`
 }
 
 const route = props.route;
@@ -66,56 +66,56 @@ const getDifficultyColor = (diff: string) => {
     </CardTitle>
 
     <CardContent class="flex flex-col gap-4 p-0 mt-4">
-      <div class="grid grid-cols-4 gap-2 divide-x divide-gray-100 dark:divide-gray-800">
+      <div class="grid grid-cols-3 gap-2">
         
-        <div class="flex flex-col items-center justify-center p-1">
+        <div class="flex flex-col items-center justify-center p-1 text-center h-full">
           <span 
-            class="text-xs font-bold px-2 py-1 rounded border mb-1"
+            class="text-sm font-bold px-3 py-1 rounded border mb-1"
             :class="getDifficultyColor(route.difficulty)"
           >
             {{ route.difficulty }}
           </span>
-          <span class="text-[10px] text-muted-foreground">{{ t('difficulty') }}</span>
+          <span class="text-[12px] text-muted-foreground">{{ t('difficulty') }}</span>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-1 text-center h-full">
+          <div class="flex flex-col items-center justify-center gap-1 mb-1 w-full">
+            <TrendingUpIcon class="h-4 w-4 md:h-5 md:w-5 text-red-600 shrink-0" />
+            <span class="font-mono font-bold text-sm md:text-xl lg:text-2xl">{{ route.ascent }}m</span>
+          </div>
+          <span class="text-[12px] text-muted-foreground">{{ t('ascent') }}</span>
+        </div>
+
+        <div class="flex flex-col items-center justify-center p-1 text-center h-full">
+          <div class="flex flex-col items-center justify-center gap-1 mb-1 w-full">
+            <TrendingDownIcon class="h-4 w-4 md:h-5 md:w-5 text-red-600 shrink-0" />
+            <span class="font-mono font-bold text-sm md:text-xl lg:text-2xl">{{ route.descent }}m</span>
+          </div>
+          <span class="text-[12px] text-muted-foreground">{{ t('descent') }}</span>
         </div>
 
         <div class="flex flex-col items-center justify-center p-1">
-          <div class="flex items-center gap-1 mb-1">
-            <TrendingUpIcon class="h-4 w-4 text-emerald-600" />
-            <span class="text-sm font-mono font-medium">{{ route.ascent }}m</span>
+           <div class="flex flex-col items-center justify-center gap-1 mb-1 w-full">
+            <ClockIcon class="h-4 w-4 md:h-5 md:w-5 text-green-600 shrink-0" />
+            <span class="font-mono font-bold text-sm md:text-xl lg:text-2xl">{{ formatDuration(route.duration) }}</span>
           </div>
-          <span class="text-[10px] text-muted-foreground">{{ t('ascent') }}</span>
+          <span class="text-[12px] text-muted-foreground">{{ t('duration') }}</span>
         </div>
 
         <div class="flex flex-col items-center justify-center p-1">
-          <div class="flex items-center gap-1 mb-1">
-            <TrendingDownIcon class="h-4 w-4 text-emerald-600" />
-            <span class="text-sm font-mono font-medium">{{ route.descent }}m</span>
+           <div class="flex flex-col items-center justify-center gap-1 mb-1 w-full">
+            <MapIcon class="h-4 w-4 md:h-5 md:w-5 text-blue-600 shrink-0" />
+            <span class="font-mono font-bold text-sm md:text-xl lg:text-2xl">{{ route.distance }}km</span>
           </div>
-          <span class="text-[10px] text-muted-foreground">{{ t('ascent') }}</span>
+          <span class="text-[12px] text-muted-foreground">{{ t('distance') }}</span>
         </div>
 
         <div class="flex flex-col items-center justify-center p-1">
-           <div class="flex items-center gap-1 mb-1">
-            <ClockIcon class="h-4 w-4 text-amber-600" />
-            <span class="text-sm font-mono font-medium">{{ formatDuration(route.duration) }}</span>
+           <div class="flex flex-col items-center justify-center gap-1 mb-1 w-full">
+            <MapPinIcon class="h-4 w-4 md:h-5 md:w-5 text-orange-600 shrink-0" />
+            <span class="font-mono font-bold text-sm md:text-xl lg:text-2xl">{{ route.routeType }}</span>
           </div>
-          <span class="text-[10px] text-muted-foreground">{{ t('duration') }}</span>
-        </div>
-
-        <div class="flex flex-col items-center justify-center p-1">
-           <div class="flex items-center gap-1 mb-1">
-            <MapIcon class="h-4 w-4 text-blue-600" />
-            <span class="text-sm font-mono font-medium">{{ route.distance }}km</span>
-          </div>
-          <span class="text-[10px] text-muted-foreground">{{ t('distance') }}</span>
-        </div>
-
-        <div class="flex flex-col items-center justify-center p-1">
-           <div class="flex items-center gap-1 mb-1">
-            <MapPinIcon class="h-4 w-4 text-blue-600" />
-            <span class="text-sm font-mono font-medium">{{ route.routeType }}</span>
-          </div>
-          <span class="text-[10px] text-muted-foreground">{{ t('distance') }}</span>
+          <span class="text-[12px] text-muted-foreground">{{ t('routeType') }}</span>
         </div>
 
       </div>
@@ -141,25 +141,31 @@ const getDifficultyColor = (diff: string) => {
     "view": "Details",
     "plan": "Navigate",
     "difficulty": "Difficulty",
-    "ascent": "Ascent",
-    "duration": "Time",
-    "distance": "Dist"
+    "ascent": "Elevation Gain",
+    "descent": "Elevation Loss",
+    "duration": "Duration",
+    "distance": "Distance",
+    "routeType": "Route Type"
   },
   "it": {
     "view": "Dettagli",
     "plan": "Naviga",
     "difficulty": "Difficoltà",
-    "ascent": "Dislivello",
+    "ascent": "Dislivello Positivo",
+    "descent": "Dislivello Negativo",
     "duration": "Tempo",
-    "distance": "Distanza"
+    "distance": "Distanza",
+    "routeType": "Tipo di percorso"
   },
   "es": {
     "view": "Detalles",
     "plan": "Navegar",
-    "difficulty": "Dif",
-    "ascent": "Desnivel",
+    "difficulty": "Dificultad",
+    "ascent": "Desnivel Positivo",
+    "descent": "Desnivel Negativo",
     "duration": "Tiempo",
-    "distance": "Distancia"
+    "distance": "Distancia",
+    "routeType": "Tipo de ruta"
   }
 }
 </i18n>
