@@ -62,7 +62,7 @@ This project uses a seeding script to populate the database with initial users a
     - Run the seeding script inside the server container:
 
         ```bash
-        docker exec -it by-trail-server node seed.js
+        docker exec -it by-trail-server npx tsx seed.ts
         ```
 
 ## Commit Message Linting
