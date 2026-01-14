@@ -45,10 +45,10 @@ const emit = defineEmits(['update:modelValue']);
           }}</AvatarFallback>
         </Avatar>
         <div class="text-center sm:text-left">
-          <H3 class="!m-0">{{
+          <H3 :noMargin="true">{{
             readOnlyFullName || t('username_placeholder')
           }}</H3>
-          <P class="!m-0">{{ email }}</P>
+          <P :noMargin="true">{{ email }}</P>
         </div>
       </div>
 
