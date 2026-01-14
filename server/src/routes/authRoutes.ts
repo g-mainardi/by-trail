@@ -1,6 +1,6 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { deleteAccount, login, signup } from '../controllers/authController.ts';
+import { deleteAccount, login, signup } from '../controllers/authController.js';
 
 // Rate limiter for authentication endpoints
 const authRateLimiter = rateLimit({

@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken';
-import { User } from '../models/models.ts';
-import { getSecret } from '../utils/secrets.ts';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { User } from '../models/models.js';
+import { getSecret } from '../utils/secrets.js';
 
-export const protect = async (req, res, next) => {
+export const protect = async (req: any, res: any, next: any) => {
   let token;
 
   // 1. Check if header Authorization is present and starts with "Bearer"
@@ -20,7 +20,7 @@ export const protect = async (req, res, next) => {
       const JWT_SECRET = getSecret('JWT_SECRET', 'JWT_SECRET');
 
       // 4. Verify token validity
-      const decoded = jwt.verify(token, JWT_SECRET);
+      const decoded: JwtPayload = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
       // 5. Search the user in the DB (without the password field)
       // Fundamental to check if user still exists

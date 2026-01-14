@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import { User } from '../models/models.ts';
-import { getSecret } from '../utils/secrets.ts';
+import { User } from '../models/models.js';
+import { getSecret } from '../utils/secrets.js';
 
 let JWT_SECRET;
 try {

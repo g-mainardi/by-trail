@@ -37,9 +37,9 @@ const connectDB = async () => {
 
   const tryConnect = async (retries = 0, delay = INITIAL_DELAY_MS) => {
     try {
-      await mongoose.connect(uri);
+      await mongoose.connect(uri!);
       console.log('MongoDB Connected successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error(`MongoDB connection error: ${error.message}`);
       if (retries < MAX_RETRIES) {
         const nextDelay = Math.min(delay * 2, MAX_DELAY_MS);

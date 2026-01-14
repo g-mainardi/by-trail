@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { Setting, User } from '../models/models.ts';
+import { Setting, User } from '../models/models.js';
 
 export interface AuthRequest extends Request {
   user?: { id: string };
