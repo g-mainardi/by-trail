@@ -34,7 +34,7 @@ const bivouacSchema = new Schema({
   note: { type: String },
 });
 
-const trailSchema = new Schema({
+const routeSchema = new Schema({
   name: { type: String, required: true },
   region: { type: String, required: true },
   city: { type: String, required: true },
@@ -124,7 +124,7 @@ proposalSchema.index(
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
 const Bivouac = mongoose.model('Bivouac', bivouacSchema);
-const Trail = mongoose.model('Trail', trailSchema);
+const Route = mongoose.model('Trail', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
@@ -143,7 +143,7 @@ export {
   Notification,
   Reservation,
   Setting,
-  Trail,
+  Route,
   User,
   Proposal,
 };
