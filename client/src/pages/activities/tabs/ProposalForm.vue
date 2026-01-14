@@ -175,7 +175,7 @@ const getErrorMessage = computed(() => {
         </Field>
 
         <Button
-          @click="submitProposal"
+          type="submit"
           :disabled="isSubmitting || isLoading"
           size="lg"
           class="w-auto sm:w-auto"
