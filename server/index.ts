@@ -1,5 +1,7 @@
 import cors from 'cors';
 import express from 'express';
+import { createServer } from 'http';
+import { initSocket } from './src/config/socket.js';
 import connectDB from './src/config/db.js';
 import authRoutes from './src/routes/authRoutes.js';
 import bivouacsRoutes from './src/routes/bivouacsRoutes.js';
@@ -21,6 +23,8 @@ if (SWAGGER_ORIGIN) {
   whitelist.push(SWAGGER_ORIGIN);
 }
 const app = express();
+
+const httpServer = createServer(app);
 
 // Middleware setup
 app.use(express.json());
@@ -61,6 +65,8 @@ app.use(
   })
 );
 
+initSocket(httpServer, app, CLIENT_ORIGIN);
+
 // Routes
 app.use('/api', mainRoutes); // Public/Generic routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
@@ -68,6 +74,6 @@ app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/proposal', proposalRoutes);
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server listening at: http://localhost:${PORT}/`);
 });

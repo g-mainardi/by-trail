@@ -34,7 +34,7 @@ const bivouacSchema = new Schema({
   note: { type: String },
 });
 
-const trailSchema = new Schema({
+const routeSchema = new Schema({
   name: { type: String, required: true },
   region: { type: String, required: true },
   city: { type: String, required: true },
@@ -84,12 +84,26 @@ const settingSchema = new Schema({
   language: { type: String, default: 'en' },
 });
 
-const notifySchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  title: { type: String, required: true },
-  message: { type: String, required: true },
-  date: { type: Date, default: Date.now },
-  read: { type: Boolean, default: false },
+const notificationSchema = new Schema({
+  recipient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ['bivouac_reservation', 'bivouac_update', 'route_reservation'],
+    required: true,
+  },
+  data: {
+    // flexible container: stores any structure
+    type: mongoose.Schema.Types.Mixed, // allows any JSON object
+    required: true,
+  },
+  title: { type: String },
+  body: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  isRead: { type: Boolean, default: false },
   referenceUrl: { type: String },
 });
 
@@ -110,13 +124,13 @@ proposalSchema.index(
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
 const Bivouac = mongoose.model('Bivouac', bivouacSchema);
-const Trail = mongoose.model('Trail', trailSchema);
+const Route = mongoose.model('Trail', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
-const Notify = mongoose.model('Notify', notifySchema);
+const Notification = mongoose.model('Notify', notificationSchema);
 const Proposal = mongoose.model('Proposal', proposalSchema);
 
 /**************************************** Exports ****************************************/
@@ -126,10 +140,10 @@ export {
   FavBivouac,
   FavTrail,
   Image,
-  Notify,
+  Notification,
   Reservation,
   Setting,
-  Trail,
+  Route,
   User,
   Proposal,
 };
