@@ -5,6 +5,7 @@ import { initSocket } from './src/config/socket.js';
 import connectDB from './src/config/db.js';
 import authRoutes from './src/routes/authRoutes.js';
 import bivouacsRoutes from './src/routes/bivouacsRoutes.js';
+import routesRoutes from './src/routes/routesRoutes.js';
 import proposalRoutes from './src/routes/proposalRoutes.js';
 import { mainRoutes } from './src/routes/mainRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
@@ -72,6 +73,7 @@ app.use('/api', mainRoutes); // Public/Generic routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
+app.use('/api/routes', routesRoutes);
 app.use('/api/proposal', proposalRoutes);
 
 httpServer.listen(PORT, () => {

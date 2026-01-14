@@ -2,8 +2,9 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path';
 import { getDbConfig } from './src/config/db.js';
+import { getGeoJsonFromGpx } from './src/utils/seedHelpers.js';
 
-import { Bivouac } from './src/models/models.js';
+import { Bivouac, Route } from './src/models/models.js';
 
 const loadData = (fileName: string) => {
   try {
@@ -21,26 +22,49 @@ const seedData = async () => {
   try {
     const { uri, type } = getDbConfig();
 
-    if (type === 'ATLAS') {
-      console.log('Target: MongoDB Atlas');
-    } else {
-      console.log('Target: Local MongoDB');
+    if (!uri) {
+      throw new Error(
+        'Database URI is missing. Check your .env file or Docker secrets'
+      );
     }
 
-    if (!uri) {
-      throw new Error('Database URI is not defined');
-    }
+    console.log(
+      `Target: ${type === 'ATLAS' ? 'MongoDB Atlas' : 'Local MongoDB'}`
+    );
 
     await mongoose.connect(uri);
 
+    // SEED BIVOUACS
     const bivouacsData = loadData('bivaccos.json');
-
-    if (!bivouacsData.bivouacs) {
-      throw new Error("JSON files missing 'bivouacs' keys.");
-    }
 
     await Bivouac.deleteMany({});
     await Bivouac.insertMany(bivouacsData.bivouacs);
+
+    // SEED ROUTES
+    const routesMeta = loadData('routes_meta.json');
+    const routesToInsert = [];
+
+    for (const meta of routesMeta.routes) {
+      const geometry = getGeoJsonFromGpx(meta.gpxFile);
+
+      if (geometry) {
+        routesToInsert.push({
+          ...meta,
+          path: {
+            type: geometry.type,
+            coordinates: geometry.coordinates,
+          },
+        });
+      }
+    }
+
+    if (routesToInsert.length > 0) {
+      await Route.deleteMany({});
+      await Route.insertMany(routesToInsert);
+      console.log(`Seeded ${routesToInsert.length} routes.`);
+    } else {
+      console.log('No valid routes found to seed.');
+    }
 
     await mongoose.connection.close();
     process.exit(0);

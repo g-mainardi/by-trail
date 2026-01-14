@@ -1,7 +1,7 @@
 import { HttpHelper } from '@/stores/utility/httpHelper';
-import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import type { LatLng } from 'leaflet';
 
 type UUID = string;
 

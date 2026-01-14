@@ -19,32 +19,62 @@ const userSchema = new Schema({
   type: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
 
-const bivouacSchema = new Schema({
-  name: { type: String, required: true },
-  region: { type: String, required: true },
-  mountainRange: { type: String, required: true },
-  comune: { type: String, required: true },
-  coords: {
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true },
+const bivouacSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    region: { type: String, required: true },
+    mountainRange: { type: String, required: true },
+    comune: { type: String, required: true },
+    coords: {
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true },
+    },
+    altitude: { type: Number, required: true },
+    capacity: { type: Number, required: true },
+    likes: { type: Number, default: 0, min: 0 },
+    note: { type: String },
   },
-  altitude: { type: Number, required: true },
-  capacity: { type: Number, required: true },
-  likes: { type: Number, default: 0, min: 0 },
-  note: { type: String },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const routeSchema = new Schema({
-  name: { type: String, required: true },
-  region: { type: String, required: true },
-  city: { type: String, required: true },
-  distance: { type: Number, required: true },
-  difficulty: { type: String, required: true },
-  ascent: { type: Number, required: true },
-  descent: { type: Number, required: true },
-  duration: { type: Number, required: true },
-  likes: { type: Number, default: 0, min: 0 },
-});
+const routeSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    region: { type: [String], required: true },
+    // T (Turistico, facile), E (Escursionistico, per esperti), EE (Escursioniti Esperti, terreni impervi), EEA (Escursionisti Esperti con Attrezzatura, vie ferrate)
+    difficulty: { type: String, required: true },
+    distance: { type: Number, required: true },
+    ascent: { type: Number, required: true },
+    descent: { type: Number, required: true },
+    duration: { type: Number, required: true },
+    routeType: {
+      type: String,
+      required: true,
+      enum: ['circular', 'out-and-back', 'point-to-point', 'stage'],
+    },
+    likes: { type: Number, default: 0, min: 0 },
+    note: { type: String },
+    path: {
+      type: {
+        type: String,
+        enum: ['LineString', 'MultiLineString'],
+        required: true,
+      },
+      coordinates: {
+        type: [],
+        required: true,
+      },
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// Create a 2dsphere index for Geospatial queries
+routeSchema.index({ path: '2dsphere' });
 
 const imageSchema = new Schema({
   url: { type: String },
@@ -124,7 +154,7 @@ proposalSchema.index(
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
 const Bivouac = mongoose.model('Bivouac', bivouacSchema);
-const Route = mongoose.model('Trail', routeSchema);
+const Route = mongoose.model('Route', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);

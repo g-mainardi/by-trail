@@ -18,6 +18,7 @@ import Profile from '@/pages/profile/Profile.vue';
 import Activities from '@/pages/activities/Activities.vue';
 import Admin from './pages/admin/Admin.vue';
 import Bivouac from './pages/bivouac/Bivouac.vue';
+import Routes from './pages/routes/Routes.vue';
 import Bivouacs from './pages/bivouacs/Bivouacs.vue';
 import Settings from './pages/settings/Settings.vue';
 import Signup from './pages/signup/Signup.vue';
@@ -42,9 +43,9 @@ const routes = [
         component: Maps,
       },
       {
-        path: 'profile',
-        name: 'Profile',
-        component: Profile,
+        path: 'routes',
+        name: 'Routes',
+        component: Routes,
       },
       {
         path: 'activities',
@@ -55,6 +56,11 @@ const routes = [
         path: 'bivouacs',
         name: 'Bivouacs',
         component: Bivouacs,
+      },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: Profile,
       },
       {
         path: 'settings',
