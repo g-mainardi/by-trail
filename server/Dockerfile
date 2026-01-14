@@ -13,7 +13,7 @@ RUN npm install
 # Copy the rest of the source code
 COPY . .
 
-# Expose the port used by Express (ensure it matches your index.js)
+# Expose the port used by Express (ensure it matches your index.ts)
 EXPOSE 3000
 
 # Startup command for development (use nodemon if available in scripts)

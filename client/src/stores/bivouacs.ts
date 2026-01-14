@@ -37,7 +37,7 @@ export interface Bivouac {
   coords: {
     latitude: number;
     longitude: number;
-  }
+  };
   altitude: number;
   capacity: number;
   likes: number;
@@ -57,15 +57,16 @@ interface RequestOptions {
 }
 
 export const useBivouacStore = defineStore('bivouacs', () => {
-
   const token = ref<string | null>(localStorage.getItem('token'));
   const httpHelper = new HttpHelper('/api', token.value || undefined);
 
-  async function fetchBivouacs(options?: RequestOptions, nextPage?: UUID): Promise<BivouacResponse> {
-
+  async function fetchBivouacs(
+    options?: RequestOptions,
+    nextPage?: UUID
+  ): Promise<BivouacResponse> {
     const body = {
       options: options,
-      nextPage: nextPage
+      nextPage: nextPage,
     };
 
     const res = await httpHelper.post('/bivouacs/list', body);
@@ -77,11 +78,13 @@ export const useBivouacStore = defineStore('bivouacs', () => {
     return data as BivouacResponse;
   }
 
-  async function fetchMapBivouacs(northWest: LatLng, southEast: LatLng):
-    Promise<Bivouac[]> {
+  async function fetchMapBivouacs(
+    northWest: LatLng,
+    southEast: LatLng
+  ): Promise<Bivouac[]> {
     const body = {
       topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
-      bottomRightCoords: { lat: southEast.lat, lng: southEast.lng }
+      bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
     };
     const res = await httpHelper.post('/bivouacs/map', body);
     if (!res.ok) {
@@ -91,6 +94,14 @@ export const useBivouacStore = defineStore('bivouacs', () => {
     return data.bivouacs as Bivouac[];
   }
 
-  return { fetchBivouacs, fetchMapBivouacs };
+  async function getBivouacById(id: UUID): Promise<Bivouac> {
+    const res = await httpHelper.get(`/bivouacs/${id}`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch bivouac by ID');
+    }
+    const data = await res.json();
+    return data.bivouac as Bivouac;
+  }
 
+  return { fetchBivouacs, fetchMapBivouacs, getBivouacById };
 });

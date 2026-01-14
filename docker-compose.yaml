@@ -1,9 +1,8 @@
 services:
-
   # 1. Local Database
   mongo:
     image: mongo
-    profiles: ["local-db"] 
+    profiles: ['local-db']
     ports:
       - 27017:27017
     volumes:
@@ -12,7 +11,7 @@ services:
   # 2. Mongo Express GUI (optional for local DB)
   mongo-express:
     image: mongo-express
-    profiles: ["local-db"]
+    profiles: ['local-db']
     ports:
       - 8081:8081
     environment:
@@ -26,7 +25,7 @@ services:
     container_name: by-trail-server
     build: ./server
     ports:
-      - "3000:3000"
+      - '3000:3000'
     secrets:
       - db_uri
       - jwt_secret
@@ -37,25 +36,29 @@ services:
       MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
       JWT_SECRET_FILE: /run/secrets/jwt_secret
       # Logic handled inside the app: to use Atlas or local MongoDB
-      USE_ATLAS: "${USE_ATLAS:-true}" 
+      USE_ATLAS: '${USE_ATLAS:-true}'
 
     volumes:
-      - ./server:/app            # Synchronize local files with the container (Hot Reload)
+      - ./server:/app # Synchronize local files with the container (Hot Reload)
       - /app/node_modules
-  
+
   # 4. Frontend (Vite/React)
   client:
     container_name: by-trail-client
     build: ./client
     ports:
-      - "5173:5173"
+      - '5173:5173'
+    secrets:
+      - map_api_key
     environment:
       VITE_PORT: ${CLIENT_PORT:-5173}
       VITE_SERVER_URL: http://${SERVER_HOST:-server}:${SERVER_PORT:-3000}
-      CHOKIDAR_USEPOLLING: "true" # Tell Vite to use polling (better FS changes detection in Docker)
+      VITE_SOCKET_URL: http://localhost:${SERVER_PORT:-3000}
+      VITE_MAP_API_KEY_FILE: /run/secrets/map_api_key # We tell Vite where to look for the key file inside the container
+      CHOKIDAR_USEPOLLING: 'true' # Tell Vite to use polling (better FS changes detection in Docker)
     volumes:
-      - ./client:/app        # Sync files for HMR
-      - /app/node_modules    # Protect container's node_modules
+      - ./client:/app # Sync files for HMR
+      - /app/node_modules # Protect container's node_modules
     depends_on:
       - server
 
@@ -64,6 +67,8 @@ secrets:
     file: ./secrets/mongo_atlas_uri.txt
   jwt_secret:
     file: ./secrets/jwt_secret.txt
+  map_api_key:
+    file: ./secrets/thunderforest_map_key.txt
 
 volumes:
   mongo-data: # named volume to not lost data on turn off

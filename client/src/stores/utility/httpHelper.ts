@@ -9,12 +9,11 @@ const HttpMethod = {
   DELETE: 'DELETE',
 };
 
-type HttpMethod = typeof HttpMethod[keyof typeof HttpMethod];
+type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
 
 type URL = string;
 
 export class HttpHelper {
-
   private baseUrl: string;
   private token?: string;
 
@@ -31,7 +30,11 @@ export class HttpHelper {
     this.token = undefined;
   }
 
-  private async request(url: URL, method: HttpMethod, body?: Body): Promise<Response> {
+  private async request(
+    url: URL,
+    method: HttpMethod,
+    body?: Body
+  ): Promise<Response> {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
@@ -62,6 +65,4 @@ export class HttpHelper {
   async delete(url: URL): Promise<Response> {
     return this.request(url, HttpMethod.DELETE);
   }
-
 }
-

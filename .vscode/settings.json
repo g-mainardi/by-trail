@@ -1,6 +1,12 @@
 {
-  "cSpell.words": [
-    "Español",
-    "Thiigs"
-  ]
+  // Custom words for the spell checker
+  "cSpell.words": ["Español", "Thiigs"],
+  // Set Prettier as the default formatter
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Format the file automatically when saving
+  "editor.formatOnSave": true,
+
+  // Show invisible characters so you can see tabs vs spaces mistakes
+  "editor.renderWhitespace": "boundary"
 }

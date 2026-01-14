@@ -5,24 +5,32 @@ import { useRouter } from 'vue-router';
 
 // --- Interfaces ---
 
+const UserEnum = {
+  USER: 'user',
+  ADMIN: 'admin',
+} as const;
+
+type UserType = (typeof UserEnum)[keyof typeof UserEnum];
+
 // Matches the User model fields we expose
-interface User {
+export interface User {
   _id?: string; // Optional because sometimes Mongo uses _id, sometimes id
   id?: string;
   name: string;
   email: string;
   favRegions?: string[];
+  type?: UserType;
 }
 
 export const useAuthStore = defineStore('auth', () => {
-
-
   // --- State ---
   const router = useRouter();
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
   const token = ref<string | null>(localStorage.getItem('token'));
-  const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  const user = ref<User | null>(
+    JSON.parse(localStorage.getItem('user') || 'null')
+  );
   const error = ref<string | null>(null);
   const isLoading = ref(false);
   const httpHelper = new HttpHelper('/api', token.value || undefined);
@@ -31,10 +39,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   // 1. Fetch Profile (The Source of Truth)
   // Call this when the app starts or after login to get fresh data
-  const fetchProfile = async (): Promise<boolean> => {
+  const fetchProfile = async (skipLoadingState = false): Promise<boolean> => {
     if (!token.value) return false;
 
-    isLoading.value = true;
+    if (!skipLoadingState) {
+      isLoading.value = true;
+    }
     try {
       const res = await httpHelper.get('/users/profile');
 
@@ -50,7 +60,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = data.user;
 
       // Update localStorage to keep it somewhat in sync
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('user', JSON.stringify(user.value));
 
       return true;
     } catch (err: any) {
@@ -58,7 +68,9 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = err.message;
       return false;
     } finally {
-      isLoading.value = false;
+      if (!skipLoadingState) {
+        isLoading.value = false;
+      }
     }
   };
 
@@ -73,14 +85,19 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (!res.ok) throw new Error(data.message || 'Update failed');
 
-      // Update local state immediately with the response
-      user.value = data.user;
-
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Fetch the latest profile to sync state (skip nested loading state management)
+      const profileSuccess = await fetchProfile(true);
+      if (!profileSuccess) {
+        console.warn(
+          'Profile updated on server, but failed to refresh local user state.'
+        );
+        error.value =
+          'Your profile was updated, but we could not refresh your data. Please reload the page.';
+      }
 
       return true;
     } catch (err: any) {
-      console.error(err);
+      console.error('Update Profile Error:', err);
       error.value = err.message;
       return false;
     } finally {
@@ -104,19 +121,20 @@ export const useAuthStore = defineStore('auth', () => {
       // Save critical auth data
       token.value = data.token;
       user.value = data.user;
+
       httpHelper.setToken(data.token);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', token.value || '');
+      localStorage.setItem('user', JSON.stringify(user.value));
 
-      // FETCH FULL PROFILE NOW
-      const profileSuccess = await fetchProfile();
+      // Fetch the latest profile to sync state (skip nested loading state management)
+      const profileSuccess = await fetchProfile(true);
       if (!profileSuccess) {
         throw new Error('Failed to load user profile');
       }
 
       // Redirect to Home
-      router.push('/maps');
+      router.push('/');
       return true;
     } catch (err: any) {
       console.error(err);
@@ -131,13 +149,20 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = () => {
     token.value = null;
     user.value = null;
+    error.value = null;
+    isLoading.value = false;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     router.push('/login');
   };
 
   // 5. Signup
-  const signup = async (name: string, email: string, signupPassword: string, favRegions: string[] = []) => {
+  const signup = async (
+    name: string,
+    email: string,
+    signupPassword: string,
+    favRegions: string[] = []
+  ) => {
     isLoading.value = true;
     error.value = null;
 
@@ -146,7 +171,7 @@ export const useAuthStore = defineStore('auth', () => {
         name,
         email,
         password: signupPassword,
-        favRegions
+        favRegions,
       };
       const res = await httpHelper.post('/auth/signup', body);
       const data = await res.json();
@@ -160,12 +185,11 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = err.message;
       return false;
     } finally {
-      console.log("Account creation process finished.");
+      console.log('Account creation process finished.');
       isLoading.value = false;
     }
   };
 
-  // TODO: put the token in the body instead of the email to improve security
   const deleteAccount = async (email: string, password: string) => {
     if (!token.value) return;
     isAccountDeleteFailed.value = false;
@@ -188,7 +212,7 @@ export const useAuthStore = defineStore('auth', () => {
       return false;
     } finally {
       isLoading.value = false;
-    };
+    }
   };
 
   function clearAuthenticationStore() {
@@ -198,12 +222,25 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = false;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-  };
+  }
 
   function log(message: string) {
     error.value = message;
     console.error(message);
-  };
+  }
 
-  return { token, user, error, isLoading, isAccountDeleteFailed, accountDeleteMessage, login, signup, logout, deleteAccount, fetchProfile, updateProfile };
+  return {
+    token,
+    user,
+    error,
+    isLoading,
+    isAccountDeleteFailed,
+    accountDeleteMessage,
+    login,
+    signup,
+    logout,
+    deleteAccount,
+    fetchProfile,
+    updateProfile,
+  };
 });
