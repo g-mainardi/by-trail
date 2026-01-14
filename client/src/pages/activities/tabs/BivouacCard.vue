@@ -16,10 +16,6 @@ const props = defineProps<{
 }>();
 
 const bivouac = props.bivouac;
-
-function getIconPath() {
-  return hoodHousePath;
-}
 </script>
 
 <template>
@@ -29,7 +25,7 @@ function getIconPath() {
       aria-label="View Bivouac Details"
     >
       <CardTitle class="flex flex-row items-center gap-4">
-        <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
+        <ThiigsIcon :alt="'bivouac icon'" :path="hoodHousePath" :size="4" />
         <H2>{{ bivouac.name }}</H2>
       </CardTitle>
     </RouterLink>
@@ -37,13 +33,11 @@ function getIconPath() {
     <CardContent
       class="px-0 flex flex-col md:flex-row md:items-center md:justify-between"
     >
-      <span class="">
-        <span v-if="!bivouac.note">
-          {{ t('no_description_available') }}
-        </span>
-        <span v-else>
-          {{ bivouac.note }}
-        </span>
+      <span v-if="!bivouac.note">
+        {{ t('no_description_available') }}
+      </span>
+      <span v-else>
+        {{ bivouac.note }}
       </span>
     </CardContent>
   </Card>
