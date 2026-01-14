@@ -22,6 +22,12 @@ const seedData = async () => {
   try {
     const { uri, type } = getDbConfig();
 
+    if (!uri) {
+      throw new Error(
+        'Database URI is missing. Check your .env file or Docker secrets'
+      );
+    }
+
     console.log(
       `Target: ${type === 'ATLAS' ? 'MongoDB Atlas' : 'Local MongoDB'}`
     );

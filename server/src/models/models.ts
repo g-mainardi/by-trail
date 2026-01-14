@@ -19,20 +19,25 @@ const userSchema = new Schema({
   type: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
 
-const bivouacSchema = new Schema({
-  name: { type: String, required: true },
-  region: { type: String, required: true },
-  mountainRange: { type: String, required: true },
-  comune: { type: String, required: true },
-  coords: {
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true },
+const bivouacSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    region: { type: String, required: true },
+    mountainRange: { type: String, required: true },
+    comune: { type: String, required: true },
+    coords: {
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true },
+    },
+    altitude: { type: Number, required: true },
+    capacity: { type: Number, required: true },
+    likes: { type: Number, default: 0, min: 0 },
+    note: { type: String },
   },
-  altitude: { type: Number, required: true },
-  capacity: { type: Number, required: true },
-  likes: { type: Number, default: 0, min: 0 },
-  note: { type: String },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const routeSchema = new Schema(
   {
@@ -58,12 +63,14 @@ const routeSchema = new Schema(
         required: true,
       },
       coordinates: {
-        type: [[Number]],
+        type: [],
         required: true,
       },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 // Create a 2dsphere index for Geospatial queries
