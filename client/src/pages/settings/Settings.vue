@@ -1,29 +1,24 @@
 <script setup lang="ts">
-import {
-  Card,
-  CardContent,
-  CardFooter
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from 'vue-i18n';
 import DeleteAccountSection from './account/DeleteAccountSection.vue';
 import ChangeLanguageSection from './appearance/ChangeLanguageSection.vue';
 import SubscriptionSection from './notifications/SubscriptionSection.vue';
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <template>
   <Tabs default-value="account">
-
     <TabsList>
       <TabsTrigger value="account">
-        {{ t("tab_account") }}
+        {{ t('tab_account') }}
       </TabsTrigger>
       <TabsTrigger value="appearance">
-        {{ t("tab_appearance") }}
+        {{ t('tab_appearance') }}
       </TabsTrigger>
       <TabsTrigger value="notifications">
-        {{ t("tab_notifications") }}
+        {{ t('tab_notifications') }}
       </TabsTrigger>
     </TabsList>
 
@@ -32,8 +27,7 @@ const { t } = useI18n()
         <CardContent class="card-content">
           <DeleteAccountSection />
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter> </CardFooter>
       </Card>
     </TabsContent>
     <TabsContent value="appearance">
@@ -41,8 +35,7 @@ const { t } = useI18n()
         <CardContent class="card-content">
           <ChangeLanguageSection />
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter> </CardFooter>
       </Card>
     </TabsContent>
     <TabsContent value="notifications">
@@ -50,23 +43,21 @@ const { t } = useI18n()
         <CardContent class="card-content">
           <SubscriptionSection />
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter> </CardFooter>
       </Card>
     </TabsContent>
   </Tabs>
 </template>
 
 <style scoped>
-  .card {
-    gap: 0;
-    padding: calc(var(--spacing) * 6);
-  }
-  .card-content {
-    padding: 0;
-  }
+.card {
+  gap: 0;
+  padding: calc(var(--spacing) * 6);
+}
+.card-content {
+  padding: 0;
+}
 </style>
-
 
 <i18n>
   {

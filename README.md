@@ -2,63 +2,69 @@
 
 ## Setup and Run
 
-1. (to run with remote DB) Set up Docker secret for MongoDB URI by creating a file named `mongo_atlas_uri.txt` in a directory named `secrets/` with the following content:
+1. Setup secrets files by creating a directory named `secrets/` in the project root and adding the following files:
+   - (to run with remote DB) `mongo_atlas_uri.txt` for MongoDB Atlas with a valid URI connection string:
 
-    ```text
-   mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0    
-   ```
+     ```text
+     mongodb+srv://<username>:<password>@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0
+     ```
 
-2. Set up Docker secret for JWT secret by creating a file named `jwt_secret.txt` in the same `secrets/` directory with a strong secret key:
+   - `jwt_secret.txt` for JWT with a strong secret key:
 
-    ```text
-   your_strong_jwt_secret_key_here
-   ```
+     ```text
+     your_strong_jwt_secret_key_here
+     ```
 
-3. Copy `.env.example`, rename it to `.env` and modify it as needed, or else default values will be used.
+   - `thunderforest_map_key.txt` for Thunderforest Map with a valid API key:
 
-4. Start the application using Docker Compose:
+     ```text
+     your_thunderforest_map_api_key_here
+     ```
 
-    - Remote (with `USE_ATLAS=true`)
+2. Copy `.env.example`, rename it to `.env` and modify it as needed, or else default values will be used.
 
-        ```bash
-        docker compose up -d
-        ```
+3. Start the application using Docker Compose:
+   - Remote (with `USE_ATLAS=true`)
 
-    - Local (with `USE_ATLAS=false`)
+     ```bash
+     docker compose up -d
+     ```
 
-        ```bash
-        docker compose --profile local-db up -d
-        ```
+   - Local (with `USE_ATLAS=false`)
 
-5. Access:
+     ```bash
+     docker compose --profile local-db up -d
+     ```
+
+4. Access:
    - Local Database structure at [http://localhost:8081](http://localhost:8081).
    - Main Application at the port you have specified (default is '5173') [http://localhost:5173](http://localhost:5173).
 
-6. To stop services and delete volumes, run:
+5. To stop services and delete volumes, run:
+   - Remote (with `USE_ATLAS=true`)
 
-    - Remote (with `USE_ATLAS=true`)
+     ```bash
+     docker compose down -v
+     ```
 
-        ```bash
-        docker compose down -v
-        ```
+   - Local (with `USE_ATLAS=false`)
 
-    - Local (with `USE_ATLAS=false`)
-
-        ```bash
-        docker compose --profile local-db down -v
-        ```
+     ```bash
+     docker compose --profile local-db down -v
+     ```
 
 ## Database Inizialization
+
 This project uses a seeding script to populate the database with initial users and bivaccos. The script automatically detects whether to use Local MongoDB or MongoDB Atlas based on your `.env` configuration.
 
     - Ensure your Docker containers are running
 
     - Run the seeding script inside the server container:
-        
+
         ```bash
         docker exec -it by-trail-server node seed.js
         ```
-        
+
 ## Commit Message Linting
 
 This project uses Commitlint to enforce conventional commit messages. Make sure to follow the commit message guidelines when making changes.

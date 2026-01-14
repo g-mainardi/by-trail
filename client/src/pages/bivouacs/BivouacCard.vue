@@ -1,28 +1,27 @@
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
+import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
-import { ArrowUpRight as ArrowUpRightIcon, Eye as EyeIcon } from 'lucide-vue-next';
+import {
+  Bed as BedIcon,
+  Eye,
+  MapPin as MapPinIcon,
+  Mountain as MountainIcon,
+  ThumbsUp as ThumbsUpIcon,
+  Toilet as ToiletIcon,
+} from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n()
+const { t } = useI18n();
 
-const hoodHousePath = new URL('@/assets/trekking_hood_house.png', import.meta.url).href;
-const mountainHouse = new URL('@/assets/trekking_mountain_house.png', import.meta.url).href;
-const tentSiteIcon = new URL('@/assets/trekking_tent.png', import.meta.url).href;
-const cliffHouseIcon = new URL('@/assets/trekking_cliff_house.png', import.meta.url).href;
-const mountain = new URL('@/assets/mountain.png', import.meta.url).href;
-const beds = new URL('@/assets/beds.png', import.meta.url).href;
-const toilet = new URL('@/assets/toilet.png', import.meta.url).href;
-const calendar = new URL('@/assets/calendar.png', import.meta.url).href;
+const hoodHousePath = new URL(
+  '@/assets/trekking_hood_house.png',
+  import.meta.url
+).href;
 
 const props = defineProps<{
-  bivouac: Bivouac
+  bivouac: Bivouac;
 }>();
 
 const bivouac = props.bivouac;
@@ -33,61 +32,75 @@ function getIconPath() {
 </script>
 
 <template>
-  <Card class="gap-2 p-4">
-    <CardTitle class="flex items-center gap-4">
-      <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="6" />
-      <h1 class="text-2xl font-bold">
-        {{ bivouac.name }}
-      </h1>
-    </CardTitle>
-    <CardContent class="flex flex-col md:flex-row gap-4 justify-between p-0">
-      <!-- Description -->
-      <span class="description text-sm md:text-base flex-1 flex items-center">
-        {{ bivouac.note }}
+  <Card class="p-4 gap-4">
+    <RouterLink
+      :to="`/bivouac/${bivouac._id}`"
+      aria-label="View Bivouac Details"
+    >
+      <CardTitle class="flex flex-row items-center gap-4">
+        <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
+        <H2>{{ bivouac.name }}</H2>
+      </CardTitle>
+    </RouterLink>
+
+    <CardContent
+      class="px-0 flex flex-col md:flex-row md:items-center md:justify-between"
+    >
+      <span class="">
+        <span v-if="!bivouac.note">
+          {{ t('no_description_available') }}
+        </span>
+        <span v-else>
+          {{ bivouac.note }}
+        </span>
       </span>
-      <div class="icons-wrapper p-2 flex justify-evenly gap-2">
-        <div class="icon1 flex flex-col">
-        <ThiigsIcon :path="mountain" :size="4" />
-          <span class="text-center font-mono text-sm">{{ bivouac.altitude }}</span>
-        </div>
-        <div class="icon2 flex flex-col">
-          <ThiigsIcon :path="beds" :size="4" />
-          <span class="text-center font-mono text-sm">{{ bivouac.capacity }}</span>
-        </div>
-        <!-- <div class="icon3 flex flex-col">
-          <ThiigsIcon :path="toilet" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.hasToilets ? t('yes') : t('no') }}
-          </span>
-        </div>
-        <div class="icon4 flex flex-col">
-          <ThiigsIcon :path="calendar" :size="4" />
-          <span class="text-center font-mono text-sm">
-            {{ bivouac.isOpen ? t('open') : t('closed') }}
-          </span>
-        </div> -->
-      </div>
     </CardContent>
-    <CardFooter class="flex gap-2 px-0">
-      <Button class="flex-1">
-        <EyeIcon />
-        <span class="hidden md:inline">{{ t('view') }}</span>
-      </Button>
-      <!-- <Button variant="secondary" class="flex-1" @click="$emit('toggle-favorite', bivouac._id)">
-        <HeartIcon
-          :fill="bivouac.favorite ? 'red' : 'none'"
-          :color="bivouac.favorite ? 'red' : 'currentColor'"
-        />
-        <span class="hidden md:inline">{{ t('favorite') }}</span>
-      </Button> -->
-      <Button variant="outline" class="flex-1">
-        <ArrowUpRightIcon />
-        <span class="hidden md:inline">{{ t('plan') }}</span>
+
+    <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
+      <div class="icon-with-text">
+        <MountainIcon />
+        <span class="">
+          {{ bivouac.altitude }}
+        </span>
+      </div>
+      <div class="icon-with-text">
+        <BedIcon />
+        <span class="">
+          {{ bivouac.capacity }}
+        </span>
+      </div>
+      <div class="icon-with-text">
+        <ToiletIcon />
+        <span class=""> N/A </span>
+      </div>
+      <div class="icon-with-text">
+        <MapPinIcon />
+        <span class=""> N/A </span>
+      </div>
+      <div class="icon-with-text">
+        <ThumbsUpIcon />
+        <span class="">
+          {{ bivouac.likes }}
+        </span>
+      </div>
+    </div>
+
+    <CardFooter class="px-0">
+      <Button class="w-full">
+        <Eye :size="4" />
+        {{ t('plan') }}
       </Button>
     </CardFooter>
-
   </Card>
 </template>
+
+<style scoped>
+.icon-with-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+</style>
 
 <i18n>
 {
@@ -98,7 +111,8 @@ function getIconPath() {
     "yes": "Yes",
     "no": "No",
     "open": "Open",
-    "closed": "Closed"
+    "closed": "Closed",
+    "no_description_available": "No description available"
   },
   "it": {
     "view": "Visualizza",
@@ -107,7 +121,8 @@ function getIconPath() {
     "yes": "Sì",
     "no": "No",
     "open": "Aperto",
-    "closed": "Chiuso"
+    "closed": "Chiuso",
+    "no_description_available": "Nessuna descrizione disponibile"
   },
   "es": {
     "view": "Ver",
@@ -116,7 +131,8 @@ function getIconPath() {
     "yes": "Sí",
     "no": "No",
     "open": "Abierto",
-    "closed": "Cerrado"
+    "closed": "Cerrado",
+    "no_description_available": "No hay descripción disponible"
   }
 }
 </i18n>

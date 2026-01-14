@@ -1,94 +1,100 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useAuthStore } from '@/stores/auth.ts'
-import { useI18n } from 'vue-i18n';
-
-import type { SidebarProps } from '@/components/ui/sidebar'
-
-import AppInfo from '@/pages/sidebar/AppInfo.vue'
-import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue'
-import SidebarUser from '@/pages/sidebar/SidebarUser.vue'
-import {
-  Bell,
-  LogOutIcon,
-  Map,
-  MountainSnow,
-  Route,
-  Settings,
-  TentTree,
-  UserRound
-} from "lucide-vue-next"
-
+import type { SidebarProps } from '@/components/ui/sidebar';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from '@/components/ui/sidebar'
-
+} from '@/components/ui/sidebar';
+import AppInfo from '@/pages/sidebar/AppInfo.vue';
+import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue';
+import SidebarUser from '@/pages/sidebar/SidebarUser.vue';
+import { useAuthStore } from '@/stores/auth.ts';
+import {
+  Activity,
+  Bell,
+  LogOutIcon,
+  Map,
+  MountainSnow,
+  Route,
+  Settings,
+  ShieldUser,
+  TentTree,
+  UserRound,
+} from 'lucide-vue-next';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const props = withDefaults(defineProps<SidebarProps>(), {
-  collapsible: "icon",
-})
+  collapsible: 'icon',
+});
+
+const authStore = useAuthStore();
 
 const handleLogout = () => {
-  const authStore = useAuthStore();
   authStore.logout();
-}
+};
+
+const isAdmin = computed(() => authStore.user?.type === 'admin');
 
 // This is sample data.
 const data = computed(() => ({
   appInfo: [
     {
-      name: "By Trail",
+      name: 'By Trail',
       logo: MountainSnow,
-      slogan: "You are what you discover",
+      slogan: 'You are what you discover',
     },
   ],
   sidebarOptions: [
     {
-      title: t("maps"),
-      url: "/maps",
+      title: t('maps'),
+      url: '/maps',
       icon: Map,
-      action: () => {}
     },
     {
-      title: t("routes"),
-      url: "#",
+      title: t('routes'),
+      url: '#',
       icon: Route,
-      action: () => {}
     },
     {
-      title: t("bivouacs"),
-      url: "/bivouacs",
+      title: t('bivouacs'),
+      url: '/bivouacs',
       icon: TentTree,
-      action: () => {}
     },
     {
-      title: t("profile"),
+      title: t('profile'),
       url: '/profile',
       icon: UserRound,
-      action: () => {}
     },
     {
-      title: t("notifications"),
-      url: "#",
+      title: t('activities'),
+      url: '/activities',
+      icon: Activity,
+    },
+    {
+      title: t('notifications'),
+      url: '#',
       icon: Bell,
-      action: () => {}
     },
     {
-      title: t("settings"),
-      url: "/settings",
+      title: t('settings'),
+      url: '/settings',
       icon: Settings,
-      action: () => {}
     },
     {
-      title: t("logout"),
-      url: "#",
+      title: t('admin'),
+      url: '/admin',
+      icon: ShieldUser,
+      condition: isAdmin.value,
+    },
+    {
+      title: t('logout'),
+      url: '#',
       icon: LogOutIcon,
-      color: "text-red-500",
+      color: 'text-red-500',
       action: handleLogout,
     },
   ],
@@ -108,7 +114,7 @@ const data = computed(() => ({
     <SidebarFooter>
       <SidebarUser />
     </SidebarFooter>
-    
+
     <SidebarRail />
   </Sidebar>
 </template>
@@ -120,8 +126,10 @@ const data = computed(() => ({
     "routes": "Routes",
     "bivouacs": "Bivouacs & Shelters",
     "profile": "Profile",
+    "activities": "Activities",
     "notifications": "Notifications",
     "settings": "Settings",
+    "admin": "Admin",
     "logout": "Logout"
   },
   "it": {
@@ -129,17 +137,21 @@ const data = computed(() => ({
     "routes": "Percorsi",
     "bivouacs": "Bivacchi e Rifugi",
     "profile": "Profilo",
+    "activities": "Attività",
     "notifications": "Notifiche",
     "settings": "Impostazioni",
+    "admin": "Amministratore",
     "logout": "Esci"
   },
   "es": {
     "maps": "Mapas",
     "routes": "Rutas",
-    "bivouacs": "Vivacs y Refugios",
+    "bivouacs": "Vivacs & Refugios",
     "profile": "Perfil",
+    "activities": "Actividades",
     "notifications": "Notificaciones",
     "settings": "Ajustes",
+    "admin": "Administrador",
     "logout": "Cerrar sesión"
   }
 }

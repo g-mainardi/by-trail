@@ -1,124 +1,124 @@
 {
-    "bivouacs":[
-        {
-            "name": "Bivacco Bedin",
-            "region": "Veneto",
-            "mountainRange": "Dolomiti",
-            "comune": "Taibon Agordino",
-            "coords": {
-                "latitude": 46.3133334 ,
-                "longitude": 11.9787921
-            },
-            "altitude": 2210,
-            "capacity": 9
-        },
-        {
-            "name": "Bivacco Vigolana",
-            "region": "Trentino - Alto Adige",
-            "mountainRange": "Prealpi Venete",
-            "comune": "Altopiano della Vigolana",
-            "coords": {
-                "latitude": 45.9710000,
-                "longitude": 11.1860000
-            },
-            "altitude": 2030,
-            "capacity": 8
-        },
-        {
-            "name": "Bivacco Fanton",
-            "region": "Veneto",
-            "mountainRange": "Dolomiti",
-            "comune": "Auronzo di Cadore",
-            "coords": {
-                "latitude": 46.5054986,
-                "longitude": 12.3422176
-            },
-            "altitude": 2667,
-            "capacity": 12
-        },
-        {
-            "name": "Bivacco Sigot",
-            "region": "Piemonte",
-            "mountainRange": "Alpi Cozie",
-            "comune": "Exilles",
-            "coords": {
-                "latitude": 45.1131636,
-                "longitude": 6.8615567
-            },
-            "altitude": 2921,
-            "capacity": 8
-        },
-        {
-            "name": "Bivacco Camposecco",
-            "region": "Piemonte",
-            "mountainRange": "Alpi Pennine",
-            "comune": "Antrona Schieranco",
-            "coords": {
-                "latitude": 46.2036111,
-                "longitude": 8.0305556
-            },
-            "altitude": 2350,
-            "capacity": 13
-        },
-        {
-            "name": "Bivacco Fiamme Gialle",
-            "region": "Trentino - Alto Adige",
-            "mountainRange": "Dolomiti",
-            "comune": "Primiero San Martino di Castrozza",
-            "coords": {
-                "latitude": 46.28394,
-                "longitude": 11.82727
-            },
-            "altitude": 3005,
-            "capacity": 9
-        },
-        {
-            "name": "Bivacco Marchi-Granzotto",
-            "region": "Friuli Venezia Giulia",
-            "mountainRange": "Dolomiti",
-            "comune": "Forni di Sopra",
-            "coords": {
-                "latitude": 46.4126544,
-                "longitude": 12.5038518
-            },
-            "altitude": 2170,
-            "capacity": 12
-        },
-        {
-            "name": "Bivacco Perugini",
-            "region": "Friuli Venezia Giulia",
-            "mountainRange": "Prealpi Venete",
-            "comune": "Cimolais",
-            "coords": {
-                "latitude": 46.39738,
-                "longitude": 12.48214
-            },
-            "altitude": 2060,
-            "capacity": 9
-        },
-        {
-            "name": "Bivacco Giordano",
-            "region": "Valle d'Aosta",
-            "mountainRange": "Alpi Pennine",
-            "comune": "Gressoney-La-Trinité",
-            "coords": {
-                "latitude": 45.9136675,
-                "longitude": 7.8582059
-            },
-            "altitude": 4167,
-            "capacity": 6
-        },
-        {
-            "name": "Bivacco Balzola",
-            "region": "Valle d'Aosta",
-            "mountainRange": "Alpi Graie",
-            "comune": "Cogne",
-            "coords": {
-                "latitude": 45.601159,
-                "longitude": 7.269006
-            },
-            "altitude": 3477,
-            "capacity": 4
-        }
-    ]
+  "bivouacs": [
+    {
+      "name": "Bivacco Bedin",
+      "region": "Veneto",
+      "mountainRange": "Dolomiti",
+      "comune": "Taibon Agordino",
+      "coords": {
+        "latitude": 46.3133334,
+        "longitude": 11.9787921
+      },
+      "altitude": 2210,
+      "capacity": 9
+    },
+    {
+      "name": "Bivacco Vigolana",
+      "region": "Trentino - Alto Adige",
+      "mountainRange": "Prealpi Venete",
+      "comune": "Altopiano della Vigolana",
+      "coords": {
+        "latitude": 45.971,
+        "longitude": 11.186
+      },
+      "altitude": 2030,
+      "capacity": 8
+    },
+    {
+      "name": "Bivacco Fanton",
+      "region": "Veneto",
+      "mountainRange": "Dolomiti",
+      "comune": "Auronzo di Cadore",
+      "coords": {
+        "latitude": 46.5054986,
+        "longitude": 12.3422176
+      },
+      "altitude": 2667,
+      "capacity": 12
+    },
+    {
+      "name": "Bivacco Sigot",
+      "region": "Piemonte",
+      "mountainRange": "Alpi Cozie",
+      "comune": "Exilles",
+      "coords": {
+        "latitude": 45.1131636,
+        "longitude": 6.8615567
+      },
+      "altitude": 2921,
+      "capacity": 8
+    },
+    {
+      "name": "Bivacco Camposecco",
+      "region": "Piemonte",
+      "mountainRange": "Alpi Pennine",
+      "comune": "Antrona Schieranco",
+      "coords": {
+        "latitude": 46.2036111,
+        "longitude": 8.0305556
+      },
+      "altitude": 2350,
+      "capacity": 13
+    },
+    {
+      "name": "Bivacco Fiamme Gialle",
+      "region": "Trentino - Alto Adige",
+      "mountainRange": "Dolomiti",
+      "comune": "Primiero San Martino di Castrozza",
+      "coords": {
+        "latitude": 46.28394,
+        "longitude": 11.82727
+      },
+      "altitude": 3005,
+      "capacity": 9
+    },
+    {
+      "name": "Bivacco Marchi-Granzotto",
+      "region": "Friuli Venezia Giulia",
+      "mountainRange": "Dolomiti",
+      "comune": "Forni di Sopra",
+      "coords": {
+        "latitude": 46.4126544,
+        "longitude": 12.5038518
+      },
+      "altitude": 2170,
+      "capacity": 12
+    },
+    {
+      "name": "Bivacco Perugini",
+      "region": "Friuli Venezia Giulia",
+      "mountainRange": "Prealpi Venete",
+      "comune": "Cimolais",
+      "coords": {
+        "latitude": 46.39738,
+        "longitude": 12.48214
+      },
+      "altitude": 2060,
+      "capacity": 9
+    },
+    {
+      "name": "Bivacco Giordano",
+      "region": "Valle d'Aosta",
+      "mountainRange": "Alpi Pennine",
+      "comune": "Gressoney-La-Trinité",
+      "coords": {
+        "latitude": 45.9136675,
+        "longitude": 7.8582059
+      },
+      "altitude": 4167,
+      "capacity": 6
+    },
+    {
+      "name": "Bivacco Balzola",
+      "region": "Valle d'Aosta",
+      "mountainRange": "Alpi Graie",
+      "comune": "Cogne",
+      "coords": {
+        "latitude": 45.601159,
+        "longitude": 7.269006
+      },
+      "altitude": 3477,
+      "capacity": 4
+    }
+  ]
 }

@@ -1,0 +1,3 @@
+# Force git to handle all files as text and normalize line endings to LF, 
+# regardless of the local OS settings.
+* text=auto eol=lf

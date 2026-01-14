@@ -2,11 +2,12 @@
   "name": "trekking-web-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon",
-    "seed": "node seed.js"
+    "start:dev": "cross-env NODE_ENV=development nodemon",
+    "seed": "cross-env NODE_ENV=development ts-node seed.ts",
+    "start": "cross-env NODE_ENV=production node index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,15 @@
     "validator": "^13.15.23"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "nodemon": "^3.1.11"
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.0.8",
+    "@types/validator": "^13.15.10",
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.11",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

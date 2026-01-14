@@ -1,36 +1,34 @@
 <script setup lang="ts">
-import type { Component } from "vue"
+import type { Component } from 'vue';
 
-import { ref } from "vue"
+import { ref } from 'vue';
 
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   //useSidebar,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
 const props = defineProps<{
   appInfo: {
-    name: string
-    logo: Component
-    slogan: string
-  }[]
-}>()
+    name: string;
+    logo: Component;
+    slogan: string;
+  }[];
+}>();
 
 //const { isMobile } = useSidebar()
-const appInfo = ref(props.appInfo[0])
+const appInfo = ref(props.appInfo[0]);
 </script>
 
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
-      <SidebarMenuButton 
-        v-if="appInfo"
-        size="lg"
-        class="hover:bg-transparent"  
-      >
-        <div class="flex aspect-square size-10 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground">
+      <SidebarMenuButton v-if="appInfo" size="lg" class="hover:bg-transparent">
+        <div
+          class="flex aspect-square size-10 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground"
+        >
           <component :is="appInfo.logo" class="size-6" />
         </div>
         <div class="grid flex-1 text-left text-sm leading-tight">

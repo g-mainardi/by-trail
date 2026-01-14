@@ -1,0 +1,11 @@
+# Dependencies and modules
+node_modules
+dist
+build
+.next
+.cache
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
