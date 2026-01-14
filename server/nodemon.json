@@ -1,12 +1,8 @@
 {
-  "watch": ["src"],
+  "watch": ["src", "index.ts"],
   "ext": "ts,json",
-  "ignore": ["node_modules", "Dockerfile"],
-  "exec": "ts-node index.ts",
+  "ignore": ["src/**/*.test.ts", "node_modules"],
+  "exec": "tsx index.ts",
   "delay": "1000",
-  "legacyWatch": true,
-  "events": {
-    "restart": "echo 'Nodemon: Server Restarted'"
-  },
-  "signal": "SIGTERM"
+  "legacyWatch": true
 }
