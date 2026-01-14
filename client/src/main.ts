@@ -4,6 +4,12 @@ import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { createRouter, createWebHistory } from 'vue-router';
 
+import '@fontsource/quicksand/300.css';
+import '@fontsource/quicksand/400.css';
+import '@fontsource/quicksand/500.css';
+import '@fontsource/quicksand/600.css';
+import '@fontsource/quicksand/700.css';
+
 import App from '@/App.vue';
 import MainLayout from '@/layouts/MainLayout.vue';
 import Login from '@/pages/login/Login.vue';
