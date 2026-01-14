@@ -1,8 +1,8 @@
-import { io } from 'socket.io-client';
+import { io, type Socket } from 'socket.io-client';
 
 const URL = "http://localhost:3000";
 
-export const socket = io(URL, {
+export const socket: Socket = io(URL, {
     autoConnect: false, // connect manually when the app start
     withCredentials: true
 });
