@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
   Bed as BedIcon,
-  Eye,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   ThumbsUp as ThumbsUpIcon,
@@ -84,13 +82,6 @@ function getIconPath() {
         </span>
       </div>
     </div>
-
-    <CardFooter class="px-0">
-      <Button class="w-full">
-        <Eye :size="4" />
-        {{ t('plan') }}
-      </Button>
-    </CardFooter>
   </Card>
 </template>
 
