@@ -101,6 +101,11 @@ const proposalSchema = new Schema({
   locality: { type: String, required: true },
   submissionDate: { type: Date, default: Date.now },
 });
+// Ensure a user cannot submit duplicate proposals
+proposalSchema.index(
+  { senderEmail: 1, type: 1, subjectName: 1, locality: 1 },
+  { unique: true }
+);
 
 /**************************************** Models ****************************************/
 const User = mongoose.model('User', userSchema);
