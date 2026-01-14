@@ -6,7 +6,6 @@ import { useI18n } from 'vue-i18n';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { Save } from 'lucide-vue-next';
 import ProfilePersonalData from './info/ProfilePersonalData.vue';
 import ProfileRegionSelector from './info/ProfileRegionSelector.vue';
@@ -65,52 +64,32 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
-    <div
-      class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
-    >
-      <div
-        v-if="feedbackMessage"
-        :class="
-          cn(
-            'px-4 py-2 text-sm rounded-md font-medium border animate-in fade-in slide-in-from-top-2',
-            isError
-              ? 'bg-red-50 text-red-600 border-red-200'
-              : 'bg-green-50 text-green-600 border-green-200'
-          )
-        "
-      >
-        {{ feedbackMessage }}
-      </div>
+  <form
+    @submit.prevent="handleSave"
+    class="grid grid-cols-1 gap-6 lg:grid-cols-12"
+  >
+    <div class="space-y-6 lg:col-span-5">
+      <ProfilePersonalData
+        v-model="formData.name"
+        :email="formData.email"
+        :readOnlyFullName="user?.name || ''"
+      />
     </div>
 
-    <form
-      @submit.prevent="handleSave"
-      class="grid grid-cols-1 gap-4 lg:grid-cols-12"
-    >
-      <div class="space-y-6 lg:col-span-5">
-        <ProfilePersonalData
-          v-model="formData.name"
-          :email="formData.email"
-          :readOnlyFullName="user?.name || ''"
-        />
-      </div>
-
-      <div class="space-y-6 lg:col-span-7">
-        <ProfileRegionSelector v-model="formData.favRegions" />
-        <Button
-          @click="handleSave"
-          :disabled="isLoading"
-          size="lg"
-          class="w-full sm:w-auto"
-        >
-          <Save class="w-4 h-4 mr-2" />
-          <span v-if="isLoading">{{ t('saving') }}</span>
-          <span v-else>{{ t('save_modifications') }}</span>
-        </Button>
-      </div>
-    </form>
-  </div>
+    <div class="space-y-6 lg:col-span-7">
+      <ProfileRegionSelector v-model="formData.favRegions" />
+      <Button
+        @click="handleSave"
+        :disabled="isLoading"
+        size="lg"
+        class="w-full sm:w-auto"
+      >
+        <Save class="w-4 h-4 mr-2" />
+        <span v-if="isLoading">{{ t('saving') }}</span>
+        <span v-else>{{ t('save_modifications') }}</span>
+      </Button>
+    </div>
+  </form>
 </template>
 <i18n>
 {
