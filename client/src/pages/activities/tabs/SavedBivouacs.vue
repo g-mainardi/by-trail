@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref, type Ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
 
 import type { Bivouac } from '@/stores/bivouacs';
 import { useFavoriteStore } from '@/stores/favorites';
@@ -15,17 +15,21 @@ const favoriteStore = useFavoriteStore();
 const favoriteBivouacs: Ref<Bivouac[]> = ref([]);
 const isLoading = ref(true);
 
-favoriteStore
-  .getFavoriteBivouacs()
-  .then((bivouacs) => {
-    favoriteBivouacs.value = bivouacs;
-  })
-  .catch((error) => {
-    console.error('Error fetching favorite bivouacs:', error);
-  })
-  .finally(() => {
-    isLoading.value = false;
-  });
+onMounted(async () => {
+  isLoading.value = true;
+
+  favoriteStore
+    .getFavoriteBivouacs()
+    .then((bivouacs) => {
+      favoriteBivouacs.value = bivouacs;
+    })
+    .catch((error) => {
+      console.error('Error fetching favorite bivouacs:', error);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+});
 </script>
 
 <template>
