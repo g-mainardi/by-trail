@@ -5,7 +5,7 @@ defineProps<{ noMargin?: boolean }>();
 <template>
   <h3
     :class="[
-      'scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight',
+      'scroll-m-20 text-2xl font-semibold tracking-tight',
       noMargin ? 'm-0' : 'first:mt-0',
     ]"
   >
