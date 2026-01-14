@@ -6,7 +6,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <H1 :text="t('change_language')" />
+  <H1>{{ t('change_language') }}</H1>
   <SelectLanguage />
 </template>
 

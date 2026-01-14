@@ -86,7 +86,7 @@ const handleSave = async () => {
 
     <form
       @submit.prevent="handleSave"
-      class="grid grid-cols-1 gap-6 lg:grid-cols-12"
+      class="grid grid-cols-1 gap-4 lg:grid-cols-12"
     >
       <div class="space-y-6 lg:col-span-5">
         <ProfilePersonalData

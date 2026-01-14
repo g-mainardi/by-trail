@@ -7,7 +7,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <H1 :text="t('subscription')" />
+  <H1>{{ t('subscription') }}</H1>
   <div class="flex items-center space-x-2 mt-6 mb-4">
     <Switch id="new-bivouacs" />
     <Label for="new-bivouacs">{{ t('get_updates_new_bivouacs') }}</Label>

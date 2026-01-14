@@ -10,7 +10,7 @@ const auth = useAuthStore();
 </script>
 
 <template>
-  <H1 :text="t('delete_account_title')" class="mb-6" />
+  <H1 class="mb-6">{{ t('delete_account_title') }}</H1>
   <DeleteAccountForm />
   <Alert
     variant="destructive"

@@ -57,7 +57,7 @@ function getIconPath() {
       </span>
     </CardContent>
     <CardFooter class="px-0">
-      <div class="flex flex-wrap gap-x-4 gap-y-2 justify-center w-full">
+      <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly w-full">
         <div class="icon-with-text">
           <MountainIcon />
           <span class="">

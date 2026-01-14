@@ -18,7 +18,6 @@ import {
   getFilteredBivouacs,
   resetFilters,
 } from '../filterbar/filters';
-
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 
@@ -61,6 +60,9 @@ const logBounds = () => {
 const filteredBivouacs = computed(() => {
   return getFilteredBivouacs(bivouacs.value);
 });
+
+const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
+  .href;
 </script>
 
 <template>
@@ -75,24 +77,33 @@ const filteredBivouacs = computed(() => {
       @update:zoom="logBounds"
       @update:center="logBounds"
     >
-      <l-tile-layer
-        :url="tileLayerUrl"
-        attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
-      >
-      </l-tile-layer>
+      <l-tile-layer :url="tileLayerUrl" />
 
       <l-marker
-        v-for="bivacco in filteredBivouacs"
-        :key="bivacco._id"
-        :lat-lng="[bivacco.coords.latitude, bivacco.coords.longitude]"
+        v-for="bivouac in filteredBivouacs"
+        :key="bivouac._id"
+        :lat-lng="[bivouac.coords.latitude, bivouac.coords.longitude]"
       >
         <l-icon :icon-size="iconSize" class-name="icon-wrapper">
           <MapPinHouse :size="iconSize[0]" class="bivouac-icon" />
         </l-icon>
-        <l-popup>
-          <div class="popup-content">
-            <h3>{{ bivacco.name }}</h3>
-          </div>
+        <l-popup :options="{ minWidth: 300, maxWidth: 300 }">
+          <RouterLink
+            :to="`/bivouac/${bivouac._id}`"
+            aria-label="View Bivouac Details"
+          >
+            <img
+              :src="imageBivouacPH1"
+              :alt="`${bivouac.name} image`"
+              class="rounded-sm object-cover"
+            />
+            <h3 class="text-lg font-semibold" style="color: var(--primary)">
+              {{ bivouac.name }}
+            </h3>
+          </RouterLink>
+          <p style="margin-top: 0rem; margin-bottom: 0rem">
+            {{ bivouac.comune }}, {{ bivouac.region }}
+          </p>
         </l-popup>
       </l-marker>
     </l-map>
@@ -100,6 +111,10 @@ const filteredBivouacs = computed(() => {
 </template>
 
 <style scoped>
+* {
+  font-family: var(--font-sans);
+}
+
 /* --- STILE ICONE BIVACCO (Shadcn Card Style) --- */
 :deep(.icon-wrapper) {
   /* Rimuove lo sfondo bianco di default di Leaflet */
@@ -166,5 +181,22 @@ const filteredBivouacs = computed(() => {
 :deep(.leaflet-touch .leaflet-control-zoom-in),
 :deep(.leaflet-touch .leaflet-control-zoom-out) {
   border-radius: var(--radius) !important;
+}
+
+:deep(.leaflet-popup-content) {
+  margin: 0.5rem;
+  padding: 0;
+}
+
+:deep(.leaflet-popup-content-wrapper) {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  margin: 0%;
+}
+
+:deep(.leaflet-popup-close-button span) {
+  color: var(--muted-foreground);
+  font-size: 1.5rem;
+  text-align: center;
 }
 </style>
