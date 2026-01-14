@@ -7,7 +7,7 @@ import {
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BivouacCard from './BivouacCard.vue';
-import FilterBar from './FilterBar.vue';
+import FilterBar from './BivouacFilterBar.vue';
 const { t } = useI18n();
 
 const bivouacStore = useBivouacStore();

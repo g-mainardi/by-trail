@@ -12,6 +12,8 @@ import type { LatLng, Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPinHouse } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
+import type { Filter } from '../bivouacs/Bivouacs.vue';
+import MapFilterBar from './MapFilterBar.vue';
 
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
@@ -51,9 +53,28 @@ const debouncedFetchBivouacs = useDebounceFn(() => {
 const logBounds = () => {
   debouncedFetchBivouacs();
 };
+
+const test: Filter = {
+  currentValue: null,
+  default: null,
+  predicate: (bivouac: Bivouac, value: any) => {
+    return true;
+  },
+};
+
+const filters = ref({
+  minDesiredBeds: test,
+  altitudeFilter: test,
+  searchQuery: test,
+});
+
+function resetFilters() {
+  console.log('Reset filters not implemented yet');
+}
 </script>
 
 <template>
+  <MapFilterBar :filters="filters" @reset="resetFilters" />
   <div class="h-full w-full overflow-hidden rounded-lg shadow-lg">
     <l-map
       v-model:zoom="zoom"
