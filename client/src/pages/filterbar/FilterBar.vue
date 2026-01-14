@@ -20,6 +20,7 @@ import {
 import Toggle from '@/components/ui/toggle/Toggle.vue';
 import {
   Bed as BedIcon,
+  Calendar as CalendarIcon,
   Heart as HeartIcon,
   Mountain as MountainIcon,
   Search as SearchIcon,
@@ -27,7 +28,7 @@ import {
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import type { Filter } from './Bivouacs.vue';
+import type { Filter } from './filters';
 const { t } = useI18n();
 
 defineProps<{
@@ -44,7 +45,10 @@ defineProps<{
     <SheetTrigger>
       <Button
         aria-label="Filter options"
-        class="fixed top-4 right-4 z-50 text-lg rounded-full shadow-lg py-6 px-12 group"
+        :class="[
+          'fixed z-50 text-lg rounded-full shadow-lg py-6 px-12 group',
+          $route.path.includes('maps') ? 'top-12 right-6' : 'top-4 right-4',
+        ]"
       >
         <SearchIcon class="w-6 h-6" />/<Settings2Icon class="w-6 h-6" />
       </Button>
@@ -137,16 +141,18 @@ defineProps<{
         </Toggle>
 
         <Toggle variant="outline" aria-label="Favorites only" class="w-full">
-          <HeartIcon />
-          {{ t('favorites_only') }}
+          <HeartIcon /> {{ t('favorites_only') }}
+        </Toggle>
+
+        <Toggle
+          variant="outline"
+          aria-label="Only open bivouacs"
+          class="w-full"
+        >
+          <CalendarIcon /> {{ t('only_open') }}
         </Toggle>
 
         <Separator orientation="horizontal" />
-
-        <!-- <Toggle variant="outline" aria-label="Only open" v-model="filters.onlyOpen" class="w-full">
-          <CalendarIcon :fill="filters.onlyOpen ? 'orange' : 'none'" :color="filters.onlyOpen ? 'orange' : 'currentColor'" />
-          {{ t('only_open') }}
-        </Toggle> -->
 
         <Button variant="destructive" @click="$emit('reset')" class="w-full">{{
           t('reset')
