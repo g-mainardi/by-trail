@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import Input from '@/components/ui/input/Input.vue';
 import {
   NumberField,
   NumberFieldContent,
@@ -16,10 +17,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import Toggle from '@/components/ui/toggle/Toggle.vue';
 import {
   Bed as BedIcon,
+  Heart as HeartIcon,
   Mountain as MountainIcon,
+  Search as SearchIcon,
   Settings2Icon,
+  Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import type { Filter } from './Bivouacs.vue';
@@ -29,6 +34,7 @@ defineProps<{
   filters: {
     minDesiredBeds: Filter;
     altitudeFilter: Filter;
+    searchQuery: Filter;
   };
 }>();
 </script>
@@ -38,9 +44,9 @@ defineProps<{
     <SheetTrigger>
       <Button
         aria-label="Filter options"
-        class="fixed top-4 right-4 z-50 text-lg px-6 py-6"
+        class="fixed top-4 right-4 z-50 text-lg rounded-full shadow-lg py-6 px-12 group"
       >
-        <Settings2Icon class="w-6 h-6" /> {{ t('filters') }}
+        <SearchIcon class="w-6 h-6" />/<Settings2Icon class="w-6 h-6" />
       </Button>
     </SheetTrigger>
 
@@ -53,8 +59,18 @@ defineProps<{
       </SheetHeader>
 
       <!-- Filter options -->
-      <div class="flex flex-col px-4">
-        <div class="beds-label flex items-center gap-2 mb-2">
+      <div class="flex flex-col px-4 gap-4">
+        <!-- Search bar Start -->
+        <div class="flex items-center gap-2">
+          <SearchIcon />
+          <Input
+            :placeholder="t('search')"
+            v-model="filters.searchQuery.currentValue"
+          />
+        </div>
+
+        <!-- Beds filter Start -->
+        <div class="flex items-center gap-2">
           <BedIcon
             :fill="filters.minDesiredBeds.currentValue >= 1 ? 'green' : 'none'"
             :color="
@@ -63,9 +79,6 @@ defineProps<{
                 : 'currentColor'
             "
           />
-          {{ t('set_minimum_beds') }}
-        </div>
-        <div class="beds-filter flex items-center gap-2">
           <NumberField
             id="beds"
             :default-value="0"
@@ -81,19 +94,7 @@ defineProps<{
           </NumberField>
         </div>
 
-        <Separator orientation="horizontal" class="my-4" />
-
-        <!-- <Toggle variant="outline" aria-label="With toilets only" v-model="filters.withToiletsOnly" class="w-full">
-          <ToiletIcon :fill="filters.withToiletsOnly ? 'blue' : 'none'" :color="filters.withToiletsOnly ? 'blue' : 'currentColor'" />
-          {{ t('with_toilets_only') }}
-        </Toggle> -->
-
-        <!-- <Toggle variant="outline" aria-label="Favorites only" v-model="filters.favoritesOnly" class="w-full">
-          <HeartIcon :fill="filters.favoritesOnly ? 'red' : 'none'" :color="filters.favoritesOnly ? 'red' : 'currentColor'" />
-          {{ t('favorites_only') }}
-        </Toggle> -->
-
-        <div class="altitude-label flex items-center gap-2 mb-2">
+        <div class="flex items-center gap-2">
           <MountainIcon
             :fill="
               filters.altitudeFilter.currentValue.min >
@@ -104,30 +105,25 @@ defineProps<{
                 : 'none'
             "
           />
-          {{ t('set_altitude_range') }}
-        </div>
-
-        <div class="altitude-filter flex items-center gap-2">
+          Min
           <NumberField
             id="altitude-min"
             :default-value="filters.altitudeFilter.default.min"
             :min="filters.altitudeFilter.default.min"
             :max="filters.altitudeFilter.default.max"
             v-model="filters.altitudeFilter.currentValue.min"
-            class="w-full"
           >
             <NumberFieldContent>
               <NumberFieldInput />
             </NumberFieldContent>
           </NumberField>
-          -
+          Max
           <NumberField
             id="altitude-max"
             :default-value="filters.altitudeFilter.default.max"
             :min="filters.altitudeFilter.default.min"
             :max="filters.altitudeFilter.default.max"
             v-model="filters.altitudeFilter.currentValue.max"
-            class="w-full"
           >
             <NumberFieldContent>
               <NumberFieldInput />
@@ -135,7 +131,17 @@ defineProps<{
           </NumberField>
         </div>
 
-        <Separator orientation="horizontal" class="my-4" />
+        <Toggle variant="outline" aria-label="With toilets only" class="w-full">
+          <ToiletIcon />
+          {{ t('with_toilets_only') }}
+        </Toggle>
+
+        <Toggle variant="outline" aria-label="Favorites only" class="w-full">
+          <HeartIcon />
+          {{ t('favorites_only') }}
+        </Toggle>
+
+        <Separator orientation="horizontal" />
 
         <!-- <Toggle variant="outline" aria-label="Only open" v-model="filters.onlyOpen" class="w-full">
           <CalendarIcon :fill="filters.onlyOpen ? 'orange' : 'none'" :color="filters.onlyOpen ? 'orange' : 'currentColor'" />
@@ -153,33 +159,36 @@ defineProps<{
 <i18n>
   {
     en: {
+      "search": "Search",
       "filters": "Filters",
       "bar_description": "Use the filters below to narrow down your search for bivouacs.",
       "with_toilets_only": "With Toilets Only",
       "favorites_only": "Favorites Only",
       "only_open": "Only Open",
       "set_minimum_beds": "Set minimum beds:",
-      "set_altitude_range": "Set Altitude Range:",
+      "set_altitude_range": "Set Altitude Range (mt):",
       "reset": "Reset"
     },
     it: {
+      "search": "Cerca",
       "filters": "Filtri",
       "bar_description": "Usa i filtri qui sotto per restringere la ricerca dei bivacchi.",
       "with_toilets_only": "Solo con servizi igienici",
       "favorites_only": "Solo Preferiti",
       "only_open": "Solo Aperto",
       "set_minimum_beds": "Imposta letti minimi:",
-      "set_altitude_range": "Imposta intervallo di altitudine:",
+      "set_altitude_range": "Imposta intervallo di altitudine (mt):",
       "reset": "Reimposta"
     },
     es: {
-      "filters": "Filtros",
+      "search": "Buscar",
+      "filters": "Filtros y Búsqueda",
       "bar_description": "Utiliza los filtros a continuación para reducir tu búsqueda de bivouacs.",
       "with_toilets_only": "Solo con baños",
       "favorites_only": "Solo Favoritos",
       "only_open": "Solo Abierto",
       "set_minimum_beds": "Establecer camas mínimas:",
-      "set_altitude_range": "Establecer rango de altitud:",
+      "set_altitude_range": "Establecer rango de altitud (mt):",
       "reset": "Reiniciar"
     }
   }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import H1 from '@/layouts/typography/H1.vue';
 import {
   useBivouacStore,
   type Bivouac,
@@ -51,7 +50,7 @@ export interface Filter {
 const minDesiredBeds: Filter = {
   currentValue: 0,
   default: 0,
-  predicate: (bivouac: Bivouac, value: any) => {
+  predicate: (bivouac: Bivouac, value: number) => {
     return bivouac.capacity !== undefined ? bivouac.capacity >= value : true;
   },
 };
@@ -59,7 +58,7 @@ const minDesiredBeds: Filter = {
 const altitudeFilter: Filter = {
   currentValue: { min: 0, max: 10000 },
   default: { min: 0, max: 10000 },
-  predicate: (bivouac: Bivouac, value: any) => {
+  predicate: (bivouac: Bivouac, value: { min: number; max: number }) => {
     const altitude = bivouac.altitude;
     if (altitude !== undefined) {
       return altitude >= value.min && altitude <= value.max;
@@ -68,9 +67,23 @@ const altitudeFilter: Filter = {
   },
 };
 
+const searchQuery: Filter = {
+  currentValue: '',
+  default: '',
+  predicate: (bivouac: Bivouac, value: string) => {
+    if (!value) return true;
+    const query = value.toLowerCase();
+    return (
+      bivouac.name.toLowerCase().includes(query) ||
+      (bivouac.note !== undefined && bivouac.note.toLowerCase().includes(query))
+    );
+  },
+};
+
 const filters = ref({
   minDesiredBeds: minDesiredBeds,
   altitudeFilter: altitudeFilter,
+  searchQuery: searchQuery,
 });
 
 function resetFilters() {
@@ -94,27 +107,10 @@ const filteredBivouacs = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-row justify-between">
-    <H1 :text="t('bivouacs')" />
-    <FilterBar :filters="filters" @reset="resetFilters" />
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div v-for="bivouac in filteredBivouacs" :key="bivouac._id">
+  <FilterBar :filters="filters" @reset="resetFilters" />
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-0">
+    <div v-for="bivouac in filteredBivouacs" :key="bivouac._id" class="mt-0">
       <BivouacCard :bivouac="bivouac" @toggle-favorite="toggleFavorite" />
     </div>
   </div>
 </template>
-
-<i18n>
-  {
-    "en": {
-      "bivouacs": "Bivouacs & Shelters"
-    },
-    "it": {
-      "bivouacs": "Bivacchi & Rifugi"
-    },
-    "es": {
-      "bivouacs": "Vivacs & Refugios"
-    }
-  }
-</i18n>

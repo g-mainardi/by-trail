@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
-import { Save } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
+import { Save } from 'lucide-vue-next';
 import ProfilePersonalData from './info/ProfilePersonalData.vue';
 import ProfileRegionSelector from './info/ProfileRegionSelector.vue';
 
@@ -65,16 +65,10 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full gap-8 p-6 md:p-10">
+  <div class="flex flex-col w-full">
     <div
       class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
     >
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight">
-          {{ t('your_profile') }}
-        </h1>
-        <p class="text-muted-foreground">{{ t('handle_info_preferences') }}</p>
-      </div>
       <div
         v-if="feedbackMessage"
         :class="
