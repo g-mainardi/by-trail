@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
 import ProfilePersonalData from './info/ProfilePersonalData.vue';
 import ProfileRegionSelector from './info/ProfileRegionSelector.vue';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, CheckCircle } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const { user, isLoading } = storeToRefs(authStore);
@@ -61,9 +63,26 @@ const handleSave = async () => {
     feedbackMessage.value = t('profile_update_error');
   }
 };
+
+const alertConfig = computed(() => {
+  if (isError.value) {
+    return {
+      variant: 'destructive' as const,
+      icon: AlertCircle,
+    };
+  }
+  return {
+    variant: 'success' as const,
+    icon: CheckCircle,
+  };
+});
 </script>
 
 <template>
+  <Alert v-if="feedbackMessage" :variant="alertConfig.variant">
+    <component :is="alertConfig.icon" />
+    <AlertTitle>{{ feedbackMessage }}</AlertTitle>
+  </Alert>
   <form
     @submit.prevent="handleSave"
     class="grid grid-cols-1 gap-6 lg:grid-cols-12"
@@ -94,24 +113,18 @@ const handleSave = async () => {
 <i18n>
 {
   "en": {
-    "your_profile": "Your Profile",
-    "handle_info_preferences": "Manage your information and preferences",
     "profile_update_success": "Profile updated successfully.",
     "profile_update_error": "An error occurred while updating your profile.",
     "saving": "Saving...",
     "save_modifications": "Save Changes"
   },
   "it": {
-    "your_profile": "Il Tuo Profilo",
-    "handle_info_preferences": "Gestisci le tue informazioni e preferenze",
     "profile_update_success": "Profilo aggiornato con successo.",
     "profile_update_error": "Si è verificato un errore durante l'aggiornamento del profilo.",
     "saving": "Salvataggio...",
     "save_modifications": "Salva Modifiche"
   },
   "es": {
-    "your_profile": "Tu Perfil",
-    "handle_info_preferences": "Gestiona tu información y preferencias",
     "profile_update_success": "Perfil actualizado con éxito.",
     "profile_update_error": "Ocurrió un error al actualizar tu perfil.",
     "saving": "Guardando...",
