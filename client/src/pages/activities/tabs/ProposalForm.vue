@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useProposalStore, type Proposal } from '@/stores/proposal';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
@@ -73,7 +72,6 @@ const submitProposal = async () => {
     description: formData.value.description,
   };
 
-  // Call store action to update profile
   const success = await proposalStore.sendProposal(payload);
   if (success) {
     feedbackMessage.value = t('proposal_submit_success');

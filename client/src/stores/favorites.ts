@@ -13,12 +13,7 @@ export const useFavoriteStore = defineStore('favorites', () => {
       const data = await res.json();
       if (!res.ok) throw new Error('Failed to fetch bivouacs');
 
-      if (
-        !data ||
-        !data.bivouacs ||
-        data.bivouacs == null ||
-        !Array.isArray(data.bivouacs)
-      )
+      if (!data || !data.bivouacs || !Array.isArray(data.bivouacs))
         throw new Error('Invalid data structure received');
       const bivouacs: Bivouac[] = data.bivouacs;
 
