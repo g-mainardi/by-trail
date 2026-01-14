@@ -94,7 +94,7 @@ export const fetchFavoriteBivouacs = async (
       .populate('bivouac')
       .exec();
 
-    var favoriteBivouacs = favorites.map((fav) => fav.bivouac);
+    let favoriteBivouacs = favorites.map((fav) => fav.bivouac);
     if (favoriteBivouacs.some((fav) => fav === null)) {
       console.warn('Orphaned favorite bivouac records found for user:', userId);
       favoriteBivouacs = favoriteBivouacs.filter((bivouac) => bivouac !== null);

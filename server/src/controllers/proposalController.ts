@@ -11,7 +11,7 @@ interface ProposalRequest extends Request {
   };
 }
 
-// POST /api/users/proposal
+// POST /api/proposal
 export const sendProposal = async (req: ProposalRequest, res: Response) => {
   try {
     const { senderEmail, type, subjectName, description, locality } = req.body;
@@ -48,12 +48,7 @@ export const sendProposal = async (req: ProposalRequest, res: Response) => {
       locality,
     });
 
-    const savedProposal = await newProposal.save();
-    if (!savedProposal) {
-      return res
-        .status(500)
-        .json({ message: 'Error saving proposal to database' });
-    }
+    await newProposal.save();
     res.status(201).json({ message: 'Proposal registered successfully!' });
   } catch (error) {
     console.error('Proposal Sending Error:', error);
