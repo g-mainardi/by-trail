@@ -45,24 +45,30 @@ const emit = defineEmits(['update:modelValue']);
           }}</AvatarFallback>
         </Avatar>
         <div class="text-center sm:text-left">
-          <H3>{{ readOnlyFullName || t('username_placeholder') }}</H3>
-          <P>{{ email }}</P>
+          <H3 class="!m-0">{{
+            readOnlyFullName || t('username_placeholder')
+          }}</H3>
+          <P class="!m-0">{{ email }}</P>
         </div>
       </div>
 
       <Separator class="my-4" />
 
       <FieldGroup>
-        <FieldLabel for="name">{{ t('your_name') }}</FieldLabel>
-        <Input
-          id="name"
-          :model-value="modelValue"
-          @update:model-value="(val) => emit('update:modelValue', val)"
-          class="h-10"
-        />
-        <FieldLabel for="email">Email</FieldLabel>
-        <Input id="email" :model-value="email" disabled class="bg-muted/50" />
-        <FieldDescription>{{ t('unmodifiable_email') }}</FieldDescription>
+        <div class="flex flex-col gap-1.5">
+          <FieldLabel for="name">{{ t('your_name') }}</FieldLabel>
+          <Input
+            id="name"
+            :model-value="modelValue"
+            @update:model-value="(val) => emit('update:modelValue', val)"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <FieldLabel for="email">Email</FieldLabel>
+          <Input id="email" :model-value="email" disabled class="bg-muted/50" />
+          <FieldDescription>{{ t('unmodifiable_email') }}</FieldDescription>
+        </div>
       </FieldGroup>
     </CardContent>
   </Card>
