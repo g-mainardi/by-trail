@@ -75,6 +75,10 @@ const submitProposal = async () => {
   const success = await proposalStore.sendProposal(payload);
   if (success) {
     feedbackMessage.value = t('proposal_submit_success');
+    formData.value.type = '';
+    formData.value.locality = '';
+    formData.value.subjectName = '';
+    formData.value.description = '';
   } else {
     isError.value = true;
     feedbackMessage.value = `${t('proposal_submit_error')} "${getErrorMessage.value}"`;
