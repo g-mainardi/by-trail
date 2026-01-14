@@ -3,7 +3,6 @@ import { useI18n } from 'vue-i18n';
 
 // --- UI Components ---
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Card,
   CardHeader,
@@ -13,6 +12,11 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import FieldLabel from '@/components/ui/field/FieldLabel.vue';
+import { FieldGroup } from '@/components/ui/field';
+import P from '@/layouts/typography/P.vue';
+import FieldDescription from '@/components/ui/field/FieldDescription.vue';
+import H3 from '@/layouts/typography/H3.vue';
 
 const { t } = useI18n();
 
@@ -31,7 +35,7 @@ const emit = defineEmits(['update:modelValue']);
       <CardTitle>{{ t('personal_data') }}</CardTitle>
       <CardDescription>{{ t('personal_data_description') }}</CardDescription>
     </CardHeader>
-    <CardContent class="space-y-6">
+    <CardContent>
       <div
         class="flex flex-col items-center justify-center gap-4 py-4 sm:flex-row sm:justify-start"
       >
@@ -41,32 +45,25 @@ const emit = defineEmits(['update:modelValue']);
           }}</AvatarFallback>
         </Avatar>
         <div class="text-center sm:text-left">
-          <h3 class="text-lg font-medium">
-            {{ readOnlyFullName || t('username_placeholder') }}
-          </h3>
-          <p class="text-sm text-muted-foreground">{{ email }}</p>
+          <H3>{{ readOnlyFullName || t('username_placeholder') }}</H3>
+          <P>{{ email }}</P>
         </div>
       </div>
 
       <Separator class="my-4" />
 
-      <div class="space-y-2">
-        <Label for="name">{{ t('your_name') }}</Label>
+      <FieldGroup>
+        <FieldLabel for="name">{{ t('your_name') }}</FieldLabel>
         <Input
           id="name"
           :model-value="modelValue"
           @update:model-value="(val) => emit('update:modelValue', val)"
           class="h-10"
         />
-      </div>
-
-      <div class="space-y-2">
-        <Label for="email">Email</Label>
+        <FieldLabel for="email">Email</FieldLabel>
         <Input id="email" :model-value="email" disabled class="bg-muted/50" />
-        <p class="text-[0.8rem] text-muted-foreground">
-          {{ t('unmodifiable_email') }}
-        </p>
-      </div>
+        <FieldDescription>{{ t('unmodifiable_email') }}</FieldDescription>
+      </FieldGroup>
     </CardContent>
   </Card>
 </template>
