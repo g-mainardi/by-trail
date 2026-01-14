@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { getDbConfig } from './src/config/db.js';
 
-import { Bivouac } from './src/models/models.ts';
+import { Bivouac } from './src/models/models.js';
 
 const loadData = (fileName: string) => {
   try {
