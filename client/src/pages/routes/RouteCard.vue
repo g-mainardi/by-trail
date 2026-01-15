@@ -13,10 +13,6 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
-// Use your existing icon paths or Lucid icons where appropriate
-const routeIcon = new URL('@/assets/trekking_route_1.png', import.meta.url)
-  .href;
-
 const props = defineProps<{
   route: TrekkingRoute;
 }>();
@@ -45,13 +41,12 @@ const getDifficultyColor = (diff: string) => {
       return 'text-gray-600';
   }
 };
-
 const imageTrailPH = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
 </script>
 
 <template>
-  <Card class="p-4 gap-4">
-    <CardContent class="px-0">
+  <Card class="p-4 gap-4 h-full flex flex-col">
+    <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
           :src="imageTrailPH"
@@ -63,7 +58,7 @@ const imageTrailPH = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
         <H2>{{ route.title }}</H2>
       </RouterLink>
       <span class="text-xs text-muted-foreground uppercase tracking-wide">
-        {{ route.region && route.region[0] }}
+        {{ route.region[0] }}
       </span>
       <div class="grid grid-cols-3 gap-2 mt-2">
         <div class="info">

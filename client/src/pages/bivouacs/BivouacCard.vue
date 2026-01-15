@@ -23,17 +23,11 @@ const hoodHousePath = new URL(
 const props = defineProps<{
   bivouac: Bivouac;
 }>();
-
-const bivouac = props.bivouac;
-
-function getIconPath() {
-  return hoodHousePath;
-}
 </script>
 
 <template>
-  <Card class="p-4 gap-4">
-    <CardContent class="px-0">
+  <Card class="p-4 gap-4 h-full flex flex-col">
+    <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
           :src="imageBivouacPH1"
@@ -53,7 +47,7 @@ function getIconPath() {
       <span v-else>
         {{ bivouac.note }}
       </span>
-      <div class="grid grid-cols-3 gap-2 mt-2">
+      <div class="grid grid-cols-3 gap-2 mt-2 flex-1">
         <div class="info">
           <MountainIcon />
           <span class="value">{{ bivouac.altitude }}mt</span>
@@ -69,9 +63,9 @@ function getIconPath() {
           <span class="value">N/A</span>
           <span class="label">Toilet</span>
         </div>
-        <div class="info">
+        <div class="info col-span-2">
           <MapPinIcon />
-          <span class="value">N/A</span>
+          <span class="value">{{ bivouac.comune }}</span>
           <span class="label">Location</span>
         </div>
         <div class="info">
