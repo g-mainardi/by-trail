@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ noMargin?: boolean; text: string }>();
+defineProps<{ noMargin?: boolean }>();
 </script>
 
 <template>
