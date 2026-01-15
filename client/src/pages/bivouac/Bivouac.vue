@@ -8,6 +8,7 @@ import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import {
   Bed as BedIcon,
+  Circle,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   ThumbsUp as ThumbsUpIcon,
@@ -68,11 +69,30 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
         <H2> {{ t('plan') }} </H2>
       </div>
       <div class="right w-full md:w-[30%]">
+        <H2> {{ t('affluence') }} </H2>
+        <div class="flex flex-col gap-4 my-4">
+          <div class="date_icon">
+            {{ new Date().toDateString() }}
+            <Circle /><Circle /><Circle />
+          </div>
+          <div class="date_icon">
+            {{ new Date(Date.now() + 86400000).toDateString() }}
+            <Circle />
+          </div>
+          <div class="date_icon">
+            {{ new Date(Date.now() + 86400000 * 2).toDateString() }}
+            <Circle />
+          </div>
+          <div class="date_icon">
+            {{ new Date(Date.now() + 86400000 * 3).toDateString() }}
+            <Circle />
+          </div>
+        </div>
         <H2>{{ t('additional_info') }}</H2>
-        <div class="flex flex-col gap-4 mt-4">
+        <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
             <MountainIcon />
-            <span class="">{{ bivouac.altitude }} mt. </span>
+            <span class="">{{ bivouac.altitude }} mt </span>
           </div>
           <div class="icon-with-text">
             <BedIcon />
@@ -96,6 +116,21 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
 </template>
 
 <style scoped>
+.date_icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date_icon * {
+  fill: var(--color-foreground); /* Tailwind's gray-600 */
+  stroke: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
+}
+
 .card-title {
   padding-left: 1.5rem;
 }
@@ -104,6 +139,11 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
   align-items: center;
   gap: 0.5rem;
 }
+
+.icon-with-text span {
+  font-family: monospace;
+  font-size: 1.25rem;
+}
 </style>
 
 <i18n>
@@ -111,6 +151,7 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
   "en": {
     "description": "Description",
     "additional_info": "Additional Info",
+    "affluence": "Affluence",
     "no_description_available": "No description available",
     "plan": "Plan",
     "altitude": "Altitude",
@@ -127,6 +168,7 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
   "it": {
     "description": "Descrizione",
     "additional_info": "Informazioni aggiuntive",
+    "affluence": "Affluenza",
     "no_description_available": "Nessuna descrizione disponibile",
     "plan": "Pianifica",
     "altitude": "Altitudine",
@@ -143,6 +185,7 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
   "es": {
     "description": "Descripción",
     "additional_info": "Información adicional",
+    "affluence": "Afluencia",
     "no_description_available": "No hay descripción disponible",
     "plan": "Planificar",
     "altitude": "Altitud",
