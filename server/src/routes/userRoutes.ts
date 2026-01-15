@@ -14,7 +14,7 @@ router.use(protect);
 
 // /api/users/...
 router.get('/profile', getProfile);
-router.put('/profile', updateProfile);
+router.patch('/profile', updateProfile);
 router.post('/favorites/bivouacs', fetchFavoriteBivouacs);
 router.post('/favorites/bivouacs/:id', addFavoriteBivouac);
 router.delete('/favorites/bivouacs/:id', removeFavoriteBivouac);
