@@ -1,6 +1,6 @@
 import express from 'express';
-import { sendProposal } from '../controllers/proposalController.ts';
-import { protect } from '../middleware/authMiddleware.ts';
+import { sendProposal } from '../controllers/proposalController.js';
+import { protect } from '../middleware/authMiddleware.js';
 import rateLimit from 'express-rate-limit';
 
 // Rate limiter for proposal submission endpoints
