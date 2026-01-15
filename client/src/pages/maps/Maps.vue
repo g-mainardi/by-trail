@@ -8,9 +8,11 @@ import 'leaflet/dist/leaflet.css';
 import { computed, ref } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
-  filters,
+  bivouacFilters,
   getFilteredBivouacs,
-  resetFilters,
+  resetBivouacFilters,
+  resetRoutesFilters,
+  routeFilters,
 } from '../filterbar/filters';
 
 const mapPinHouseIconUrl = new URL(
@@ -89,7 +91,12 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
 </script>
 
 <template>
-  <FilterBar :filters="filters" @reset="resetFilters" />
+  <FilterBar
+    :bivouacFilters="bivouacFilters"
+    :routeFilters="routeFilters"
+    @resetBivouacFilters="resetBivouacFilters"
+    @resetRouteFilters="resetRoutesFilters"
+  />
   <div class="h-full w-full overflow-hidden rounded-lg shadow-lg">
     <l-map
       v-model:zoom="zoom"

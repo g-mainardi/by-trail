@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
-import CardFooter from '@/components/ui/card/CardFooter.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
@@ -24,17 +23,11 @@ const hoodHousePath = new URL(
 const props = defineProps<{
   bivouac: Bivouac;
 }>();
-
-const bivouac = props.bivouac;
-
-function getIconPath() {
-  return hoodHousePath;
-}
 </script>
 
 <template>
-  <Card class="p-4 gap-4">
-    <CardContent class="px-0">
+  <Card class="p-4 gap-4 h-full flex flex-col">
+    <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
           :src="imageBivouacPH1"
@@ -46,7 +39,6 @@ function getIconPath() {
         :to="`/bivouac/${bivouac._id}`"
         aria-label="View Bivouac Details"
       >
-        <!-- <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" /> -->
         <H2>{{ bivouac.name }}</H2>
       </RouterLink>
       <span v-if="!bivouac.note">
@@ -55,45 +47,58 @@ function getIconPath() {
       <span v-else>
         {{ bivouac.note }}
       </span>
-    </CardContent>
-    <CardFooter class="px-0">
-      <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly w-full">
-        <div class="icon-with-text">
+      <div class="grid grid-cols-3 gap-2 mt-2 flex-1">
+        <div class="info">
           <MountainIcon />
-          <span class="">
-            {{ bivouac.altitude }}
-          </span>
+          <span class="value">{{ bivouac.altitude }}mt</span>
+          <span class="label">Altitude</span>
         </div>
-        <div class="icon-with-text">
+        <div class="info">
           <BedIcon />
-          <span class="">
-            {{ bivouac.capacity }}
-          </span>
+          <span class="value">{{ bivouac.capacity }}</span>
+          <span class="label">Capacity</span>
         </div>
-        <div class="icon-with-text">
+        <div class="info">
           <ToiletIcon />
-          <span class=""> N/A </span>
+          <span class="value">N/A</span>
+          <span class="label">Toilet</span>
         </div>
-        <div class="icon-with-text">
+        <div class="info col-span-2">
           <MapPinIcon />
-          <span class=""> N/A </span>
+          <span class="value">{{ bivouac.comune }}</span>
+          <span class="label">Location</span>
         </div>
-        <div class="icon-with-text">
+        <div class="info">
           <ThumbsUpIcon />
-          <span class="">
-            {{ bivouac.likes }}
-          </span>
+          <span class="value">{{ bivouac.likes }}</span>
+          <span class="label">Likes</span>
         </div>
       </div>
-    </CardFooter>
+    </CardContent>
   </Card>
 </template>
 
 <style scoped>
-.icon-with-text {
+.info {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.info span.value {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace;
+  font-size: large;
+}
+
+.info span.label {
+  font-size: small;
+  color: var(--muted-foreground);
 }
 </style>
 

@@ -1,14 +1,23 @@
 import api from '@/stores/utility/axiosInstance';
-import { defineStore } from 'pinia';
 import type { LatLng } from 'leaflet';
+import { defineStore } from 'pinia';
 
 type UUID = string;
+
+export const DifficultyLevels = {
+  T: 'T',
+  E: 'E',
+  EE: 'EE',
+  EEA: 'EEA',
+} as const;
+export type DifficultyLevel =
+  (typeof DifficultyLevels)[keyof typeof DifficultyLevels];
 
 export interface TrekkingRoute {
   _id: UUID;
   title: string;
   region: string[];
-  difficulty: string;
+  difficulty: DifficultyLevel;
   distance: number;
   ascent: number;
   descent: number;
