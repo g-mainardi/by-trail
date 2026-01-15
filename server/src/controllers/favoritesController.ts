@@ -36,6 +36,7 @@ export const fetchFavoriteBivouacs = async (
 
 export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
+  const { bivouacId } = req.body;
 
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
@@ -43,9 +44,31 @@ export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
   }
+  if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid or missing bivouac ID' });
+  }
 
-  console.log('Add favorite bivouac - Not implemented yet');
-  return res.status(501).json({ error: 'Not implemented yet' });
+  try {
+    const existingFavorite = await FavBivouac.findOne({
+      user: userId,
+      bivouac: bivouacId,
+    }).exec();
+
+    if (existingFavorite) {
+      return res.status(409).json({ error: 'Bivouac already in favorites' });
+    }
+
+    const newFavorite = new FavBivouac({
+      user: userId,
+      bivouac: bivouacId,
+    });
+    await newFavorite.save();
+
+    return res.status(201).json({ message: 'Bivouac added to favorites' });
+  } catch (error) {
+    console.error('Error adding favorite bivouac:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 export const removeFavoriteBivouac = async (
@@ -53,6 +76,7 @@ export const removeFavoriteBivouac = async (
   res: Response
 ) => {
   const userId = req.user?.id;
+  const { bivouacId } = req.body;
 
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
@@ -60,7 +84,23 @@ export const removeFavoriteBivouac = async (
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
   }
+  if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid or missing bivouac ID' });
+  }
 
-  console.log('Remove favorite bivouac - Not implemented yet');
-  return res.status(501).json({ error: 'Not implemented yet' });
+  try {
+    const deletedFavorite = await FavBivouac.findOneAndDelete({
+      user: userId,
+      bivouac: bivouacId,
+    }).exec();
+
+    if (!deletedFavorite) {
+      return res.status(404).json({ error: 'Favorite bivouac not found' });
+    }
+
+    return res.status(200).json({ message: 'Bivouac removed from favorites' });
+  } catch (error) {
+    console.error('Error removing favorite bivouac:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 };
