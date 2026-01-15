@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
-import {
-  LIcon,
-  LMap,
-  LMarker,
-  LPopup,
-  LTileLayer,
-} from '@vue-leaflet/vue-leaflet';
+import { LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import { useDebounceFn } from '@vueuse/core';
-import type { LatLng, Map } from 'leaflet';
+import type { Icon, IconOptions, LatLng, Map } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapPinHouse } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
@@ -18,11 +12,40 @@ import {
   getFilteredBivouacs,
   resetFilters,
 } from '../filterbar/filters';
+
+const mapPinHouseIconUrl = new URL(
+  '@/assets/map-pin-house.svg',
+  import.meta.url
+).href;
+
+const iconSize: [number, number] = [30, 30];
+const bivouacIcon = L.divIcon({
+  className: 'bivouac-icon-wrapper',
+  html: `
+    <div style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: ${iconSize[0]}px;
+      height: ${iconSize[1]}px;
+      background: var(--primary);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    ">
+      <img src="${mapPinHouseIconUrl}" alt="Bivouac" style="width: 60%; height: 60%; filter: brightness(0) invert(1);" />
+    </div>
+  `,
+  iconSize: iconSize as [number, number],
+  iconAnchor: [iconSize[0] / 2, iconSize[1] - iconSize[0] / 2] as [
+    number,
+    number,
+  ],
+}) as Icon<IconOptions>;
+
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 
 const bivouacs = ref<Bivouac[]>([]);
-const iconSize: [number, number] = [30, 30];
 
 const tileLayerUrl = computed(() => {
   return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
@@ -83,10 +106,8 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
         v-for="bivouac in filteredBivouacs"
         :key="bivouac._id"
         :lat-lng="[bivouac.coords.latitude, bivouac.coords.longitude]"
+        :icon="bivouacIcon"
       >
-        <l-icon :icon-size="iconSize" class-name="icon-wrapper">
-          <MapPinHouse :size="iconSize[0]" class="bivouac-icon" />
-        </l-icon>
         <l-popup :options="{ minWidth: 300, maxWidth: 300 }">
           <RouterLink
             :to="`/bivouac/${bivouac._id}`"
