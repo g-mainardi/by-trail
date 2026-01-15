@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 /**************************************** Schemas ****************************************/
-
+// USER
 const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -19,6 +19,7 @@ const userSchema = new Schema({
   type: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
 
+// BIVOAUC
 const bivouacSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -39,6 +40,7 @@ const bivouacSchema = new Schema(
   }
 );
 
+// ROUTE
 const routeSchema = new Schema(
   {
     title: { type: String, required: true },
@@ -76,11 +78,13 @@ const routeSchema = new Schema(
 // Create a 2dsphere index for Geospatial queries
 routeSchema.index({ path: '2dsphere' });
 
+// IMAGE
 const imageSchema = new Schema({
   url: { type: String },
   uploadedDate: { type: Date, default: Date.now },
 });
 
+// FAV_BIVOUAC
 const favBivouacSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   bivouac: {
@@ -92,11 +96,13 @@ const favBivouacSchema = new Schema({
 // Create an index for faster lookups and ensuring a user cannot favorite the same bivouac multiple times
 favBivouacSchema.index({ user: 1, bivouac: 1 }, { unique: true });
 
+// FAV_TRAIL
 const favTrailSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   trail: { type: mongoose.Schema.Types.ObjectId, ref: 'Trail', required: true },
 });
 
+// RESERVATION
 const reservationSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   bivouac: {
@@ -108,12 +114,14 @@ const reservationSchema = new Schema({
   reservationDate: { type: Date, default: Date.now },
 });
 
+// SETTING
 const settingSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   darkMode: { type: Boolean, default: false },
   language: { type: String, default: 'en' },
 });
 
+// NOTIFICATION
 const notificationSchema = new Schema({
   recipient: {
     type: mongoose.Schema.Types.ObjectId,
@@ -122,21 +130,35 @@ const notificationSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['bivouac_reservation', 'bivouac_update', 'route_reservation'],
+    enum: [
+      'bivouac_reservation',
+      'bivouac_update',
+      'route_reservation',
+      'weather_alert',
+    ],
     required: true,
   },
+  uiType: {
+    type: String,
+    enum: ['info', 'success', 'alert'],
+    required: true,
+    default: 'info',
+  },
+  title: { type: String, required: true },
+  message: { type: String, required: true },
   data: {
     // flexible container: stores any structure
     type: mongoose.Schema.Types.Mixed, // allows any JSON object
-    required: true,
+    default: {},
   },
-  title: { type: String },
-  body: { type: String },
-  createdAt: { type: Date, default: Date.now },
+  referenceUrl: { type: String }, // where the user goes when they click
   isRead: { type: Boolean, default: false },
-  referenceUrl: { type: String },
+  createdAt: { type: Date, default: Date.now },
 });
+// this ensures fetching notifications is istant
+notificationSchema.index({ recipient: 1, createdAt: -1 });
 
+// PROPOSAL
 const proposalSchema = new Schema({
   senderEmail: { type: String, required: true },
   type: { type: String, required: true },
