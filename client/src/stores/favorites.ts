@@ -5,7 +5,7 @@ import { defineStore } from 'pinia';
 export const useFavoriteStore = defineStore('favorites', () => {
   async function getFavoriteBivouacs(): Promise<Bivouac[]> {
     try {
-      const res = await api.post('/users/favorites/bivouacs', {});
+      const res = await api.get('/users/favorites/bivouacs', {});
       const data = res.data;
 
       if (!data || !data.bivouacs || !Array.isArray(data.bivouacs))

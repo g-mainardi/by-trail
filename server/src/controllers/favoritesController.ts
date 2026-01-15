@@ -36,7 +36,7 @@ export const fetchFavoriteBivouacs = async (
 
 export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
-  const { bivouacId } = req.body;
+  const bivouacId = req.params.id;
 
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
@@ -76,7 +76,7 @@ export const removeFavoriteBivouac = async (
   res: Response
 ) => {
   const userId = req.user?.id;
-  const { bivouacId } = req.body;
+  const bivouacId = req.params.id;
 
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });

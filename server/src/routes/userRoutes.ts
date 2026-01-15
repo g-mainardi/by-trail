@@ -15,8 +15,8 @@ router.use(protect);
 // /api/users/...
 router.get('/profile', getProfile);
 router.patch('/profile', updateProfile);
-router.post('/favorites/bivouacs', fetchFavoriteBivouacs);
-router.post('/favorites/bivouacs/:id', addFavoriteBivouac);
-router.delete('/favorites/bivouacs/:id', removeFavoriteBivouac);
+router.get('/favorites/bivouacs', fetchFavoriteBivouacs);
+router.post('/favorites/bivouacs', addFavoriteBivouac);
+router.delete('/favorites/bivouacs', removeFavoriteBivouac);
 
 export default router;
