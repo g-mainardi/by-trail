@@ -33,3 +33,34 @@ export const fetchFavoriteBivouacs = async (
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+
+  console.log('Add favorite bivouac - Not implemented yet');
+  return res.status(501).json({ error: 'Not implemented yet' });
+};
+
+export const removeFavoriteBivouac = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+
+  console.log('Remove favorite bivouac - Not implemented yet');
+  return res.status(501).json({ error: 'Not implemented yet' });
+};
