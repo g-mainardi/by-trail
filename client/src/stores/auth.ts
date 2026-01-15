@@ -72,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       // Axios put
-      await api.put('/users/profile', updateData);
+      await api.patch('/users/profile', updateData);
 
       // If we are here, it was successful (2xx)
       const profileSuccess = await fetchProfile(true);
