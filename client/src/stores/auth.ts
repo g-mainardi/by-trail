@@ -1,3 +1,4 @@
+import { socket } from '@/services/socket';
 import api from '@/stores/utility/axiosInstance'; // Import the global instance
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -133,6 +134,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = false;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    socket.disconnect();
     router.push('/login');
   };
 

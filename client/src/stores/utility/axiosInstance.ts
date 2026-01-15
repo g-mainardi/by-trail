@@ -1,3 +1,4 @@
+import { socket } from '@/services/socket';
 import axios from 'axios';
 
 const api = axios.create({
@@ -29,6 +30,7 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      socket.disconnect();
       // Lazy import to avoid circular dependency
       const { router } = await import('@/router');
       router.push({ name: 'Login' }).catch(() => {
