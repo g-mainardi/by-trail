@@ -1,4 +1,4 @@
-import { HttpHelper } from '@/stores/utility/httpHelper';
+import api from '@/stores/utility/axiosInstance';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 import { defineStore } from 'pinia';
@@ -10,6 +10,7 @@ const ProposalEnum = {
 } as const;
 
 type ProposalType = (typeof ProposalEnum)[keyof typeof ProposalEnum];
+
 export interface Proposal {
   senderEmail: string;
   type: ProposalType;
@@ -20,11 +21,9 @@ export interface Proposal {
 
 export const useProposalStore = defineStore('proposal', () => {
   const authStore = useAuthStore();
-  const { user, token } = storeToRefs(authStore);
+  const { user } = storeToRefs(authStore);
   const isSubmitting = ref(false);
   const proposalError = ref<string | null>(null);
-
-  const httpHelper = new HttpHelper('/api', token.value || undefined);
 
   // --- State ---
   const email = computed(() => user.value?.email || '');
@@ -34,14 +33,11 @@ export const useProposalStore = defineStore('proposal', () => {
     proposalError.value = null;
 
     try {
-      const res = await httpHelper.post('/proposal', proposalData);
-      const data = await res.json();
-
-      if (!res.ok)
-        throw new Error(data.message || 'Proposal submission failed');
+      await api.post('/proposal', proposalData);
+      // If we are here, status is 2xx
       return true;
     } catch (err: any) {
-      proposalError.value = err.message;
+      proposalError.value = err.response?.data?.message || err.message;
       return false;
     } finally {
       isSubmitting.value = false;

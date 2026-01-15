@@ -1,4 +1,4 @@
-import { HttpHelper } from '@/stores/utility/httpHelper';
+import api from '@/stores/utility/axiosInstance'; // Import the global instance
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -33,12 +33,9 @@ export const useAuthStore = defineStore('auth', () => {
   );
   const error = ref<string | null>(null);
   const isLoading = ref(false);
-  const httpHelper = new HttpHelper('/api', token.value || undefined);
 
   // --- Actions ---
 
-  // 1. Fetch Profile (The Source of Truth)
-  // Call this when the app starts or after login to get fresh data
   const fetchProfile = async (skipLoadingState = false): Promise<boolean> => {
     if (!token.value) return false;
 
@@ -46,26 +43,20 @@ export const useAuthStore = defineStore('auth', () => {
       isLoading.value = true;
     }
     try {
-      const res = await httpHelper.get('/users/profile');
+      // Axios directly returns the response object. Data is in .data
+      const res = await api.get('/users/profile');
 
-      if (!res.ok) {
-        // If token is invalid (401), force logout
-        if (res.status === 401) logout();
-        throw new Error('Failed to fetch profile');
-      }
+      // No need to check !res.ok, axios throws if status is not 2xx
+      const data = res.data;
 
-      const data = await res.json();
-
-      // Update state with fresh data from DB
       user.value = data.user;
-
-      // Update localStorage to keep it somewhat in sync
       localStorage.setItem('user', JSON.stringify(user.value));
 
       return true;
     } catch (err: any) {
       console.error('Fetch Profile Error:', err);
-      error.value = err.message;
+      // Handle axios error object structure
+      error.value = err.response?.data?.message || err.message;
       return false;
     } finally {
       if (!skipLoadingState) {
@@ -74,18 +65,15 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  // 2. Update Profile
   const updateProfile = async (updateData: Partial<User>) => {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const res = await httpHelper.put('/users/profile', updateData);
-      const data = await res.json();
+      // Axios put
+      await api.put('/users/profile', updateData);
 
-      if (!res.ok) throw new Error(data.message || 'Update failed');
-
-      // Fetch the latest profile to sync state (skip nested loading state management)
+      // If we are here, it was successful (2xx)
       const profileSuccess = await fetchProfile(true);
       if (!profileSuccess) {
         console.warn(
@@ -94,36 +82,29 @@ export const useAuthStore = defineStore('auth', () => {
         error.value =
           'Your profile was updated, but we could not refresh your data. Please reload the page.';
       }
-
       return true;
     } catch (err: any) {
       console.error('Update Profile Error:', err);
-      error.value = err.message;
+      error.value = err.response?.data?.message || err.message;
       return false;
     } finally {
       isLoading.value = false;
     }
   };
 
-  // 3. Login (Updated)
   const login = async (email: string, password: string) => {
     isLoading.value = true;
     error.value = null;
 
     try {
-      // API Call to Backend
       const body = { email, password };
-      const res = await httpHelper.post('/auth/login', body);
-      const data = await res.json();
+      const res = await api.post('/auth/login', body);
+      const data = res.data;
 
-      if (!res.ok) throw new Error(data.message || 'Login failed');
-
-      // Save critical auth data
       token.value = data.token;
       user.value = data.user;
 
-      httpHelper.setToken(data.token);
-
+      // No need to manually set token on helper, the interceptor reads localStorage
       localStorage.setItem('token', token.value || '');
       localStorage.setItem('user', JSON.stringify(user.value));
 
@@ -138,14 +119,13 @@ export const useAuthStore = defineStore('auth', () => {
       return true;
     } catch (err: any) {
       console.error(err);
-      error.value = err.message;
+      error.value = err.response?.data?.message || err.message;
       return false;
     } finally {
       isLoading.value = false;
     }
   };
 
-  // 4. Logout
   const logout = () => {
     token.value = null;
     user.value = null;
@@ -156,7 +136,6 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login');
   };
 
-  // 5. Signup
   const signup = async (
     name: string,
     email: string,
@@ -173,16 +152,12 @@ export const useAuthStore = defineStore('auth', () => {
         password: signupPassword,
         favRegions,
       };
-      const res = await httpHelper.post('/auth/signup', body);
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || 'Signup failed');
-
+      await api.post('/auth/signup', body);
       router.push('/login');
       return true;
     } catch (err: any) {
       console.error(err);
-      error.value = err.message;
+      error.value = err.response?.data?.message || err.message;
       return false;
     } finally {
       console.log('Account creation process finished.');
@@ -191,24 +166,24 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const deleteAccount = async (email: string, password: string) => {
+    // For safety, we check if token exists before attempting account deletion.
     if (!token.value) return;
+
     isAccountDeleteFailed.value = false;
     isLoading.value = true;
     error.value = null;
 
     try {
       const body = { email: email, password: password };
-      let res = await httpHelper.post('/auth/delete', body);
-      let data = await res.json();
-      if (res.status === 200) {
-        clearAuthenticationStore();
-        router.push('/login');
-      } else {
-        isAccountDeleteFailed.value = true;
-        accountDeleteMessage.value = data.error || 'Account deletion failed';
-      }
+      await api.post('/auth/delete', body);
+
+      clearAuthenticationStore();
+      router.push('/login');
     } catch (err: any) {
-      log(err.message);
+      log(err.response?.data?.error || err.message);
+      isAccountDeleteFailed.value = true;
+      accountDeleteMessage.value =
+        err.response?.data?.error || 'Account deletion failed';
       return false;
     } finally {
       isLoading.value = false;

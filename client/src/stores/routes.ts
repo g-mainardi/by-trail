@@ -1,7 +1,6 @@
-import { HttpHelper } from '@/stores/utility/httpHelper';
+import api from '@/stores/utility/axiosInstance';
 import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 
 type UUID = string;
 
@@ -39,19 +38,16 @@ export interface RouteResponse {
 }
 
 export const useRouteStore = defineStore('routes', () => {
-  const token = ref<string | null>(localStorage.getItem('token'));
-  const httpHelper = new HttpHelper('/api', token.value || undefined);
-
   async function fetchRoutes(): Promise<RouteResponse> {
-    const res = await httpHelper.post('/routes/list', {});
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error('Fetch Routes Error:', data);
-      throw new Error('Failed to fetch routes');
+    try {
+      const res = await api.post('/routes/list', {});
+      return res.data as RouteResponse;
+    } catch (error: any) {
+      console.error('Fetch Routes Error:', error);
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch routes'
+      );
     }
-
-    return data as RouteResponse;
   }
 
   async function fetchMapRoutes(
@@ -63,31 +59,33 @@ export const useRouteStore = defineStore('routes', () => {
       bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
     };
 
-    const res = await httpHelper.post('/routes/map', body);
-    if (!res.ok) throw new Error('Failed to fetch map routes');
+    try {
+      const res = await api.post('/routes/map', body);
+      const data = res.data;
+      const rawRoutes = data.routes as TrekkingRoute[];
 
-    const data = await res.json();
-    const rawRoutes = data.routes as TrekkingRoute[];
+      // CLIENT-SIDE FIX:
+      // MongoDB returns [Lng, Lat]. If Leaflet needs [Lat, Lng], we might need to swap them
+      // or simply extract the start position here for the marker.
+      return rawRoutes.map((route) => {
+        if (
+          route.path &&
+          route.path.coordinates &&
+          route.path.coordinates.length > 0
+        ) {
+          // We cast the first element to a tuple [number, number]
+          const [lng, lat] = route.path.coordinates[0] as [number, number];
 
-    // CLIENT-SIDE FIX:
-    // MongoDB returns [Lng, Lat]. If Leaflet needs [Lat, Lng], we might need to swap them
-    // or simply extract the start position here for the marker.
-
-    return rawRoutes.map((route) => {
-      if (
-        route.path &&
-        route.path.coordinates &&
-        route.path.coordinates.length > 0
-      ) {
-        // We cast the first element to a tuple [number, number]
-        const [lng, lat] = route.path.coordinates[0] as [number, number];
-
-        if (typeof lat === 'number' && typeof lng === 'number') {
-          route.startPosition = { lat, lng };
+          if (typeof lat === 'number' && typeof lng === 'number') {
+            route.startPosition = { lat, lng };
+          }
         }
-      }
-      return route;
-    });
+        return route;
+      });
+    } catch (error: any) {
+      console.error('Fetch Map Routes Error:', error);
+      throw new Error('Failed to fetch map routes');
+    }
   }
 
   return { fetchRoutes, fetchMapRoutes };
