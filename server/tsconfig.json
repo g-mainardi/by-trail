@@ -10,9 +10,9 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "noImplicitAny": true
   },
   "include": ["src/**/*", "index.ts", "seed.ts", "src/types/declaration.d.ts"],
-  "noImplicitAny": true,
   "exclude": ["node_modules", "**/*.test.ts"]
 }
