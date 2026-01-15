@@ -1,24 +1,51 @@
 <script setup lang="ts">
-import bivaccoIcon from '@/assets/bivacco.png'; /* @attribution: <a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a> */
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
-import {
-  LIcon,
-  LMap,
-  LMarker,
-  LPopup,
-  LTileLayer,
-} from '@vue-leaflet/vue-leaflet';
+import { LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import { useDebounceFn } from '@vueuse/core';
-import type { LatLng, Map } from 'leaflet';
+import type { Icon, IconOptions, LatLng, Map } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { computed, ref } from 'vue';
+import FilterBar from '../filterbar/FilterBar.vue';
+import {
+  filters,
+  getFilteredBivouacs,
+  resetFilters,
+} from '../filterbar/filters';
+
+const mapPinHouseIconUrl = new URL(
+  '@/assets/map-pin-house.svg',
+  import.meta.url
+).href;
+
+const iconSize: [number, number] = [30, 30];
+const bivouacIcon = L.divIcon({
+  className: 'bivouac-icon-wrapper',
+  html: `
+    <div style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: ${iconSize[0]}px;
+      height: ${iconSize[1]}px;
+      background: var(--primary);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    ">
+      <img src="${mapPinHouseIconUrl}" alt="Bivouac" style="width: 60%; height: 60%; filter: brightness(0) invert(1);" />
+    </div>
+  `,
+  iconSize: iconSize as [number, number],
+  iconAnchor: [iconSize[0] / 2, iconSize[1] - iconSize[0] / 2] as [
+    number,
+    number,
+  ],
+}) as Icon<IconOptions>;
 
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 
 const bivouacs = ref<Bivouac[]>([]);
-const iconUrl = bivaccoIcon;
-const iconSize: [number, number] = [25, 25];
 
 const tileLayerUrl = computed(() => {
   return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
@@ -52,49 +79,145 @@ const debouncedFetchBivouacs = useDebounceFn(() => {
 const logBounds = () => {
   debouncedFetchBivouacs();
 };
+
+const filteredBivouacs = computed(() => {
+  return getFilteredBivouacs(bivouacs.value);
+});
+
+const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
+  .href;
 </script>
 
 <template>
-  <l-map
-    v-model:zoom="zoom"
-    v-model:center="center"
-    :useGlobalLeaflet="false"
-    class="w-full h-full z-0"
-    @ready="onMapReady"
-    @update:zoom="logBounds"
-    @update:center="logBounds"
-  >
-    <l-tile-layer
-      :url="tileLayerUrl"
-      attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
+  <FilterBar :filters="filters" @reset="resetFilters" />
+  <div class="h-full w-full overflow-hidden rounded-lg shadow-lg">
+    <l-map
+      v-model:zoom="zoom"
+      v-model:center="center"
+      :useGlobalLeaflet="false"
+      class="w-full h-full z-0"
+      @ready="onMapReady"
+      @update:zoom="logBounds"
+      @update:center="logBounds"
     >
-    </l-tile-layer>
+      <l-tile-layer :url="tileLayerUrl" />
 
-    <l-marker
-      v-for="bivacco in bivouacs"
-      :key="bivacco._id"
-      :lat-lng="[bivacco.coords.latitude, bivacco.coords.longitude]"
-    >
-      <l-icon
-        :icon-url="iconUrl"
-        :icon-size="iconSize"
-        class-name="bivaccoIconStyle"
-      />
-      <l-popup>
-        <div class="popup-content">
-          <h3>{{ bivacco.name }}</h3>
-        </div>
-      </l-popup>
-    </l-marker>
-  </l-map>
+      <l-marker
+        v-for="bivouac in filteredBivouacs"
+        :key="bivouac._id"
+        :lat-lng="[bivouac.coords.latitude, bivouac.coords.longitude]"
+        :icon="bivouacIcon"
+      >
+        <l-popup :options="{ minWidth: 300, maxWidth: 300 }">
+          <RouterLink
+            :to="`/bivouac/${bivouac._id}`"
+            aria-label="View Bivouac Details"
+          >
+            <img
+              :src="imageBivouacPH1"
+              :alt="`${bivouac.name} image`"
+              class="rounded-sm object-cover"
+            />
+            <h3 class="text-lg font-semibold" style="color: var(--primary)">
+              {{ bivouac.name }}
+            </h3>
+          </RouterLink>
+          <p style="margin-top: 0rem; margin-bottom: 0rem">
+            {{ bivouac.comune }}, {{ bivouac.region }}
+          </p>
+        </l-popup>
+      </l-marker>
+    </l-map>
+  </div>
 </template>
 
 <style scoped>
-:deep(.bivaccoIconStyle) {
-  box-sizing: border-box;
-  border: 1px solid #000000;
-  border-radius: 5px;
-  background-color: rgb(255, 173, 254);
-  padding: 5px;
+* {
+  font-family: var(--font-sans);
+}
+
+/* --- STILE ICONE BIVACCO (Shadcn Card Style) --- */
+:deep(.icon-wrapper) {
+  /* Rimuove lo sfondo bianco di default di Leaflet */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.bivouac-icon {
+  color: var(--card);
+  background-color: var(--primary);
+  border-radius: calc(var(--radius) / 2);
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+
+/* --- STILE PULSANTI ZOOM (Shadcn Button/Outline Style) --- */
+/* 1. Rimuove il contenitore unito di default di Leaflet */
+:deep(.leaflet-bar) {
+  border: none;
+  box-shadow: none;
+}
+
+/* 2. Stile base dei pulsanti (+ e -) */
+:deep(.leaflet-control-zoom a) {
+  background-color: var(--card); /* Sfondo Card */
+  color: var(--foreground); /* Testo scuro/chiaro in base al tema */
+  border: 1px solid var(--border);
+
+  /* Dimensioni e Tipografia */
+  width: 36px; /* Un po' più grandi dello standard */
+  height: 36px;
+  line-height: 34px; /* Centratura verticale (height - borders) */
+  font-size: 1.2rem;
+  font-family: var(--font-sans); /* Quicksand */
+  font-weight: 500;
+
+  /* Forma */
+  border-radius: var(--radius) !important; /* Forza il radius del tema */
+  margin-bottom: 8px; /* Spazio tra i pulsanti */
+  box-shadow: var(--shadow-sm);
+
+  transition: all 0.2s;
+}
+
+/* 3. Stile Hover (Accent) */
+:deep(.leaflet-control-zoom a:hover) {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+/* 4. Stile Disabilitato (es. zoom massimo raggiunto) */
+:deep(.leaflet-control-zoom a.leaflet-disabled) {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  border-color: var(--border);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 5. Override specifico per Leaflet che a volte forza radius strani */
+:deep(.leaflet-touch .leaflet-control-zoom-in),
+:deep(.leaflet-touch .leaflet-control-zoom-out) {
+  border-radius: var(--radius) !important;
+}
+
+:deep(.leaflet-popup-content) {
+  margin: 0.5rem;
+  padding: 0;
+}
+
+:deep(.leaflet-popup-content-wrapper) {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  margin: 0%;
+}
+
+:deep(.leaflet-popup-close-button span) {
+  color: var(--muted-foreground);
+  font-size: 1.5rem;
+  text-align: center;
 }
 </style>

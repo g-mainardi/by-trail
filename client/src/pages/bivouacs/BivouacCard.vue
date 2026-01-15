@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
-import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
+import { Card, CardContent } from '@/components/ui/card';
+import CardFooter from '@/components/ui/card/CardFooter.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
   Bed as BedIcon,
-  Eye,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   ThumbsUp as ThumbsUpIcon,
@@ -14,6 +12,9 @@ import {
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
+
+const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
+  .href;
 
 const hoodHousePath = new URL(
   '@/assets/trekking_hood_house.png',
@@ -33,63 +34,57 @@ function getIconPath() {
 
 <template>
   <Card class="p-4 gap-4">
-    <RouterLink
-      :to="`/bivouac/${bivouac._id}`"
-      aria-label="View Bivouac Details"
-    >
-      <CardTitle class="flex flex-row items-center gap-4">
-        <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" />
+    <CardContent class="px-0">
+      <div class="relative w-full mb-2">
+        <img
+          :src="imageBivouacPH1"
+          :alt="`${bivouac.name} image`"
+          class="w-full rounded-sm object-cover"
+        />
+      </div>
+      <RouterLink
+        :to="`/bivouac/${bivouac._id}`"
+        aria-label="View Bivouac Details"
+      >
+        <!-- <ThiigsIcon :alt="'bivouac icon'" :path="getIconPath()" :size="4" /> -->
         <H2>{{ bivouac.name }}</H2>
-      </CardTitle>
-    </RouterLink>
-
-    <CardContent
-      class="px-0 flex flex-col md:flex-row md:items-center md:justify-between"
-    >
-      <span class="">
-        <span v-if="!bivouac.note">
-          {{ t('no_description_available') }}
-        </span>
-        <span v-else>
-          {{ bivouac.note }}
-        </span>
+      </RouterLink>
+      <span v-if="!bivouac.note">
+        {{ t('no_description_available') }}
+      </span>
+      <span v-else>
+        {{ bivouac.note }}
       </span>
     </CardContent>
-
-    <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
-      <div class="icon-with-text">
-        <MountainIcon />
-        <span class="">
-          {{ bivouac.altitude }}
-        </span>
-      </div>
-      <div class="icon-with-text">
-        <BedIcon />
-        <span class="">
-          {{ bivouac.capacity }}
-        </span>
-      </div>
-      <div class="icon-with-text">
-        <ToiletIcon />
-        <span class=""> N/A </span>
-      </div>
-      <div class="icon-with-text">
-        <MapPinIcon />
-        <span class=""> N/A </span>
-      </div>
-      <div class="icon-with-text">
-        <ThumbsUpIcon />
-        <span class="">
-          {{ bivouac.likes }}
-        </span>
-      </div>
-    </div>
-
     <CardFooter class="px-0">
-      <Button class="w-full">
-        <Eye :size="4" />
-        {{ t('plan') }}
-      </Button>
+      <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly w-full">
+        <div class="icon-with-text">
+          <MountainIcon />
+          <span class="">
+            {{ bivouac.altitude }}
+          </span>
+        </div>
+        <div class="icon-with-text">
+          <BedIcon />
+          <span class="">
+            {{ bivouac.capacity }}
+          </span>
+        </div>
+        <div class="icon-with-text">
+          <ToiletIcon />
+          <span class=""> N/A </span>
+        </div>
+        <div class="icon-with-text">
+          <MapPinIcon />
+          <span class=""> N/A </span>
+        </div>
+        <div class="icon-with-text">
+          <ThumbsUpIcon />
+          <span class="">
+            {{ bivouac.likes }}
+          </span>
+        </div>
+      </div>
     </CardFooter>
   </Card>
 </template>

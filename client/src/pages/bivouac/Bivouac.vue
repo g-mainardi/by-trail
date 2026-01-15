@@ -1,18 +1,10 @@
 <script setup lang="ts">
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
+import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import ThiigsIcon from '@/components/ui/icons/ThiigsIcon.vue';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
-import Lead from '@/layouts/typography/Lead.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import {
   Bed as BedIcon,
@@ -40,93 +32,66 @@ onMounted(async () => {
     console.error('Error fetching bivouac:', error);
   }
 });
+const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
+  .href;
 </script>
 
 <template>
-  <div class="flex items-center gap-4">
-    <ThiigsIcon :alt="'bivouac icon'" :path="hoodHousePath" :size="4" />
-    <H1 :text="bivouac.name" />
-  </div>
-  <div class="mt-4 flex flex-col gap-4 md:grid md:grid-cols-2">
-    <Card>
-      <CardTitle class="card-title">
+  <Card class="p-4">
+    <CardTitle>
+      <H1>{{ bivouac.name }}</H1>
+    </CardTitle>
+    <CardContent class="flex flex-col md:flex-row gap-4 w-full p-0">
+      <div class="left w-full md:w-[70%]">
         <H2>{{ t('description') }}</H2>
-      </CardTitle>
-
-      <CardContent>
-        <Lead v-if="!bivouac.note">
+        <p class="mt-2 mb-4">
           {{ t('no_description_available') }}
-        </Lead>
-        <Lead v-else>{{ bivouac.note }}</Lead>
-      </CardContent>
-    </Card>
-
-    <Card>
-      <CardTitle class="card-title">
+        </p>
+        <H2>{{ t('images') }}</H2>
+        <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
+          <img
+            :src="imageBivouacPH1"
+            :alt="`${bivouac.name} image`"
+            class="rounded-sm object-cover shrink-0 w-1/2"
+          />
+          <img
+            :src="imageBivouacPH1"
+            :alt="`${bivouac.name} image`"
+            class="rounded-sm object-cover shrink-0 w-1/2"
+          />
+          <img
+            :src="imageBivouacPH1"
+            :alt="`${bivouac.name} image`"
+            class="rounded-sm object-cover shrink-0 w-1/2"
+          />
+        </div>
+        <H2> {{ t('plan') }} </H2>
+      </div>
+      <div class="right w-full md:w-[30%]">
         <H2>{{ t('additional_info') }}</H2>
-      </CardTitle>
-
-      <CardContent>
-        <div class="flex flex-wrap gap-x-4 gap-y-2 justify-evenly">
+        <div class="flex flex-col gap-4 mt-4">
           <div class="icon-with-text">
             <MountainIcon />
-            {{ t('altitude') }}: {{ bivouac.altitude }} mt
+            <span class="">{{ bivouac.altitude }} mt. </span>
           </div>
           <div class="icon-with-text">
             <BedIcon />
-            {{ t('capacity') }}: {{ bivouac.capacity }}
+            <span>{{ bivouac.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
-            <ToiletIcon />
-            {{ t('toilet') }}: N/A
+            <ToiletIcon /><span class="">N/A</span>
           </div>
           <div class="icon-with-text">
             <MapPinIcon />
-            {{ t('location') }}: N/A
+            <span class="">N/A</span>
           </div>
           <div class="icon-with-text">
-            <ThumbsUpIcon />
-            {{ t('likes') }}: {{ bivouac.likes }}
+            <ThumbsUpIcon /><span class="">{{ bivouac.likes }}</span>
           </div>
         </div>
-      </CardContent>
-    </Card>
-  </div>
-
-  <H2 class="ml-4">{{ t('images') }}</H2>
-  <Carousel class="w-full max-w-xs mt-6 md:max-w-md lg:max-w-lg mx-auto">
-    <div class="flex items-center gap-2">
-      <CarouselPrevious class="relative left-0 translate-y-0" />
-      <CarouselContent>
-        <CarouselItem
-          v-for="i in 5"
-          :key="i"
-          class="basis-full md:basis-3/4 lg:basis-2/3"
-        >
-          <div class="p-1 w-full">
-            <Card class="w-full">
-              <CardContent
-                class="flex aspect-square items-center justify-center"
-              >
-                <span class="text-4xl font-semibold">{{ i }}</span>
-              </CardContent>
-            </Card>
-          </div>
-        </CarouselItem>
-      </CarouselContent>
-      <CarouselNext class="relative right-0 translate-y-0" />
-    </div>
-  </Carousel>
-
-  <Card>
-    <CardTitle class="card-title">
-      <H2> {{ t('plan') }} </H2>
-    </CardTitle>
-    <CardContent>
-      <Lead>
-        {{ t('explain_plan_functionality') }}
-      </Lead>
+      </div>
     </CardContent>
+    <CardFooter> </CardFooter>
   </Card>
 </template>
 
@@ -150,6 +115,7 @@ onMounted(async () => {
     "plan": "Plan",
     "altitude": "Altitude",
     "capacity": "Capacity",
+    "beds": "Beds",
     "toilet": "Toilet",
     "location": "Location",
     "likes": "Likes",
@@ -165,6 +131,7 @@ onMounted(async () => {
     "plan": "Pianifica",
     "altitude": "Altitudine",
     "capacity": "Capacità",
+    "beds": "Letti",
     "toilet": "Bagno",
     "location": "Posizione",
     "likes": "Mi piace",
@@ -180,6 +147,7 @@ onMounted(async () => {
     "plan": "Planificar",
     "altitude": "Altitud",
     "capacity": "Capacidad",
+    "beds": "Camas",
     "toilet": "Baño",
     "location": "Ubicación",
     "likes": "Me gusta",

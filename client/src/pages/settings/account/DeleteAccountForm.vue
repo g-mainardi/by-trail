@@ -21,7 +21,7 @@ const handleDeleteAccount = async () => {
 
 <template>
   <form @submit.prevent="handleDeleteAccount">
-    <FieldGroup class="w-full">
+    <FieldGroup class="w-full md:w-1/2">
       <Field>
         <FieldLabel> Email </FieldLabel>
         <span class="font-bold"> {{ email }} </span>

@@ -7,7 +7,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  //useSidebar,
 } from '@/components/ui/sidebar';
 
 const props = defineProps<{

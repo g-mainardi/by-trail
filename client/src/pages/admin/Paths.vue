@@ -5,7 +5,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <H1 :text="t('paths_management')" />
+  <H1>{{ t('paths_management') }}</H1>
 </template>
 
 <i18n>

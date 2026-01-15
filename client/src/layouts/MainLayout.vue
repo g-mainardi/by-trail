@@ -42,7 +42,7 @@ const pageName = computed(() => (route.name ? route.name.toString() : 'Home'));
         </Breadcrumb>
       </div>
 
-      <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div class="flex flex-1 flex-col px-4 pb-4">
         <Suspense>
           <template #default>
             <RouterView />
