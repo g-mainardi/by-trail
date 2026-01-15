@@ -57,9 +57,6 @@ export const useAuthStore = defineStore('auth', () => {
       console.error('Fetch Profile Error:', err);
       // Handle axios error object structure
       error.value = err.response?.data?.message || err.message;
-
-      if (err.response?.status === 401) logout();
-
       return false;
     } finally {
       if (!skipLoadingState) {

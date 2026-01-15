@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { router } from '@/router';
 
 const api = axios.create({
   baseURL: '/api',
@@ -25,11 +24,13 @@ api.interceptors.request.use(
 // Response Interceptor: Handle global errors
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     // If 401 Unauthorized, clear local storage and redirect to login
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      // Lazy import to avoid circular dependency
+      const { router } = await import('@/router');
       router.push({ name: 'Login' }).catch(() => {
         // Ignore navigation errors
       });
