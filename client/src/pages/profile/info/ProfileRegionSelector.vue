@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import {
   Card,
   CardHeader,
@@ -29,6 +28,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { FieldGroup, FieldLabel } from '@/components/ui/field';
+import P from '@/layouts/typography/P.vue';
 
 const { t } = useI18n();
 
@@ -91,8 +92,8 @@ const removeRegion = (region: string) => {
       <CardDescription>{{ t('personalize_trekking') }}</CardDescription>
     </CardHeader>
     <CardContent class="space-y-4">
-      <div class="flex flex-col gap-4">
-        <Label class="text-base">{{ t('select_regions') }}</Label>
+      <FieldGroup>
+        <FieldLabel class="text-base">{{ t('select_regions') }}</FieldLabel>
 
         <Popover v-model:open="openRegions">
           <PopoverTrigger as-child>
@@ -104,12 +105,12 @@ const removeRegion = (region: string) => {
               class="justify-between w-full h-12 px-4 text-left"
             >
               <span
-                class="text-muted-foreground"
                 v-if="modelValue.length === 0"
+                class="text-muted-foreground"
               >
                 {{ t('select_regions') }}
               </span>
-              <span class="text-foreground" v-else>
+              <span v-else class="text-foreground">
                 {{ modelValue.length }} {{ t('selected_regions') }}
               </span>
               <ChevronsUpDown class="w-4 h-4 ml-2 opacity-50 shrink-0" />
@@ -152,12 +153,12 @@ const removeRegion = (region: string) => {
         </Popover>
 
         <div class="min-h-[100px] p-4 border rounded-lg bg-muted/20">
-          <p
+          <P
             v-if="modelValue.length === 0"
-            class="text-sm italic text-muted-foreground"
+            class="italic text-muted-foreground"
           >
             {{ t('no_region_selected') }}
-          </p>
+          </P>
           <div v-else class="flex flex-wrap gap-2">
             <Badge
               v-for="region in modelValue"
@@ -176,7 +177,7 @@ const removeRegion = (region: string) => {
             </Badge>
           </div>
         </div>
-      </div>
+      </FieldGroup>
     </CardContent>
   </Card>
 </template>

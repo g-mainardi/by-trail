@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { Save } from 'lucide-vue-next';
 import ProfilePersonalData from './info/ProfilePersonalData.vue';
 import ProfileRegionSelector from './info/ProfileRegionSelector.vue';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, CheckCircle } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const { user, isLoading } = storeToRefs(authStore);
@@ -62,31 +63,30 @@ const handleSave = async () => {
     feedbackMessage.value = t('profile_update_error');
   }
 };
+
+const alertConfig = computed(() => {
+  if (isError.value) {
+    return {
+      variant: 'destructive' as const,
+      icon: AlertCircle,
+    };
+  }
+  return {
+    variant: 'success' as const,
+    icon: CheckCircle,
+  };
+});
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
-    <div
-      class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
-    >
-      <div
-        v-if="feedbackMessage"
-        :class="
-          cn(
-            'px-4 py-2 text-sm rounded-md font-medium border animate-in fade-in slide-in-from-top-2',
-            isError
-              ? 'bg-red-50 text-red-600 border-red-200'
-              : 'bg-green-50 text-green-600 border-green-200'
-          )
-        "
-      >
-        {{ feedbackMessage }}
-      </div>
-    </div>
-
+  <div class="mb-6">
+    <Alert v-if="feedbackMessage" :variant="alertConfig.variant" class="mb-6">
+      <component :is="alertConfig.icon" />
+      <AlertTitle>{{ feedbackMessage }}</AlertTitle>
+    </Alert>
     <form
       @submit.prevent="handleSave"
-      class="grid grid-cols-1 gap-4 lg:grid-cols-12"
+      class="grid grid-cols-1 gap-6 lg:grid-cols-12"
     >
       <div class="space-y-6 lg:col-span-5">
         <ProfilePersonalData
@@ -115,24 +115,18 @@ const handleSave = async () => {
 <i18n>
 {
   "en": {
-    "your_profile": "Your Profile",
-    "handle_info_preferences": "Manage your information and preferences",
     "profile_update_success": "Profile updated successfully.",
     "profile_update_error": "An error occurred while updating your profile.",
     "saving": "Saving...",
     "save_modifications": "Save Changes"
   },
   "it": {
-    "your_profile": "Il Tuo Profilo",
-    "handle_info_preferences": "Gestisci le tue informazioni e preferenze",
     "profile_update_success": "Profilo aggiornato con successo.",
     "profile_update_error": "Si è verificato un errore durante l'aggiornamento del profilo.",
     "saving": "Salvataggio...",
     "save_modifications": "Salva Modifiche"
   },
   "es": {
-    "your_profile": "Tu Perfil",
-    "handle_info_preferences": "Gestiona tu información y preferencias",
     "profile_update_success": "Perfil actualizado con éxito.",
     "profile_update_error": "Ocurrió un error al actualizar tu perfil.",
     "saving": "Guardando...",
