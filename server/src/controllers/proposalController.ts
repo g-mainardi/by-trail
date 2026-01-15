@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { Proposal } from '../models/models.ts';
+import { Proposal } from '../models/models.js';
 
 interface ProposalRequest extends Request {
   body: {
