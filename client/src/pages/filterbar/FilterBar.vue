@@ -226,6 +226,7 @@ defineProps<{
             id="hour_duration"
             :default-value="6"
             :min="0"
+            :max="999999"
             :step="1"
             v-model="routeFilters.maxDurationFilter.currentValue.hours"
           >
@@ -240,6 +241,7 @@ defineProps<{
             id="min_duration"
             :default-value="0"
             :min="0"
+            :max="60"
             :step="15"
             v-model="routeFilters.maxDurationFilter.currentValue.minutes"
           >
