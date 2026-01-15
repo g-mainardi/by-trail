@@ -125,8 +125,6 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
 .date_icon * {
   fill: var(--color-foreground); /* Tailwind's gray-600 */
   stroke: 0;
-  width: 1.25rem;
-  height: 1.25rem;
   width: 1rem;
   height: 1rem;
 }

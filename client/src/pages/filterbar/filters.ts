@@ -48,23 +48,34 @@ const searchQuery: BivouacFilter = {
 };
 
 const maxDurationFilter: TrekkingRouteFilter = {
-  currentValue: { hour: 8, minute: 0 },
-  default: { hour: 8, minute: 0 },
+  currentValue: { hours: 8, minutes: 0 },
+  default: { hours: 8, minutes: 0 },
   predicate: (route: TrekkingRoute, value: any) => {
     if (route.duration !== undefined) {
-      return route.duration <= value.hour * 60 + value.minute;
+      return route.duration <= value.hours * 60 + value.minutes;
     }
     return true;
   },
 };
 
-// Filter 2: Difficulty
+const currentValue = {
+  t: true,
+  e: true,
+  ee: true,
+  eea: true,
+};
+
 const difficultyFilter: TrekkingRouteFilter = {
-  currentValue: 'All',
-  default: 'All',
+  currentValue: currentValue,
+  default: currentValue,
   predicate: (route: TrekkingRoute, value: any) => {
-    if (value === 'All') return true;
-    return route.difficulty === value;
+    const difficulties = {
+      T: value.t,
+      E: value.e,
+      EE: value.ee,
+      EEA: value.eea,
+    };
+    return difficulties[route.difficulty];
   },
 };
 
@@ -108,7 +119,7 @@ function getFilteredRoutes(routes: TrekkingRoute[]): TrekkingRoute[] {
 }
 
 export {
-  bivouacFilters as bivouacFilters,
+  bivouacFilters,
   getFilteredBivouacs,
   getFilteredRoutes,
   resetBivouacFilters,

@@ -29,7 +29,11 @@ import {
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import type { BivouacFilter, TrekkingRouteFilter } from './filters';
+import {
+  routeFilters,
+  type BivouacFilter,
+  type TrekkingRouteFilter,
+} from './filters';
 const { t } = useI18n();
 
 defineProps<{
@@ -189,10 +193,31 @@ defineProps<{
         <h3>{{ t('route_filters') }}</h3>
         <div class="flex items-center gap-2 w-full">
           Difficulty:
-          <Toggle variant="outline" class="w-full">T</Toggle>
-          <Toggle variant="outline" class="w-full">E</Toggle>
-          <Toggle variant="outline" class="w-full">EE</Toggle>
-          <Toggle variant="outline" class="w-full">EEA</Toggle>
+          <Toggle
+            variant="outline"
+            class="w-full"
+            v-model="routeFilters.difficultyFilter.currentValue.t"
+          >
+            T
+          </Toggle>
+          <Toggle
+            variant="outline"
+            class="w-full"
+            v-model="routeFilters.difficultyFilter.currentValue.e"
+            >E</Toggle
+          >
+          <Toggle
+            variant="outline"
+            class="w-full"
+            v-model="routeFilters.difficultyFilter.currentValue.ee"
+            >EE</Toggle
+          >
+          <Toggle
+            variant="outline"
+            class="w-full"
+            v-model="routeFilters.difficultyFilter.currentValue.eea"
+            >EEA</Toggle
+          >
         </div>
 
         <div class="flex items-center gap-2 w-full">
@@ -203,7 +228,6 @@ defineProps<{
             :min="0"
             :step="1"
             v-model="routeFilters.maxDurationFilter.currentValue.hours"
-            class="w-full"
           >
             <NumberFieldContent>
               <NumberFieldDecrement />
@@ -218,7 +242,6 @@ defineProps<{
             :min="0"
             :step="15"
             v-model="routeFilters.maxDurationFilter.currentValue.minutes"
-            class="w-full"
           >
             <NumberFieldContent>
               <NumberFieldDecrement />
