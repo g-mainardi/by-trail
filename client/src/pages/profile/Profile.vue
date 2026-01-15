@@ -79,36 +79,38 @@ const alertConfig = computed(() => {
 </script>
 
 <template>
-  <Alert v-if="feedbackMessage" :variant="alertConfig.variant">
-    <component :is="alertConfig.icon" />
-    <AlertTitle>{{ feedbackMessage }}</AlertTitle>
-  </Alert>
-  <form
-    @submit.prevent="handleSave"
-    class="grid grid-cols-1 gap-6 lg:grid-cols-12"
-  >
-    <div class="space-y-6 lg:col-span-5">
-      <ProfilePersonalData
-        v-model="formData.name"
-        :email="formData.email"
-        :readOnlyFullName="user?.name || ''"
-      />
-    </div>
+  <div class="mb-6">
+    <Alert v-if="feedbackMessage" :variant="alertConfig.variant" class="mb-6">
+      <component :is="alertConfig.icon" />
+      <AlertTitle>{{ feedbackMessage }}</AlertTitle>
+    </Alert>
+    <form
+      @submit.prevent="handleSave"
+      class="grid grid-cols-1 gap-6 lg:grid-cols-12"
+    >
+      <div class="space-y-6 lg:col-span-5">
+        <ProfilePersonalData
+          v-model="formData.name"
+          :email="formData.email"
+          :readOnlyFullName="user?.name || ''"
+        />
+      </div>
 
-    <div class="space-y-6 lg:col-span-7">
-      <ProfileRegionSelector v-model="formData.favRegions" />
-      <Button
-        @click="handleSave"
-        :disabled="isLoading"
-        size="lg"
-        class="w-full sm:w-auto"
-      >
-        <Save class="w-4 h-4 mr-2" />
-        <span v-if="isLoading">{{ t('saving') }}</span>
-        <span v-else>{{ t('save_modifications') }}</span>
-      </Button>
-    </div>
-  </form>
+      <div class="space-y-6 lg:col-span-7">
+        <ProfileRegionSelector v-model="formData.favRegions" />
+        <Button
+          @click="handleSave"
+          :disabled="isLoading"
+          size="lg"
+          class="w-full sm:w-auto"
+        >
+          <Save class="w-4 h-4 mr-2" />
+          <span v-if="isLoading">{{ t('saving') }}</span>
+          <span v-else>{{ t('save_modifications') }}</span>
+        </Button>
+      </div>
+    </form>
+  </div>
 </template>
 <i18n>
 {
