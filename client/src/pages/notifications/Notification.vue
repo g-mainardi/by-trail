@@ -1,60 +1,58 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import {
+  useNotificationStore,
+  type NotificationItem,
+} from '@/stores/notifications';
+
 import NotificationCard from '@/pages/notifications/NotificationCard.vue';
 
-// 1. Define the Interface for your data
-interface NotificationItem {
-  id: number;
-  title: string;
-  message: string;
-  time: string;
-  type: 'alert' | 'success' | 'info';
-  read: boolean;
-}
+const notificationStore = useNotificationStore();
+const notifications = ref<NotificationItem[]>([]);
+const isLoading = ref(false);
 
-// 2. Type the Ref as an array of that Interface
-const notifications = ref<NotificationItem[]>([
-  {
-    id: 1,
-    title: '⚠️ Weather Alert: Heavy Rain',
-    message:
-      'The forecast for your "Alpine Loop" trek has changed. Expect heavy rainfall this Saturday afternoon. Please pack accordingly.',
-    time: '10 min ago',
-    type: 'alert',
-    read: false,
-  },
-  {
-    id: 2,
-    title: 'Registration Confirmed',
-    message:
-      'You have successfully registered for the "Introduction to Navigation" course. See you on the trail!',
-    time: '2 hours ago',
-    type: 'success',
-    read: false,
-  },
-  {
-    id: 3,
-    title: 'New Route Added',
-    message:
-      'A new scenic route "Eagle\'s Nest" has been added to the university database. Check it out now.',
-    time: '1 day ago',
-    type: 'info',
-    read: true,
-  },
-]);
-
-// 3. Type arguments explicitly
-const markRead = (id: number) => {
-  const n = notifications.value.find((x) => x.id === id);
-  if (n) n.read = true;
+// 1. Load History
+const loadNotifications = async () => {
+  isLoading.value = true;
+  try {
+    notifications.value = await notificationStore.fetchNotifications();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-const removeNotification = (id: number) => {
-  notifications.value = notifications.value.filter((x) => x.id !== id);
+// 2. Handle real-time
+const handleNewNotification = (newNotification: NotificationItem) => {
+  // Add new item to the TOP of the list
+  notifications.value.unshift(newNotification);
 };
+
+onMounted(() => {
+  loadNotifications();
+  notificationStore.listenForNotifications(handleNewNotification);
+});
+
+onUnmounted(() => {
+  notificationStore.stopListening();
+});
 
 const markAllRead = () => {
-  notifications.value.forEach((n) => (n.read = true));
+  notifications.value.forEach((n) => (n.isRead = true));
+};
+
+const handleRead = async (id: string) => {
+  const target = notifications.value.find((n) => n._id === id);
+  if (target && !target.isRead) {
+    target.isRead = true;
+    await notificationStore.markAsRead(id);
+  }
+};
+
+const handleDelete = async (id: string) => {
+  notifications.value = notifications.value.filter((n) => n._id !== id);
+  await notificationStore.deleteNotification(id);
 };
 </script>
 
@@ -82,14 +80,14 @@ const markAllRead = () => {
       <div class="space-y-3">
         <NotificationCard
           v-for="notif in notifications"
-          :key="notif.id"
+          :key="notif._id"
           :title="notif.title"
           :message="notif.message"
-          :time="notif.time"
-          :read="notif.read"
-          :type="notif.type"
-          @read="markRead(notif.id)"
-          @delete="removeNotification(notif.id)"
+          :time="new Date(notif.createdAt).toLocaleDateString()"
+          :read="notif.isRead"
+          :type="notif.uiType"
+          @read="handleRead(notif._id)"
+          @delete="handleDelete(notif._id)"
         />
       </div>
 

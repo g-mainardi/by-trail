@@ -9,6 +9,7 @@ import routesRoutes from './src/routes/routesRoutes.js';
 import proposalRoutes from './src/routes/proposalRoutes.js';
 import { mainRoutes } from './src/routes/mainRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
+import notificationsRoutes from './src/routes/notificationsRoutes.js';
 
 // Environment variables setup
 const PORT = process.env.PORT || 3000; // Default port for Express
@@ -75,6 +76,7 @@ app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/routes', routesRoutes);
 app.use('/api/proposal', proposalRoutes);
+app.use('/api/notifications', notificationsRoutes);
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening at: http://localhost:${PORT}/`);

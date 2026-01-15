@@ -182,7 +182,7 @@ const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
 const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
-const Notification = mongoose.model('Notify', notificationSchema);
+const Notification = mongoose.model('Notification', notificationSchema);
 const Proposal = mongoose.model('Proposal', proposalSchema);
 
 /**************************************** Exports ****************************************/
