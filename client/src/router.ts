@@ -9,6 +9,7 @@ import Bivouac from './pages/bivouac/Bivouac.vue';
 import Bivouacs from './pages/bivouacs/Bivouacs.vue';
 import Settings from './pages/settings/Settings.vue';
 import Signup from './pages/signup/Signup.vue';
+import Routes from './pages/routes/Routes.vue';
 
 const routes = [
   {
@@ -23,6 +24,16 @@ const routes = [
         component: Maps,
       },
       {
+        path: 'routes',
+        name: 'Routes',
+        component: Routes,
+      },
+      {
+        path: 'bivouacs',
+        name: 'Bivouacs',
+        component: Bivouacs,
+      },
+      {
         path: 'profile',
         name: 'Profile',
         component: Profile,
@@ -31,11 +42,6 @@ const routes = [
         path: 'activities',
         name: 'Activities',
         component: Activities,
-      },
-      {
-        path: 'bivouacs',
-        name: 'Bivouacs',
-        component: Bivouacs,
       },
       {
         path: 'settings',
