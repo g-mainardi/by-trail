@@ -12,7 +12,7 @@ const router = express.Router();
 router.use(protect);
 
 router.get('/', fetchNotifications);
-router.patch('/read', markNotificationRead);
+router.patch('/:id/read', markNotificationRead);
 router.patch('/read-all', markAllNotificationsRead);
 router.delete('/:id', deleteNotification);
 
