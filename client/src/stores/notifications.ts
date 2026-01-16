@@ -30,6 +30,10 @@ export const useNotificationStore = defineStore('notifications', () => {
     await api.patch(`/notifications/${id}/read`);
   }
 
+  async function markAllAsRead(): Promise<void> {
+    await api.patch('/notifications/read-all');
+  }
+
   async function deleteNotification(id: UUID): Promise<void> {
     await api.delete(`/notifications/${id}`);
   }
@@ -48,6 +52,7 @@ export const useNotificationStore = defineStore('notifications', () => {
   return {
     fetchNotifications,
     markAsRead,
+    markAllAsRead,
     deleteNotification,
     listenForNotifications,
     stopListening,

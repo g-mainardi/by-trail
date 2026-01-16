@@ -29,14 +29,17 @@ export const fetchNotifications = async (req: AuthRequest, res: Response) => {
 
 export const markNotificationRead = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid notification ID format' });
   }
 
   try {
-    const notification = await Notification.findByIdAndUpdate(
-      id,
+    const notification = await Notification.findOneAndUpdate(
+      { _id: id, recipient: userId },
       { isRead: true },
       { new: true }
     ).exec();
@@ -52,15 +55,44 @@ export const markNotificationRead = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const markAllNotificationsRead = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ error: 'Unhautorized' });
+
+  try {
+    await Notification.updateMany(
+      { recipient: userId, isRead: false },
+      { $set: { isRead: true } }
+    );
+    return res.status(200).json({ message: 'All marked as read' });
+  } catch (error) {
+    console.error('Error making all read:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const deleteNotification = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid notification ID format' });
   }
 
   try {
-    const deleted = await Notification.findByIdAndDelete(id).exec();
+    const deleted = await Notification.findOneAndDelete({
+      _id: id,
+      recipient: userId,
+    }).exec();
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Notification not found' });
+    }
 
     if (!deleted) {
       return res.status(404).json({ message: 'Notification not found' });

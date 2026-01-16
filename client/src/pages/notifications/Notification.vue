@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import {
   useNotificationStore,
   type NotificationItem,
@@ -19,13 +19,15 @@ const notifications = ref<NotificationItem[]>([]);
 const isLoading = ref(false);
 const { t } = useI18n();
 
+const hasUnread = computed(() => notifications.value.some((n) => !n.isRead));
+
 // 1. Load History
 const loadNotifications = async () => {
   isLoading.value = true;
   try {
     notifications.value = await notificationStore.fetchNotifications();
   } catch (e) {
-    console.error(e);
+    console.error('Failed to load notifications', e);
   } finally {
     isLoading.value = false;
   }
@@ -37,6 +39,59 @@ const handleNewNotification = (newNotification: NotificationItem) => {
   notifications.value.unshift(newNotification);
 };
 
+const formatTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.round(diffMs / 60);
+  const diffHours = Math.round(diffMins / 60);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  return date.toLocaleDateString();
+};
+
+const handleRead = async (id: string) => {
+  const target = notifications.value.find((n) => n._id === id);
+  if (target && !target.isRead) {
+    target.isRead = true;
+    try {
+      await notificationStore.markAsRead(id);
+    } catch (e) {
+      target.isRead = false;
+      console.error('Failed to mark as read', e);
+    }
+  }
+};
+
+const handleAllRead = async () => {
+  if (!hasUnread.value) return;
+
+  notifications.value.forEach((n) => (n.isRead = true));
+
+  try {
+    await notificationStore.markAllAsRead();
+  } catch (e) {
+    console.error('Failed to mark all read', e);
+    loadNotifications();
+  }
+};
+
+const handleDelete = async (id: string) => {
+  const index = notifications.value.findIndex((n) => n._id === id);
+
+  if (index !== -1) {
+    const deletedItem = notifications.value[index]!;
+    notifications.value.splice(index, 1);
+    try {
+      await notificationStore.deleteNotification(id);
+    } catch (e) {
+      notifications.value.splice(index, 0, deletedItem);
+    }
+  }
+};
+
 onMounted(() => {
   loadNotifications();
   notificationStore.listenForNotifications(handleNewNotification);
@@ -45,31 +100,15 @@ onMounted(() => {
 onUnmounted(() => {
   notificationStore.stopListening();
 });
-
-const markAllRead = () => {
-  notifications.value.forEach((n) => (n.isRead = true));
-};
-
-const handleRead = async (id: string) => {
-  const target = notifications.value.find((n) => n._id === id);
-  if (target && !target.isRead) {
-    target.isRead = true;
-    await notificationStore.markAsRead(id);
-  }
-};
-
-const handleDelete = async (id: string) => {
-  notifications.value = notifications.value.filter((n) => n._id !== id);
-  await notificationStore.deleteNotification(id);
-};
 </script>
 
 <template>
   <Card class="card">
     <CardHeader>
       <Button
-        @click="markAllRead"
-        class="text-sm font-medium transition-colors"
+        v-if="hasUnread"
+        @click="handleAllRead"
+        class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
       >
         {{ t('notifications_mark_all_read') }}
       </Button>
@@ -81,7 +120,7 @@ const handleDelete = async (id: string) => {
         :key="notif._id"
         :title="notif.title"
         :message="notif.message"
-        :time="new Date(notif.createdAt).toLocaleDateString()"
+        :time="formatTime(notif.createdAt)"
         :read="notif.isRead"
         :type="notif.uiType"
         @read="handleRead(notif._id)"
