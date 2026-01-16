@@ -33,7 +33,6 @@ export const useFavoriteStore = defineStore('favorites', () => {
     // post /favorites/bivouacs params: user id and bivouac id
     try {
       const body = { id: bivouacId };
-      console.log('Request body:', body);
       const res = await api.post(`/users/favorites/bivouacs`, body);
       return res.status === 200 || res.status === 201;
     } catch (error: any) {
