@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
+import { Toaster } from 'vue-sonner';
 import { socket } from './services/socket.ts';
 
 const onConnect = () => {
@@ -38,5 +39,6 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <Toaster position="top-center" richColors />
   <RouterView />
 </template>

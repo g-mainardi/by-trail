@@ -16,6 +16,7 @@ import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import { useFavoriteStore } from '@/stores/favorites';
+import { useIntentionStore } from '@/stores/intentions';
 import {
   fromDate,
   getLocalTimeZone,
@@ -31,10 +32,33 @@ import {
 } from 'lucide-vue-next';
 import { onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { toast } from 'vue-sonner';
+import 'vue-sonner/style.css';
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
 const favorites = ref<Bivouac[]>([]);
+
+const intentionStore = useIntentionStore();
+
+const sendIntention = async () => {
+  const res = await intentionStore.sendIntention(
+    bivouac.value._id,
+    date.value.toDate(getLocalTimeZone()),
+    people.value
+  );
+  if (res.success) {
+    console.log('Intention sent successfully');
+    toast.success('Intention sent successfully');
+  } else {
+    toast.error(`Error: ${res.error}`);
+  }
+};
+
+const minDate = fromDate(
+  new Date(new Date().setHours(0, 0, 0, 0)),
+  getLocalTimeZone()
+);
 
 const isFavorite = (bivouacId: string): boolean => {
   return favorites.value.some((bivouac) => bivouac._id === bivouacId);
@@ -111,7 +135,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
           <!-- CALENDAR -->
           <Calendar
             v-model="date"
-            class="rounded-md border shadow-sm"
+            class="rounded-md border shadow-sm w-full [&_table]:w-full [&_tr]:justify-evenly"
+            :min-value="minDate"
             disable-days-outside-current-view
           />
           <div class="affluence-form w-full gap-4 flex flex-col">
@@ -131,8 +156,9 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
                 </SelectContent>
               </Select>
             </div>
+
             <!-- Confirm Button -->
-            <Button> Send intention </Button>
+            <Button @click="sendIntention">Send intention</Button>
           </div>
         </div>
       </div>

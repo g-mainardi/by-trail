@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
-import type { AuthRequest } from './userController.ts';
 import mongoose from 'mongoose';
-import { FavBivouac, Bivouac } from '../models/models.js';
+import { Bivouac } from '../models/models.js';
 
 export const fetchBivouacs = async (req: Request, res: Response) => {
   const DEFAULT_SIZE_LIMIT = 50;
