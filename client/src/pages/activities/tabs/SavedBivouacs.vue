@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
 import { onMounted, ref, type Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { Bivouac } from '@/stores/bivouacs';
 import { useFavoriteStore } from '@/stores/favorites';
 
-import BivouacCard from './BivouacCard.vue';
 import P from '@/layouts/typography/P.vue';
+import BivouacCard from './BivouacCard.vue';
 
 const { t } = useI18n();
 
@@ -30,6 +30,11 @@ onMounted(async () => {
       isLoading.value = false;
     });
 });
+
+async function handleRemove(id: string) {
+  await favoriteStore.removeFavoriteBivouac(id);
+  favoriteBivouacs.value = await favoriteStore.getFavoriteBivouacs();
+}
 </script>
 
 <template>
@@ -43,7 +48,7 @@ onMounted(async () => {
 
   <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div v-for="bivouac in favoriteBivouacs" :key="bivouac._id">
-      <BivouacCard :bivouac="bivouac" />
+      <BivouacCard :bivouac="bivouac" @remove="handleRemove(bivouac._id)" />
     </div>
   </div>
 </template>

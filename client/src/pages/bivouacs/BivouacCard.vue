@@ -4,25 +4,19 @@ import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
 import {
   Bed as BedIcon,
+  Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
-  ThumbsUp as ThumbsUpIcon,
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
-  .href;
-
-const hoodHousePath = new URL(
-  '@/assets/trekking_hood_house.png',
-  import.meta.url
-).href;
-
 const props = defineProps<{
   bivouac: Bivouac;
+  isFavorite?: boolean;
 }>();
+const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -30,7 +24,7 @@ const props = defineProps<{
     <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
-          :src="imageBivouacPH1"
+          :src="placeholder"
           :alt="`${bivouac.name} image`"
           class="w-full rounded-sm object-cover"
         />
@@ -69,9 +63,18 @@ const props = defineProps<{
           <span class="label">Location</span>
         </div>
         <div class="info">
-          <ThumbsUpIcon />
-          <span class="value">{{ bivouac.likes }}</span>
-          <span class="label">Likes</span>
+          <HeartIcon
+            :color="
+              props.isFavorite ? 'var(--primary)' : 'var(--muted-foreground)'
+            "
+            :fill="props.isFavorite ? 'var(--primary)' : 'var(--background)'"
+            class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
+            @click="$emit('toggle-favorite', bivouac._id)"
+          />
+          <span class="value">{{
+            props.isFavorite ? t('saved') : t('unsaved')
+          }}</span>
+          <span class="label">{{ t('favorites') }}</span>
         </div>
       </div>
     </CardContent>
@@ -110,6 +113,9 @@ const props = defineProps<{
     "plan": "Plan",
     "yes": "Yes",
     "no": "No",
+    "saved": "Saved",
+    "unsaved": "Unsaved",
+    "favorites": "Favorites",
     "open": "Open",
     "closed": "Closed",
     "no_description_available": "No description available"
@@ -120,6 +126,9 @@ const props = defineProps<{
     "plan": "Pianifica",
     "yes": "Sì",
     "no": "No",
+    "saved": "Salvato",
+    "unsaved": "Non salvato",
+    "favorites": "Preferiti",
     "open": "Aperto",
     "closed": "Chiuso",
     "no_description_available": "Nessuna descrizione disponibile"
@@ -130,6 +139,9 @@ const props = defineProps<{
     "plan": "Planificar",
     "yes": "Sí",
     "no": "No",
+    "saved": "Guardado",
+    "unsaved": "No guardado",
+    "favorites": "Favoritos",
     "open": "Abierto",
     "closed": "Cerrado",
     "no_description_available": "No hay descripción disponible"

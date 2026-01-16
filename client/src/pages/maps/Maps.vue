@@ -86,8 +86,7 @@ const filteredBivouacs = computed(() => {
   return getFilteredBivouacs(bivouacs.value);
 });
 
-const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
-  .href;
+const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -121,7 +120,7 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
             aria-label="View Bivouac Details"
           >
             <img
-              :src="imageBivouacPH1"
+              :src="placeholder"
               :alt="`${bivouac.name} image`"
               class="rounded-sm object-cover"
             />
