@@ -234,6 +234,18 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </template>
 
 <style scoped>
+.icon-with-text {
+  /* transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 */
+  transition: all 0.3s;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.1);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .date_icon {
   display: flex;
   align-items: center;
