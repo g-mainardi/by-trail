@@ -2,7 +2,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
 import type { Bivouac } from '@/stores/bivouacs';
-import { useFavoriteStore } from '@/stores/favorites';
 import {
   Bed as BedIcon,
   Heart as HeartIcon,
@@ -10,34 +9,13 @@ import {
   Mountain as MountainIcon,
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
-const favoritesStore = useFavoriteStore();
-const favorites = ref<Bivouac[]>();
-
-const isFavorite = (bivouacId: string) => {
-  return favorites.value?.some((bivouac) => bivouac._id === bivouacId);
-};
-
-const toggleFavorite = async (bivouacId: string) => {
-  if (isFavorite(bivouacId)) {
-    await favoritesStore.removeFavoriteBivouac(bivouacId);
-  } else {
-    await favoritesStore.addFavoriteBivouac(bivouacId);
-  }
-  favorites.value = await favoritesStore.getFavoriteBivouacs();
-};
-
-onMounted(async () => {
-  favorites.value = await favoritesStore.getFavoriteBivouacs();
-});
-
 const props = defineProps<{
   bivouac: Bivouac;
+  isFavorite?: boolean;
 }>();
-
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
@@ -87,18 +65,14 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <div class="info">
           <HeartIcon
             :color="
-              isFavorite(bivouac._id)
-                ? 'var(--primary)'
-                : 'var(--muted-foreground)'
+              props.isFavorite ? 'var(--primary)' : 'var(--muted-foreground)'
             "
-            :fill="
-              isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
-            "
+            :fill="props.isFavorite ? 'var(--primary)' : 'var(--background)'"
             class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
-            @click="toggleFavorite(bivouac._id)"
+            @click="$emit('toggle-favorite', bivouac._id)"
           />
           <span class="value">{{
-            isFavorite(bivouac._id) ? t('saved') : t('unsaved')
+            props.isFavorite ? t('saved') : t('unsaved')
           }}</span>
           <span class="label">{{ t('favorites') }}</span>
         </div>

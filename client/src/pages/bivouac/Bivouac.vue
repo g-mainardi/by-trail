@@ -20,19 +20,23 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
-const favorites = ref<Bivouac[]>();
+const favorites = ref<Bivouac[]>([]);
 
-const isFavorite = (bivouacId: string) => {
-  return favorites.value?.some((bivouac) => bivouac._id === bivouacId);
+const isFavorite = (bivouacId: string): boolean => {
+  return favorites.value.some((bivouac) => bivouac._id === bivouacId);
 };
 
 const toggleFavorite = async (bivouacId: string) => {
+  let res: { success: boolean; error?: string } = {
+    success: false,
+  };
   if (isFavorite(bivouacId)) {
-    await favoritesStore.removeFavoriteBivouac(bivouacId);
+    res = await favoritesStore.removeFavoriteBivouac(bivouacId);
   } else {
-    await favoritesStore.addFavoriteBivouac(bivouacId);
+    res = await favoritesStore.addFavoriteBivouac(bivouacId);
   }
-  favorites.value = await favoritesStore.getFavoriteBivouacs();
+  if (res.success) favorites.value = await favoritesStore.getFavoriteBivouacs();
+  else console.log(res.error);
 };
 
 const bivouacStore = useBivouacStore();
@@ -131,6 +135,9 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
                 isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
               "
               class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
+              :aria-label="t('toggle_favorite')"
+              role="button"
+              :aria-pressed="isFavorite(bivouac._id) ? 'true' : 'false'"
               @click="toggleFavorite(bivouac._id)"
             />
             <span class="value">{{
@@ -189,6 +196,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "unsaved": "Unsaved",
     "location": "Location",
     "likes": "Likes",
+    "toggle_favorite": "Toggle favorite",
     "images": "Images",
     "explain_plan_functionality": "Here you can express the intention to go to a bivouac and know how many
         people have expressed the intention to go to the same bivouac on the
@@ -208,6 +216,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "unsaved": "Non salvato",
     "location": "Posizione",
     "likes": "Mi piace",
+    "toggle_favorite": "Attiva/disattiva preferito",
     "images": "Immagini",
     "explain_plan_functionality": "Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
         persone hanno espresso l'intenzione di andare nello stesso bivacco nei
@@ -227,6 +236,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "saved": "Guardado",
     "unsaved": "No guardado",
     "likes": "Me gusta",
+    "toggle_favorite": "Alternar favorito",
     "images": "Imágenes",
     "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
         personas han expresado la intención de ir al mismo bivouac en los

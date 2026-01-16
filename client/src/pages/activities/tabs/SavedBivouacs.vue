@@ -32,7 +32,7 @@ onMounted(async () => {
 });
 
 async function handleRemove(id: string) {
-  favoriteStore.removeFavoriteBivouac(id);
+  await favoriteStore.removeFavoriteBivouac(id);
   favoriteBivouacs.value = await favoriteStore.getFavoriteBivouacs();
 }
 </script>

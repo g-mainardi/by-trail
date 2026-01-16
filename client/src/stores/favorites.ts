@@ -29,29 +29,45 @@ export const useFavoriteStore = defineStore('favorites', () => {
     }
   }
 
-  async function addFavoriteBivouac(bivouacId: string): Promise<boolean> {
+  async function addFavoriteBivouac(
+    bivouacId: string
+  ): Promise<{ success: boolean; error?: string }> {
     // post /favorites/bivouacs params: user id and bivouac id
     try {
       const body = { id: bivouacId };
-      const res = await api.post(`/users/favorites/bivouacs`, body);
-      return res.status === 200 || res.status === 201;
+      const res = await api.post(`/users/favorites/bivouacs/`, body);
+      if (res.status === 200 || res.status === 201) return { success: true };
+      return {
+        success: false,
+        error: `Unexpected response status: ${res.status}`,
+      };
     } catch (error: any) {
       console.error('Error adding favorite bivouac:', error);
-      return false;
+      return { success: false, error: error };
     }
   }
 
-  async function removeFavoriteBivouac(bivouacId: string): Promise<boolean> {
+  async function removeFavoriteBivouac(
+    bivouacId: string
+  ): Promise<{ success: boolean; error?: string }> {
     // delete /favorites/bivouacs params: user id and bivouac id
     try {
       const body = { id: bivouacId };
       const res = await api.delete(`/users/favorites/bivouacs`, { data: body });
-      return res.status === 200;
+      if (res.status === 200) return { success: true };
+      return {
+        success: false,
+        error: `Unexpected response status: ${res.status}`,
+      };
     } catch (error: any) {
       console.error('Error removing favorite bivouac:', error);
-      return false;
+      return { success: false, error: error };
     }
   }
 
-  return { getFavoriteBivouacs, addFavoriteBivouac, removeFavoriteBivouac };
+  return {
+    getFavoriteBivouacs,
+    addFavoriteBivouac,
+    removeFavoriteBivouac,
+  };
 });

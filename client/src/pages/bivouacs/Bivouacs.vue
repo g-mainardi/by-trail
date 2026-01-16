@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useFavoriteStore } from '@/stores/favorites';
 import { computed, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
   bivouacFilters,
@@ -11,12 +11,14 @@ import {
   routeFilters,
 } from '../filterbar/filters';
 import BivouacCard from './BivouacCard.vue';
-const { t } = useI18n();
 
 const bivouacStore = useBivouacStore();
 const bivouacs = ref<Bivouac[]>([]);
 const nextPage = ref<string | undefined>(undefined);
 const isLoading = ref(true);
+
+const favoritesStore = useFavoriteStore();
+const favorites = ref<Bivouac[]>([]);
 
 const loadBivouacs = async () => {
   isLoading.value = true;
@@ -24,12 +26,30 @@ const loadBivouacs = async () => {
     const response = await bivouacStore.fetchBivouacs();
     bivouacs.value = response.bivouacs;
     nextPage.value = response.nextPage;
+    favorites.value = await favoritesStore.getFavoriteBivouacs();
   } catch (error) {
     console.error('Error fetching bivouacs:', error);
     bivouacs.value = [];
   } finally {
     isLoading.value = false;
   }
+};
+
+const isFavorite = (bivouacId: string): boolean => {
+  return favorites.value.some((bivouac) => bivouac._id === bivouacId);
+};
+
+const toggleFavorite = async (bivouacId: string) => {
+  let res: { success: boolean; error?: string } = {
+    success: false,
+  };
+  if (isFavorite(bivouacId)) {
+    res = await favoritesStore.removeFavoriteBivouac(bivouacId);
+  } else {
+    res = await favoritesStore.addFavoriteBivouac(bivouacId);
+  }
+  if (res.success) favorites.value = await favoritesStore.getFavoriteBivouacs();
+  else console.log(res.error);
 };
 
 onMounted(() => {
@@ -63,7 +83,11 @@ const filteredBivouacs = computed(() => {
   />
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-0">
     <div v-for="bivouac in filteredBivouacs" :key="bivouac._id" class="mt-0">
-      <BivouacCard :bivouac="bivouac" />
+      <BivouacCard
+        :bivouac="bivouac"
+        :isFavorite="isFavorite(bivouac._id)"
+        @toggle-favorite="toggleFavorite(bivouac._id)"
+      />
     </div>
   </div>
 </template>
