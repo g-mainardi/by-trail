@@ -7,7 +7,7 @@ import authRoutes from './src/routes/authRoutes.js';
 import bivouacsRoutes from './src/routes/bivouacsRoutes.js';
 import routesRoutes from './src/routes/routesRoutes.js';
 import proposalRoutes from './src/routes/proposalRoutes.js';
-import { mainRoutes } from './src/routes/mainRoutes.js';
+import adminRoutes from './src/routes/adminRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
 
 // Environment variables setup
@@ -69,12 +69,12 @@ app.use(
 initSocket(httpServer, app, CLIENT_ORIGIN);
 
 // Routes
-app.use('/api', mainRoutes); // Public/Generic routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/routes', routesRoutes);
 app.use('/api/proposal', proposalRoutes);
+app.use('/api', adminRoutes); // Public/Generic routes
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening at: http://localhost:${PORT}/`);
