@@ -1,12 +1,26 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import Calendar from '@/components/ui/calendar/Calendar.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import { useFavoriteStore } from '@/stores/favorites';
+import {
+  fromDate,
+  getLocalTimeZone,
+  type DateValue,
+} from '@internationalized/date';
 import {
   Bed as BedIcon,
   Circle,
@@ -15,7 +29,7 @@ import {
   Mountain as MountainIcon,
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
@@ -42,6 +56,10 @@ const toggleFavorite = async (bivouacId: string) => {
 const bivouacStore = useBivouacStore();
 const props = defineProps<{ id: string }>();
 let bivouac = ref<Bivouac>({} as Bivouac);
+const capacity = bivouac.value.capacity;
+
+const people = ref<number>(0);
+const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>;
 
 onMounted(async () => {
   try {
@@ -55,16 +73,19 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
-  <Card class="p-4">
+  <Card class="p-4 gap-4">
     <CardTitle>
       <H1>{{ bivouac.name }}</H1>
     </CardTitle>
     <CardContent class="flex flex-col md:flex-row gap-4 w-full p-0">
       <div class="left w-full md:w-[70%]">
+        <!-- DESCRIPTION -->
         <H2>{{ t('description') }}</H2>
         <p class="mt-2 mb-4">
           {{ t('no_description_available') }}
         </p>
+
+        <!-- IMAGES -->
         <H2>{{ t('images') }}</H2>
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
@@ -83,10 +104,43 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
         </div>
+
+        <!-- PLAN -->
         <H2> {{ t('plan') }} </H2>
+        <div class="flex flex-col lg:flex-row gap-4 my-4 justify-between">
+          <!-- CALENDAR -->
+          <Calendar
+            v-model="date"
+            class="rounded-md border shadow-sm"
+            disable-days-outside-current-view
+          />
+          <div class="affluence-form w-full gap-4 flex flex-col">
+            <!-- People -->
+            <div class="flex flex-col lg:flex-row gap-2">
+              <span class="flex items-center whitespace-nowrap">
+                People going
+              </span>
+              <Select v-model="people">
+                <SelectTrigger id="dropdown" class="w-full">
+                  <SelectValue placeholder="1" />
+                </SelectTrigger>
+                <SelectContent align="center">
+                  <div v-for="i in bivouac.capacity" :key="i">
+                    <SelectItem :value="i">{{ i }}</SelectItem>
+                  </div>
+                </SelectContent>
+              </Select>
+            </div>
+            <!-- Confirm Button -->
+            <Button> Send intention </Button>
+          </div>
+        </div>
       </div>
+
+      <!-- RIGHT SIDE -->
       <div class="right w-full md:w-[30%]">
-        <H2> {{ t('affluence') }} </H2>
+        <!-- AFFLUENCE INFO -->
+        <H2>{{ t('affluence') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="date_icon">
             {{ new Date().toDateString() }}
@@ -105,6 +159,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             <Circle />
           </div>
         </div>
+
+        <!-- ADDITIONAL INFO -->
         <H2>{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
@@ -147,7 +203,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         </div>
       </div>
     </CardContent>
-    <CardFooter> </CardFooter>
+    <CardFooter></CardFooter>
   </Card>
 </template>
 
@@ -176,7 +232,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 
 .icon-with-text span {
   font-family: monospace;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 </style>
 
