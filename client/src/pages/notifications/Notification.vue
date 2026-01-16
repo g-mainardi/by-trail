@@ -4,12 +4,20 @@ import {
   useNotificationStore,
   type NotificationItem,
 } from '@/stores/notifications';
+import { useI18n } from 'vue-i18n';
 
 import NotificationCard from '@/pages/notifications/NotificationCard.vue';
+import Card from '@/components/ui/card/Card.vue';
+import CardHeader from '@/components/ui/card/CardHeader.vue';
+import CardContent from '@/components/ui/card/CardContent.vue';
+import Button from '@/components/ui/button/Button.vue';
+import H3 from '@/layouts/typography/H3.vue';
+import { MailOpen } from 'lucide-vue-next';
 
 const notificationStore = useNotificationStore();
 const notifications = ref<NotificationItem[]>([]);
 const isLoading = ref(false);
+const { t } = useI18n();
 
 // 1. Load History
 const loadNotifications = async () => {
@@ -57,45 +65,51 @@ const handleDelete = async (id: string) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl">
-      <div class="mb-6 flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold tracking-tight text-gray-900">
-            Notifications
-          </h1>
-          <p class="text-sm text-gray-500 mt-1">
-            Stay updated on your upcoming treks.
-          </p>
-        </div>
+  <Card class="card">
+    <CardHeader>
+      <Button
+        @click="markAllRead"
+        class="text-sm font-medium transition-colors"
+      >
+        {{ t('notifications_mark_all_read') }}
+      </Button>
+    </CardHeader>
 
-        <button
-          @click="markAllRead"
-          class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          Mark all as read
-        </button>
-      </div>
+    <CardContent>
+      <NotificationCard
+        v-for="notif in notifications"
+        :key="notif._id"
+        :title="notif.title"
+        :message="notif.message"
+        :time="new Date(notif.createdAt).toLocaleDateString()"
+        :read="notif.isRead"
+        :type="notif.uiType"
+        @read="handleRead(notif._id)"
+        @delete="handleDelete(notif._id)"
+      />
+    </CardContent>
 
-      <div class="space-y-3">
-        <NotificationCard
-          v-for="notif in notifications"
-          :key="notif._id"
-          :title="notif.title"
-          :message="notif.message"
-          :time="new Date(notif.createdAt).toLocaleDateString()"
-          :read="notif.isRead"
-          :type="notif.uiType"
-          @read="handleRead(notif._id)"
-          @delete="handleDelete(notif._id)"
-        />
-      </div>
-
-      <div v-if="notifications.length === 0" class="mt-10 text-center">
-        <div class="mx-auto h-12 w-12 text-gray-300 text-4xl">📭</div>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">No notifications</h3>
-        <p class="mt-1 text-sm text-gray-500">You're all caught up!</p>
-      </div>
+    <div v-if="notifications.length === 0" class="mt-10 text-center">
+      <MailOpen class="mx-auto" />
+      <H3 class="mt-2 text-sm font-medium text-gray-900">{{
+        t('no_notifications')
+      }}</H3>
     </div>
-  </div>
+  </Card>
 </template>
+<i18n>
+  {
+    "en": {
+      "notifications_mark_all_read": "Mark all as read",
+      "no_notifications": "No Notifications",
+    },
+    "it": {
+      "notifications_mark_all_read": "Segna tutte come lette",
+      "no_notifications": "Nessuna Notifica",
+    },
+    "es": {
+      "notifications_mark_all_read": "Marcar todas como leídas",
+      "no_notifications": "No hay notificaciones",
+    }
+  }
+</i18n>
