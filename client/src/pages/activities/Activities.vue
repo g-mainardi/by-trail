@@ -6,20 +6,13 @@ import SavedRoutes from './tabs/SavedRoutes.vue';
 import ProposalForm from './tabs/ProposalForm.vue';
 import Card from '@/components/ui/card/Card.vue';
 import H1 from '@/layouts/typography/H1.vue';
+import P from '@/layouts/typography/P.vue';
+import CardHeader from '@/components/ui/card/CardHeader.vue';
+import CardContent from '@/components/ui/card/CardContent.vue';
 const { t } = useI18n();
 </script>
 
 <template>
-  <div
-    class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
-  >
-    <div>
-      <H1 :text="t('your_activities')" />
-      <p class="text-muted-foreground">
-        {{ t('your_activities_description') }}
-      </p>
-    </div>
-  </div>
   <Tabs default-value="routes">
     <TabsList>
       <TabsTrigger value="routes">
@@ -34,38 +27,44 @@ const { t } = useI18n();
     </TabsList>
 
     <TabsContent value="routes">
-      <Card class="container">
-        <div>
-          <H1 :text="t('saved_routes')" />
-          <p class="text-muted-foreground">
+      <Card class="card">
+        <CardHeader>
+          <H1>{{ t('saved_routes') }}</H1>
+          <P :no-margin="true" class="text-muted-foreground">
             {{ t('your_routes_description') }}
-          </p>
-        </div>
-        <SavedRoutes />
+          </P>
+        </CardHeader>
+        <CardContent>
+          <SavedRoutes />
+        </CardContent>
       </Card>
     </TabsContent>
 
     <TabsContent value="bivouacs">
-      <Card class="container">
-        <div>
-          <H1 :text="t('saved_bivouacs')" />
-          <p class="text-muted-foreground">
+      <Card class="card">
+        <CardHeader>
+          <H1>{{ t('saved_bivouacs') }}</H1>
+          <P :no-margin="true" class="text-muted-foreground">
             {{ t('your_bivouacs_description') }}
-          </p>
-        </div>
-        <SavedBivouacs />
+          </P>
+        </CardHeader>
+        <CardContent>
+          <SavedBivouacs />
+        </CardContent>
       </Card>
     </TabsContent>
 
     <TabsContent value="proposal">
-      <Card class="container">
-        <div>
-          <H1 :text="t('make_a_proposal')" />
-          <p class="text-muted-foreground">
+      <Card class="card">
+        <CardHeader>
+          <H1>{{ t('make_a_proposal') }}</H1>
+          <P :no-margin="true" class="text-muted-foreground">
             {{ t('make_a_proposal_description') }}
-          </p>
-        </div>
-        <ProposalForm />
+          </P>
+        </CardHeader>
+        <CardContent>
+          <ProposalForm />
+        </CardContent>
       </Card>
     </TabsContent>
   </Tabs>
