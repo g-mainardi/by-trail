@@ -1,6 +1,6 @@
 import api from '@/stores/utility/axiosInstance';
-import type { Bivouac } from './bivouacs';
 import { defineStore } from 'pinia';
+import type { Bivouac } from './bivouacs';
 
 export const useFavoriteStore = defineStore('favorites', () => {
   async function getFavoriteBivouacs(): Promise<Bivouac[]> {
@@ -29,5 +29,30 @@ export const useFavoriteStore = defineStore('favorites', () => {
     }
   }
 
-  return { getFavoriteBivouacs };
+  async function addFavoriteBivouac(bivouacId: string): Promise<boolean> {
+    // post /favorites/bivouacs params: user id and bivouac id
+    try {
+      const body = { id: bivouacId };
+      console.log('Request body:', body);
+      const res = await api.post(`/users/favorites/bivouacs`, body);
+      return res.status === 200 || res.status === 201;
+    } catch (error: any) {
+      console.error('Error adding favorite bivouac:', error);
+      return false;
+    }
+  }
+
+  async function removeFavoriteBivouac(bivouacId: string): Promise<boolean> {
+    // delete /favorites/bivouacs params: user id and bivouac id
+    try {
+      const body = { id: bivouacId };
+      const res = await api.delete(`/users/favorites/bivouacs`, { data: body });
+      return res.status === 200;
+    } catch (error: any) {
+      console.error('Error removing favorite bivouac:', error);
+      return false;
+    }
+  }
+
+  return { getFavoriteBivouacs, addFavoriteBivouac, removeFavoriteBivouac };
 });

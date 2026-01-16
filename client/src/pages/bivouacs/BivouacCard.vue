@@ -21,6 +21,15 @@ const isFavorite = (bivouacId: string) => {
   return favorites.value?.some((bivouac) => bivouac._id === bivouacId);
 };
 
+const toggleFavorite = async (bivouacId: string) => {
+  if (isFavorite(bivouacId)) {
+    await favoritesStore.removeFavoriteBivouac(bivouacId);
+  } else {
+    await favoritesStore.addFavoriteBivouac(bivouacId);
+  }
+  favorites.value = await favoritesStore.getFavoriteBivouacs();
+};
+
 onMounted(async () => {
   favorites.value = await favoritesStore.getFavoriteBivouacs();
 });
@@ -85,6 +94,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             :fill="
               isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
             "
+            @click="toggleFavorite(bivouac._id)"
+            class="cursor-pointer"
           />
           <span class="value">{{
             isFavorite(bivouac._id) ? t('saved') : t('unsaved')
