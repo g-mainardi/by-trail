@@ -21,7 +21,7 @@ function formatDuration(minutes: number): string {
   if (!minutes) return '-';
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  return `${h}h : ${m}m`;
+  return `${h}h:${m}m`;
 }
 
 const route = props.route;
@@ -41,7 +41,7 @@ const getDifficultyColor = (diff: string) => {
       return 'text-gray-600';
   }
 };
-const imageTrailPH = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
+const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -49,7 +49,7 @@ const imageTrailPH = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
     <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
-          :src="imageTrailPH"
+          :src="placeholder"
           :alt="`${route.title} image`"
           class="w-full rounded-sm object-cover"
         />

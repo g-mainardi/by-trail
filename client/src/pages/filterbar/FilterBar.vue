@@ -194,26 +194,22 @@ defineProps<{
         <div class="flex items-center gap-2 w-full">
           Difficulty:
           <Toggle
-            variant="outline"
             class="w-full"
             v-model="routeFilters.difficultyFilter.currentValue.t"
           >
             T
           </Toggle>
           <Toggle
-            variant="outline"
             class="w-full"
             v-model="routeFilters.difficultyFilter.currentValue.e"
             >E</Toggle
           >
           <Toggle
-            variant="outline"
             class="w-full"
             v-model="routeFilters.difficultyFilter.currentValue.ee"
             >EE</Toggle
           >
           <Toggle
-            variant="outline"
             class="w-full"
             v-model="routeFilters.difficultyFilter.currentValue.eea"
             >EEA</Toggle
