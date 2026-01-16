@@ -21,6 +21,8 @@ export interface User {
   email: string;
   favRegions?: string[];
   type?: UserType;
+  status: 'active' | 'banned';
+  creationDate: Date;
 }
 
 export const useAuthStore = defineStore('auth', () => {
