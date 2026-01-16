@@ -5,17 +5,13 @@ import DataTable from '@/components/ui/data-table/DataTable.vue';
 import UserActions from './UserActions.vue';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-vue-next';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  type: 'admin' | 'user';
-  status: 'active' | 'banned';
-  creationDate: Date;
-};
+import type { User } from '@/stores/auth';
 
 const { t, locale } = useI18n();
+
+const getUserId = (user: User): string => {
+  return user.id || user._id || '';
+};
 
 // todo fetch users from API
 const data = ref<User[]>([
@@ -26,14 +22,16 @@ const data = ref<User[]>([
     type: 'admin',
     status: 'active',
     creationDate: new Date('2024-01-15'),
+    favRegions: [],
   },
   {
-    id: '2',
+    _id: '2',
     name: 'Luigi Verdi',
     email: 'luigi@example.com',
     type: 'user',
     status: 'banned',
     creationDate: new Date('2024-02-20'),
+    favRegions: [],
   },
 ]);
 
@@ -46,14 +44,16 @@ const columns = [
   { accessorKey: 'actions', header: t('actions') },
 ];
 
-const onBanUser = (id: string) => {
-  const user = data.value.find((u) => u.id === id);
+const onBanUser = (user: User) => {
+  // todo call API to ban/unban user
+  console.log('Not implemented: ban/unban user with id', getUserId(user));
   if (user) user.status = user.status === 'active' ? 'banned' : 'active';
 };
 
-const onDeleteUser = (id: string) => {
+const onDeleteUser = (user: User) => {
   if (confirm(t('confirm_delete')))
-    data.value = data.value.filter((u) => u.id !== id);
+    // todo call API to delete user
+    console.log('Not implemented: delete user with id', getUserId(user));
 };
 </script>
 
@@ -92,7 +92,7 @@ const onDeleteUser = (id: string) => {
     </template>
 
     <template #cell-creationDate="{ row }">
-      <span class="text-sm">{{
+      <span class="text-xs text-muted-foreground">{{
         new Date(row.creationDate).toLocaleDateString(
           ['it', 'es'].includes(locale) ? 'it-IT' : 'en-US',
           {
@@ -105,7 +105,11 @@ const onDeleteUser = (id: string) => {
     </template>
 
     <template #cell-actions="{ row }">
-      <UserActions :user="row" @ban="onBanUser" @delete="onDeleteUser" />
+      <UserActions
+        :user="{ ...row, id: getUserId(row) }"
+        @ban="onBanUser(row)"
+        @delete="onDeleteUser(row)"
+      />
     </template>
   </DataTable>
 </template>
