@@ -19,7 +19,7 @@ const userSchema = new Schema({
   type: { type: String, enum: ['user', 'admin'], default: 'user' },
 });
 
-// BIVOAUC
+// BIVOUAC
 const bivouacSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -155,7 +155,7 @@ const notificationSchema = new Schema({
   isRead: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
-// this ensures fetching notifications is istant
+// this ensures fetching notifications is instant
 notificationSchema.index({ recipient: 1, createdAt: -1 });
 
 // PROPOSAL

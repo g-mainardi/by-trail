@@ -6,7 +6,7 @@ import { getIO } from '../config/socket.js';
 export const sendNotification = async (
   recipientId: string,
   type: string,
-  uiType: 'alert' | 'succes' | 'info',
+  uiType: 'alert' | 'success' | 'info',
   title: string,
   message: string,
   data: any = {}
@@ -38,5 +38,6 @@ export const sendNotification = async (
     return newNotification;
   } catch (error) {
     console.error('Critical Error: Failed to save notification:', error);
+    throw error;
   }
 };

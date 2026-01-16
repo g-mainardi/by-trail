@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { AuthRequest } from './userController.js';
 import mongoose from 'mongoose';
 import { Notification } from '../models/models.js';
@@ -27,7 +27,7 @@ export const fetchNotifications = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const markNotificationRead = async (req: Request, res: Response) => {
+export const markNotificationRead = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -52,7 +52,7 @@ export const markNotificationRead = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteNotification = async (req: Request, res: Response) => {
+export const deleteNotification = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
