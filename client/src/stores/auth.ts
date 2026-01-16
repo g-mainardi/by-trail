@@ -1,3 +1,4 @@
+import { socket } from '@/services/socket';
 import api from '@/stores/utility/axiosInstance'; // Import the global instance
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -71,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       // Axios put
-      await api.put('/users/profile', updateData);
+      await api.patch('/users/profile', updateData);
 
       // If we are here, it was successful (2xx)
       const profileSuccess = await fetchProfile(true);
@@ -133,6 +134,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = false;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    socket.disconnect();
     router.push('/login');
   };
 
