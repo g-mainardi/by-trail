@@ -94,8 +94,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             :fill="
               isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
             "
+            class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
             @click="toggleFavorite(bivouac._id)"
-            class="cursor-pointer"
           />
           <span class="value">{{
             isFavorite(bivouac._id) ? t('saved') : t('unsaved')

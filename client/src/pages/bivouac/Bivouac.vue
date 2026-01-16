@@ -6,21 +6,34 @@ import CardTitle from '@/components/ui/card/CardTitle.vue';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useFavoriteStore } from '@/stores/favorites';
 import {
   Bed as BedIcon,
   Circle,
+  Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
-  ThumbsUp as ThumbsUpIcon,
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
-const hoodHousePath = new URL(
-  '@/assets/trekking_hood_house.png',
-  import.meta.url
-).href;
+
+const favoritesStore = useFavoriteStore();
+const favorites = ref<Bivouac[]>();
+
+const isFavorite = (bivouacId: string) => {
+  return favorites.value?.some((bivouac) => bivouac._id === bivouacId);
+};
+
+const toggleFavorite = async (bivouacId: string) => {
+  if (isFavorite(bivouacId)) {
+    await favoritesStore.removeFavoriteBivouac(bivouacId);
+  } else {
+    await favoritesStore.addFavoriteBivouac(bivouacId);
+  }
+  favorites.value = await favoritesStore.getFavoriteBivouacs();
+};
 
 const bivouacStore = useBivouacStore();
 const props = defineProps<{ id: string }>();
@@ -32,9 +45,9 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching bivouac:', error);
   }
+  favorites.value = await favoritesStore.getFavoriteBivouacs();
 });
-const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
-  .href;
+const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -51,17 +64,17 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
         <H2>{{ t('images') }}</H2>
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
-            :src="imageBivouacPH1"
+            :src="placeholder"
             :alt="`${bivouac.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
           <img
-            :src="imageBivouacPH1"
+            :src="placeholder"
             :alt="`${bivouac.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
           <img
-            :src="imageBivouacPH1"
+            :src="placeholder"
             :alt="`${bivouac.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
@@ -103,10 +116,26 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
           </div>
           <div class="icon-with-text">
             <MapPinIcon />
-            <span class="">N/A</span>
+            <span class=""
+              >{{ bivouac.comune }}, {{ bivouac.mountainRange }}</span
+            >
           </div>
           <div class="icon-with-text">
-            <ThumbsUpIcon /><span class="">{{ bivouac.likes }}</span>
+            <HeartIcon
+              :color="
+                isFavorite(bivouac._id)
+                  ? 'var(--primary)'
+                  : 'var(--muted-foreground)'
+              "
+              :fill="
+                isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
+              "
+              class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
+              @click="toggleFavorite(bivouac._id)"
+            />
+            <span class="value">{{
+              isFavorite(bivouac._id) ? t('saved') : t('unsaved')
+            }}</span>
           </div>
         </div>
       </div>
@@ -156,6 +185,8 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
     "capacity": "Capacity",
     "beds": "Beds",
     "toilet": "Toilet",
+    "saved": "Saved",
+    "unsaved": "Unsaved",
     "location": "Location",
     "likes": "Likes",
     "images": "Images",
@@ -173,6 +204,8 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
     "capacity": "Capacità",
     "beds": "Letti",
     "toilet": "Bagno",
+    "saved": "Salvato",
+    "unsaved": "Non salvato",
     "location": "Posizione",
     "likes": "Mi piace",
     "images": "Immagini",
@@ -191,6 +224,8 @@ const imageBivouacPH1 = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
     "beds": "Camas",
     "toilet": "Baño",
     "location": "Ubicación",
+    "saved": "Guardado",
+    "unsaved": "No guardado",
     "likes": "Me gusta",
     "images": "Imágenes",
     "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
