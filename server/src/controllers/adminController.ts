@@ -1,5 +1,9 @@
 import type { Response } from 'express';
-import type { AuthRequest } from 'src/types/index.js';
+import {
+  UserStatusEnum,
+  UserTypeEnum,
+  type AuthRequest,
+} from '../types/index.js';
 import { User } from '../models/models.js';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
@@ -27,14 +31,24 @@ export const updateUserStatus = async (req: AuthRequest, res: Response) => {
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
-  if (!['active', 'banned'].includes(status)) {
+  if (!Object.values(UserStatusEnum).includes(status)) {
     return res.status(400).json({ error: 'Invalid status value' });
+  }
+  if (userId === targetUserId) {
+    return res
+      .status(400)
+      .json({ error: 'Cannot change status of your own account' });
   }
 
   try {
     const user = await User.findById(targetUserId).exec();
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+    if (user.type === UserTypeEnum.ADMIN) {
+      return res
+        .status(403)
+        .json({ error: 'Cannot change status of an admin account' });
     }
 
     user.status = status;
@@ -56,11 +70,20 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
+  if (userId === targetUserId) {
+    return res.status(400).json({
+      error:
+        'Cannot delete your own account, use the appropriate settings form instead',
+    });
+  }
 
   try {
     const user = await User.findByIdAndDelete(targetUserId).exec();
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+    if (user.type === UserTypeEnum.ADMIN) {
+      return res.status(403).json({ error: 'Cannot delete an admin account' });
     }
 
     return res.status(200).json({ message: 'User deleted successfully' });

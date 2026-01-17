@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from 'src/types/index.js';
+import { AuthRequest } from '../types/index.js';
 
 export const protect = async (
   req: AuthRequest,

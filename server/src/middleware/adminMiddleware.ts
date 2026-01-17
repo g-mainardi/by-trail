@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from 'src/types/index.js';
+import { AuthRequest, UserTypeEnum } from '../types/index.js';
 
 export const admin = (req: AuthRequest, res: Response, next: NextFunction) => {
   // Defensive check: If req.user is missing, someone probably forgot to add 'protect' before 'admin' in the routes
@@ -9,10 +9,10 @@ export const admin = (req: AuthRequest, res: Response, next: NextFunction) => {
       .json({ message: 'Server Error: Auth middleware missing' });
   }
 
-  if (req.user.type === 'admin') {
+  if (req.user.type === UserTypeEnum.ADMIN) {
     next();
   } else {
     // It's a user but not an admin
-    res.status(403).json({ message: 'Admin access required' }); //
+    return res.status(403).json({ message: 'Admin access required' });
   }
 };

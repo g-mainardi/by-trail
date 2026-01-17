@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import type { AuthRequest } from 'src/types/index.js';
+import type { AuthRequest } from '../types/index.js';
 import mongoose from 'mongoose';
 import { FavBivouac } from '../models/models.js';
 
