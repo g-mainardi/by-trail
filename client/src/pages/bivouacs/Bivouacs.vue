@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+// todo: change to type from '@/types' when store is updated
+import type { Bivouac as RealBivouac } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
 import { computed, onMounted, ref } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
@@ -18,7 +20,7 @@ const nextPage = ref<string | undefined>(undefined);
 const isLoading = ref(true);
 
 const favoritesStore = useFavoriteStore();
-const favorites = ref<Bivouac[]>([]);
+const favorites = ref<RealBivouac[]>([]);
 
 const loadBivouacs = async () => {
   isLoading.value = true;

@@ -1,6 +1,6 @@
 import api from '@/stores/utility/axiosInstance';
 import { defineStore } from 'pinia';
-import type { Bivouac } from './bivouacs';
+import type { Bivouac } from '@/types';
 
 export const useFavoriteStore = defineStore('favorites', () => {
   async function getFavoriteBivouacs(): Promise<Bivouac[]> {

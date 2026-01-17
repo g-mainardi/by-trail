@@ -35,8 +35,8 @@ onMounted(async () => {
 
   // Populate formData
   if (user.value) {
-    formData.value.name = user.value.name;
-    formData.value.email = user.value.email;
+    formData.value.name = user.value.name || '';
+    formData.value.email = user.value.email || '';
     // Create a copy of the array to avoid direct mutation of store state
     formData.value.favRegions = user.value.favRegions
       ? [...(user.value.favRegions as Region[])]

@@ -3,21 +3,7 @@ import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-
-const ProposalEnum = {
-  ROUTE: 'route',
-  BIVOUAC: 'bivouac',
-} as const;
-
-type ProposalType = (typeof ProposalEnum)[keyof typeof ProposalEnum];
-
-export interface Proposal {
-  senderEmail: string;
-  type: ProposalType;
-  subjectName: string;
-  description: string;
-  locality: string;
-}
+import type { Proposal } from '@/types';
 
 export const useProposalStore = defineStore('proposal', () => {
   const authStore = useAuthStore();
