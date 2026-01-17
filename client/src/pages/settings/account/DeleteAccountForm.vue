@@ -26,12 +26,13 @@ const handleDeleteAccount = async () => {
         <FieldLabel> Email </FieldLabel>
         <span class="font-bold"> {{ email }} </span>
         <FieldLabel for="password">
-          {{ t('password_label') }}
+          {{ t('password') }}
         </FieldLabel>
         <Input
           id="password"
           type="password"
-          placeholder="Insert your password"
+          autocomplete="current-password"
+          :placeholder="t('password_placeholder')"
           v-model="password"
           required
         />
@@ -46,15 +47,18 @@ const handleDeleteAccount = async () => {
 <i18n>
   {
     "en": {
-      "password_label": "Password",
+      "password": "Enter your password to confirm the deletion",
+      "password_placeholder": "Enter your password here",
       "delete_account_button": "Delete"
     },
     "it": {
-      "password_label": "Password",
+      "password": "Enter your password to confirm the deletion",
+      "password_placeholder": "Enter your password here",
       "delete_account_button": "Elimina"
     },
     "es": {
-      "password_label": "Contraseña",
+      "password": "Enter your password to confirm the deletion",
+      "password_placeholder": "Enter your password here",
       "delete_account_button": "Eliminar"
     }
   }

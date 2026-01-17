@@ -110,6 +110,7 @@ const handleSignup = async () => {
               id="email"
               v-model="email"
               type="email"
+              autocomplete="username"
               placeholder="m@example.com"
               required
             />
@@ -121,7 +122,14 @@ const handleSignup = async () => {
             <FieldLabel for="password">
               {{ t('password') }}
             </FieldLabel>
-            <Input id="password" v-model="password" type="password" required />
+            <Input
+              id="password"
+              v-model="password"
+              type="password"
+              autocomplete="new-password"
+              :placeholder="t('password_placeholder')"
+              required
+            />
             <FieldDescription>{{ t('password_description') }}</FieldDescription>
           </Field>
           <Field>
@@ -132,6 +140,8 @@ const handleSignup = async () => {
               id="confirm-password"
               v-model="confirmPassword"
               type="password"
+              autocomplete="new-password"
+              :placeholder="t('password_confirm_placeholder')"
               required
             />
             <FieldDescription>{{
@@ -174,7 +184,9 @@ const handleSignup = async () => {
     "have_account": "Already have an account?",
     "log_in": "Log in",
     "name_placeholder": "John Doe",
+    "password_placeholder": "Insert here your password",
     "password_description": "Must be at least 8 characters long.",
+    "password_confirm_placeholder": "Re-enter your password",
     "confirm_password_description": "Please confirm your password.",
     "email_description": "We'll never share your email with anyone else.",  
     "signup_fill_all_fields": "Please fill in all fields.",
@@ -194,7 +206,9 @@ const handleSignup = async () => {
     "have_account": "Hai già un account?",
     "log_in": "Accedi",
     "name_placeholder": "Mario Rossi",
+    "password_placeholder": "Inserisci qui la tua password",
     "password_description": "Deve contenere almeno 8 caratteri.",
+    "password_confirm_placeholder": "Reinserisci la tua password",
     "confirm_password_description": "Per favore conferma la tua password.",
     "email_description": "Non condivideremo mai la tua email con nessun altro.",
     "signup_fill_all_fields": "Per favore, compila tutti i campi.",
@@ -214,7 +228,9 @@ const handleSignup = async () => {
     "have_account": "¿Ya tienes una cuenta?",
     "log_in": "Iniciar sesión",
     "name_placeholder": "Juan Pérez",
+    "password_placeholder": "Introduce aquí tu contraseña",
     "password_description": "Debe tener al menos 8 caracteres.",
+    "password_confirm_placeholder": "Vuelve a introducir tu contraseña",
     "confirm_password_description": "Por favor confirma tu contraseña.",
     "email_description": "Nunca compartiremos tu correo electrónico con nadie más.",
     "signup_fill_all_fields": "Por favor, completa todos los campos.",
