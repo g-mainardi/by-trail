@@ -184,7 +184,7 @@ const handleSignup = async () => {
     "have_account": "Already have an account?",
     "log_in": "Log in",
     "name_placeholder": "John Doe",
-    "password_placeholder": "Insert here your password",
+    "password_placeholder": "Enter your password here",
     "password_description": "Must be at least 8 characters long.",
     "password_confirm_placeholder": "Re-enter your password",
     "confirm_password_description": "Please confirm your password.",
