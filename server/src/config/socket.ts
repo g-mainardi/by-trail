@@ -49,11 +49,19 @@ export const initSocket = (
 
       // 5. Attach User ID to the socket session
       socket.userId = decoded.id;
-
       next();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Socket Auth Error:', error);
-      next(new Error('Not Authorized, token failed'));
+
+      if (error.name === 'TokenExpiredError') {
+        return next(new Error('Token expired'));
+      }
+
+      if (error.name === 'JsonWebTokenError') {
+        return next(new Error('Invalid token'));
+      }
+
+      next(new Error('Not Authorized, authentication failed'));
     }
   });
 

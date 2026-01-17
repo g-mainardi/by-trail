@@ -94,10 +94,6 @@ export const deleteNotification = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Notification not found' });
     }
 
-    if (!deleted) {
-      return res.status(404).json({ message: 'Notification not found' });
-    }
-
     return res
       .status(200)
       .json({ message: 'Notification deleted successfully' });
