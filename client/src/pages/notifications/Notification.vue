@@ -17,9 +17,23 @@ import { MailOpen } from 'lucide-vue-next';
 const notificationStore = useNotificationStore();
 const notifications = ref<NotificationItem[]>([]);
 const isLoading = ref(false);
+const isTesting = ref(false);
 const { t } = useI18n();
 
 const hasUnread = computed(() => notifications.value.some((n) => !n.isRead));
+
+const formatTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.round(diffMs / 60000);
+  const diffHours = Math.round(diffMins / 60);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  return date.toLocaleDateString();
+};
 
 // 1. Load History
 const loadNotifications = async () => {
@@ -37,19 +51,6 @@ const loadNotifications = async () => {
 const handleNewNotification = (newNotification: NotificationItem) => {
   // Add new item to the TOP of the list
   notifications.value.unshift(newNotification);
-};
-
-const formatTime = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.round(diffMs / 60);
-  const diffHours = Math.round(diffMins / 60);
-
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins} min ago`;
-  if (diffHours < 24) return `${diffHours} hours ago`;
-  return date.toLocaleDateString();
 };
 
 const handleRead = async (id: string) => {
@@ -92,6 +93,17 @@ const handleDelete = async (id: string) => {
   }
 };
 
+const handleTestNotification = async () => {
+  isTesting.value = true;
+  try {
+    await notificationStore.triggerTestNotification();
+  } catch (e) {
+    console.error('Failed to trigger test', e);
+  } finally {
+    isTesting.value = false;
+  }
+};
+
 onMounted(() => {
   loadNotifications();
   notificationStore.listenForNotifications(handleNewNotification);
@@ -104,11 +116,18 @@ onUnmounted(() => {
 
 <template>
   <Card class="card">
-    <CardHeader>
+    <CardHeader class="flex flex-row justify-between items-center">
+      <Button
+        @click="handleTestNotification"
+        :disabled="isTesting"
+        class="text-sm font-bold bg-gray-600 hover:bg-gray-500 cursor-pointer"
+      >
+        {{ isTesting ? 'Sending...' : 'Test Real Time Notification' }}
+      </Button>
       <Button
         v-if="hasUnread"
         @click="handleAllRead"
-        class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+        class="text-sm font-bold cursor-pointer"
       >
         {{ t('notifications_mark_all_read') }}
       </Button>

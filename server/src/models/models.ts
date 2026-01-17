@@ -122,39 +122,43 @@ const settingSchema = new Schema({
 });
 
 // NOTIFICATION
-const notificationSchema = new Schema({
-  recipient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const notificationSchema = new Schema(
+  {
+    recipient: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: [
+        'bivouac_reservation',
+        'bivouac_update',
+        'route_reservation',
+        'weather_alert',
+      ],
+      required: true,
+    },
+    uiType: {
+      type: String,
+      enum: ['info', 'success', 'alert'],
+      required: true,
+      default: 'info',
+    },
+    title: { type: String, required: true },
+    message: { type: String, required: true },
+    data: {
+      // flexible container: stores any structure
+      type: mongoose.Schema.Types.Mixed, // allows any JSON object
+      default: {},
+    },
+    referenceUrl: { type: String }, // where the user goes when they click
+    isRead: { type: Boolean, default: false },
   },
-  type: {
-    type: String,
-    enum: [
-      'bivouac_reservation',
-      'bivouac_update',
-      'route_reservation',
-      'weather_alert',
-    ],
-    required: true,
-  },
-  uiType: {
-    type: String,
-    enum: ['info', 'success', 'alert'],
-    required: true,
-    default: 'info',
-  },
-  title: { type: String, required: true },
-  message: { type: String, required: true },
-  data: {
-    // flexible container: stores any structure
-    type: mongoose.Schema.Types.Mixed, // allows any JSON object
-    default: {},
-  },
-  referenceUrl: { type: String }, // where the user goes when they click
-  isRead: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now },
-});
+  {
+    timestamps: true,
+  }
+);
 // this ensures fetching notifications is instant
 notificationSchema.index({ recipient: 1, createdAt: -1 });
 

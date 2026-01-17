@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.use(protect);
 
-router.post('/test-realtime', async (req: any, res) => {
+router.post('/test-realtime-reservation', async (req: any, res) => {
   const userId = req.user.id;
 
   await sendNotification(
@@ -20,7 +20,7 @@ router.post('/test-realtime', async (req: any, res) => {
     'bivouac_reservation',
     'success',
     'Real-time Test!',
-    'If you see this without refreshing, your Socket.io is working perfectly.'
+    'You have confirmed your intention to stay overnight at the [BIVOUAC_NAME] on [DATE], reserving [NUMBER_OF_BEDS] places.'
   );
 
   res.json({ message: 'Socket emit triggered ' });

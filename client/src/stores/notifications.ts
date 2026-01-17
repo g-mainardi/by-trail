@@ -38,6 +38,10 @@ export const useNotificationStore = defineStore('notifications', () => {
     await api.delete(`/notifications/${id}`);
   }
 
+  async function triggerTestNotification(): Promise<void> {
+    await api.post('/notifications/test-realtime-reservation');
+  }
+
   function listenForNotifications(callback: (n: NotificationItem) => void) {
     // Listen for the specific event name we emit in the helper
     socket.on('notification:new', (notification: NotificationItem) => {
@@ -56,5 +60,6 @@ export const useNotificationStore = defineStore('notifications', () => {
     deleteNotification,
     listenForNotifications,
     stopListening,
+    triggerTestNotification,
   };
 });
