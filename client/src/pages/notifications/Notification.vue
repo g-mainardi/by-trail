@@ -137,6 +137,13 @@ onUnmounted(() => {
       </Button>
     </CardHeader>
 
+    <div
+      v-if="notificationStore.error"
+      class="mx-6 mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm flex items-center gap-2"
+    >
+      <span>{{ notificationStore.error }}</span>
+    </div>
+
     <CardContent>
       <NotificationCard
         v-for="notif in notifications"
