@@ -6,6 +6,7 @@ export interface UserDocument extends User {
 }
 export interface BivouacDocument extends Bivouac {}
 export interface RouteDocument extends Route {}
+export interface ProposalDocument {}
 
 export interface AuthRequest extends Request {
   user?: User | null;

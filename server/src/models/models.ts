@@ -6,11 +6,13 @@ import {
   RouteDifficultyEnum,
   RouteTypeEnum,
   RoutePathTypeEnum,
+  ProposalEnum,
 } from '../types/index.js';
 import {
   UserDocument,
   BivouacDocument,
   RouteDocument,
+  ProposalDocument,
 } from 'src/types/server_only.js';
 
 const { Schema } = mongoose;
@@ -161,7 +163,7 @@ const notificationSchema = new Schema({
 
 const proposalSchema = new Schema({
   senderEmail: { type: String, required: true },
-  type: { type: String, required: true },
+  type: { type: String, enum: Object.values(ProposalEnum), required: true },
   subjectName: { type: String, required: true },
   description: { type: String, required: true },
   locality: { type: String, required: true },
@@ -181,7 +183,7 @@ const Image = mongoose.model('Image', imageSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
 const Notification = mongoose.model('Notify', notificationSchema);
-const Proposal = mongoose.model('Proposal', proposalSchema);
+const Proposal = mongoose.model<ProposalDocument>('Proposal', proposalSchema);
 
 /**************************************** Exports ****************************************/
 
