@@ -74,7 +74,7 @@ app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/routes', routesRoutes);
 app.use('/api/proposal', proposalRoutes);
-app.use('/api', adminRoutes); // Public/Generic routes
+app.use('/api', adminRoutes);
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening at: http://localhost:${PORT}/`);
