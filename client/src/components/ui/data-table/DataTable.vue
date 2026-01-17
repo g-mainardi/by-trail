@@ -49,8 +49,9 @@ const table = useVueTable({
       return sorting.value;
     },
   },
-  onSortingChange: (updater) => {
-    // @ts-ignore
+  onSortingChange: (
+    updater: SortingState | ((old: SortingState) => SortingState)
+  ) => {
     sorting.value =
       typeof updater === 'function' ? updater(sorting.value) : updater;
   },

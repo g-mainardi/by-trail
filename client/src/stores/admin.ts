@@ -41,7 +41,7 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
       );
       if (userIndex !== -1) {
         // Create a copy for safe reactivity or modify directly if it's a deep ref
-        (users.value[userIndex] as any).status = newStatus;
+        (users.value[userIndex] as User).status = newStatus;
       }
 
       return true;
