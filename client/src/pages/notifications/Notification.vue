@@ -85,12 +85,12 @@ const handleDelete = async (id: string) => {
   const index = notifications.value.findIndex((n) => n._id === id);
 
   if (index !== -1) {
-    const deletedItem = notifications.value[index]!;
     notifications.value.splice(index, 1);
     try {
       await notificationStore.deleteNotification(id);
     } catch (e) {
-      notifications.value.splice(index, 0, deletedItem);
+      console.error('Failed to delete notification', e);
+      await loadNotifications();
     }
   }
 };
