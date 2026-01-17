@@ -1,5 +1,11 @@
 import mongoose from 'mongoose';
-import { UserStatusEnum, UserTypeEnum, UserDocument } from '../types/index.js';
+import {
+  UserStatusEnum,
+  UserTypeEnum,
+  UserDocument,
+  BivouacDocument,
+  RegionsEnum,
+} from '../types/index.js';
 
 const { Schema } = mongoose;
 
@@ -10,7 +16,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   creationDate: { type: Date, default: Date.now },
-  favRegions: { type: [String], default: [] },
+  favRegions: [{ type: String, enum: Object.values(RegionsEnum) }],
   status: {
     type: String,
     enum: Object.values(UserStatusEnum),
@@ -162,7 +168,7 @@ proposalSchema.index(
 
 /**************************************** Models ****************************************/
 const User = mongoose.model<UserDocument>('User', userSchema);
-const Bivouac = mongoose.model('Bivouac', bivouacSchema);
+const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
 const Route = mongoose.model('Route', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
 const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
