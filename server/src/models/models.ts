@@ -5,6 +5,10 @@ import {
   UserDocument,
   BivouacDocument,
   RegionsEnum,
+  RouteDifficultyEnum,
+  RouteTypeEnum,
+  RoutePathTypeEnum,
+  RouteDocument,
 } from '../types/index.js';
 
 const { Schema } = mongoose;
@@ -62,24 +66,36 @@ const bivouacSchema = new Schema(
 const routeSchema = new Schema(
   {
     title: { type: String, required: true },
-    region: { type: [String], required: true },
-    // T (Turistico, facile), E (Escursionistico, per esperti), EE (Escursioniti Esperti, terreni impervi), EEA (Escursionisti Esperti con Attrezzatura, vie ferrate)
-    difficulty: { type: String, required: true },
+    region: {
+      type: [String],
+      enum: Object.values(RegionsEnum),
+      validate: {
+        validator: function (v: string[]) {
+          return v && v.length > 0;
+        },
+        message: 'A route must have at least one region.',
+      },
+    },
+    difficulty: {
+      type: String,
+      enum: Object.values(RouteDifficultyEnum),
+      required: true,
+    },
     distance: { type: Number, required: true },
     ascent: { type: Number, required: true },
     descent: { type: Number, required: true },
     duration: { type: Number, required: true },
     routeType: {
       type: String,
+      enum: Object.values(RouteTypeEnum),
       required: true,
-      enum: ['circular', 'out-and-back', 'point-to-point', 'stage'],
     },
     likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
     path: {
       type: {
         type: String,
-        enum: ['LineString', 'MultiLineString'],
+        enum: Object.values(RoutePathTypeEnum),
         required: true,
       },
       coordinates: {
@@ -158,7 +174,7 @@ proposalSchema.index(
 /**************************************** Models ****************************************/
 const User = mongoose.model<UserDocument>('User', userSchema);
 const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
-const Route = mongoose.model('Route', routeSchema);
+const Route = mongoose.model<RouteDocument>('Route', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);

@@ -33,10 +33,34 @@ export const RegionsEnum = {
   Veneto: 'Veneto',
 } as const;
 
+export const RouteDifficultyEnum = {
+  T: 'T', // Turistico
+  E: 'E', // Escursionistico
+  EE: 'EE', // Escursionisti Esperti
+  EEA: 'EEA', // Escursionisti Esperti con Attrezzatura
+} as const;
+
+export const RouteTypeEnum = {
+  CIRCULAR: 'circular',
+  OUT_AND_BACK: 'out-and-back',
+  POINT_TO_POINT: 'point-to-point',
+  STAGE: 'stage',
+} as const;
+
+export const RoutePathTypeEnum = {
+  LINE_STRING: 'LineString',
+  MULTI_LINE_STRING: 'MultiLineString',
+} as const;
+
 // Derive types automatically compile time
 export type UserStatus = (typeof UserStatusEnum)[keyof typeof UserStatusEnum];
 export type UserType = (typeof UserTypeEnum)[keyof typeof UserTypeEnum];
 export type Region = (typeof RegionsEnum)[keyof typeof RegionsEnum];
+export type RouteDifficulty =
+  (typeof RouteDifficultyEnum)[keyof typeof RouteDifficultyEnum];
+export type RouteType = (typeof RouteTypeEnum)[keyof typeof RouteTypeEnum];
+export type RoutePathType =
+  (typeof RoutePathTypeEnum)[keyof typeof RoutePathTypeEnum];
 
 export interface UserDocument {
   _id?: string;
@@ -66,6 +90,25 @@ export interface BivouacDocument {
   capacity?: number;
   likes?: number;
   note?: string;
+}
+
+export interface RouteDocument {
+  _id?: string;
+  id?: string;
+  title: string;
+  region: Region[];
+  difficulty: RouteDifficulty;
+  distance: number;
+  ascent: number;
+  descent: number;
+  duration: number;
+  routeType: RouteType;
+  likes?: number;
+  note?: string;
+  path?: {
+    type: RoutePathType;
+    coordinates: any[];
+  };
 }
 
 export interface AuthRequest extends Request {
