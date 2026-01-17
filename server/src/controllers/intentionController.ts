@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 import mongoose from 'mongoose';
-import { Reservation } from 'src/models/models.js';
+import { Reservation, User } from 'src/models/models.js';
 import type { AuthRequest } from './userController.ts';
 
 export const createIntention = async (req: AuthRequest, res: Response) => {
@@ -49,13 +49,35 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteIntentions = async (req: AuthRequest, res: Response) => {
+export const deleteIntention = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
-  const { bivouacId, date, people } = req.body;
-  console.log(
-    `User ${userId} cancels intention to book bivouac ${bivouacId} on ${date} for ${people} people.`
-  );
-  res.status(200).json({ message: 'Intention deleted' });
+  const { intentionId } = req.body;
+  console.log('INTENTION ID: ', intentionId);
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(intentionId)) {
+    return res.status(400).json({ error: 'Invalid intention ID format' });
+  }
+
+  try {
+    const res = await Reservation.findOne({
+      _id: intentionId,
+    }).exec();
+    console.log(' -->> ', res);
+
+    await Reservation.deleteMany({
+      _id: intentionId,
+    }).exec();
+  } catch (error) {
+    console.error('Error deleting intention:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+
+  return res.status(200).json({ message: 'Intention deleted' });
 };
 
 export const fetchUserBivouacIntentions = async (
@@ -73,16 +95,26 @@ export const fetchUserBivouacIntentions = async (
   }
 
   if (bivouacId) {
+    // Fetch intentions for the specific bivouac
     if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
       return res.status(400).json({ error: 'Invalid bivouac ID format' });
     }
-    // Fetch intentions for the specific bivouac
     try {
       const intentions = await Reservation.find({
         user: userId,
         bivouac: bivouacId,
       });
-      return res.status(200).json({ intentions: intentions });
+      const dateAndPlaces = intentions.map((intention) => ({
+        date: intention.reservationDate,
+        places: intention.reservedPlaces,
+      }));
+
+      const user = await User.findById(userId).exec();
+      if (user?.type === 'admin') {
+        return res.status(200).json({ intentions: intentions });
+      } else {
+        return res.status(200).json({ intentions: dateAndPlaces });
+      }
     } catch (error) {
       console.error('Error fetching intentions:', error);
       return res.status(500).json({ error: 'Internal server error' });

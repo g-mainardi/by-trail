@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import type { DateValue } from 'reka-ui';
 import api from './utility/axiosInstance';
 
 export interface Intention {
+  _id: string;
   bivouacId: string;
-  date: DateValue;
-  people: number;
+  reservationDate: Date;
+  reservedPlaces: number;
 }
 
 export const useIntentionStore = defineStore('intentions', () => {
@@ -34,15 +34,11 @@ export const useIntentionStore = defineStore('intentions', () => {
   }
 
   async function deleteIntention(
-    bivouacId: string,
-    date: Date,
-    people: number
+    intentionId: string
   ): Promise<{ success: boolean; error?: string; message?: string }> {
     try {
       const body = {
-        bivouacId: bivouacId,
-        date: date,
-        people: people,
+        intentionId: intentionId,
       };
       const res = await api.delete(`/users/intention`, { data: body });
       if (res.status === 200)
@@ -74,9 +70,34 @@ export const useIntentionStore = defineStore('intentions', () => {
     }
   }
 
-  // async function getAllBivouacIntentions(): Promise<Intention[]> {
+  async function getAllBivouacIntentions(): Promise<
+    {
+      date: Date;
+      places: number;
+    }[]
+  > {
+    try {
+      const res = await api.get(`/bivouacs/intentions`);
+      const data = res.data;
 
-  // }
+      if (!data || !data.intentions || !Array.isArray(data.intentions))
+        throw new Error('Invalid data structure received');
 
-  return { sendIntention, deleteIntention, getIntentions: getUserIntentions };
+      const intentions: {
+        date: Date;
+        places: number;
+      }[] = data.intentions;
+      return intentions;
+    } catch (error: any) {
+      console.error('Error fetching all bivouac intentions:', error);
+      return [];
+    }
+  }
+
+  return {
+    sendIntention,
+    deleteIntention,
+    getIntentions: getUserIntentions,
+    getAllBivouacIntentions,
+  };
 });

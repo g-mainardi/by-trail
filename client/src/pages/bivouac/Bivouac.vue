@@ -24,11 +24,13 @@ import {
 } from '@internationalized/date';
 import {
   Bed as BedIcon,
+  CalendarIcon,
   Circle,
   Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   Toilet as ToiletIcon,
+  X,
 } from 'lucide-vue-next';
 import { onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -40,27 +42,36 @@ const favoritesStore = useFavoriteStore();
 const favorites = ref<Bivouac[]>([]);
 
 const intentionStore = useIntentionStore();
-const intentions = ref<Intention[]>([]);
+const userIntentions = ref<Intention[]>([]);
 
 const sendIntention = async () => {
   const res = await intentionStore.sendIntention(
     bivouac.value._id,
-    date.value.toDate(getLocalTimeZone()),
+    selectedDate.value.toDate(getLocalTimeZone()),
     people.value
   );
   if (res.success) {
     toast.success(res.message ? res.message : 'Intention sent successfully!');
-    intentions.value = await intentionStore.getIntentions();
-    console.log(intentions.value);
+    userIntentions.value = await intentionStore.getIntentions();
   } else {
     toast.error(`Error: ${res.error}`);
   }
 };
 
-const minDate = fromDate(
-  new Date(new Date().setHours(0, 0, 0, 0)),
-  getLocalTimeZone()
-);
+const cancelIntention = async (intentionId: string) => {
+  console.log('Cancelling intention:', intentionId);
+  const res = await intentionStore.deleteIntention(intentionId);
+  if (res.success) {
+    toast.success(
+      res.message ? res.message : 'Intention cancelled successfully!'
+    );
+    userIntentions.value = await intentionStore.getIntentions();
+  } else {
+    toast.error(`Error: ${res.error}`);
+  }
+};
+
+const minDate = fromDate(new Date(), getLocalTimeZone());
 
 const isFavorite = (bivouacId: string): boolean => {
   return favorites.value.some((bivouac) => bivouac._id === bivouacId);
@@ -85,7 +96,9 @@ let bivouac = ref<Bivouac>({} as Bivouac);
 const capacity = bivouac.value.capacity;
 
 const people = ref<number>(1);
-const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>;
+const selectedDate = ref(
+  fromDate(new Date(), getLocalTimeZone())
+) as Ref<DateValue>;
 
 onMounted(async () => {
   try {
@@ -96,7 +109,7 @@ onMounted(async () => {
   favorites.value = await favoritesStore.getFavoriteBivouacs();
 
   try {
-    intentions.value = await intentionStore.getIntentions();
+    userIntentions.value = await intentionStore.getIntentions();
   } catch (error) {
     console.error('Error fetching intentions:', error);
   }
@@ -142,7 +155,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <div class="flex flex-col lg:flex-row gap-4 my-4 justify-between">
           <!-- CALENDAR -->
           <Calendar
-            v-model="date"
+            v-model="selectedDate"
             class="rounded-md border shadow-sm w-full [&_table]:w-full [&_tr]:justify-evenly"
             :min-value="minDate"
             disable-days-outside-current-view
@@ -173,6 +186,26 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 
       <!-- RIGHT SIDE -->
       <div class="right w-full md:w-[30%]">
+        <!-- MY INTENTIONS -->
+        <H2>My Intentions</H2>
+        <div class="flex flex-col gap-4 my-4">
+          <div v-for="intention in userIntentions">
+            <div class="icon-with-text">
+              <CalendarIcon class="icon" />
+              <span class="">
+                {{ intention.reservationDate.toString().slice(0, 10) }} for
+                {{ intention.reservedPlaces }} people.
+              </span>
+              <Button
+                variant="destructive"
+                @click="cancelIntention(intention._id)"
+              >
+                <X class="icon" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
         <!-- AFFLUENCE INFO -->
         <H2>{{ t('affluence') }}</H2>
         <div class="flex flex-col gap-4 my-4">
@@ -198,18 +231,18 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <H2>{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
-            <MountainIcon />
+            <MountainIcon class="icon" />
             <span class="">{{ bivouac.altitude }} mt </span>
           </div>
           <div class="icon-with-text">
-            <BedIcon />
+            <BedIcon class="icon" />
             <span>{{ bivouac.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
-            <ToiletIcon /><span class="">N/A</span>
+            <ToiletIcon class="icon" /><span class="">N/A</span>
           </div>
           <div class="icon-with-text">
-            <MapPinIcon />
+            <MapPinIcon class="icon" />
             <span class=""
               >{{ bivouac.comune }}, {{ bivouac.mountainRange }}</span
             >
@@ -242,21 +275,15 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </template>
 
 <style scoped>
-/* Highlight calendar days with intentions */
-.calendar tbody tr button {
-  border-color: aqua;
-}
-
 .icon-with-text {
   /* transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 */
   transition: all 0.3s;
   cursor: pointer;
-  &:hover {
-    transform: scale(1.1);
-  }
-  &:active {
-    transform: scale(0.95);
-  }
+}
+
+.icon {
+  min-width: 1.25rem;
+  min-height: 1.25rem;
 }
 
 .date_icon {
