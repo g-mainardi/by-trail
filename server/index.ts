@@ -68,12 +68,18 @@ app.use(
 
 initSocket(httpServer, app, CLIENT_ORIGIN);
 
+const welcomeMessage = 'Welcome to the By Trail API';
+
 // Routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/routes', routesRoutes);
 app.use('/api/proposal', proposalRoutes);
+app.get('/api', (_, res) => {
+  console.log(welcomeMessage);
+  res.send(welcomeMessage);
+});
 app.use('/api', adminRoutes);
 
 httpServer.listen(PORT, () => {
