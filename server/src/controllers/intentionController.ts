@@ -18,11 +18,20 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
       user: userId,
       bivouac: bivouacId,
       reservationDate: new Date(date),
-      reservedPlaces: people,
     }).exec();
     if (existingReservation) {
       // update entry
-      console.log('Intention already exists, no action taken.');
+      try {
+        await Reservation.updateMany(
+          { _id: existingReservation._id },
+          { $set: { reservedPlaces: people } }
+        ).exec();
+      } catch (updateError) {
+        console.error('Error updating intention:', updateError);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+      console.log('Intention already exists, updated reserved places.');
+      return res.status(200).json({ message: 'Intention updated' });
     } else {
       const newReservation = new Reservation({
         user: userId,
@@ -49,7 +58,10 @@ export const deleteIntentions = async (req: AuthRequest, res: Response) => {
   res.status(200).json({ message: 'Intention deleted' });
 };
 
-export const fetchIntentions = async (req: AuthRequest, res: Response) => {
+export const fetchUserBivouacIntentions = async (
+  req: AuthRequest,
+  res: Response
+) => {
   const userId = req.user?.id;
   const { bivouacId } = req.params;
   console.log(bivouacId);
@@ -86,3 +98,8 @@ export const fetchIntentions = async (req: AuthRequest, res: Response) => {
     }
   }
 };
+
+export const fetchBivouacIntentions = async (
+  req: AuthRequest,
+  res: Response
+) => {};

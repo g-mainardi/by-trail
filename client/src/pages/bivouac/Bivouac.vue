@@ -49,8 +49,7 @@ const sendIntention = async () => {
     people.value
   );
   if (res.success) {
-    console.log('Intention sent successfully');
-    toast.success('Intention sent successfully');
+    toast.success(res.message ? res.message : 'Intention sent successfully!');
     intentions.value = await intentionStore.getIntentions();
     console.log(intentions.value);
   } else {

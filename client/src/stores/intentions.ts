@@ -13,7 +13,7 @@ export const useIntentionStore = defineStore('intentions', () => {
     bivouacId: string,
     date: Date,
     people: number
-  ): Promise<{ success: boolean; error?: string }> {
+  ): Promise<{ success: boolean; error?: string; message?: string }> {
     try {
       const body = {
         bivouacId: bivouacId,
@@ -21,7 +21,8 @@ export const useIntentionStore = defineStore('intentions', () => {
         people: people,
       };
       const res = await api.post(`/users/intention`, body);
-      if (res.status === 200 || res.status === 201) return { success: true };
+      if (res.status === 200 || res.status === 201)
+        return { success: true, message: res.data.message };
       return {
         success: false,
         error: `Unexpected response status: ${res.status}`,
@@ -36,7 +37,7 @@ export const useIntentionStore = defineStore('intentions', () => {
     bivouacId: string,
     date: Date,
     people: number
-  ): Promise<{ success: boolean; error?: string }> {
+  ): Promise<{ success: boolean; error?: string; message?: string }> {
     try {
       const body = {
         bivouacId: bivouacId,
@@ -44,7 +45,8 @@ export const useIntentionStore = defineStore('intentions', () => {
         people: people,
       };
       const res = await api.delete(`/users/intention`, { data: body });
-      if (res.status === 200) return { success: true };
+      if (res.status === 200)
+        return { success: true, message: res.data.message };
       return {
         success: false,
         error: `Unexpected response status: ${res.status}`,
@@ -55,7 +57,7 @@ export const useIntentionStore = defineStore('intentions', () => {
     }
   }
 
-  async function getIntentions(bivouacId?: string): Promise<Intention[]> {
+  async function getUserIntentions(bivouacId?: string): Promise<Intention[]> {
     try {
       const body = bivouacId ? { bivouacId: bivouacId } : {};
       const res = await api.post(`/users/intentions`, body);
@@ -72,5 +74,9 @@ export const useIntentionStore = defineStore('intentions', () => {
     }
   }
 
-  return { sendIntention, deleteIntention, getIntentions };
+  // async function getAllBivouacIntentions(): Promise<Intention[]> {
+
+  // }
+
+  return { sendIntention, deleteIntention, getIntentions: getUserIntentions };
 });
