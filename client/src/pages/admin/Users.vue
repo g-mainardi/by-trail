@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { User } from '@/stores/auth';
+import { useAdminUsersStore } from '@/stores/admin';
+import { storeToRefs } from 'pinia';
+import { UserStatusEnum, UserTypeEnum } from '@/stores/auth';
+
 import DataTable from '@/components/ui/data-table/DataTable.vue';
 import UserActions from './UserActions.vue';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-vue-next';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
-import type { User } from '@/stores/auth';
-import { useAdminUsersStore } from '@/stores/admin';
-import { storeToRefs } from 'pinia';
 import { AlertCircle, CheckCircle } from 'lucide-vue-next';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 
+const { ACTIVE } = UserStatusEnum;
+const { ADMIN } = UserTypeEnum;
 const { t, locale } = useI18n();
 const adminUsersStore = useAdminUsersStore();
 const { users, isLoading } = storeToRefs(adminUsersStore);
@@ -39,21 +43,24 @@ const columns = [
 const onBanUser = async (user: User) => {
   const id = getUserId(user);
   if (!id) return;
+  const originalStatus = user.status;
   try {
     // Confirm action
     const confirmed = confirm(
-      user.status === 'active' ? t('confirm_ban_user') : t('confirm_unban_user')
+      originalStatus === ACTIVE
+        ? t('confirm_ban_user')
+        : t('confirm_unban_user')
     );
     if (!confirmed) return;
     // Store will handle the toggling logic
-    await toggleUserBlock(id, user.status);
+    await toggleUserBlock(id, originalStatus);
   } catch (e) {
     feedbackMessage.value = t('user_ban_error');
     isError.value = true;
     return;
   }
   feedbackMessage.value = t(
-    user.status === 'active' ? 'user_ban_success' : 'user_unban_success'
+    originalStatus === ACTIVE ? 'user_ban_success' : 'user_unban_success'
   );
   isError.value = false;
 };
@@ -169,7 +176,8 @@ const alertConfig = computed(() => {
     "confirm_delete": "Are you sure you want to delete this user?",
     "confirm_ban_user": "Are you sure you want to ban this user?",
     "confirm_unban_user": "Are you sure you want to unban this user?",
-    "user_ban_success": "User status updated successfully.",
+    "user_ban_success": "User banned successfully.",
+    "user_unban_success": "User unbanned successfully.",
     "user_ban_error": "Error updating user status.",
     "user_delete_success": "User deleted successfully.",
     "user_delete_error": "Error deleting user."
@@ -185,7 +193,8 @@ const alertConfig = computed(() => {
     "confirm_delete": "Sei sicuro di voler eliminare questo utente?",
     "confirm_ban_user": "Sei sicuro di voler bannare questo utente?",
     "confirm_unban_user": "Sei sicuro di voler sbannare questo utente?",
-    "user_ban_success": "Stato utente aggiornato con successo.",
+    "user_ban_success": "Utente bannato con successo.",
+    "user_unban_success": "Utente sbannato con successo.",
     "user_ban_error": "Errore durante l'aggiornamento dello stato utente.",
     "user_delete_success": "Utente eliminato con successo.",
     "user_delete_error": "Errore durante l'eliminazione dell'utente."
@@ -201,7 +210,8 @@ const alertConfig = computed(() => {
     "confirm_delete": "¿Estás seguro de que deseas eliminar este usuario?",
     "confirm_ban_user": "¿Estás seguro de que deseas prohibir a este usuario?",
     "confirm_unban_user": "¿Estás seguro de que deseas desprohibir a este usuario?",
-    "user_ban_success": "Estado del usuario actualizado con éxito.",
+    "user_ban_success": "Usuario prohibido con éxito.",
+    "user_unban_success": "Usuario desprohibido con éxito.",
     "user_ban_error": "Error al actualizar el estado del usuario.",
     "user_delete_success": "Usuario eliminado con éxito.",
     "user_delete_error": "Error al eliminar el usuario."
