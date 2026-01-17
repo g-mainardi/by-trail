@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { UserStatusEnum, UserTypeEnum, UserDocument } from 'src/types/index.js';
+import { UserStatusEnum, UserTypeEnum, UserDocument } from '../types/index.js';
 
 const { Schema } = mongoose;
 

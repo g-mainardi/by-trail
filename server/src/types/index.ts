@@ -24,7 +24,7 @@ export interface UserDocument {
   password?: string;
   creationDate?: Date;
   favRegions?: string[];
-  favoritesBivouacs?: any[];
+  favoritesBivouacs?: Object[];
 }
 
 export interface AuthRequest extends Request {
