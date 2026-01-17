@@ -31,7 +31,7 @@ const typeStyles: Record<NotificationType, string> = {
 
 <template>
   <div
-    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-gray-100 p-4 transition-all duration-200 hover:shadow-md"
+    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-gray-100 p-3 mb-1 transition-all duration-200 hover:shadow-md"
     :class="[
       read ? 'bg-white' : 'bg-blue-50/50',
       typeStyles[type] || 'border-l-4 border-l-gray-300',

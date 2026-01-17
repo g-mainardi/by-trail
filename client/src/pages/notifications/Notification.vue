@@ -116,18 +116,20 @@ onUnmounted(() => {
 
 <template>
   <Card class="card">
-    <CardHeader class="flex flex-row justify-between items-center">
+    <CardHeader
+      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
+    >
       <Button
         @click="handleTestNotification"
         :disabled="isTesting"
-        class="text-sm font-bold bg-gray-600 hover:bg-gray-500 cursor-pointer"
+        class="w-full sm:w-auto text-sm font-bold bg-gray-600 hover:bg-gray-500 cursor-pointer"
       >
-        {{ isTesting ? 'Sending...' : 'Test Real Time Notification' }}
+        {{ isTesting ? t('sending') : t('test_real_time') }}
       </Button>
       <Button
         v-if="hasUnread"
         @click="handleAllRead"
-        class="text-sm font-bold cursor-pointer"
+        class="w-full sm:w-auto text-sm font-bold cursor-pointer"
       >
         {{ t('notifications_mark_all_read') }}
       </Button>
@@ -160,14 +162,20 @@ onUnmounted(() => {
     "en": {
       "notifications_mark_all_read": "Mark all as read",
       "no_notifications": "No Notifications",
+      "test_real_time": "Test Real Time Notification",
+      "sending": "Sending..."
     },
     "it": {
       "notifications_mark_all_read": "Segna tutte come lette",
       "no_notifications": "Nessuna Notifica",
+      "test_real_time": "Test Notifica in Tempo Reale",
+      "sending": "Invio in corso..."
     },
     "es": {
       "notifications_mark_all_read": "Marcar todas como leídas",
       "no_notifications": "No hay notificaciones",
+      "test_real_time": "Probar Notificación en Tiempo Real",
+      "sending": "Enviando..."
     }
   }
 </i18n>
