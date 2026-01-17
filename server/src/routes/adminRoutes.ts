@@ -5,11 +5,12 @@ import {
   deleteUser,
 } from '../controllers/adminController.js';
 import { protect } from '../middleware/authMiddleware.js';
+import { admin } from '../middleware/adminMiddleware.js';
 
 const router = express.Router();
 
-// All routes here are protected
-router.use(protect);
+// All routes here are protected -- admin only
+router.use(protect, admin);
 
 // /api/...
 router.get('/users', fetchUsers);
