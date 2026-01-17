@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { User, UserStatus } from '@/stores/auth';
-import { UserStatusEnum } from '@/stores/auth';
+import type { User, UserStatus } from '@/types';
+import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 

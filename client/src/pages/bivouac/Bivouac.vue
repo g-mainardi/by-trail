@@ -6,6 +6,8 @@ import CardTitle from '@/components/ui/card/CardTitle.vue';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+// todo: change to type from '@/types' when store is updated
+import type { Bivouac as RealBivouac } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
 import {
   Bed as BedIcon,
@@ -20,7 +22,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
-const favorites = ref<Bivouac[]>([]);
+const favorites = ref<RealBivouac[]>([]);
 
 const isFavorite = (bivouacId: string): boolean => {
   return favorites.value.some((bivouac) => bivouac._id === bivouacId);

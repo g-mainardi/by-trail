@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { User } from '@/stores/auth';
 import { useAdminUsersStore } from '@/stores/admin';
 import { storeToRefs } from 'pinia';
-import { UserStatusEnum, UserTypeEnum } from '@/stores/auth';
+import {
+  type User,
+  type UserStatus,
+  UserStatusEnum,
+  UserTypeEnum,
+} from '@/types';
 
 import DataTable from '@/components/ui/data-table/DataTable.vue';
 import UserActions from './UserActions.vue';
@@ -43,7 +47,7 @@ const columns = [
 const onBanUser = async (user: User) => {
   const id = getUserId(user);
   if (!id) return;
-  const originalStatus = user.status;
+  const originalStatus = user.status as UserStatus;
   try {
     // Confirm action
     const confirmed = confirm(
@@ -136,27 +140,29 @@ const alertConfig = computed(() => {
 
       <template #cell-status="{ row }">
         <span class="font-bold text-xs" :class="row.status">
-          {{ t(row.status) }}
+          {{ t(row.status || '') }}
         </span>
       </template>
 
       <template #cell-creationDate="{ row }">
         <span class="text-xs text-muted-foreground">{{
-          new Date(row.creationDate).toLocaleDateString(
-            ['it', 'es'].includes(locale) ? 'it-IT' : 'en-US',
-            {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            }
-          )
+          row.creationDate
+            ? new Date(row.creationDate).toLocaleDateString(
+                ['it', 'es'].includes(locale) ? 'it-IT' : 'en-US',
+                {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                }
+              )
+            : '-'
         }}</span>
       </template>
 
       <template #cell-actions="{ row }">
         <UserActions
           v-if="row.type !== ADMIN"
-          :user="{ ...row, id: getUserId(row) }"
+          :user="{ ...row, id: getUserId(row), status: row.status || ACTIVE }"
           @ban="onBanUser(row)"
           @delete="onDeleteUser(row)"
         />
