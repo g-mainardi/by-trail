@@ -126,17 +126,15 @@ const alertConfig = computed(() => {
       <template #cell-type="{ row }">
         <span
           class="capitalize badge badge-outline px-2 py-1 rounded-full text-xs bg-secondary"
+          :class="row.type"
         >
           {{ row.type }}
         </span>
       </template>
 
       <template #cell-status="{ row }">
-        <span
-          class="font-bold text-xs"
-          :class="row.status === 'active' ? 'text-green-600' : 'text-red-600'"
-        >
-          {{ row.status === 'active' ? t('active') : t('banned') }}
+        <span class="font-bold text-xs" :class="row.status">
+          {{ t(row.status) }}
         </span>
       </template>
 
@@ -155,6 +153,7 @@ const alertConfig = computed(() => {
 
       <template #cell-actions="{ row }">
         <UserActions
+          v-if="row.type !== ADMIN"
           :user="{ ...row, id: getUserId(row) }"
           @ban="onBanUser(row)"
           @delete="onDeleteUser(row)"
@@ -163,6 +162,24 @@ const alertConfig = computed(() => {
     </DataTable>
   </div>
 </template>
+<style scoped>
+.admin {
+  background-color: #e6f0fa; /* light blue */
+  color: #555; /* gray */
+  font-weight: bold;
+}
+.user {
+  color: #888; /* gray */
+  background-color: transparent;
+  font-weight: normal;
+}
+.active {
+  color: #16a34a; /* green */
+}
+.banned {
+  color: #dc2626; /* red */
+}
+</style>
 <i18n>
 {
   "en": {
