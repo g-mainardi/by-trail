@@ -7,12 +7,6 @@ import {
 import { User } from '../models/models.js';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-
   try {
     const users = await User.find().exec();
 
