@@ -1,1 +1,13 @@
+# ! /bin/sh
+# Copy types from server to client
+mkdir -p client/src/types
+cp server/src/types/index.ts client/src/types/index.ts
+
+if [ $? -ne 0 ]; then
+  echo "Error copying types!"
+  exit 1
+fi
+git add client/src/types/index.ts
+
+# Run lint-staged
 npx lint-staged
