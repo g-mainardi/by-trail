@@ -39,6 +39,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Toaster position="top-center" richColors />
+  <Toaster
+    position="top-center"
+    richColors
+    :toastOptions="{
+      style: {
+        borderRadius: 'var(--radius)',
+        fontFamily: 'var(--font-sans)',
+      },
+    }"
+  />
   <RouterView />
 </template>

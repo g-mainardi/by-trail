@@ -16,7 +16,7 @@ import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 import { useFavoriteStore } from '@/stores/favorites';
-import { useIntentionStore } from '@/stores/intentions';
+import { useIntentionStore, type Intention } from '@/stores/intentions';
 import {
   fromDate,
   getLocalTimeZone,
@@ -40,6 +40,7 @@ const favoritesStore = useFavoriteStore();
 const favorites = ref<Bivouac[]>([]);
 
 const intentionStore = useIntentionStore();
+const intentions = ref<Intention[]>([]);
 
 const sendIntention = async () => {
   const res = await intentionStore.sendIntention(
@@ -50,6 +51,8 @@ const sendIntention = async () => {
   if (res.success) {
     console.log('Intention sent successfully');
     toast.success('Intention sent successfully');
+    intentions.value = await intentionStore.getIntentions();
+    console.log(intentions.value);
   } else {
     toast.error(`Error: ${res.error}`);
   }
@@ -82,7 +85,7 @@ const props = defineProps<{ id: string }>();
 let bivouac = ref<Bivouac>({} as Bivouac);
 const capacity = bivouac.value.capacity;
 
-const people = ref<number>(0);
+const people = ref<number>(1);
 const date = ref(fromDate(new Date(), getLocalTimeZone())) as Ref<DateValue>;
 
 onMounted(async () => {
@@ -92,6 +95,12 @@ onMounted(async () => {
     console.error('Error fetching bivouac:', error);
   }
   favorites.value = await favoritesStore.getFavoriteBivouacs();
+
+  try {
+    intentions.value = await intentionStore.getIntentions();
+  } catch (error) {
+    console.error('Error fetching intentions:', error);
+  }
 });
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
@@ -143,11 +152,11 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             <!-- People -->
             <div class="flex flex-col lg:flex-row gap-2">
               <span class="flex items-center whitespace-nowrap">
-                People going
+                {{ t('people_going') }}:
               </span>
               <Select v-model="people">
                 <SelectTrigger id="dropdown" class="w-full">
-                  <SelectValue placeholder="1" />
+                  <SelectValue placeholder="{{ people }}" />
                 </SelectTrigger>
                 <SelectContent align="center">
                   <div v-for="i in bivouac.capacity" :key="i">
@@ -158,7 +167,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             </div>
 
             <!-- Confirm Button -->
-            <Button @click="sendIntention">Send intention</Button>
+            <Button @click="sendIntention">{{ t('send_intention') }}</Button>
           </div>
         </div>
       </div>
@@ -182,7 +191,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
           </div>
           <div class="date_icon">
             {{ new Date(Date.now() + 86400000 * 3).toDateString() }}
-            <Circle />
+            <Circle /><Circle />
           </div>
         </div>
 
@@ -234,6 +243,11 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </template>
 
 <style scoped>
+/* Highlight calendar days with intentions */
+.calendar tbody tr button {
+  border-color: aqua;
+}
+
 .icon-with-text {
   /* transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 */
   transition: all 0.3s;
@@ -292,6 +306,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "likes": "Likes",
     "toggle_favorite": "Toggle favorite",
     "images": "Images",
+    "people_going": "People going",
+    "send_intention": "Send intention",
     "explain_plan_functionality": "Here you can express the intention to go to a bivouac and know how many
         people have expressed the intention to go to the same bivouac on the
         various days."
@@ -312,6 +328,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "likes": "Mi piace",
     "toggle_favorite": "Attiva/disattiva preferito",
     "images": "Immagini",
+    "people_going": "Persone che vanno",
+    "send_intention": "Invia intenzione",
     "explain_plan_functionality": "Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
         persone hanno espresso l'intenzione di andare nello stesso bivacco nei
         vari giorni."
@@ -332,6 +350,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "likes": "Me gusta",
     "toggle_favorite": "Alternar favorito",
     "images": "Imágenes",
+    "people_going": "Personas que van",
+    "send_intention": "Enviar intención",
     "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
         personas han expresado la intención de ir al mismo bivouac en los
         varios días."

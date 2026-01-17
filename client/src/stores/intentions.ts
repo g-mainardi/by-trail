@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { DateValue } from 'reka-ui';
 import api from './utility/axiosInstance';
 
-interface Intention {
+export interface Intention {
   bivouacId: string;
   date: DateValue;
   people: number;
@@ -64,7 +64,7 @@ export const useIntentionStore = defineStore('intentions', () => {
       if (!data || !data.intentions || !Array.isArray(data.intentions))
         throw new Error('Invalid data structure received');
 
-      const intentions: any[] = data.intentions;
+      const intentions: Intention[] = data.intentions;
       return intentions;
     } catch (error: any) {
       console.error('Error fetching intentions:', error);
