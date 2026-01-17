@@ -11,6 +11,7 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
   const isLoading = ref(false);
 
   const fetchUsers = async () => {
+    if (isLoading.value) return;
     isLoading.value = true;
     try {
       const res = await api.get('/users');
@@ -29,6 +30,7 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
   };
 
   const toggleUserBlock = async (userId: string, currentStatus: UserStatus) => {
+    if (isLoading.value) return false;
     isLoading.value = true;
 
     try {
@@ -54,6 +56,7 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
   };
 
   const deleteUser = async (userId: string) => {
+    if (isLoading.value) return false;
     isLoading.value = true;
 
     try {
