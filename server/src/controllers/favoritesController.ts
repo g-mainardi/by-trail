@@ -1,7 +1,7 @@
 import type { Response } from 'express';
 import type { AuthRequest } from '../types/index.js';
 import mongoose from 'mongoose';
-import { User, Bivouac } from '../models/models.js';
+import { User, Bivouac, Route } from '../models/models.js';
 
 export const fetchFavoriteBivouacs = async (
   req: AuthRequest,
@@ -81,6 +81,82 @@ export const removeFavoriteBivouac = async (
     return res.status(204).send();
   } catch (error) {
     console.error('Error removing favorite bivouac:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const fetchFavoriteRoutes = async (req: AuthRequest, res: Response) => {
+  try {
+    const favoriteRoutesIds = req.user?.favoritesRoutes || [];
+    if (!favoriteRoutesIds || favoriteRoutesIds.length === 0) {
+      return res.status(200).json({ routes: [] });
+    }
+    const favorites = await Route.find({
+      _id: { $in: favoriteRoutesIds },
+    });
+    if (!favorites) {
+      console.warn('Invalid route IDs in user favorites');
+      return res.status(200).json({ routes: [] });
+    }
+
+    return res.status(200).json({ routes: favorites });
+  } catch (error) {
+    console.error('Error fetching favorite routes:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const addFavoriteRoute = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const routeId = req.body.id;
+
+  if (!routeId || !mongoose.Types.ObjectId.isValid(routeId)) {
+    return res.status(400).json({ error: 'Invalid or missing route ID' });
+  }
+  const favoritesRoutes = req.user?.favoritesRoutes || [];
+
+  if (favoritesRoutes.includes(routeId)) {
+    return res.status(409).json({ error: 'Route already in favorites' });
+  }
+  try {
+    const success = await User.findByIdAndUpdate(userId, {
+      $push: { favoritesRoutes: routeId },
+    });
+    if (!success) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.status(201).json({ message: 'Route added to favorites' });
+  } catch (error) {
+    console.error('Error adding favorite route:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const removeFavoriteRoute = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const routeId = req.body.id;
+
+  if (!routeId || !mongoose.Types.ObjectId.isValid(routeId)) {
+    return res.status(400).json({ error: 'Invalid or missing route ID' });
+  }
+  const favoritesRoutes = req.user?.favoritesRoutes || [];
+
+  if (!favoritesRoutes.includes(routeId)) {
+    return res.status(404).json({ error: 'Route not in favorites' });
+  }
+
+  try {
+    const deletedFavorite = await User.findByIdAndUpdate(userId, {
+      $pull: { favoritesRoutes: routeId },
+    });
+
+    if (!deletedFavorite) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    return res.status(204).send();
+  } catch (error) {
+    console.error('Error removing favorite route:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
