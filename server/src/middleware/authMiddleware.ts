@@ -2,8 +2,13 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
 import { NextFunction, Response } from 'express';
+import { AuthRequest } from '../types/index.js';
 
-export const protect = async (req: any, res: Response, next: NextFunction) => {
+export const protect = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
   let token;
 
   // 1. Check if header Authorization is present and starts with "Bearer"

@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import type { AuthRequest } from './userController.ts';
+import type { AuthRequest } from '../types/index.js';
 import mongoose from 'mongoose';
 import { FavBivouac } from '../models/models.js';
 
@@ -36,7 +36,7 @@ export const fetchFavoriteBivouacs = async (
 
 export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
-  const bivouacId = req.params.id;
+  const bivouacId = req.body.id;
 
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
@@ -76,7 +76,7 @@ export const removeFavoriteBivouac = async (
   res: Response
 ) => {
   const userId = req.user?.id;
-  const bivouacId = req.params.id;
+  const bivouacId = req.body.id;
 
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });

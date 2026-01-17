@@ -6,12 +6,19 @@ import { useRouter } from 'vue-router';
 
 // --- Interfaces ---
 
-const UserEnum = {
+export const UserTypeEnum = {
   USER: 'user',
   ADMIN: 'admin',
 } as const;
 
-type UserType = (typeof UserEnum)[keyof typeof UserEnum];
+type UserType = (typeof UserTypeEnum)[keyof typeof UserTypeEnum];
+
+export const UserStatusEnum = {
+  ACTIVE: 'active',
+  BANNED: 'banned',
+} as const;
+
+export type UserStatus = (typeof UserStatusEnum)[keyof typeof UserStatusEnum];
 
 // Matches the User model fields we expose
 export interface User {
@@ -21,6 +28,8 @@ export interface User {
   email: string;
   favRegions?: string[];
   type?: UserType;
+  status: UserStatus;
+  creationDate: Date;
 }
 
 export const useAuthStore = defineStore('auth', () => {
