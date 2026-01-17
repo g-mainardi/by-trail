@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
+import { AuthRequestWithPassword } from 'src/types/server_only.js';
 
 let JWT_SECRET;
 try {
@@ -140,7 +141,10 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteAccount = async (req: Request, res: Response) => {
+export const deleteAccount = async (
+  req: AuthRequestWithPassword,
+  res: Response
+) => {
   const { email, password } = req.body;
   // Input validation: check for missing or empty email/password
   if (!email || !password) {
