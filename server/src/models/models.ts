@@ -2,14 +2,16 @@ import mongoose from 'mongoose';
 import {
   UserStatusEnum,
   UserTypeEnum,
-  UserDocument,
-  BivouacDocument,
   RegionsEnum,
   RouteDifficultyEnum,
   RouteTypeEnum,
   RoutePathTypeEnum,
-  RouteDocument,
 } from '../types/index.js';
+import {
+  UserDocument,
+  BivouacDocument,
+  RouteDocument,
+} from 'src/types/server_only.js';
 
 const { Schema } = mongoose;
 

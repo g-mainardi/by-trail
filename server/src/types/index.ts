@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 export const UserStatusEnum = {
   ACTIVE: 'active',
   BANNED: 'banned',
@@ -62,7 +60,7 @@ export type RouteType = (typeof RouteTypeEnum)[keyof typeof RouteTypeEnum];
 export type RoutePathType =
   (typeof RoutePathTypeEnum)[keyof typeof RoutePathTypeEnum];
 
-export interface UserDocument {
+export interface User {
   _id?: string;
   id?: string;
   name?: string;
@@ -75,7 +73,7 @@ export interface UserDocument {
   favoritesRoutes?: string[];
 }
 
-export interface BivouacDocument {
+export interface Bivouac {
   _id?: string;
   id?: string;
   name?: string;
@@ -92,7 +90,7 @@ export interface BivouacDocument {
   note?: string;
 }
 
-export interface RouteDocument {
+export interface Route {
   _id?: string;
   id?: string;
   title: string;
@@ -109,8 +107,4 @@ export interface RouteDocument {
     type: RoutePathType;
     coordinates: any[];
   };
-}
-
-export interface AuthRequest extends Request {
-  user?: UserDocument | null;
 }
