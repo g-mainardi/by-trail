@@ -1,5 +1,4 @@
 import express from 'express';
-import { fetchBivouacIntentions } from 'src/controllers/intentionController.js';
 import {
   fetchBivouacById,
   fetchBivouacs,
@@ -15,6 +14,5 @@ router.use(protect);
 router.post('/list', fetchBivouacs);
 router.post('/map', fetchMapBivouacs);
 router.get('/:id', fetchBivouacById);
-router.get('/intentions', fetchBivouacIntentions);
 
 export default router;

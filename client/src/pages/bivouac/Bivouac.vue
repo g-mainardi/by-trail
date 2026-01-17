@@ -44,6 +44,8 @@ const favorites = ref<Bivouac[]>([]);
 const intentionStore = useIntentionStore();
 const userIntentions = ref<Intention[]>([]);
 
+const bivouacsIntentions = ref<{ date: Date; places: number }[]>([]);
+
 const sendIntention = async () => {
   const res = await intentionStore.sendIntention(
     bivouac.value._id,
@@ -52,7 +54,7 @@ const sendIntention = async () => {
   );
   if (res.success) {
     toast.success(res.message ? res.message : 'Intention sent successfully!');
-    userIntentions.value = await intentionStore.getIntentions();
+    userIntentions.value = await intentionStore.getUserIntentions(props.id);
   } else {
     toast.error(`Error: ${res.error}`);
   }
@@ -65,7 +67,7 @@ const cancelIntention = async (intentionId: string) => {
     toast.success(
       res.message ? res.message : 'Intention cancelled successfully!'
     );
-    userIntentions.value = await intentionStore.getIntentions();
+    userIntentions.value = await intentionStore.getUserIntentions(props.id);
   } else {
     toast.error(`Error: ${res.error}`);
   }
@@ -109,7 +111,7 @@ onMounted(async () => {
   favorites.value = await favoritesStore.getFavoriteBivouacs();
 
   try {
-    userIntentions.value = await intentionStore.getIntentions();
+    userIntentions.value = await intentionStore.getUserIntentions(props.id);
   } catch (error) {
     console.error('Error fetching intentions:', error);
   }

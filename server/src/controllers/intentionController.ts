@@ -130,8 +130,3 @@ export const fetchUserBivouacIntentions = async (
     }
   }
 };
-
-export const fetchBivouacIntentions = async (
-  req: AuthRequest,
-  res: Response
-) => {};

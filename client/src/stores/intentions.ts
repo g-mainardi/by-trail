@@ -70,34 +70,9 @@ export const useIntentionStore = defineStore('intentions', () => {
     }
   }
 
-  async function getAllBivouacIntentions(): Promise<
-    {
-      date: Date;
-      places: number;
-    }[]
-  > {
-    try {
-      const res = await api.get(`/bivouacs/intentions`);
-      const data = res.data;
-
-      if (!data || !data.intentions || !Array.isArray(data.intentions))
-        throw new Error('Invalid data structure received');
-
-      const intentions: {
-        date: Date;
-        places: number;
-      }[] = data.intentions;
-      return intentions;
-    } catch (error: any) {
-      console.error('Error fetching all bivouac intentions:', error);
-      return [];
-    }
-  }
-
   return {
     sendIntention,
     deleteIntention,
-    getIntentions: getUserIntentions,
-    getAllBivouacIntentions,
+    getUserIntentions,
   };
 });
