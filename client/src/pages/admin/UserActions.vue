@@ -16,11 +16,15 @@ import {
   Copy,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
+import type { UserStatus } from '@/stores/auth';
+import { UserStatusEnum } from '@/stores/auth';
+
+const { ACTIVE } = UserStatusEnum;
 
 const props = defineProps<{
   user: {
     id: string;
-    status: 'active' | 'banned';
+    status: UserStatus;
   };
 }>();
 
@@ -54,10 +58,10 @@ function copyId() {
 
       <DropdownMenuItem @click="$emit('ban', user.id)">
         <component
-          :is="user.status === 'active' ? Ban : CheckCircle"
+          :is="user.status === ACTIVE ? Ban : CheckCircle"
           class="mr-2 h-4 w-4"
         />
-        {{ user.status === 'active' ? t('ban_user') : t('unban_user') }}
+        {{ user.status === ACTIVE ? t('ban_user') : t('unban_user') }}
       </DropdownMenuItem>
 
       <DropdownMenuItem
