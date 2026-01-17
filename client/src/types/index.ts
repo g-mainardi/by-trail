@@ -60,8 +60,10 @@ export type RouteType = (typeof RouteTypeEnum)[keyof typeof RouteTypeEnum];
 export type RoutePathType =
   (typeof RoutePathTypeEnum)[keyof typeof RoutePathTypeEnum];
 
+export type UUID = string;
+
 export interface User {
-  _id?: string;
+  _id?: UUID;
   id?: string;
   name?: string;
   email?: string;
@@ -74,7 +76,7 @@ export interface User {
 }
 
 export interface Bivouac {
-  _id?: string;
+  _id?: UUID;
   id?: string;
   name?: string;
   region?: Region;
@@ -91,7 +93,7 @@ export interface Bivouac {
 }
 
 export interface Route {
-  _id?: string;
+  _id?: UUID;
   id?: string;
   title: string;
   region: Region[];
