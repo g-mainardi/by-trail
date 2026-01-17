@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { User } from '@/stores/auth';
+import type { User, UserStatus } from '@/stores/auth';
+import { UserStatusEnum } from '@/stores/auth';
+
+const { ACTIVE, BANNED } = UserStatusEnum;
 
 export const useAdminUsersStore = defineStore('admin-users', () => {
   const users = ref<User[]>([]);
@@ -25,14 +28,11 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
     }
   };
 
-  const toggleUserBlock = async (
-    userId: string,
-    currentStatus: 'active' | 'banned'
-  ) => {
+  const toggleUserBlock = async (userId: string, currentStatus: UserStatus) => {
     isLoading.value = true;
 
     try {
-      const newStatus = currentStatus === 'active' ? 'banned' : 'active';
+      const newStatus = currentStatus === ACTIVE ? BANNED : ACTIVE;
       await api.patch(`/users/${userId}/status`, { status: newStatus });
 
       // Local update
@@ -48,6 +48,8 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
     } catch (err: any) {
       console.error(`Error changing status for user ${userId}:`, err);
       return false;
+    } finally {
+      isLoading.value = false;
     }
   };
 
