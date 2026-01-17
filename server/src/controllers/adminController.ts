@@ -25,7 +25,7 @@ export const updateUserStatus = async (req: AuthRequest, res: Response) => {
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
-  if (!Object.values(UserStatusEnum).includes(status)) {
+  if (!status || !Object.values(UserStatusEnum).includes(status)) {
     return res.status(400).json({ error: 'Invalid status value' });
   }
   if (userId === targetUserId) {
@@ -72,13 +72,16 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
   }
 
   try {
-    const user = await User.findByIdAndDelete(targetUserId).exec();
+    const user = await User.findById(targetUserId).exec();
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     if (user.type === UserTypeEnum.ADMIN) {
       return res.status(403).json({ error: 'Cannot delete an admin account' });
     }
+    const deletionResult = await User.deleteOne({ _id: targetUserId }).exec();
+    if (deletionResult.deletedCount === 0)
+      return res.status(404).json({ error: 'User not found' });
 
     return res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {

@@ -10,7 +10,7 @@ export const UserTypeEnum = {
   USER: 'user',
 } as const;
 
-// Derives types automatically compile time
+// Derive types automatically compile time
 export type UserStatus = (typeof UserStatusEnum)[keyof typeof UserStatusEnum];
 export type UserType = (typeof UserTypeEnum)[keyof typeof UserTypeEnum];
 

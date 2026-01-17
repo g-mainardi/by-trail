@@ -53,7 +53,8 @@ const onBanUser = async (user: User) => {
     );
     if (!confirmed) return;
     // Store will handle the toggling logic
-    await toggleUserBlock(id, originalStatus);
+    const success = await toggleUserBlock(id, originalStatus);
+    if (!success) throw new Error('Status toggle failed');
   } catch (e) {
     feedbackMessage.value = t('user_ban_error');
     isError.value = true;
@@ -71,7 +72,8 @@ const onDeleteUser = async (user: User) => {
     if (!id) return;
     const confirmed = confirm(t('confirm_delete'));
     if (!confirmed) return;
-    await deleteUser(id);
+    const success = await deleteUser(id);
+    if (!success) throw new Error('Deletion failed');
   } catch (e) {
     feedbackMessage.value = t('user_delete_error');
     isError.value = true;
