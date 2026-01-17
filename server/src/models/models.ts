@@ -27,6 +27,11 @@ const userSchema = new Schema({
     ref: 'Bivouac',
     default: [],
   },
+  favoritesRoutes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Route',
+    default: [],
+  },
   type: {
     type: String,
     enum: Object.values(UserTypeEnum),
@@ -96,22 +101,6 @@ const imageSchema = new Schema({
   uploadedDate: { type: Date, default: Date.now },
 });
 
-const favBivouacSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  bivouac: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bivouac',
-    required: true,
-  },
-});
-// Create an index for faster lookups and ensuring a user cannot favorite the same bivouac multiple times
-favBivouacSchema.index({ user: 1, bivouac: 1 }, { unique: true });
-
-const favTrailSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  trail: { type: mongoose.Schema.Types.ObjectId, ref: 'Trail', required: true },
-});
-
 const reservationSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   bivouac: {
@@ -171,8 +160,6 @@ const User = mongoose.model<UserDocument>('User', userSchema);
 const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
 const Route = mongoose.model('Route', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
-const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
-const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
 const Notification = mongoose.model('Notify', notificationSchema);
@@ -182,8 +169,6 @@ const Proposal = mongoose.model('Proposal', proposalSchema);
 
 export {
   Bivouac,
-  FavBivouac,
-  FavTrail,
   Image,
   Notification,
   Reservation,
