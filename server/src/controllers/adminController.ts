@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import type { AuthRequest } from './userController.js';
+import type { AuthRequest } from 'src/types/index.js';
 import { User } from '../models/models.js';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {

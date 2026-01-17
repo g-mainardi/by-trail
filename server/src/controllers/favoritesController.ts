@@ -1,7 +1,7 @@
 import type { Response } from 'express';
+import type { AuthRequest } from 'src/types/index.js';
 import mongoose from 'mongoose';
 import { FavBivouac } from '../models/models.js';
-import type { AuthRequest } from './userController.ts';
 
 export const fetchFavoriteBivouacs = async (
   req: AuthRequest,
