@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import type { AuthRequest } from './userController.js';
+import type { AuthRequest } from '../types/index.js';
 import mongoose from 'mongoose';
 import { Notification } from '../models/models.js';
 

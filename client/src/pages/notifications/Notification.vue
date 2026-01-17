@@ -26,12 +26,14 @@ const formatTime = (dateString: string) => {
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.round(diffMs / 60000);
-  const diffHours = Math.round(diffMins / 60);
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
 
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins} min ago`;
-  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffMins < 1) return t('notifications.time.justNow');
+  if (diffMins < 60)
+    return t('notifications.time.minutesAgo', { count: diffMins });
+  if (diffHours < 24)
+    return t('notifications.time.hoursAgo', { count: diffHours });
   return date.toLocaleDateString();
 };
 
@@ -163,19 +165,40 @@ onUnmounted(() => {
       "notifications_mark_all_read": "Mark all as read",
       "no_notifications": "No Notifications",
       "test_real_time": "Test Real Time Notification",
-      "sending": "Sending..."
+      "sending": "Sending...",
+      "notifications": {
+        "time": {
+          "justNow": "Just now",
+          "minutesAgo": "{count} minute ago | {count} minutes ago",
+          "hoursAgo": "{count} hour ago | {count} hours ago"
+        }
+      }
     },
     "it": {
       "notifications_mark_all_read": "Segna tutte come lette",
       "no_notifications": "Nessuna Notifica",
       "test_real_time": "Test Notifica in Tempo Reale",
-      "sending": "Invio in corso..."
+      "sending": "Invio in corso...",
+      "notifications": {
+        "time": {
+          "justNow": "Proprio ora",
+          "minutesAgo": "{count} minuto fa | {count} minuti fa",
+          "hoursAgo": "{count} ora fa | {count} ore fa"
+        }
+      }
     },
     "es": {
       "notifications_mark_all_read": "Marcar todas como leídas",
       "no_notifications": "No hay notificaciones",
       "test_real_time": "Probar Notificación en Tiempo Real",
-      "sending": "Enviando..."
+      "sending": "Enviando...",
+      "notifications": {
+        "time": {
+          "justNow": "Ahora mismo",
+          "minutesAgo": "hace {count} minuto | hace {count} minutos",
+          "hoursAgo": "hace {count} hora | hace {count} horas"
+        }
+      }
     }
   }
 </i18n>
