@@ -50,6 +50,11 @@ export const RoutePathTypeEnum = {
   MULTI_LINE_STRING: 'MultiLineString',
 } as const;
 
+export const ProposalEnum = {
+  ROUTE: 'route',
+  BIVOUAC: 'bivouac',
+} as const;
+
 // Derive types automatically compile time
 export type UserStatus = (typeof UserStatusEnum)[keyof typeof UserStatusEnum];
 export type UserType = (typeof UserTypeEnum)[keyof typeof UserTypeEnum];
@@ -59,6 +64,7 @@ export type RouteDifficulty =
 export type RouteType = (typeof RouteTypeEnum)[keyof typeof RouteTypeEnum];
 export type RoutePathType =
   (typeof RoutePathTypeEnum)[keyof typeof RoutePathTypeEnum];
+export type ProposalType = (typeof ProposalEnum)[keyof typeof ProposalEnum];
 
 export type UUID = string;
 
@@ -109,4 +115,12 @@ export interface Route {
     type: RoutePathType;
     coordinates: any[];
   };
+}
+
+export interface Proposal {
+  senderEmail: string;
+  type: ProposalType;
+  subjectName: string;
+  description: string;
+  locality: string;
 }
