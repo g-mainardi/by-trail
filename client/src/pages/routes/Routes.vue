@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useFavoriteStore } from '@/stores/favorites';
 import { useRouteStore } from '@/stores/routes';
 import { computed, onMounted } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
@@ -12,9 +13,11 @@ import {
 import RouteCard from './RouteCard.vue';
 
 const routeStore = useRouteStore();
+const favoriteStore = useFavoriteStore();
 
 onMounted(async () => {
   await routeStore.fetchRoutes();
+  await favoriteStore.fetchFavoriteRoutes();
 });
 
 const filteredRoutes = computed(() => {
@@ -34,10 +37,14 @@ const filteredRoutes = computed(() => {
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-0"
   >
     <div v-for="route in filteredRoutes" :key="route._id">
-      <RouteCard :route="route" />
+      <RouteCard
+        :route="route"
+        :isFavorite="favoriteStore.isFavoriteRoute(route._id || '')"
+        @toggle-favorite="favoriteStore.toggleFavoriteRoute"
+      />
     </div>
   </div>
   <div v-else class="no-results">
-    <p>No routes found matching your criteria.</p>
+    <p></p>
   </div>
 </template>

@@ -20,7 +20,6 @@ import {
 import Toggle from '@/components/ui/toggle/Toggle.vue';
 import {
   Bed as BedIcon,
-  Calendar as CalendarIcon,
   Clock,
   Heart as HeartIcon,
   Mountain as MountainIcon,
@@ -29,11 +28,7 @@ import {
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import {
-  routeFilters,
-  type BivouacFilter,
-  type TrekkingRouteFilter,
-} from './filters';
+import { routeFilters, type BivouacFilter, type RouteFilter } from './filters';
 const { t } = useI18n();
 
 defineProps<{
@@ -43,8 +38,8 @@ defineProps<{
     searchQuery: BivouacFilter;
   };
   routeFilters: {
-    maxDurationFilter: TrekkingRouteFilter;
-    difficultyFilter: TrekkingRouteFilter;
+    maxDurationFilter: RouteFilter;
+    difficultyFilter: RouteFilter;
   };
 }>();
 </script>
@@ -80,6 +75,7 @@ defineProps<{
           class="flex flex-col gap-4"
         >
           <h3>{{ t('bivouac_filters') }}</h3>
+          <!-- SEARCH -->
           <div class="flex items-center gap-2">
             <SearchIcon />
             <Input
@@ -88,6 +84,7 @@ defineProps<{
             />
           </div>
 
+          <!-- CAPACITY -->
           <div class="flex items-center gap-2">
             <BedIcon
               :fill="
@@ -116,6 +113,7 @@ defineProps<{
             </NumberField>
           </div>
 
+          <!-- ALTITUDE -->
           <div class="flex items-center gap-2">
             <MountainIcon
               :fill="
@@ -153,16 +151,24 @@ defineProps<{
             </NumberField>
           </div>
 
+          <!-- TOILETS -->
           <Toggle
             variant="outline"
             aria-label="With toilets only"
             class="w-full"
+            disabled
           >
             <ToiletIcon />
             {{ t('with_toilets_only') }}
           </Toggle>
 
-          <Toggle variant="outline" aria-label="Favorites only" class="w-full">
+          <!-- FAVORITES -->
+          <Toggle
+            variant="outline"
+            aria-label="Favorites only"
+            class="w-full"
+            disabled
+          >
             <HeartIcon /> {{ t('favorites_only') }}
           </Toggle>
 
@@ -170,18 +176,20 @@ defineProps<{
             variant="outline"
             aria-label="Only open bivouacs"
             class="w-full"
+            disabled
           >
             <CalendarIcon /> {{ t('only_open') }}
           </Toggle>
 
           <Separator orientation="horizontal" />
 
+          <!-- RESET -->
           <Button
             variant="destructive"
             @click="$emit('resetBivouacFilters')"
-            class="w-full"
-            >{{ t('reset') }}</Button
-          >
+            class="w-1/3 self-end"
+            >{{ t('reset') }}
+          </Button>
         </div>
       </div>
 
@@ -191,8 +199,19 @@ defineProps<{
         class="flex flex-col px-4 gap-4"
       >
         <h3>{{ t('route_filters') }}</h3>
+
+        <!-- SEARCH -->
+        <div class="flex items-center gap-2">
+          <SearchIcon />
+          <Input
+            :placeholder="t('search')"
+            v-model="routeFilters.searchQuery.currentValue"
+          />
+        </div>
+
+        <!-- DIFFICULTY -->
         <div class="flex items-center gap-2 w-full">
-          Difficulty:
+          {{ t('difficulty') }}
           <Toggle
             class="w-full"
             v-model="routeFilters.difficultyFilter.currentValue.t"
@@ -216,8 +235,10 @@ defineProps<{
           >
         </div>
 
+        <!-- MAX DURATION -->
         <div class="flex items-center gap-2 w-full">
           <Clock />
+          Max
           <NumberField
             id="hour_duration"
             :default-value="6"
@@ -255,7 +276,7 @@ defineProps<{
         <Button
           variant="destructive"
           @click="$emit('resetRouteFilters')"
-          class="w-full"
+          class="w-1/3 self-end"
           >{{ t('reset') }}</Button
         >
       </div>
@@ -282,6 +303,7 @@ h3 {
       "only_open": "Only Open",
       "set_minimum_beds": "Set minimum beds:",
       "set_altitude_range": "Set Altitude Range (mt):",
+      "difficulty": "Difficulty",
       "reset": "Reset"
     },
     it: {
@@ -295,6 +317,7 @@ h3 {
       "only_open": "Solo Aperto",
       "set_minimum_beds": "Imposta letti minimi:",
       "set_altitude_range": "Imposta intervallo di altitudine (mt):",
+      "difficulty": "Difficoltà",
       "reset": "Reimposta"
     },
     es: {
@@ -308,6 +331,7 @@ h3 {
       "only_open": "Solo Abierto",
       "set_minimum_beds": "Establecer camas mínimas:",
       "set_altitude_range": "Establecer rango de altitud (mt):",
+      "difficulty": "Dificultad",
       "reset": "Reiniciar"
     }
   }

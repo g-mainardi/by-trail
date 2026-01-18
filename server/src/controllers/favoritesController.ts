@@ -1,7 +1,7 @@
 import type { Response } from 'express';
-import type { AuthRequest } from '../types/server_only.js';
 import mongoose from 'mongoose';
-import { User, Bivouac, Route } from '../models/models.js';
+import { Bivouac, Route, User } from '../models/models.js';
+import type { AuthRequest } from '../types/server_only.js';
 
 export const fetchFavoriteBivouacs = async (
   req: AuthRequest,

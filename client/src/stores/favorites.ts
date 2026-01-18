@@ -61,14 +61,9 @@ export const useFavoriteStore = defineStore('favorites', () => {
     try {
       const res = await api.get('/users/favorites/routes');
       const data = res.data;
-
-      if (!data || !data.routes || !Array.isArray(data.routes))
-        throw new Error('Invalid data structure received');
-
-      return data.routes as Route[];
+      routeFavorites.value = data.routes as Route[];
     } catch (error: any) {
       console.error('Error fetching favorite routes:', error);
-      return [];
     }
   };
 
@@ -77,8 +72,14 @@ export const useFavoriteStore = defineStore('favorites', () => {
   ): Promise<FavoritesResponse> => {
     try {
       const body = { id: routeId };
-      const res = await api.post(`/users/favorites/routes/`, body);
+      const res = await api.post(`/users/favorites/routes`, body);
       if (res.status === 200 || res.status === 201) return { success: true };
+      if (res.status === 409) {
+        return {
+          success: false,
+          error: 'Route is already in favorites.',
+        };
+      }
       return {
         success: false,
         error: `Unexpected response status: ${res.status}`,
@@ -124,6 +125,7 @@ export const useFavoriteStore = defineStore('favorites', () => {
       success: false,
     };
     if (isFavoriteRoute(routeId)) {
+      console.log('Removing favorite route:', routeId);
       res = await deleteFavoriteRoute(routeId);
     } else {
       res = await addFavoriteRoute(routeId);

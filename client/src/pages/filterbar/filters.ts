@@ -7,7 +7,7 @@ export interface BivouacFilter {
   predicate: (bivouac: Bivouac, value: any) => boolean;
 }
 
-export interface TrekkingRouteFilter {
+export interface RouteFilter {
   currentValue?: any;
   default: any;
   predicate: (route: Route, value: any) => boolean;
@@ -33,7 +33,7 @@ const altitudeFilter: BivouacFilter = {
   },
 };
 
-const searchQuery: BivouacFilter = {
+const searchBivouacQuery: BivouacFilter = {
   currentValue: '',
   default: '',
   predicate: (bivouac: Bivouac, value: string) => {
@@ -46,7 +46,7 @@ const searchQuery: BivouacFilter = {
   },
 };
 
-const maxDurationFilter: TrekkingRouteFilter = {
+const maxDurationFilter: RouteFilter = {
   currentValue: { hours: 8, minutes: 0 },
   default: { hours: 8, minutes: 0 },
   predicate: (route: Route, value: any) => {
@@ -64,7 +64,7 @@ const currentValue = {
   eea: true,
 };
 
-const difficultyFilter: TrekkingRouteFilter = {
+const difficultyFilter: RouteFilter = {
   currentValue: currentValue,
   default: currentValue,
   predicate: (route: Route, value: any) => {
@@ -78,15 +78,26 @@ const difficultyFilter: TrekkingRouteFilter = {
   },
 };
 
+const searchRouteQuery: RouteFilter = {
+  currentValue: '',
+  default: '',
+  predicate: (route: Route, value: string) => {
+    if (!value) return true;
+    const query = value.toLowerCase();
+    return route.title?.toLowerCase().includes(query);
+  },
+};
+
 const bivouacFilters = ref({
   minDesiredBeds: minDesiredBeds,
   altitudeFilter: altitudeFilter,
-  searchQuery: searchQuery,
+  searchQuery: searchBivouacQuery,
 });
 
 const routeFilters = ref({
   maxDurationFilter: maxDurationFilter,
   difficultyFilter: difficultyFilter,
+  searchQuery: searchRouteQuery,
 });
 
 function resetBivouacFilters() {

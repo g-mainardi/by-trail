@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import type { Bivouac } from '@/stores/bivouacs';
+import type { Bivouac } from '@/types';
 import {
   Bed as BedIcon,
   Heart as HeartIcon,
