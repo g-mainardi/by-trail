@@ -217,7 +217,7 @@ const onAutoSave = async (
 
         <div class="grid w-full items-center gap-1.5">
           <div class="flex justify-between">
-            <Label for="note">{{ t('notes') }}</Label>
+            <Label for="note">{{ t('note') }}</Label>
             <span
               v-if="savingField === 'note'"
               class="text-xs text-muted-foreground flex items-center"

@@ -5,6 +5,9 @@ import { useAdminStore } from '@/stores/admin';
 import { storeToRefs } from 'pinia';
 import type { Bivouac } from '@/types';
 
+import { Button } from '@/components/ui/button';
+import { ArrowUpDown } from 'lucide-vue-next';
+
 import DataTable from '@/components/ui/data-table/DataTable.vue';
 import BivouacActions from './BivouacsActions.vue';
 import BivouacEditSheet from './BivouacsEditSheet.vue';
@@ -75,7 +78,7 @@ const columns = [
     accessorKey: 'capacity',
   },
   {
-    header: t('notes'),
+    header: t('note'),
     accessorKey: 'note',
   },
   {
@@ -89,6 +92,16 @@ const columns = [
 <template>
   <div class="space-y-4">
     <DataTable :columns="columns" :data="bivouacs" search-key="name">
+      <template #header-name="{ column }">
+        <Button
+          variant="ghost"
+          class="pl-0 hover:bg-transparent"
+          @click="column.toggleSorting(column.getIsSorted() === 'asc')"
+        >
+          {{ t('name') }}
+          <ArrowUpDown class="ml-2 h-4 w-4" />
+        </Button>
+      </template>
       <template #cell-name="{ row }">
         <span class="font-medium pl-4">{{ row.name }}</span>
       </template>
@@ -114,7 +127,7 @@ const columns = [
     "edit_bivouac": "Edit Bivouac",
     "auto_save_notice": "Changes are saved automatically when you modify a field.",
     "saving": "Saving...",
-    "notes": "Notes",
+    "note": "Notes",
     "capacity": "Capacity",
     "altitude": "Elevation",
     "name": "Name",
@@ -130,7 +143,7 @@ const columns = [
     "edit_bivouac": "Modifica Bivacco",
     "auto_save_notice": "Le modifiche vengono salvate automaticamente quando modifichi un campo.",
     "saving": "Salvataggio...",
-    "notes": "Note",
+    "note": "Note",
     "capacity": "Posti Letto",
     "altitude": "Altitudine",
     "name": "Nome",
@@ -146,7 +159,7 @@ const columns = [
     "edit_bivouac": "Editar Vivac",
     "auto_save_notice": "Los cambios se guardan automáticamente al modificar un campo.",
     "saving": "Guardando...",
-    "notes": "Notas",
+    "note": "Notas",
     "capacity": "Capacidad",
     "altitude": "Altitud",
     "name": "Nombre",
