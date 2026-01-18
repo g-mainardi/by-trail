@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { User, UserStatus } from '@/types';
+import type { Bivouac, User, UserStatus } from '@/types';
 import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
 export const useAdminStore = defineStore('admin-users', () => {
   const users = ref<User[]>([]);
+  const bivouacs = ref<Bivouac[]>([]);
   const isLoading = ref(false);
 
   const fetchUsers = async () => {
@@ -78,11 +79,73 @@ export const useAdminStore = defineStore('admin-users', () => {
     }
   };
 
+  const fetchBivouacs = async () => {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      const res = await api.post('/bivouacs/list', {});
+      const data = res.data;
+
+      if (!data || !Array.isArray(data.bivouacs)) {
+        throw new Error('Invalid data format received from server');
+      }
+
+      bivouacs.value = data.bivouacs;
+    } catch (err: any) {
+      console.error('Error fetching bivouacs:', err);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const updateBivouac = async (
+    bivouacId: string,
+    updates: Record<string, any>
+  ) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      const res = await api.patch(`/bivouacs/${bivouacId}`, updates);
+      if (!res || res.status !== 201)
+        throw new Error('Failed to update bivouac');
+
+      return true;
+    } catch (err: any) {
+      console.error(`Error updating bivouac ${bivouacId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const deleteBivouac = async (bivouacId: string) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      const success = await api.delete(`/bivouacs/${bivouacId}`);
+      if (!success || success.status !== 204)
+        throw new Error('Failed to delete bivouac');
+      return true;
+    } catch (err: any) {
+      console.error(`Error deleting bivouac ${bivouacId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     users,
+    bivouacs,
     isLoading,
     fetchUsers,
     toggleUserBlock,
     deleteUser,
+    fetchBivouacs,
+    updateBivouac,
+    deleteBivouac,
   };
 });
