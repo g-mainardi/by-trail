@@ -36,6 +36,7 @@ const onOpenEdit = (id: string) => {
 const onDeleteBivouac = async (id: string) => {
   if (confirm(t('confirm_delete'))) {
     await adminStore.deleteBivouac(id);
+    await adminStore.fetchBivouacs();
   }
 };
 

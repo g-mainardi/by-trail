@@ -62,12 +62,17 @@ const onAutoSave = async (
     payload = { [key]: value };
   }
 
-  await store.updateBivouac(id, payload);
+  try {
+    await store.updateBivouac(id, payload);
 
-  // Reset savingField after a short delay
-  setTimeout(() => {
+    // Reset savingField after a short delay on success
+    setTimeout(() => {
+      savingField.value = null;
+    }, 1000);
+  } catch (error) {
+    console.error('Failed to auto-save bivouac changes:', error);
     savingField.value = null;
-  }, 1000);
+  }
 };
 </script>
 
@@ -248,6 +253,7 @@ const onAutoSave = async (
     "comune": "Comune",
     "latitude": "Latitude",
     "longitude": "Longitude",
+    "select_region": "Select Region"  
   },
   "it": {
     "edit_bivouac": "Modifica Bivacco",
@@ -261,7 +267,8 @@ const onAutoSave = async (
     "mountainRange": "Catena Montuosa",
     "comune": "Comune",
     "latitude": "Latitudine",
-    "longitude": "Longitudine"
+    "longitude": "Longitudine",
+    "select_region": "Seleziona Regione"
   },
   "es": {
     "edit_bivouac": "Editar Vivac",
@@ -275,7 +282,8 @@ const onAutoSave = async (
     "mountainRange": "Cordillera",
     "comune": "Municipio",
     "latitude": "Latitud",
-    "longitude": "Longitud" 
+    "longitude": "Longitud",
+    "select_region": "Seleccionar Región"
   }
 }
 </i18n>
