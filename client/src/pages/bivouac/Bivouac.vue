@@ -5,8 +5,10 @@ import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
-import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useBivouacStore } from '@/stores/bivouacs';
+// todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
+import type { Bivouac } from '@/types';
 import {
   Bed as BedIcon,
   Circle,
@@ -20,44 +22,23 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
-const favorites = ref<Bivouac[]>([]);
-
-const isFavorite = (bivouacId: string): boolean => {
-  return favorites.value.some((bivouac) => bivouac._id === bivouacId);
-};
-
-const toggleFavorite = async (bivouacId: string) => {
-  let res: { success: boolean; error?: string } = {
-    success: false,
-  };
-  if (isFavorite(bivouacId)) {
-    res = await favoritesStore.removeFavoriteBivouac(bivouacId);
-  } else {
-    res = await favoritesStore.addFavoriteBivouac(bivouacId);
-  }
-  if (res.success) favorites.value = await favoritesStore.getFavoriteBivouacs();
-  else console.log(res.error);
-};
-
 const bivouacStore = useBivouacStore();
-const props = defineProps<{ id: string }>();
-let bivouac = ref<Bivouac>({} as Bivouac);
+const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
+
+let bivouac = ref<Bivouac>();
 
 onMounted(async () => {
-  try {
-    bivouac.value = await bivouacStore.getBivouacById(props.id);
-  } catch (error) {
-    console.error('Error fetching bivouac:', error);
-  }
-  favorites.value = await favoritesStore.getFavoriteBivouacs();
+  bivouac.value = await bivouacStore.getBivouacById(props.id);
+  await favoritesStore.fetchBivouacFavorites();
 });
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
+
+const props = defineProps<{ id: string }>();
 </script>
 
 <template>
   <Card class="p-4">
     <CardTitle>
-      <H1>{{ bivouac.name }}</H1>
+      <H1>{{ bivouac?.name }}</H1>
     </CardTitle>
     <CardContent class="flex flex-col md:flex-row gap-4 w-full p-0">
       <div class="left w-full md:w-[70%]">
@@ -69,17 +50,17 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
             :src="placeholder"
-            :alt="`${bivouac.name} image`"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
           <img
             :src="placeholder"
-            :alt="`${bivouac.name} image`"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
           <img
             :src="placeholder"
-            :alt="`${bivouac.name} image`"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
         </div>
@@ -109,11 +90,11 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
             <MountainIcon />
-            <span class="">{{ bivouac.altitude }} mt </span>
+            <span class="">{{ bivouac?.altitude }} mt </span>
           </div>
           <div class="icon-with-text">
             <BedIcon />
-            <span>{{ bivouac.capacity }} {{ t('beds') }}</span>
+            <span>{{ bivouac?.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
             <ToiletIcon /><span class="">N/A</span>
@@ -121,27 +102,35 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
           <div class="icon-with-text">
             <MapPinIcon />
             <span class=""
-              >{{ bivouac.comune }}, {{ bivouac.mountainRange }}</span
+              >{{ bivouac?.comune }}, {{ bivouac?.mountainRange }}</span
             >
           </div>
           <div class="icon-with-text">
             <HeartIcon
               :color="
-                isFavorite(bivouac._id)
+                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
                   ? 'var(--primary)'
                   : 'var(--muted-foreground)'
               "
               :fill="
-                isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
+                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                  ? 'var(--primary)'
+                  : 'var(--background)'
               "
               class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
               :aria-label="t('toggle_favorite')"
               role="button"
-              :aria-pressed="isFavorite(bivouac._id) ? 'true' : 'false'"
-              @click="toggleFavorite(bivouac._id)"
+              :aria-pressed="
+                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                  ? 'true'
+                  : 'false'
+              "
+              @click="favoritesStore.toggleFavoriteBivouac(bivouac?._id || '')"
             />
             <span class="value">{{
-              isFavorite(bivouac._id) ? t('saved') : t('unsaved')
+              favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                ? t('saved')
+                : t('unsaved')
             }}</span>
           </div>
         </div>

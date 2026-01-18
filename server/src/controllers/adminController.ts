@@ -1,9 +1,6 @@
 import type { Response } from 'express';
-import {
-  UserStatusEnum,
-  UserTypeEnum,
-  type AuthRequest,
-} from '../types/index.js';
+import { UserStatusEnum, UserTypeEnum } from '../types/index.js';
+import { AuthRequest } from '../types/server_only.js';
 import { User } from '../models/models.js';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {

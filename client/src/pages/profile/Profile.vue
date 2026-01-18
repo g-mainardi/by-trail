@@ -11,6 +11,7 @@ import ProfilePersonalData from './info/ProfilePersonalData.vue';
 import ProfileRegionSelector from './info/ProfileRegionSelector.vue';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle } from 'lucide-vue-next';
+import type { Region } from '@/types';
 
 const authStore = useAuthStore();
 const { user, isLoading } = storeToRefs(authStore);
@@ -21,7 +22,7 @@ const { t } = useI18n();
 const formData = ref({
   name: '',
   email: '',
-  favRegions: [] as string[],
+  favRegions: [] as Region[],
 });
 
 const feedbackMessage = ref('');
@@ -34,11 +35,11 @@ onMounted(async () => {
 
   // Populate formData
   if (user.value) {
-    formData.value.name = user.value.name;
-    formData.value.email = user.value.email;
+    formData.value.name = user.value.name || '';
+    formData.value.email = user.value.email || '';
     // Create a copy of the array to avoid direct mutation of store state
     formData.value.favRegions = user.value.favRegions
-      ? [...user.value.favRegions]
+      ? [...(user.value.favRegions as Region[])]
       : [];
   }
 });

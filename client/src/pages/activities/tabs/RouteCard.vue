@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import type { Route } from '@/types';
+import { type Route } from '@/types';
 import {
   Clock as ClockIcon,
-  Heart,
   Map as MapIcon,
   MapPin as MapPinIcon,
   TrendingDown as TrendingDownIcon,
   TrendingUp as TrendingUpIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
+
 const { t } = useI18n();
+
+const props = defineProps<{
+  route: Route;
+}>();
 
 function formatDuration(minutes: number): string {
   if (!minutes) return '-';
@@ -20,6 +23,8 @@ function formatDuration(minutes: number): string {
   const m = minutes % 60;
   return `${h}h : ${m}m`;
 }
+
+const route = props.route;
 
 // Helper to determine difficulty color
 const getDifficultyColor = (diff: string) => {
@@ -37,17 +42,11 @@ const getDifficultyColor = (diff: string) => {
   }
 };
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
-
-const props = defineProps<{
-  route: Route;
-  isFavorite?: boolean;
-}>();
-const route = props.route;
 </script>
 
 <template>
   <Card class="p-4 gap-4 h-full flex flex-col">
-    <CardContent class="px-0 flex-1 flex flex-col justify-between">
+    <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
           :src="placeholder"
@@ -55,11 +54,11 @@ const route = props.route;
           class="w-full rounded-sm object-cover"
         />
       </div>
-      <RouterLink :to="`#`" aria-label="View Route Details">
+      <RouterLink :to="`/routes/${route._id}`" aria-label="View Route Details">
         <H2>{{ route.title }}</H2>
       </RouterLink>
       <span class="text-xs text-muted-foreground uppercase tracking-wide">
-        {{ route.region[0] }}
+        {{ route.region && route.region.length ? route.region[0] : '-' }}
       </span>
       <div class="grid grid-cols-3 gap-2 mt-2">
         <div class="info">
@@ -100,19 +99,6 @@ const route = props.route;
         </div>
       </div>
     </CardContent>
-    <CardFooter class="px-0">
-      <Button
-        class="rounded-full w-full"
-        @click="$emit('toggle-favorite', route._id)"
-      >
-        <Heart
-          :fill="props.isFavorite ? 'var(--background)' : 'var(--primary)'"
-          class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
-          @click="$emit('toggle-favorite', route._id)"
-        />
-        Non salvato
-      </Button>
-    </CardFooter>
   </Card>
 </template>
 

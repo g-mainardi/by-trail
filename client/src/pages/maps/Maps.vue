@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
-import { LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet';
+import { useBivouacStore } from '@/stores/bivouacs';
+import { useRouteStore } from '@/stores/routes';
+import { RouteDifficultyEnum } from '@/types';
+import {
+  LMap,
+  LMarker,
+  LPolyline,
+  LPopup,
+  LTileLayer,
+} from '@vue-leaflet/vue-leaflet';
 import { useDebounceFn } from '@vueuse/core';
-import type { Icon, IconOptions, LatLng, Map } from 'leaflet';
+import type { Icon, IconOptions, Map } from 'leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { computed, ref } from 'vue';
@@ -10,15 +18,21 @@ import FilterBar from '../filterbar/FilterBar.vue';
 import {
   bivouacFilters,
   getFilteredBivouacs,
+  getFilteredRoutes,
   resetBivouacFilters,
   resetRoutesFilters,
   routeFilters,
 } from '../filterbar/filters';
 
+const bivouacStore = useBivouacStore();
+const routeStore = useRouteStore();
+
 const mapPinHouseIconUrl = new URL(
   '@/assets/map-pin-house.svg',
   import.meta.url
 ).href;
+
+const routeIconUrl = new URL('@/assets/route.svg', import.meta.url).href;
 
 const iconSize: [number, number] = [30, 30];
 const bivouacIcon = L.divIcon({
@@ -44,46 +58,63 @@ const bivouacIcon = L.divIcon({
   ],
 }) as Icon<IconOptions>;
 
+const routeIcon = L.divIcon({
+  className: 'route-icon-wrapper',
+  html: `
+    <div style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: ${iconSize[0]}px;
+      height: ${iconSize[1]}px;
+      background: #bc6c25;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    ">
+      <img src="${routeIconUrl}" alt="Route" style="width: 60%; height: 60%; filter: brightness(0) invert(1);" />
+    </div>
+  `,
+  iconSize: iconSize as [number, number],
+  iconAnchor: [iconSize[0] / 2, iconSize[1] - iconSize[0] / 2] as [
+    number,
+    number,
+  ],
+}) as Icon<IconOptions>;
+
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
-
-const bivouacs = ref<Bivouac[]>([]);
 
 const tileLayerUrl = computed(() => {
   return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
 });
 
+function getCoords(
+  coords: { lat: number; lng: number }[]
+): L.LatLngExpression[] {
+  return coords.map((coord) => [coord.lat, coord.lng]);
+}
+
 const mapRef = ref<Map | null>(null);
 const onMapReady = (map: Map) => {
   mapRef.value = map;
-  logBounds();
+  debouncedFetchBivouacs();
 };
 
-const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
-  try {
-    bivouacs.value = await useBivouacStore().fetchMapBivouacs(
-      northWest,
-      southEast
-    );
-  } catch (error) {
-    console.error('Error fetching map bivouacs:', error);
-  }
-};
-
-const debouncedFetchBivouacs = useDebounceFn(() => {
+const debouncedFetchBivouacs = useDebounceFn(async () => {
   if (!mapRef.value) return;
   const bounds = mapRef.value.getBounds();
   const northWest = bounds.getNorthWest();
   const southEast = bounds.getSouthEast();
-  fetchMapBivouacs(northWest, southEast);
+  await bivouacStore.fetchMapBivouacs(northWest, southEast);
+  await routeStore.fetchMapRoutes(northWest, southEast);
 }, 500);
 
-const logBounds = () => {
-  debouncedFetchBivouacs();
-};
-
 const filteredBivouacs = computed(() => {
-  return getFilteredBivouacs(bivouacs.value);
+  return getFilteredBivouacs(bivouacStore.mapBivouacs);
+});
+
+const filteredRoutes = computed(() => {
+  return getFilteredRoutes(routeStore.mapRoutes);
 });
 
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
@@ -103,15 +134,19 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
       :useGlobalLeaflet="false"
       class="w-full h-full z-0"
       @ready="onMapReady"
-      @update:zoom="logBounds"
-      @update:center="logBounds"
+      @update:zoom="debouncedFetchBivouacs()"
+      @update:center="debouncedFetchBivouacs()"
     >
       <l-tile-layer :url="tileLayerUrl" />
 
       <l-marker
         v-for="bivouac in filteredBivouacs"
         :key="bivouac._id"
-        :lat-lng="[bivouac.coords.latitude, bivouac.coords.longitude]"
+        :lat-lng="
+          bivouac.coords
+            ? [bivouac.coords.latitude, bivouac.coords.longitude]
+            : [0, 0]
+        "
         :icon="bivouacIcon"
       >
         <l-popup :options="{ minWidth: 300, maxWidth: 300 }">
@@ -133,6 +168,56 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
           </p>
         </l-popup>
       </l-marker>
+
+      <l-polyline
+        v-for="route in filteredRoutes"
+        :key="`poly-${route._id}`"
+        :lat-lngs="getCoords(route.path?.coordinates || [])"
+        :color="
+          route.difficulty === RouteDifficultyEnum.E
+            ? 'var(--route-e)'
+            : route.difficulty === RouteDifficultyEnum.EE
+              ? 'var(--route-ee)'
+              : route.difficulty === RouteDifficultyEnum.EEA
+                ? 'var(--route-eea)'
+                : route.difficulty === RouteDifficultyEnum.T
+                  ? 'var(--route-t)'
+                  : 'var(--route-t)'
+        "
+        :weight="4"
+        :opacity="1"
+      />
+
+      <l-marker
+        v-for="route in filteredRoutes"
+        :key="route._id"
+        :lat-lng="
+          route.path?.coordinates[0]
+            ? [route.path.coordinates[0].lat, route.path.coordinates[0].lng]
+            : [0, 0]
+        "
+        :icon="routeIcon"
+      >
+        <l-popup>
+          <RouterLink
+            :to="`/route/${route._id}`"
+            aria-label="View Route Details"
+          >
+            <img
+              :src="placeholder"
+              :alt="`${route.title} image`"
+              class="rounded-sm object-cover"
+            />
+            <h3 class="text-lg font-semibold" style="color: var(--primary)">
+              {{ route.title }}
+            </h3>
+          </RouterLink>
+          <p style="margin-top: 0rem; margin-bottom: 0rem">
+            {{ route.duration }} min -
+            {{ route.region.map((r) => r).join(', ') }}
+          </p>
+        </l-popup>
+      </l-marker>
     </l-map>
   </div>
 </template>
@@ -142,7 +227,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
   font-family: var(--font-sans);
 }
 
-/* --- STILE ICONE BIVACCO (Shadcn Card Style) --- */
+/* --- Shadcn Card Style --- */
 :deep(.icon-wrapper) {
   /* Rimuove lo sfondo bianco di default di Leaflet */
   background: transparent;

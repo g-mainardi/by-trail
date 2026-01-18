@@ -1,33 +1,22 @@
 import type { Response } from 'express';
-import type { AuthRequest } from '../types/index.js';
 import mongoose from 'mongoose';
-import { FavBivouac } from '../models/models.js';
+import { Bivouac, Route, User } from '../models/models.js';
+import type { AuthRequest } from '../types/server_only.js';
 
 export const fetchFavoriteBivouacs = async (
   req: AuthRequest,
   res: Response
 ) => {
-  const userId = req.user?.id;
-
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: 'Invalid user ID format' });
-  }
-
   try {
-    const favorites = await FavBivouac.find({ user: userId })
-      .populate('bivouac')
-      .exec();
-
-    let favoriteBivouacs = favorites.map((fav) => fav.bivouac);
-    if (favoriteBivouacs.some((fav) => fav === null)) {
-      console.warn('Orphaned favorite bivouac records found for user:', userId);
-      favoriteBivouacs = favoriteBivouacs.filter((bivouac) => bivouac !== null);
+    const favoriteBivouacsIds = req.user?.favoritesBivouacs || [];
+    if (!favoriteBivouacsIds || favoriteBivouacsIds.length === 0) {
+      return res.status(200).json({ bivouacs: [] });
     }
+    const favorites = await Bivouac.find({
+      _id: { $in: favoriteBivouacsIds },
+    });
 
-    return res.status(200).json({ bivouacs: favoriteBivouacs });
+    return res.status(200).json({ bivouacs: favorites });
   } catch (error) {
     console.error('Error fetching favorite bivouacs:', error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -38,31 +27,25 @@ export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const bivouacId = req.body.id;
 
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: 'Invalid user ID format' });
-  }
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid or missing bivouac ID' });
   }
+  const favoritesBivouacs = req.user?.favoritesBivouacs || [];
 
+  if (favoritesBivouacs.includes(bivouacId)) {
+    return res.status(409).json({ error: 'Bivouac already in favorites' });
+  }
   try {
-    const existingFavorite = await FavBivouac.findOne({
-      user: userId,
-      bivouac: bivouacId,
-    }).exec();
-
-    if (existingFavorite) {
-      return res.status(409).json({ error: 'Bivouac already in favorites' });
+    const exists = await Bivouac.findById(bivouacId);
+    if (!exists) {
+      return res.status(404).json({ error: 'Bivouac not found' });
     }
-
-    const newFavorite = new FavBivouac({
-      user: userId,
-      bivouac: bivouacId,
+    const success = await User.findByIdAndUpdate(userId, {
+      $push: { favoritesBivouacs: bivouacId },
     });
-    await newFavorite.save();
+    if (!success) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     return res.status(201).json({ message: 'Bivouac added to favorites' });
   } catch (error) {
@@ -78,29 +61,102 @@ export const removeFavoriteBivouac = async (
   const userId = req.user?.id;
   const bivouacId = req.body.id;
 
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: 'Invalid user ID format' });
-  }
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid or missing bivouac ID' });
   }
+  const favoritesBivouacs = req.user?.favoritesBivouacs || [];
+
+  if (!favoritesBivouacs.includes(bivouacId)) {
+    return res.status(404).json({ error: 'Bivouac not in favorites' });
+  }
 
   try {
-    const deletedFavorite = await FavBivouac.findOneAndDelete({
-      user: userId,
-      bivouac: bivouacId,
-    }).exec();
+    const deletedFavorite = await User.findByIdAndUpdate(userId, {
+      $pull: { favoritesBivouacs: bivouacId },
+    });
 
     if (!deletedFavorite) {
-      return res.status(404).json({ error: 'Favorite bivouac not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
-
-    return res.status(200).json({ message: 'Bivouac removed from favorites' });
+    return res.status(204).send();
   } catch (error) {
     console.error('Error removing favorite bivouac:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const fetchFavoriteRoutes = async (req: AuthRequest, res: Response) => {
+  try {
+    const favoriteRoutesIds = req.user?.favoritesRoutes || [];
+    if (!favoriteRoutesIds || favoriteRoutesIds.length === 0) {
+      return res.status(200).json({ routes: [] });
+    }
+    const favorites = await Route.find({
+      _id: { $in: favoriteRoutesIds },
+    });
+
+    return res.status(200).json({ routes: favorites });
+  } catch (error) {
+    console.error('Error fetching favorite routes:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const addFavoriteRoute = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const routeId = req.body.id;
+
+  if (!routeId || !mongoose.Types.ObjectId.isValid(routeId)) {
+    return res.status(400).json({ error: 'Invalid or missing route ID' });
+  }
+  const favoritesRoutes = req.user?.favoritesRoutes || [];
+
+  if (favoritesRoutes.includes(routeId)) {
+    return res.status(409).json({ error: 'Route already in favorites' });
+  }
+  try {
+    const exists = await Route.findById(routeId);
+    if (!exists) {
+      return res.status(404).json({ error: 'Route not found' });
+    }
+    const success = await User.findByIdAndUpdate(userId, {
+      $push: { favoritesRoutes: routeId },
+    });
+    if (!success) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.status(201).json({ message: 'Route added to favorites' });
+  } catch (error) {
+    console.error('Error adding favorite route:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const removeFavoriteRoute = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const routeId = req.body.id;
+
+  if (!routeId || !mongoose.Types.ObjectId.isValid(routeId)) {
+    return res.status(400).json({ error: 'Invalid or missing route ID' });
+  }
+  const favoritesRoutes = req.user?.favoritesRoutes || [];
+
+  if (!favoritesRoutes.includes(routeId)) {
+    return res.status(404).json({ error: 'Route not in favorites' });
+  }
+
+  try {
+    const deletedFavorite = await User.findByIdAndUpdate(userId, {
+      $pull: { favoritesRoutes: routeId },
+    });
+
+    if (!deletedFavorite) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    return res.status(204).send();
+  } catch (error) {
+    console.error('Error removing favorite route:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

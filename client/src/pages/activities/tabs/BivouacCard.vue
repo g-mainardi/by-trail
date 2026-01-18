@@ -2,7 +2,7 @@
 import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import type { Bivouac } from '@/stores/bivouacs';
+import type { Bivouac } from '@/types';
 import { X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();

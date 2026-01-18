@@ -1,5 +1,19 @@
 import mongoose from 'mongoose';
-import { UserStatusEnum, UserTypeEnum, UserDocument } from '../types/index.js';
+import {
+  ProposalEnum,
+  RegionsEnum,
+  RouteDifficultyEnum,
+  RoutePathTypeEnum,
+  RouteTypeEnum,
+  UserStatusEnum,
+  UserTypeEnum,
+} from '../types/index.js';
+import {
+  BivouacDocument,
+  ProposalDocument,
+  RouteDocument,
+  UserDocument,
+} from '../types/server_only.js';
 
 const { Schema } = mongoose;
 
@@ -10,7 +24,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: false },
   creationDate: { type: Date, default: Date.now },
-  favRegions: { type: [String], default: [] },
+  favRegions: [{ type: String, enum: Object.values(RegionsEnum) }],
   status: {
     type: String,
     enum: Object.values(UserStatusEnum),
@@ -19,6 +33,11 @@ const userSchema = new Schema({
   favoritesBivouacs: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Bivouac',
+    default: [],
+  },
+  favoritesRoutes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Route',
     default: [],
   },
   type: {
@@ -53,24 +72,37 @@ const bivouacSchema = new Schema(
 const routeSchema = new Schema(
   {
     title: { type: String, required: true },
-    region: { type: [String], required: true },
-    // T (Turistico, facile), E (Escursionistico, per esperti), EE (Escursioniti Esperti, terreni impervi), EEA (Escursionisti Esperti con Attrezzatura, vie ferrate)
-    difficulty: { type: String, required: true },
+    region: {
+      type: [{ type: String, enum: Object.values(RegionsEnum) }],
+      required: true,
+      validate: {
+        validator: function (v: string[]) {
+          return v && v.length > 0;
+        },
+        message: 'A route must have at least one region.',
+      },
+      default: [],
+    },
+    difficulty: {
+      type: String,
+      enum: Object.values(RouteDifficultyEnum),
+      required: true,
+    },
     distance: { type: Number, required: true },
     ascent: { type: Number, required: true },
     descent: { type: Number, required: true },
     duration: { type: Number, required: true },
     routeType: {
       type: String,
+      enum: Object.values(RouteTypeEnum),
       required: true,
-      enum: ['circular', 'out-and-back', 'point-to-point', 'stage'],
     },
     likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
     path: {
       type: {
         type: String,
-        enum: ['LineString', 'MultiLineString'],
+        enum: Object.values(RoutePathTypeEnum),
         required: true,
       },
       coordinates: {
@@ -91,24 +123,6 @@ routeSchema.index({ path: '2dsphere' });
 const imageSchema = new Schema({
   url: { type: String },
   uploadedDate: { type: Date, default: Date.now },
-});
-
-// FAV_BIVOUAC
-const favBivouacSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  bivouac: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bivouac',
-    required: true,
-  },
-});
-// Create an index for faster lookups and ensuring a user cannot favorite the same bivouac multiple times
-favBivouacSchema.index({ user: 1, bivouac: 1 }, { unique: true });
-
-// FAV_TRAIL
-const favTrailSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  trail: { type: mongoose.Schema.Types.ObjectId, ref: 'Trail', required: true },
 });
 
 // RESERVATION
@@ -174,7 +188,7 @@ notificationSchema.index({ recipient: 1, createdAt: -1 });
 // PROPOSAL
 const proposalSchema = new Schema({
   senderEmail: { type: String, required: true },
-  type: { type: String, required: true },
+  type: { type: String, enum: Object.values(ProposalEnum), required: true },
   subjectName: { type: String, required: true },
   description: { type: String, required: true },
   locality: { type: String, required: true },
@@ -188,27 +202,24 @@ proposalSchema.index(
 
 /**************************************** Models ****************************************/
 const User = mongoose.model<UserDocument>('User', userSchema);
-const Bivouac = mongoose.model('Bivouac', bivouacSchema);
-const Route = mongoose.model('Route', routeSchema);
+const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
+const Route = mongoose.model<RouteDocument>('Route', routeSchema);
+Route.schema.index({ path: '2dsphere' }); // 2dsphere index for geospatial queries
 const Image = mongoose.model('Image', imageSchema);
-const FavBivouac = mongoose.model('FavBivouac', favBivouacSchema);
-const FavTrail = mongoose.model('FavTrail', favTrailSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
 const Notification = mongoose.model('Notification', notificationSchema);
-const Proposal = mongoose.model('Proposal', proposalSchema);
+const Proposal = mongoose.model<ProposalDocument>('Proposal', proposalSchema);
 
 /**************************************** Exports ****************************************/
 
 export {
   Bivouac,
-  FavBivouac,
-  FavTrail,
   Image,
   Notification,
-  Reservation,
-  Setting,
-  Route,
-  User,
   Proposal,
+  Reservation,
+  Route,
+  Setting,
+  User,
 };

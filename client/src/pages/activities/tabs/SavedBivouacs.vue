@@ -2,7 +2,7 @@
 import { onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type { Bivouac } from '@/stores/bivouacs';
+import type { Bivouac } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
 
 import P from '@/layouts/typography/P.vue';
@@ -11,6 +11,7 @@ import BivouacCard from './BivouacCard.vue';
 const { t } = useI18n();
 
 const favoriteStore = useFavoriteStore();
+const { getFavoriteBivouacs, removeFavoriteBivouac } = favoriteStore;
 
 const favoriteBivouacs: Ref<Bivouac[]> = ref([]);
 const isLoading = ref(true);
@@ -18,8 +19,7 @@ const isLoading = ref(true);
 onMounted(async () => {
   isLoading.value = true;
 
-  favoriteStore
-    .getFavoriteBivouacs()
+  getFavoriteBivouacs()
     .then((bivouacs) => {
       favoriteBivouacs.value = bivouacs;
     })
@@ -31,9 +31,10 @@ onMounted(async () => {
     });
 });
 
-async function handleRemove(id: string) {
-  await favoriteStore.removeFavoriteBivouac(id);
-  favoriteBivouacs.value = await favoriteStore.getFavoriteBivouacs();
+async function handleRemove(id: string | undefined) {
+  if (!id) return;
+  await removeFavoriteBivouac(id);
+  favoriteBivouacs.value = await getFavoriteBivouacs();
 }
 </script>
 
