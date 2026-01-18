@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAdminStore } from '@/stores/admin';
-import type { Bivouac } from '@/types';
+import { type Bivouac, RegionsEnum } from '@/types';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,6 +14,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Loader2 } from 'lucide-vue-next';
 
 const props = defineProps<{
@@ -34,6 +41,7 @@ const onAutoSave = async (
   value: any
 ) => {
   if (!props.bivouac) return;
+  if (key === 'capacity' && Number(value) < 0) return;
   const id = props.bivouac.id || props.bivouac._id || '';
 
   savingField.value = key;
@@ -68,9 +76,7 @@ const onAutoSave = async (
     <SheetContent class="overflow-y-auto sm:max-w-md">
       <SheetHeader>
         <SheetTitle>{{ t('edit_bivouac') }}</SheetTitle>
-        <SheetDescription>
-          {{ t('auto_save_notice') }}
-        </SheetDescription>
+        <SheetDescription>{{ t('auto_save_notice') }}</SheetDescription>
       </SheetHeader>
 
       <div v-if="bivouac" class="grid gap-4 py-4">
@@ -94,19 +100,54 @@ const onAutoSave = async (
         </div>
 
         <div class="grid w-full items-center gap-1.5">
-          <Label for="region">{{ t('region') }}</Label>
-          <Input
-            id="region"
+          <Label>{{ t('region') }}</Label>
+          <Select
             :model-value="bivouac.region"
+            @update:model-value="(val) => onAutoSave('region', val)"
+          >
+            <SelectTrigger>
+              <SelectValue :placeholder="t('select_region')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="region in Object.values(RegionsEnum)"
+                :key="region"
+                :value="region"
+              >
+                {{ region }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="grid w-full items-center gap-1.5">
+          <Label for="mountainRange">{{ t('mountainRange') }}</Label>
+          <Input
+            id="mountainRange"
+            :model-value="bivouac.mountainRange"
             @change="
-              onAutoSave('region', ($event.target as HTMLInputElement).value)
+              onAutoSave(
+                'mountainRange',
+                ($event.target as HTMLInputElement).value
+              )
+            "
+          />
+        </div>
+
+        <div class="grid w-full items-center gap-1.5">
+          <Label for="comune">{{ t('comune') }}</Label>
+          <Input
+            id="comune"
+            :model-value="bivouac.comune"
+            @change="
+              onAutoSave('comune', ($event.target as HTMLInputElement).value)
             "
           />
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="grid w-full items-center gap-1.5">
-            <Label for="lat">Lat</Label>
+            <Label for="lat">{{ t('latitude') }}</Label>
             <Input
               id="lat"
               type="number"
@@ -121,7 +162,7 @@ const onAutoSave = async (
             />
           </div>
           <div class="grid w-full items-center gap-1.5">
-            <Label for="lng">Lng</Label>
+            <Label for="lng">{{ t('longitude') }}</Label>
             <Input
               id="lng"
               type="number"
@@ -157,6 +198,7 @@ const onAutoSave = async (
             <Input
               id="capacity"
               type="number"
+              min="0"
               :model-value="bivouac.capacity"
               @change="
                 onAutoSave(
@@ -170,7 +212,7 @@ const onAutoSave = async (
 
         <div class="grid w-full items-center gap-1.5">
           <div class="flex justify-between">
-            <Label for="note">{{ t('note') }}</Label>
+            <Label for="note">{{ t('notes') }}</Label>
             <span
               v-if="savingField === 'note'"
               class="text-xs text-muted-foreground flex items-center"
@@ -201,7 +243,11 @@ const onAutoSave = async (
     "altitude": "Altitude",
     "capacity": "Capacity",
     "note": "Note",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "mountainRange": "Mountain Range",
+    "comune": "Comune",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
   },
   "it": {
     "edit_bivouac": "Modifica Bivacco",
@@ -211,7 +257,11 @@ const onAutoSave = async (
     "altitude": "Altitudine",
     "capacity": "Capacità",
     "note": "Nota",
-    "saving": "Salvataggio..."
+    "saving": "Salvataggio...",
+    "mountainRange": "Catena Montuosa",
+    "comune": "Comune",
+    "latitude": "Latitudine",
+    "longitude": "Longitudine"
   },
   "es": {
     "edit_bivouac": "Editar Vivac",
@@ -221,7 +271,11 @@ const onAutoSave = async (
     "altitude": "Altitud",
     "capacity": "Capacidad",
     "note": "Nota",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "mountainRange": "Cordillera",
+    "comune": "Municipio",
+    "latitude": "Latitud",
+    "longitude": "Longitud" 
   }
 }
 </i18n>
