@@ -1,7 +1,7 @@
 import type { Response } from 'express';
 import mongoose from 'mongoose';
 import { Reservation, User } from 'src/models/models.js';
-import type { AuthRequest } from './userController.ts';
+import { AuthRequest } from 'src/types/server_only.js';
 
 export const createIntention = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;

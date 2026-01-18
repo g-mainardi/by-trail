@@ -188,7 +188,7 @@ onMounted(async () => {
               </span>
               <Button
                 variant="destructive"
-                @click="cancelIntention(intention._id)"
+                @click="cancelIntention(intention._id || '')"
               >
                 <X class="icon" />
               </Button>

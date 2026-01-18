@@ -9,6 +9,11 @@ interface IntentionResponse {
   message?: string;
 }
 
+interface AnonymousIntention {
+  date: Date;
+  people: number;
+}
+
 export const useIntentionStore = defineStore('intentions', () => {
   // State
 
@@ -77,7 +82,7 @@ export const useIntentionStore = defineStore('intentions', () => {
 
   const fetchAnonymousBivouacIntentions = async (
     bivouacId: string
-  ): Promise<{ date: Date; people: number }[]> => {
+  ): Promise<AnonymousIntention[]> => {
     try {
       const res = await api.get(`/bivouacs/intentions`, {
         params: { bivouacId },
@@ -87,7 +92,7 @@ export const useIntentionStore = defineStore('intentions', () => {
       if (!data || !data.intentions || !Array.isArray(data.intentions))
         throw new Error('Invalid data structure received');
 
-      return data.intentions as { date: Date; people: number }[];
+      return data.intentions as AnonymousIntention[];
     } catch (error: any) {
       console.error('Error fetching bivouac intentions:', error);
       return [];
