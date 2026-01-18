@@ -6,7 +6,7 @@ import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
-export const useAdminStore = defineStore('admin-users', () => {
+export const useAdminStore = defineStore('admin', () => {
   const users = ref<User[]>([]);
   const bivouacs = ref<Bivouac[]>([]);
   const isLoading = ref(false);
@@ -61,8 +61,8 @@ export const useAdminStore = defineStore('admin-users', () => {
     isLoading.value = true;
 
     try {
-      const success = await api.delete(`/users/${userId}`);
-      if (!success || success.status !== 204)
+      const response = await api.delete(`/users/${userId}`);
+      if (!response || response.status !== 204)
         throw new Error('Failed to delete user');
 
       // Remove from the local users array
@@ -135,9 +135,12 @@ export const useAdminStore = defineStore('admin-users', () => {
     isLoading.value = true;
 
     try {
-      const success = await api.delete(`/bivouacs/${bivouacId}`);
-      if (!success || success.status !== 204)
+      const response = await api.delete(`/bivouacs/${bivouacId}`);
+      if (!response || response.status !== 204)
         throw new Error('Failed to delete bivouac');
+      bivouacs.value = bivouacs.value.filter(
+        (b) => (b.id || b._id) !== bivouacId
+      );
       return true;
     } catch (err: any) {
       console.error(`Error deleting bivouac ${bivouacId}:`, err);
