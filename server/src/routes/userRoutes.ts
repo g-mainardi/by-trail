@@ -26,6 +26,6 @@ router.delete('/favorites/bivouacs', removeFavoriteBivouac);
 
 router.post('/intention', createIntention);
 router.delete('/intention', deleteIntention);
-router.post('/intentions', fetchUserBivouacIntentions);
+router.get('/intentions', fetchUserBivouacIntentions);
 
 export default router;

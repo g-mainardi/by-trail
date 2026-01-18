@@ -55,10 +55,11 @@ export const useIntentionStore = defineStore('intentions', () => {
 
   async function getUserIntentions(bivouacId?: string): Promise<Intention[]> {
     try {
-      const body = bivouacId ? { bivouacId: bivouacId } : {};
-      const res = await api.post(`/users/intentions`, body);
-      const data = res.data;
+      const res = await api.get(`/users/intentions`, {
+        params: { ID: bivouacId },
+      });
 
+      const data = res.data;
       if (!data || !data.intentions || !Array.isArray(data.intentions))
         throw new Error('Invalid data structure received');
 

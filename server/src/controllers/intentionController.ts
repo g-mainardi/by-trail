@@ -52,7 +52,7 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
 export const deleteIntention = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const { intentionId } = req.body;
-  console.log('INTENTION ID: ', intentionId);
+
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
@@ -85,8 +85,7 @@ export const fetchUserBivouacIntentions = async (
   res: Response
 ) => {
   const userId = req.user?.id;
-  const { bivouacId } = req.params;
-  console.log(bivouacId);
+  const { ID: bivouacId } = req.query;
   if (!userId) {
     return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
@@ -96,7 +95,7 @@ export const fetchUserBivouacIntentions = async (
 
   if (bivouacId) {
     // Fetch intentions for the specific bivouac
-    if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    if (!mongoose.Types.ObjectId.isValid(String(bivouacId))) {
       return res.status(400).json({ error: 'Invalid bivouac ID format' });
     }
     try {
