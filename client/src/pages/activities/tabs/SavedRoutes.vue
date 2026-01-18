@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { type Route } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
+import { type Route } from '@/types';
+import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import P from '@/layouts/typography/P.vue';
 import RouteCard from './RouteCard.vue';
@@ -10,30 +10,26 @@ import RouteCard from './RouteCard.vue';
 const { t } = useI18n();
 
 const favoriteStore = useFavoriteStore();
-const { getFavoriteRoutes, removeFavoriteRoute } = favoriteStore;
 
-const favoriteRoutes: Ref<Route[]> = ref([]);
+const favoriteRoutes = ref<Route[]>([]);
 const isLoading = ref(true);
 
 onMounted(async () => {
   isLoading.value = true;
-
-  getFavoriteRoutes()
-    .then((routes) => {
-      favoriteRoutes.value = routes;
-    })
-    .catch((error) => {
-      console.error('Error fetching favorite routes:', error);
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
+  try {
+    await favoriteStore.fetchFavoriteRoutes();
+    favoriteRoutes.value = favoriteStore.routeFavorites;
+  } catch (error: any) {
+    console.error('Error fetching favorite routes:', error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 async function handleRemove(id: string | undefined) {
   if (!id) return;
-  await removeFavoriteRoute(id);
-  favoriteRoutes.value = await getFavoriteRoutes();
+  await favoriteStore.deleteFavoriteRoute(id);
+  favoriteRoutes.value = favoriteStore.routeFavorites;
 }
 </script>
 

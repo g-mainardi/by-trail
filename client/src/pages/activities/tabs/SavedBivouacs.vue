@@ -17,17 +17,14 @@ const isLoading = ref(true);
 
 onMounted(async () => {
   isLoading.value = true;
-  await favoriteStore
-    .fetchBivouacFavorites()
-    .then(() => {
-      favoriteBivouacs.value = favoriteStore.bivouacFavorites;
-    })
-    .catch((error: Error) => {
-      console.error('Error fetching favorite bivouacs:', error);
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
+  try {
+    await favoriteStore.fetchBivouacFavorites();
+    favoriteBivouacs.value = favoriteStore.bivouacFavorites;
+  } catch (error: any) {
+    console.error('Error fetching favorite bivouacs:', error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 async function handleRemove(id: string | undefined) {
