@@ -13,7 +13,7 @@ import {
   BivouacDocument,
   RouteDocument,
   ProposalDocument,
-} from 'src/types/server_only.js';
+} from '../types/server_only.js';
 
 const { Schema } = mongoose;
 
@@ -71,14 +71,15 @@ const routeSchema = new Schema(
   {
     title: { type: String, required: true },
     region: {
-      type: [String],
-      enum: Object.values(RegionsEnum),
+      type: [{ type: String, enum: Object.values(RegionsEnum) }],
+      required: true,
       validate: {
         validator: function (v: string[]) {
           return v && v.length > 0;
         },
         message: 'A route must have at least one region.',
       },
+      default: [],
     },
     difficulty: {
       type: String,
