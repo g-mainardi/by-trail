@@ -7,7 +7,7 @@ import {
 } from '../controllers/notificationsController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { sendNotification } from '../utils/notificationHelper.js';
-import { AuthRequest } from '../types/index.js';
+import { AuthRequest } from '../types/server_only.js';
 
 const router = express.Router();
 
