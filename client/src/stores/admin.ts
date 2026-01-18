@@ -103,13 +103,23 @@ export const useAdminStore = defineStore('admin-users', () => {
     bivouacId: string,
     updates: Record<string, any>
   ) => {
-    if (isLoading.value) return false;
     isLoading.value = true;
 
     try {
       const res = await api.patch(`/bivouacs/${bivouacId}`, updates);
       if (!res || res.status !== 201)
         throw new Error('Failed to update bivouac');
+
+      // Local update
+      const index = bivouacs.value.findIndex(
+        (b) => (b.id || b._id) === bivouacId
+      );
+      if (index !== -1) {
+        bivouacs.value[index] = {
+          ...bivouacs.value[index],
+          ...updates,
+        };
+      }
 
       return true;
     } catch (err: any) {
