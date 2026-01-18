@@ -7,6 +7,7 @@ export const getDbConfig = () => {
   const withAtlas = process.env.USE_ATLAS === 'true';
   const secretPath = process.env.MONGO_URI_FILE;
 
+  console.log('SECRET PATH: ', secretPath);
   // Case 1: Docker with Secrets (Atlas)
   if (withAtlas && secretPath && fs.existsSync(secretPath)) {
     return {
