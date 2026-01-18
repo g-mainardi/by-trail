@@ -46,7 +46,7 @@ export const updateUserStatus = async (req: AuthRequest, res: Response) => {
     await user.save();
 
     return res
-      .status(200)
+      .status(201)
       .json({ message: 'User status updated successfully' });
   } catch (error) {
     console.error('Error updating user status:', error);
@@ -80,7 +80,7 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
     if (deletionResult.deletedCount === 0)
       return res.status(404).json({ error: 'User not found' });
 
-    return res.status(200).json({ message: 'User deleted successfully' });
+    return res.status(204).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
     return res.status(500).json({ error: 'Internal server error' });
