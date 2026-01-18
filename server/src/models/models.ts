@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 import {
-  UserStatusEnum,
-  UserTypeEnum,
+  ProposalEnum,
   RegionsEnum,
   RouteDifficultyEnum,
-  RouteTypeEnum,
   RoutePathTypeEnum,
-  ProposalEnum,
+  RouteTypeEnum,
+  UserStatusEnum,
+  UserTypeEnum,
 } from '../types/index.js';
 import {
-  UserDocument,
   BivouacDocument,
-  RouteDocument,
   ProposalDocument,
+  RouteDocument,
+  UserDocument,
 } from '../types/server_only.js';
 
 const { Schema } = mongoose;
@@ -180,6 +180,7 @@ proposalSchema.index(
 const User = mongoose.model<UserDocument>('User', userSchema);
 const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
 const Route = mongoose.model<RouteDocument>('Route', routeSchema);
+Route.schema.index({ path: '2dsphere' }); // 2dsphere index for geospatial queries
 const Image = mongoose.model('Image', imageSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);
@@ -192,9 +193,9 @@ export {
   Bivouac,
   Image,
   Notification,
-  Reservation,
-  Setting,
-  Route,
-  User,
   Proposal,
+  Reservation,
+  Route,
+  Setting,
+  User,
 };

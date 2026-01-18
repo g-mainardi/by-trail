@@ -61,6 +61,10 @@
   --shadow-2xl: 0 1px 10px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: 0.025em;
   --spacing: 0.25rem;
+  --route-e: oklch(88.114% 0.13687 202.564);
+  --route-ee: oklch(87.278% 0.27933 141.992);
+  --route-eea: oklch(77.581% 0.16994 64.407);
+  --route-t: oklch(55.591% 0.22813 29.223);
 }
 
 .dark {

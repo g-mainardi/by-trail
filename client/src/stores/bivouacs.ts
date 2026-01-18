@@ -1,104 +1,62 @@
 import api from '@/stores/utility/axiosInstance';
+import type { Bivouac } from '@/types';
 import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
-
-type UUID = string;
-
-// How will be:
-// export interface Bivouac {
-//   _id?: string;
-//   name: string;
-//   description?: string;
-//   region: string;
-//   type: 'bivouac' | 'refuge';
-//   mountainRange?: string; // ???
-//   comune: string;
-//   position: {
-//     latitude: number;
-//     longitude: number;
-//   }
-//   altitude: number;
-//   capacity: number;
-//   openDate?: Date;
-//   closeDate?: Date;
-//   hasToilets?: boolean;
-//   likes?: number;
-//   isOpen?: boolean;
-//   isFavorite: boolean;
-// }
-
-export interface Bivouac {
-  _id: UUID;
-  name: string;
-  region: string;
-  mountainRange: string;
-  comune: string;
-  coords: {
-    latitude: number;
-    longitude: number;
-  };
-  altitude: number;
-  capacity: number;
-  likes: number;
-  note?: string;
-}
-
-export interface BivouacResponse {
-  bivouacs: Bivouac[];
-  nextPage?: UUID;
-}
-
-interface RequestOptions {
-  region?: string;
-  favoritesOnly?: boolean;
-  sortByLikes?: 'asc' | 'desc';
-  pageSize?: number; // Default to 50 if not provided
-}
+import { ref } from 'vue';
 
 export const useBivouacStore = defineStore('bivouacs', () => {
-  async function fetchBivouacs(
-    options?: RequestOptions,
-    nextPage?: UUID
-  ): Promise<BivouacResponse> {
-    const body = {
-      options: options,
-      nextPage: nextPage,
-    };
+  // State
 
+  const bivouacs = ref<Bivouac[]>([]);
+  const mapBivouacs = ref<Bivouac[]>([]);
+
+  // Actions
+
+  const fetchBivouacs = async () => {
     try {
-      const res = await api.post('/bivouacs/list', body);
-      return res.data as BivouacResponse;
-    } catch (error) {
-      console.error('Fetch Bivouacs Error:', error);
+      const res = await api.get('/bivouacs/list');
+      const data = res.data;
+      bivouacs.value = data.bivouacs as Bivouac[];
+    } catch (error: any) {
+      console.error('Error fetching bivouacs:', error);
       throw new Error('Failed to fetch bivouacs');
     }
-  }
+  };
 
-  async function fetchMapBivouacs(
-    northWest: LatLng,
-    southEast: LatLng
-  ): Promise<Bivouac[]> {
-    const body = {
-      topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
-      bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
-    };
-
+  const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
     try {
-      const res = await api.post('/bivouacs/map', body);
-      return res.data.bivouacs as Bivouac[];
-    } catch (error) {
+      const res = await api.get('/bivouacs/map', {
+        params: {
+          latNw: northWest.lat,
+          lngNw: northWest.lng,
+          latSe: southEast.lat,
+          lngSe: southEast.lng,
+        },
+      });
+      const data = res.data;
+      mapBivouacs.value = data.bivouacs as Bivouac[];
+    } catch (error: any) {
+      console.error('Error fetching map bivouacs:', error);
       throw new Error('Failed to fetch map bivouacs');
     }
-  }
+  };
 
-  async function getBivouacById(id: UUID): Promise<Bivouac> {
+  const getBivouacById = async (id: string): Promise<Bivouac> => {
     try {
-      const res = await api.get(`/bivouacs/${id}`);
-      return res.data.bivouac as Bivouac;
-    } catch (error) {
+      const res = await api.get(`/bivouacs/bivouac`, { params: { id } });
+      const data = res.data;
+      return data.bivouac as Bivouac;
+    } catch (error: any) {
+      console.error('Error fetching bivouac by ID:', error);
       throw new Error('Failed to fetch bivouac by ID');
     }
-  }
+  };
 
-  return { fetchBivouacs, fetchMapBivouacs, getBivouacById };
+  return {
+    fetchBivouacs,
+    fetchMapBivouacs,
+    getBivouacById,
+    mapBivouacs,
+    bivouacs,
+  };
 });

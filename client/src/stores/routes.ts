@@ -1,92 +1,73 @@
 import api from '@/stores/utility/axiosInstance';
+import type { Route } from '@/types';
 import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
-
-type UUID = string;
-
-export const DifficultyLevels = {
-  T: 'T',
-  E: 'E',
-  EE: 'EE',
-  EEA: 'EEA',
-} as const;
-export type DifficultyLevel =
-  (typeof DifficultyLevels)[keyof typeof DifficultyLevels];
-
-export interface TrekkingRoute {
-  _id: UUID;
-  title: string;
-  region: string[];
-  difficulty: DifficultyLevel;
-  distance: number;
-  ascent: number;
-  descent: number;
-  duration: number;
-  routeType: string;
-  likes: number;
-  note?: string;
-  path?: {
-    type: 'LineString' | 'MultiLineString';
-    coordinates: number[][];
-  };
-  startPosition?: { lat: number; lng: number };
-}
-
-export interface RouteResponse {
-  routes: TrekkingRoute[];
-  nextPage?: UUID;
-}
+import { ref } from 'vue';
 
 export const useRouteStore = defineStore('routes', () => {
-  async function fetchRoutes(): Promise<RouteResponse> {
-    try {
-      const res = await api.post('/routes/list', {});
-      return res.data as RouteResponse;
-    } catch (error: any) {
-      console.error('Fetch Routes Error:', error);
-      throw new Error(
-        error.response?.data?.message || 'Failed to fetch routes'
-      );
-    }
-  }
+  // State
 
-  async function fetchMapRoutes(
-    northWest: LatLng,
-    southEast: LatLng
-  ): Promise<TrekkingRoute[]> {
-    const body = {
-      topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
-      bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
-    };
+  const routes = ref<Route[]>([]);
+  const mapRoutes = ref<Route[]>([]);
 
+  // Actions
+
+  const fetchRoutes = async () => {
     try {
-      const res = await api.post('/routes/map', body);
+      const res = await api.get('/routes/list');
       const data = res.data;
-      const rawRoutes = data.routes as TrekkingRoute[];
+      routes.value = data.routes as Route[];
+    } catch (error: any) {
+      console.error('Error fetching routes:', error);
+      throw new Error('Failed to fetch routes');
+    }
+  };
 
-      // CLIENT-SIDE FIX:
-      // MongoDB returns [Lng, Lat]. If Leaflet needs [Lat, Lng], we might need to swap them
-      // or simply extract the start position here for the marker.
-      return rawRoutes.map((route) => {
+  const fetchMapRoutes = async (northWest: LatLng, southEast: LatLng) => {
+    try {
+      const res = await api.get('/routes/map', {
+        params: {
+          latNw: northWest.lat,
+          lngNw: northWest.lng,
+          latSe: southEast.lat,
+          lngSe: southEast.lng,
+        },
+      });
+      const data = res.data;
+      const routes = data.routes as Route[];
+      // Trasformiamo le coordinate per ogni route
+      mapRoutes.value = routes.map((route) => {
         if (
           route.path &&
           route.path.coordinates &&
           route.path.coordinates.length > 0
         ) {
-          // We cast the first element to a tuple [number, number]
-          const [lng, lat] = route.path.coordinates[0] as [number, number];
-
-          if (typeof lat === 'number' && typeof lng === 'number') {
-            route.startPosition = { lat, lng };
-          }
+          // Mappiamo l'INTERO array di coordinate
+          // I dati arrivano come [Lng, Lat, Alt] -> Li trasformiamo in [Lat, Lng]
+          route.path.coordinates = route.path.coordinates.map((coord: any) => {
+            const [lng, lat] = coord as [number, number];
+            // Imposta tutte le coordinate come oggetto { lat, lng }
+            return { lat, lng };
+          });
         }
         return route;
       });
     } catch (error: any) {
-      console.error('Fetch Map Routes Error:', error);
+      console.error('Error fetching map routes:', error);
       throw new Error('Failed to fetch map routes');
     }
-  }
+  };
 
-  return { fetchRoutes, fetchMapRoutes };
+  const fetchRouteById = async (id: string): Promise<Route> => {
+    try {
+      const res = await api.get(`/routes/route`, { params: { id } });
+      const data = res.data;
+      return data.route as Route;
+    } catch (error: any) {
+      console.error('Error fetching route by ID:', error);
+      throw new Error('Failed to fetch route by ID');
+    }
+  };
+
+  return { fetchRoutes, fetchMapRoutes, fetchRouteById, routes, mapRoutes };
 });
