@@ -15,6 +15,8 @@ import {
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+// todo: change to type from '@/types' when store is updated
+import type { Bivouac as RealBivouac } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
 import { useIntentionStore, type Intention } from '@/stores/intentions';
 import {
@@ -39,7 +41,7 @@ import 'vue-sonner/style.css';
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
-const favorites = ref<Bivouac[]>([]);
+const favorites = ref<RealBivouac[]>([]);
 
 const intentionStore = useIntentionStore();
 const userIntentions = ref<Intention[]>([]);

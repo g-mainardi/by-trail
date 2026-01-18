@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type { Region } from '@/types/index';
+import { RegionsEnum } from '@/types/index';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
@@ -34,38 +36,14 @@ import P from '@/layouts/typography/P.vue';
 const { t } = useI18n();
 
 const props = defineProps<{
-  modelValue: string[];
+  modelValue: Region[];
 }>();
 
 const emit = defineEmits(['update:modelValue']);
 const openRegions = ref(false); // Popover state
 
-// --- Constants ---
-const ITALIAN_REGIONS = [
-  'Abruzzo',
-  'Basilicata',
-  'Calabria',
-  'Campania',
-  'Emilia-Romagna',
-  'Friuli-Venezia Giulia',
-  'Lazio',
-  'Liguria',
-  'Lombardia',
-  'Marche',
-  'Molise',
-  'Piemonte',
-  'Puglia',
-  'Sardegna',
-  'Sicilia',
-  'Toscana',
-  'Trentino-Alto Adige',
-  'Umbria',
-  "Valle d'Aosta",
-  'Veneto',
-];
-
 // --- Logic: Toggle Region (Add/Remove from Popover) ---
-const toggleRegion = (region: string) => {
+const toggleRegion = (region: Region) => {
   const current = [...props.modelValue];
   if (current.includes(region)) {
     emit(
@@ -79,7 +57,7 @@ const toggleRegion = (region: string) => {
 };
 
 // --- Logic: Remove Tag (Remove from Badge) ---
-const removeRegion = (region: string) => {
+const removeRegion = (region: Region) => {
   const current = props.modelValue.filter((r) => r !== region);
   emit('update:modelValue', current);
 };
@@ -128,7 +106,7 @@ const removeRegion = (region: string) => {
               <CommandList class="max-h-[300px] overflow-y-auto">
                 <CommandGroup>
                   <CommandItem
-                    v-for="region in ITALIAN_REGIONS"
+                    v-for="region in RegionsEnum"
                     :key="region"
                     :value="region"
                     @select="() => toggleRegion(region)"

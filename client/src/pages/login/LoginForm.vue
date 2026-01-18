@@ -71,6 +71,7 @@ const handleLogin = async () => {
                 id="email"
                 v-model="email"
                 type="email"
+                autocomplete="username"
                 placeholder="m@example.com"
                 required
               />
@@ -91,6 +92,8 @@ const handleLogin = async () => {
                 id="password"
                 v-model="password"
                 type="password"
+                autocomplete="current-password"
+                :placeholder="t('password_placeholder')"
                 required
               />
             </Field>
@@ -122,6 +125,7 @@ const handleLogin = async () => {
     "description": "Enter your email below to login to your account",
     "email": "Email",
     "password": "Password",
+    "password_placeholder": "Enter your password here",
     "forgot_password": "Forgot your password?",
     "login_button": "Login",
     "login_google": "Login with Google",
@@ -133,6 +137,7 @@ const handleLogin = async () => {
     "description": "Inserisci la tua email qui sotto per accedere al tuo account",
     "email": "Email",
     "password": "Password",
+    "password_placeholder": "Inserisci qui la tua password",
     "forgot_password": "Hai dimenticato la password?",
     "login_button": "Accedi",
     "login_google": "Accedi con Google",
@@ -144,6 +149,7 @@ const handleLogin = async () => {
     "description": "Ingresa tu correo electrónico a continuación para iniciar sesión en tu cuenta",
     "email": "Correo electrónico",
     "password": "Contraseña",
+    "password_placeholder": "Introduce aquí tu contraseña",
     "forgot_password": "¿Olvidaste tu contraseña?",
     "login_button": "Iniciar sesión",
     "login_google": "Iniciar sesión con Google",

@@ -3,25 +3,7 @@ import api from '@/stores/utility/axiosInstance'; // Import the global instance
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
-// --- Interfaces ---
-
-const UserEnum = {
-  USER: 'user',
-  ADMIN: 'admin',
-} as const;
-
-type UserType = (typeof UserEnum)[keyof typeof UserEnum];
-
-// Matches the User model fields we expose
-export interface User {
-  _id?: string; // Optional because sometimes Mongo uses _id, sometimes id
-  id?: string;
-  name: string;
-  email: string;
-  favRegions?: string[];
-  type?: UserType;
-}
+import type { User } from '@/types';
 
 export const useAuthStore = defineStore('auth', () => {
   // --- State ---

@@ -1,9 +1,6 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { Setting, User } from '../models/models.js';
-
-export interface AuthRequest extends Request {
-  user?: { id: string };
-}
+import { AuthRequest } from '../types/server_only.js';
 
 /**
  * GET /api/users/profile

@@ -2,7 +2,8 @@
 import { useI18n } from 'vue-i18n';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import { useProposalStore, type Proposal } from '@/stores/proposal';
+import { useProposalStore } from '@/stores/proposal';
+import type { Proposal } from '@/types';
 import { storeToRefs } from 'pinia';
 
 // --- UI Components ---
