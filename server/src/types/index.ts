@@ -127,8 +127,8 @@ export interface Proposal {
 
 export interface Intention {
   _id: string;
-  userId: string;
-  bivouacId: string;
+  user: string;
+  bivouac: string;
   reservedPlaces: number;
   reservationDate: Date;
 }
