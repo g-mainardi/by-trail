@@ -1,13 +1,18 @@
 import express from 'express';
-import { getProfile, updateProfile } from '../controllers/userController.js';
 import {
-  fetchFavoriteBivouacs,
+  createIntention,
+  deleteIntention,
+  fetchUserIntentions,
+} from 'src/controllers/intentionController.js';
+import {
   addFavoriteBivouac,
-  removeFavoriteBivouac,
-  fetchFavoriteRoutes,
   addFavoriteRoute,
+  fetchFavoriteBivouacs,
+  fetchFavoriteRoutes,
+  removeFavoriteBivouac,
   removeFavoriteRoute,
 } from '../controllers/favoritesController.js';
+import { getProfile, updateProfile } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -28,5 +33,10 @@ router.delete('/favorites/bivouacs', removeFavoriteBivouac);
 router.get('/favorites/routes', fetchFavoriteRoutes);
 router.post('/favorites/routes', addFavoriteRoute);
 router.delete('/favorites/routes', removeFavoriteRoute);
+
+// /api/users/intention
+router.post('/intention', createIntention);
+router.delete('/intention', deleteIntention);
+router.get('/intentions', fetchUserIntentions);
 
 export default router;

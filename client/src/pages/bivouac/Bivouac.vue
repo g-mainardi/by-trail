@@ -1,51 +1,131 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import Calendar from '@/components/ui/calendar/Calendar.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
-import type { Bivouac } from '@/types';
+import {
+  useIntentionStore,
+  type AnonymousIntention,
+} from '@/stores/intentions';
+import type { Bivouac, Intention } from '@/types';
+import {
+  fromDate,
+  getLocalTimeZone,
+  type DateValue,
+} from '@internationalized/date';
 import {
   Bed as BedIcon,
+  CalendarIcon,
   Circle,
   Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   Toilet as ToiletIcon,
+  X,
 } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { toast } from 'vue-sonner';
+import 'vue-sonner/style.css';
 const { t } = useI18n();
 
-const favoritesStore = useFavoriteStore();
-const bivouacStore = useBivouacStore();
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 
-let bivouac = ref<Bivouac>();
+const props = defineProps<{ id: string }>();
+const bivouacStore = useBivouacStore();
+const favoritesStore = useFavoriteStore();
+const intentionStore = useIntentionStore();
+
+const bivouac = ref<Bivouac>();
+const minDate = fromDate(new Date(), getLocalTimeZone());
+const bivouacsIntentions = ref<AnonymousIntention[]>([]);
+const userBivouacIntentions = ref<Intention[]>([]);
+
+async function updateIntentions() {
+  await intentionStore.fetchUserIntentions();
+  userBivouacIntentions.value = intentionStore.userIntentions.filter(
+    (intention) => intention.bivouac === props.id
+  );
+  console.log(userBivouacIntentions.value);
+  bivouacsIntentions.value = (
+    await intentionStore.fetchAnonymousBivouacIntentions(props.id)
+  ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+}
+
+const sendIntention = async () => {
+  const res = await intentionStore.sendIntention(
+    bivouac.value?._id || '',
+    selectedDate.value.toDate(getLocalTimeZone()),
+    people.value
+  );
+  if (res.success) {
+    toast.success(res.message ? res.message : 'Intention sent successfully!');
+    await updateIntentions();
+  } else {
+    toast.error(`Error: ${res.error}`);
+  }
+};
+
+const cancelIntention = async (intentionId: string) => {
+  const res = await intentionStore.deleteIntention(intentionId);
+  if (res.success) {
+    toast.success(
+      res.message ? res.message : 'Intention cancelled successfully!'
+    );
+    await updateIntentions();
+  } else {
+    toast.error(`Error: ${res.error}`);
+  }
+};
+
+const people = ref<number>(1);
+const selectedDate = ref(
+  fromDate(new Date(), getLocalTimeZone())
+) as Ref<DateValue>;
 
 onMounted(async () => {
-  bivouac.value = await bivouacStore.getBivouacById(props.id);
-  await favoritesStore.fetchBivouacFavorites();
-});
+  try {
+    bivouac.value = await bivouacStore.getBivouacById(props.id);
+  } catch (error) {
+    console.error('Error fetching bivouac:', error);
+  }
 
-const props = defineProps<{ id: string }>();
+  try {
+    await updateIntentions();
+  } catch (error) {
+    console.error('Error fetching bivouac intentions:', error);
+  }
+});
 </script>
 
 <template>
-  <Card class="p-4">
+  <Card class="p-4 gap-4">
     <CardTitle>
       <H1>{{ bivouac?.name }}</H1>
     </CardTitle>
     <CardContent class="flex flex-col md:flex-row gap-4 w-full p-0">
       <div class="left w-full md:w-[70%]">
+        <!-- DESCRIPTION -->
         <H2>{{ t('description') }}</H2>
         <p class="mt-2 mb-4">
           {{ t('no_description_available') }}
         </p>
+
+        <!-- IMAGES -->
         <H2>{{ t('images') }}</H2>
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
@@ -64,28 +144,81 @@ const props = defineProps<{ id: string }>();
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
         </div>
+
+        <!-- PLAN -->
         <H2> {{ t('plan') }} </H2>
-      </div>
-      <div class="right w-full md:w-[30%]">
-        <H2> {{ t('affluence') }} </H2>
-        <div class="flex flex-col gap-4 my-4">
-          <div class="date_icon">
-            {{ new Date().toDateString() }}
-            <Circle /><Circle /><Circle />
-          </div>
-          <div class="date_icon">
-            {{ new Date(Date.now() + 86400000).toDateString() }}
-            <Circle />
-          </div>
-          <div class="date_icon">
-            {{ new Date(Date.now() + 86400000 * 2).toDateString() }}
-            <Circle />
-          </div>
-          <div class="date_icon">
-            {{ new Date(Date.now() + 86400000 * 3).toDateString() }}
-            <Circle />
+        <div class="flex flex-col lg:flex-row gap-4 my-4 justify-between">
+          <!-- CALENDAR -->
+          <Calendar
+            v-model="selectedDate"
+            class="rounded-md border shadow-sm w-full [&_table]:w-full [&_tr]:justify-evenly"
+            :min-value="minDate"
+            disable-days-outside-current-view
+          />
+          <div class="affluence-form w-full gap-4 flex flex-col">
+            <!-- People -->
+            <div class="flex flex-col lg:flex-row gap-2">
+              <span class="flex items-center whitespace-nowrap">
+                {{ t('people_going') }}:
+              </span>
+              <Select v-model="people">
+                <SelectTrigger id="dropdown" class="w-full">
+                  <SelectValue placeholder="{{ people }}" />
+                </SelectTrigger>
+                <SelectContent align="center">
+                  <div v-for="i in bivouac?.capacity" :key="i">
+                    <SelectItem :value="i">{{ i }}</SelectItem>
+                  </div>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <!-- Confirm Button -->
+            <Button @click="sendIntention">{{ t('send_intention') }}</Button>
           </div>
         </div>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="right w-full md:w-[30%]">
+        <!-- MY INTENTIONS -->
+        <H2>My Intentions</H2>
+        <div class="flex flex-col gap-4 my-4">
+          <div v-for="intention in userBivouacIntentions">
+            <div class="icon-with-text">
+              <CalendarIcon class="icon" />
+              <span class="">
+                {{ new Date(intention.reservationDate).toDateString() }} for
+                {{ intention.reservedPlaces }} people.
+              </span>
+              <Button
+                class="rounded-full"
+                variant="destructive"
+                :size="'icon'"
+                @click="cancelIntention(intention._id || '')"
+              >
+                <X class="icon" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AFFLUENCE INFO -->
+        <H2>{{ t('affluence') }}</H2>
+        <div class="flex flex-col gap-4 my-4">
+          <div v-for="intention in bivouacsIntentions">
+            <div class="icon-with-text">
+              <span class="date_icon">
+                <Circle />
+                {{ new Date(intention.date).toDateString() }}:
+                {{ intention.people }}/{{ bivouac?.capacity }}
+                people.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADDITIONAL INFO -->
         <H2>{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
@@ -97,10 +230,10 @@ const props = defineProps<{ id: string }>();
             <span>{{ bivouac?.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
-            <ToiletIcon /><span class="">N/A</span>
+            <ToiletIcon class="icon" /><span class="">N/A</span>
           </div>
           <div class="icon-with-text">
-            <MapPinIcon />
+            <MapPinIcon class="icon" />
             <span class=""
               >{{ bivouac?.comune }}, {{ bivouac?.mountainRange }}</span
             >
@@ -108,12 +241,12 @@ const props = defineProps<{ id: string }>();
           <div class="icon-with-text">
             <HeartIcon
               :color="
-                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                favoritesStore.isFavoriteBivouac(props.id)
                   ? 'var(--primary)'
                   : 'var(--muted-foreground)'
               "
               :fill="
-                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                favoritesStore.isFavoriteBivouac(props.id)
                   ? 'var(--primary)'
                   : 'var(--background)'
               "
@@ -121,14 +254,12 @@ const props = defineProps<{ id: string }>();
               :aria-label="t('toggle_favorite')"
               role="button"
               :aria-pressed="
-                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
-                  ? 'true'
-                  : 'false'
+                favoritesStore.isFavoriteBivouac(props.id) ? 'true' : 'false'
               "
-              @click="favoritesStore.toggleFavoriteBivouac(bivouac?._id || '')"
+              @click="favoritesStore.toggleFavoriteBivouac(props.id)"
             />
             <span class="value">{{
-              favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+              favoritesStore.isFavoriteBivouac(props.id)
                 ? t('saved')
                 : t('unsaved')
             }}</span>
@@ -136,11 +267,22 @@ const props = defineProps<{ id: string }>();
         </div>
       </div>
     </CardContent>
-    <CardFooter> </CardFooter>
+    <CardFooter></CardFooter>
   </Card>
 </template>
 
 <style scoped>
+.icon-with-text {
+  /* transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95 */
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.icon {
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+}
+
 .date_icon {
   display: flex;
   align-items: center;
@@ -165,7 +307,7 @@ const props = defineProps<{ id: string }>();
 
 .icon-with-text span {
   font-family: monospace;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 </style>
 
@@ -187,6 +329,8 @@ const props = defineProps<{ id: string }>();
     "likes": "Likes",
     "toggle_favorite": "Toggle favorite",
     "images": "Images",
+    "people_going": "People going",
+    "send_intention": "Send intention",
     "explain_plan_functionality": "Here you can express the intention to go to a bivouac and know how many
         people have expressed the intention to go to the same bivouac on the
         various days."
@@ -207,6 +351,8 @@ const props = defineProps<{ id: string }>();
     "likes": "Mi piace",
     "toggle_favorite": "Attiva/disattiva preferito",
     "images": "Immagini",
+    "people_going": "Persone che vanno",
+    "send_intention": "Invia intenzione",
     "explain_plan_functionality": "Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
         persone hanno espresso l'intenzione di andare nello stesso bivacco nei
         vari giorni."
@@ -227,6 +373,8 @@ const props = defineProps<{ id: string }>();
     "likes": "Me gusta",
     "toggle_favorite": "Alternar favorito",
     "images": "Imágenes",
+    "people_going": "Personas que van",
+    "send_intention": "Enviar intención",
     "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
         personas han expresado la intención de ir al mismo bivouac en los
         varios días."
