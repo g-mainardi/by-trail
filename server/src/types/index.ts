@@ -124,3 +124,11 @@ export interface Proposal {
   description: string;
   locality: string;
 }
+
+export interface Intention {
+  _id: string;
+  userId: string;
+  bivouacId: string;
+  reservedPlaces: number;
+  reservationDate: Date;
+}
