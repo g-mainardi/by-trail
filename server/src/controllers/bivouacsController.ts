@@ -1,26 +1,24 @@
 import type { Request, Response } from 'express';
-import type { AuthRequest } from '../types/server_only.js';
 import mongoose from 'mongoose';
 import { Bivouac } from '../models/models.js';
+import type { AuthRequest } from '../types/server_only.js';
 
-export const fetchBivouacs = async (req: Request, res: Response) => {
-  const DEFAULT_SIZE_LIMIT = 50;
-  // TODO: implement options and pagination
-  const { options, nextPage } = req.body;
-
+export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
   try {
-    const bivouacs = await Bivouac.find().limit(DEFAULT_SIZE_LIMIT).exec();
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const bivouacs = await Bivouac.find().exec();
     if (!bivouacs || bivouacs.length === 0) {
-      return res.status(404).json({ message: 'No bivouacs found' });
+      return res.status(200).json({ bivouacs: [] });
     }
     return res.status(200).json({ bivouacs });
-  } catch (error) {
-    console.error('Error fetching bivouacs:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  } catch (error) {}
 };
 
-export const fetchMapBivouacs = async (req: Request, res: Response) => {
+export const fetchMapBivouacs = async (req: AuthRequest, res: Response) => {
   const { topLeftCoords, bottomRightCoords } = req.body || {};
 
   if (
@@ -58,14 +56,14 @@ export const fetchMapBivouacs = async (req: Request, res: Response) => {
 };
 
 export const fetchBivouacById = async (req: Request, res: Response) => {
-  const bivouacId = req.params.id;
+  const id = req.query.id as string;
 
-  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });
   }
 
   try {
-    const bivouac = await Bivouac.findById(bivouacId).exec();
+    const bivouac = await Bivouac.findById(id).exec();
     if (!bivouac) {
       return res.status(404).json({ message: 'Bivouac not found' });
     }

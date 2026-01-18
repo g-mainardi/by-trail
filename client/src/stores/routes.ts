@@ -1,6 +1,8 @@
 import api from '@/stores/utility/axiosInstance';
+import type { Route } from '@/types';
 import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
 type UUID = string;
 
@@ -32,61 +34,53 @@ export interface TrekkingRoute {
   startPosition?: { lat: number; lng: number };
 }
 
-export interface RouteResponse {
-  routes: TrekkingRoute[];
-  nextPage?: UUID;
-}
-
 export const useRouteStore = defineStore('routes', () => {
-  async function fetchRoutes(): Promise<RouteResponse> {
+  // State
+
+  const routes = ref<Route[]>([]);
+  const mapRoutes = ref<Route[]>([]);
+
+  // Actions
+
+  const fetchRoutes = async () => {
     try {
       const res = await api.post('/routes/list', {});
-      return res.data as RouteResponse;
-    } catch (error: any) {
-      console.error('Fetch Routes Error:', error);
-      throw new Error(
-        error.response?.data?.message || 'Failed to fetch routes'
-      );
-    }
-  }
-
-  async function fetchMapRoutes(
-    northWest: LatLng,
-    southEast: LatLng
-  ): Promise<TrekkingRoute[]> {
-    const body = {
-      topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
-      bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
-    };
-
-    try {
-      const res = await api.post('/routes/map', body);
       const data = res.data;
-      const rawRoutes = data.routes as TrekkingRoute[];
+      routes.value = data.routes as Route[];
+    } catch (error: any) {
+      console.error('Error fetching routes:', error);
+      throw new Error('Failed to fetch routes');
+    }
+  };
 
-      // CLIENT-SIDE FIX:
-      // MongoDB returns [Lng, Lat]. If Leaflet needs [Lat, Lng], we might need to swap them
-      // or simply extract the start position here for the marker.
-      return rawRoutes.map((route) => {
+  const fetchMapRoutes = async (northWest: LatLng, southEast: LatLng) => {
+    try {
+      const res = await api.get('/routes/map', {
+        params: {
+          topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
+          bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
+        },
+      });
+      const data = res.data;
+      const routes = data.routes as Route[];
+      mapRoutes.value = routes.map((route) => {
         if (
           route.path &&
           route.path.coordinates &&
           route.path.coordinates.length > 0
         ) {
-          // We cast the first element to a tuple [number, number]
           const [lng, lat] = route.path.coordinates[0] as [number, number];
-
           if (typeof lat === 'number' && typeof lng === 'number') {
-            route.startPosition = { lat, lng };
+            route.path.coordinates[0] = { lat, lng };
           }
         }
         return route;
       });
     } catch (error: any) {
-      console.error('Fetch Map Routes Error:', error);
+      console.error('Error fetching map routes:', error);
       throw new Error('Failed to fetch map routes');
     }
-  }
+  };
 
-  return { fetchRoutes, fetchMapRoutes };
+  return { fetchRoutes, fetchMapRoutes, routes, mapRoutes };
 });

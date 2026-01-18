@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useBivouacStore } from '@/stores/bivouacs';
+import { useRouteStore } from '@/stores/routes';
 import { LMap, LMarker, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import { useDebounceFn } from '@vueuse/core';
-import type { Icon, IconOptions, LatLng, Map } from 'leaflet';
+import type { Icon, IconOptions, Map } from 'leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { computed, ref } from 'vue';
@@ -14,6 +15,9 @@ import {
   resetRoutesFilters,
   routeFilters,
 } from '../filterbar/filters';
+
+const bivouacStore = useBivouacStore();
+const routeStore = useRouteStore();
 
 const mapPinHouseIconUrl = new URL(
   '@/assets/map-pin-house.svg',
@@ -47,8 +51,6 @@ const bivouacIcon = L.divIcon({
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 
-const bivouacs = ref<Bivouac[]>([]);
-
 const tileLayerUrl = computed(() => {
   return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
 });
@@ -56,34 +58,20 @@ const tileLayerUrl = computed(() => {
 const mapRef = ref<Map | null>(null);
 const onMapReady = (map: Map) => {
   mapRef.value = map;
-  logBounds();
+  debouncedFetchBivouacs();
 };
 
-const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
-  try {
-    bivouacs.value = await useBivouacStore().fetchMapBivouacs(
-      northWest,
-      southEast
-    );
-  } catch (error) {
-    console.error('Error fetching map bivouacs:', error);
-  }
-};
-
-const debouncedFetchBivouacs = useDebounceFn(() => {
+const debouncedFetchBivouacs = useDebounceFn(async () => {
   if (!mapRef.value) return;
   const bounds = mapRef.value.getBounds();
   const northWest = bounds.getNorthWest();
   const southEast = bounds.getSouthEast();
-  fetchMapBivouacs(northWest, southEast);
+  await bivouacStore.fetchMapBivouacs(northWest, southEast);
+  await routeStore.fetchMapRoutes(northWest, southEast);
 }, 500);
 
-const logBounds = () => {
-  debouncedFetchBivouacs();
-};
-
 const filteredBivouacs = computed(() => {
-  return getFilteredBivouacs(bivouacs.value);
+  return getFilteredBivouacs(bivouacStore.mapBivouacs);
 });
 
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
@@ -103,8 +91,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
       :useGlobalLeaflet="false"
       class="w-full h-full z-0"
       @ready="onMapReady"
-      @update:zoom="logBounds"
-      @update:center="logBounds"
+      @update:zoom="debouncedFetchBivouacs()"
+      @update:center="debouncedFetchBivouacs()"
     >
       <l-tile-layer :url="tileLayerUrl" />
 

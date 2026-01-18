@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
-import type { Bivouac as RealBivouac } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
+import type { Bivouac as RealBivouac } from '@/types';
 import { computed, onMounted, ref } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
@@ -15,27 +15,9 @@ import {
 import BivouacCard from './BivouacCard.vue';
 
 const bivouacStore = useBivouacStore();
-const bivouacs = ref<Bivouac[]>([]);
-const nextPage = ref<string | undefined>(undefined);
-const isLoading = ref(true);
 
 const favoritesStore = useFavoriteStore();
 const favorites = ref<RealBivouac[]>([]);
-
-const loadBivouacs = async () => {
-  isLoading.value = true;
-  try {
-    const response = await bivouacStore.fetchBivouacs();
-    bivouacs.value = response.bivouacs;
-    nextPage.value = response.nextPage;
-    favorites.value = await favoritesStore.getFavoriteBivouacs();
-  } catch (error) {
-    console.error('Error fetching bivouacs:', error);
-    bivouacs.value = [];
-  } finally {
-    isLoading.value = false;
-  }
-};
 
 const isFavorite = (bivouacId: string): boolean => {
   return favorites.value.some((bivouac) => bivouac._id === bivouacId);
@@ -54,25 +36,12 @@ const toggleFavorite = async (bivouacId: string) => {
   else console.log(res.error);
 };
 
-onMounted(() => {
-  loadBivouacs();
+onMounted(async () => {
+  await bivouacStore.fetchBivouacs();
 });
 
-async function fetchNextPage() {
-  if (!nextPage.value) {
-    return;
-  }
-  try {
-    const response = await bivouacStore.fetchBivouacs({}, nextPage.value);
-    bivouacs.value.push(...response.bivouacs);
-    nextPage.value = response.nextPage;
-  } catch (error) {
-    console.error('Error fetching next page of bivouacs:', error);
-  }
-}
-
 const filteredBivouacs = computed(() => {
-  return getFilteredBivouacs(bivouacs.value);
+  return getFilteredBivouacs(bivouacStore.bivouacs);
 });
 </script>
 

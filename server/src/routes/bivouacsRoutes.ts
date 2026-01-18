@@ -11,8 +11,8 @@ const router = express.Router();
 router.use(protect);
 
 // /api/bivouacs
-router.post('/list', fetchBivouacs);
-router.post('/map', fetchMapBivouacs);
-router.get('/:id', fetchBivouacById);
+router.get('/list', fetchBivouacs);
+router.get('/map', fetchMapBivouacs);
+router.get('/bivouac', fetchBivouacById);
 
 export default router;
