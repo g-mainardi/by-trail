@@ -1,7 +1,8 @@
 import type { Response } from 'express';
 import { UserStatusEnum, UserTypeEnum } from '../types/index.js';
 import { AuthRequest } from '../types/server_only.js';
-import { User } from '../models/models.js';
+import { User, Bivouac } from '../models/models.js';
+import mongoose from 'mongoose';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
   try {
@@ -83,6 +84,51 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
     return res.status(204).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateBivouac = async (req: AuthRequest, res: Response) => {
+  const bivouacId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
+  const updates = req.body;
+  try {
+    const bivouac = await Bivouac.findById(bivouacId).exec();
+    if (!bivouac) return res.status(404).json({ error: 'Bivouac not found' });
+
+    const success = await Bivouac.updateOne({ _id: bivouacId }, updates).exec();
+    if (!success)
+      return res.status(500).json({ error: 'Failed to update bivouac' });
+
+    return res.status(201).json({
+      message:
+        success.modifiedCount === 0
+          ? 'No changes were made to the bivouac'
+          : 'Bivouac updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating bivouac:', error);
+    throw error;
+  }
+};
+
+export const deleteBivouac = async (req: AuthRequest, res: Response) => {
+  const bivouacId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
+
+  try {
+    const deletionResult = await Bivouac.deleteOne({ _id: bivouacId }).exec();
+    if (deletionResult.deletedCount === 0)
+      return res.status(404).json({ error: 'Bivouac not found' });
+
+    return res.status(204).json({ message: 'Bivouac deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting bivouac:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
