@@ -75,7 +75,7 @@ const data = computed(() => ({
     },
     {
       title: t('notifications'),
-      url: '#',
+      url: '/notifications',
       icon: Bell,
     },
     {
