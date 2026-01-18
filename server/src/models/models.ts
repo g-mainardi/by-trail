@@ -116,9 +116,6 @@ const routeSchema = new Schema(
   }
 );
 
-// Create a 2dsphere index for Geospatial queries
-routeSchema.index({ path: '2dsphere' });
-
 // IMAGE
 const imageSchema = new Schema({
   url: { type: String },
