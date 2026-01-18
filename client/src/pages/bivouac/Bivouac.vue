@@ -14,11 +14,11 @@ import {
 } from '@/components/ui/select';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
-import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
+import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
 import { useIntentionStore } from '@/stores/intentions';
-import type { Intention } from '@/types';
+import type { Bivouac, Intention } from '@/types';
 import {
   fromDate,
   getLocalTimeZone,
@@ -62,7 +62,7 @@ async function updateIntentions() {
 
 const sendIntention = async () => {
   const res = await intentionStore.sendIntention(
-    bivouac.value!._id,
+    bivouac.value?._id || '',
     selectedDate.value.toDate(getLocalTimeZone()),
     people.value
   );
@@ -215,11 +215,11 @@ onMounted(async () => {
         <H2>{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
-            <MountainIcon class="icon" />
+            <MountainIcon />
             <span class="">{{ bivouac?.altitude }} mt </span>
           </div>
           <div class="icon-with-text">
-            <BedIcon class="icon" />
+            <BedIcon />
             <span>{{ bivouac?.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
@@ -234,18 +234,24 @@ onMounted(async () => {
           <div class="icon-with-text">
             <!-- <HeartIcon
               :color="
-                isFavorite(bivouac._id)
+                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
                   ? 'var(--primary)'
                   : 'var(--muted-foreground)'
               "
               :fill="
-                isFavorite(bivouac._id) ? 'var(--primary)' : 'var(--background)'
+                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                  ? 'var(--primary)'
+                  : 'var(--background)'
               "
               class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
               :aria-label="t('toggle_favorite')"
               role="button"
-              :aria-pressed="isFavorite(bivouac._id) ? 'true' : 'false'"
-              @click="toggleFavorite(bivouac._id)"
+              :aria-pressed="
+                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                  ? 'true'
+                  : 'false'
+              "
+              @click="favoritesStore.toggleFavoriteBivouac(bivouac?._id || '')"
             />
             <span class="value">{{
               isFavorite(bivouac._id) ? t('saved') : t('unsaved')

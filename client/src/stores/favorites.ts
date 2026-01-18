@@ -1,38 +1,31 @@
 import api from '@/stores/utility/axiosInstance';
-import { defineStore } from 'pinia';
 import type { Bivouac, Route } from '@/types';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+
+interface FavoritesResponse {
+  success: boolean;
+  error?: string;
+}
 
 export const useFavoriteStore = defineStore('favorites', () => {
-  async function getFavoriteBivouacs(): Promise<Bivouac[]> {
+  // State
+  const bivouacFavorites = ref<Bivouac[]>([]);
+  const routeFavorites = ref<Route[]>([]);
+
+  const fetchBivouacFavorites = async () => {
     try {
-      const res = await api.get('/users/favorites/bivouacs', {});
+      const res = await api.get('/users/favorites/bivouacs');
       const data = res.data;
-
-      if (!data || !data.bivouacs || !Array.isArray(data.bivouacs))
-        throw new Error('Invalid data structure received');
-
-      const bivouacs: Bivouac[] = data.bivouacs;
-
-      if (bivouacs.some((item) => item == null || item === undefined)) {
-        console.warn(
-          'Warning: Some favorite bivouacs are null or undefined, filtering them out.',
-          bivouacs
-        );
-        return bivouacs.filter(
-          (item: Bivouac) => item !== null && item !== undefined
-        );
-      }
-      return bivouacs;
-    } catch (error: any) {
+      bivouacFavorites.value = data.bivouacs as Bivouac[];
+    } catch (error) {
       console.error('Error fetching favorite bivouacs:', error);
-      return [];
     }
-  }
+  };
 
-  async function addFavoriteBivouac(
+  const addFavoriteBivouac = async (
     bivouacId: string
-  ): Promise<{ success: boolean; error?: string }> {
-    // post /favorites/bivouacs params: user id and bivouac id
+  ): Promise<FavoritesResponse> => {
     try {
       const body = { id: bivouacId };
       const res = await api.post(`/users/favorites/bivouacs/`, body);
@@ -45,12 +38,11 @@ export const useFavoriteStore = defineStore('favorites', () => {
       console.error('Error adding favorite bivouac:', error);
       return { success: false, error: error };
     }
-  }
+  };
 
-  async function removeFavoriteBivouac(
+  const deleteFavoriteBivouac = async (
     bivouacId: string
-  ): Promise<{ success: boolean; error?: string }> {
-    // delete /favorites/bivouacs params: user id and bivouac id
+  ): Promise<FavoritesResponse> => {
     try {
       const body = { id: bivouacId };
       const res = await api.delete(`/users/favorites/bivouacs`, { data: body });
@@ -63,42 +55,31 @@ export const useFavoriteStore = defineStore('favorites', () => {
       console.error('Error removing favorite bivouac:', error);
       return { success: false, error: error };
     }
-  }
+  };
 
-  async function getFavoriteRoutes(): Promise<Route[]> {
+  const fetchFavoriteRoutes = async () => {
     try {
-      const res = await api.get('/users/favorites/routes', {});
+      const res = await api.get('/users/favorites/routes');
       const data = res.data;
-
-      if (!data || !data.routes || !Array.isArray(data.routes))
-        throw new Error('Invalid data structure received');
-
-      const routes: Route[] = data.routes;
-
-      if (routes.some((item) => item == null || item === undefined)) {
-        console.warn(
-          'Warning: Some favorite routes are null or undefined, filtering them out.',
-          routes
-        );
-        return routes.filter(
-          (item: Route) => item !== null && item !== undefined
-        );
-      }
-      return routes;
+      routeFavorites.value = data.routes as Route[];
     } catch (error: any) {
       console.error('Error fetching favorite routes:', error);
-      return [];
     }
-  }
+  };
 
-  async function addFavoriteRoute(
+  const addFavoriteRoute = async (
     routeId: string
-  ): Promise<{ success: boolean; error?: string }> {
-    // post /favorites/routes params: user id and route id
+  ): Promise<FavoritesResponse> => {
     try {
       const body = { id: routeId };
-      const res = await api.post(`/users/favorites/routes/`, body);
+      const res = await api.post(`/users/favorites/routes`, body);
       if (res.status === 200 || res.status === 201) return { success: true };
+      if (res.status === 409) {
+        return {
+          success: false,
+          error: 'Route is already in favorites.',
+        };
+      }
       return {
         success: false,
         error: `Unexpected response status: ${res.status}`,
@@ -107,12 +88,11 @@ export const useFavoriteStore = defineStore('favorites', () => {
       console.error('Error adding favorite route:', error);
       return { success: false, error: error };
     }
-  }
+  };
 
-  async function removeFavoriteRoute(
+  const deleteFavoriteRoute = async (
     routeId: string
-  ): Promise<{ success: boolean; error?: string }> {
-    // delete /favorites/routes params: user id and route id
+  ): Promise<FavoritesResponse> => {
     try {
       const body = { id: routeId };
       const res = await api.delete(`/users/favorites/routes`, { data: body });
@@ -125,14 +105,55 @@ export const useFavoriteStore = defineStore('favorites', () => {
       console.error('Error removing favorite route:', error);
       return { success: false, error: error };
     }
+  };
+
+  async function toggleFavoriteBivouac(bivouacId: string) {
+    let res: { success: boolean; error?: string } = {
+      success: false,
+    };
+    if (isFavoriteBivouac(bivouacId)) {
+      res = await deleteFavoriteBivouac(bivouacId);
+    } else {
+      res = await addFavoriteBivouac(bivouacId);
+    }
+    if (res.success) await fetchBivouacFavorites();
+    else console.log(res.error);
+  }
+
+  async function toggleFavoriteRoute(routeId: string) {
+    let res: { success: boolean; error?: string } = {
+      success: false,
+    };
+    if (isFavoriteRoute(routeId)) {
+      console.log('Removing favorite route:', routeId);
+      res = await deleteFavoriteRoute(routeId);
+    } else {
+      res = await addFavoriteRoute(routeId);
+    }
+    if (res.success) await fetchFavoriteRoutes();
+    else console.log(res.error);
+  }
+
+  function isFavoriteBivouac(bivouacId: string): boolean {
+    return bivouacFavorites.value.some((bivouac) => bivouac._id === bivouacId);
+  }
+
+  function isFavoriteRoute(routeId: string): boolean {
+    return routeFavorites.value.some((route) => route._id === routeId);
   }
 
   return {
-    getFavoriteBivouacs,
+    bivouacFavorites,
+    routeFavorites,
+    fetchBivouacFavorites,
     addFavoriteBivouac,
-    removeFavoriteBivouac,
-    getFavoriteRoutes,
+    deleteFavoriteBivouac,
+    fetchFavoriteRoutes,
     addFavoriteRoute,
-    removeFavoriteRoute,
+    deleteFavoriteRoute,
+    toggleFavoriteBivouac,
+    toggleFavoriteRoute,
+    isFavoriteBivouac,
+    isFavoriteRoute,
   };
 });
