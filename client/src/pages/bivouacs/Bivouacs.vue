@@ -2,8 +2,7 @@
 import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
-import type { Bivouac as RealBivouac } from '@/types';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
   bivouacFilters,
@@ -15,29 +14,11 @@ import {
 import BivouacCard from './BivouacCard.vue';
 
 const bivouacStore = useBivouacStore();
-
 const favoritesStore = useFavoriteStore();
-const favorites = ref<RealBivouac[]>([]);
-
-const isFavorite = (bivouacId: string): boolean => {
-  return favorites.value.some((bivouac) => bivouac._id === bivouacId);
-};
-
-const toggleFavorite = async (bivouacId: string) => {
-  let res: { success: boolean; error?: string } = {
-    success: false,
-  };
-  if (isFavorite(bivouacId)) {
-    res = await favoritesStore.removeFavoriteBivouac(bivouacId);
-  } else {
-    res = await favoritesStore.addFavoriteBivouac(bivouacId);
-  }
-  if (res.success) favorites.value = await favoritesStore.getFavoriteBivouacs();
-  else console.log(res.error);
-};
 
 onMounted(async () => {
   await bivouacStore.fetchBivouacs();
+  await favoritesStore.fetchBivouacFavorites();
 });
 
 const filteredBivouacs = computed(() => {
@@ -56,8 +37,10 @@ const filteredBivouacs = computed(() => {
     <div v-for="bivouac in filteredBivouacs" :key="bivouac._id" class="mt-0">
       <BivouacCard
         :bivouac="bivouac"
-        :isFavorite="isFavorite(bivouac._id || '')"
-        @toggle-favorite="toggleFavorite(bivouac._id || '')"
+        :isFavorite="favoritesStore.isFavoriteBivouac(bivouac._id || '')"
+        @toggle-favorite="
+          favoritesStore.toggleFavoriteBivouac(bivouac._id || '')
+        "
       />
     </div>
   </div>
