@@ -16,9 +16,9 @@ import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore, type Bivouac } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
-import type { Bivouac as RealBivouac } from '@/types';
 import { useFavoriteStore } from '@/stores/favorites';
-import { useIntentionStore, type Intention } from '@/stores/intentions';
+import { useIntentionStore } from '@/stores/intentions';
+import type { Intention } from '@/types';
 import {
   fromDate,
   getLocalTimeZone,
@@ -28,7 +28,6 @@ import {
   Bed as BedIcon,
   CalendarIcon,
   Circle,
-  Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   Toilet as ToiletIcon,
@@ -40,26 +39,36 @@ import { toast } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const { t } = useI18n();
 
-const favoritesStore = useFavoriteStore();
-const favorites = ref<RealBivouac[]>([]);
+const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 
+const props = defineProps<{ id: string }>();
+const bivouacStore = useBivouacStore();
+const favoritesStore = useFavoriteStore();
 const intentionStore = useIntentionStore();
+
+const bivouac = ref<Bivouac>();
+const minDate = fromDate(new Date(), getLocalTimeZone());
+const bivouacsIntentions = ref<{ date: Date; people: number }[]>([]);
 const userIntentions = ref<Intention[]>([]);
 
-const bivouacsIntentions = ref<{ date: Date; people: number }[]>([]);
+async function updateIntentions() {
+  await intentionStore.fetchUserIntentions();
+  userIntentions.value = intentionStore.userIntentions.filter(
+    (intention) => intention.bivouacId === props.id
+  );
+  bivouacsIntentions.value =
+    await intentionStore.fetchAnonymousBivouacIntentions(props.id);
+}
 
 const sendIntention = async () => {
   const res = await intentionStore.sendIntention(
-    bivouac.value._id,
+    bivouac.value!._id,
     selectedDate.value.toDate(getLocalTimeZone()),
     people.value
   );
   if (res.success) {
     toast.success(res.message ? res.message : 'Intention sent successfully!');
-    userIntentions.value = await intentionStore.getUserIntentions(props.id);
-    bivouacsIntentions.value = await intentionStore.getBivouacIntentions(
-      props.id
-    );
+    await updateIntentions();
   } else {
     toast.error(`Error: ${res.error}`);
   }
@@ -72,37 +81,11 @@ const cancelIntention = async (intentionId: string) => {
     toast.success(
       res.message ? res.message : 'Intention cancelled successfully!'
     );
-    userIntentions.value = await intentionStore.getUserIntentions(props.id);
-    bivouacsIntentions.value = await intentionStore.getBivouacIntentions(
-      props.id
-    );
+    await updateIntentions();
   } else {
     toast.error(`Error: ${res.error}`);
   }
 };
-
-const minDate = fromDate(new Date(), getLocalTimeZone());
-
-const isFavorite = (bivouacId: string): boolean => {
-  return favorites.value.some((bivouac) => bivouac._id === bivouacId);
-};
-
-const toggleFavorite = async (bivouacId: string) => {
-  let res: { success: boolean; error?: string } = {
-    success: false,
-  };
-  if (isFavorite(bivouacId)) {
-    res = await favoritesStore.removeFavoriteBivouac(bivouacId);
-  } else {
-    res = await favoritesStore.addFavoriteBivouac(bivouacId);
-  }
-  if (res.success) favorites.value = await favoritesStore.getFavoriteBivouacs();
-  else console.log(res.error);
-};
-
-const bivouacStore = useBivouacStore();
-const props = defineProps<{ id: string }>();
-let bivouac = ref<Bivouac>({} as Bivouac);
 
 const people = ref<number>(1);
 const selectedDate = ref(
@@ -115,29 +98,19 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching bivouac:', error);
   }
-  favorites.value = await favoritesStore.getFavoriteBivouacs();
 
   try {
-    userIntentions.value = await intentionStore.getUserIntentions(props.id);
-  } catch (error) {
-    console.error('Error fetching intentions:', error);
-  }
-
-  try {
-    bivouacsIntentions.value = await intentionStore.getBivouacIntentions(
-      props.id
-    );
+    await updateIntentions();
   } catch (error) {
     console.error('Error fetching bivouac intentions:', error);
   }
 });
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
   <Card class="p-4 gap-4">
     <CardTitle>
-      <H1>{{ bivouac.name }}</H1>
+      <H1>{{ bivouac?.name }}</H1>
     </CardTitle>
     <CardContent class="flex flex-col md:flex-row gap-4 w-full p-0">
       <div class="left w-full md:w-[70%]">
@@ -152,17 +125,17 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
             :src="placeholder"
-            :alt="`${bivouac.name} image`"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
           <img
             :src="placeholder"
-            :alt="`${bivouac.name} image`"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
           <img
             :src="placeholder"
-            :alt="`${bivouac.name} image`"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
         </div>
@@ -188,7 +161,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
                   <SelectValue placeholder="{{ people }}" />
                 </SelectTrigger>
                 <SelectContent align="center">
-                  <div v-for="i in bivouac.capacity" :key="i">
+                  <div v-for="i in bivouac?.capacity" :key="i">
                     <SelectItem :value="i">{{ i }}</SelectItem>
                   </div>
                 </SelectContent>
@@ -231,7 +204,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
               <span class="date_icon">
                 <Circle />
                 {{ new Date(intention.date).toDateString() }}:
-                {{ intention.people }}/{{ bivouac.capacity }}
+                {{ intention.people }}/{{ bivouac?.capacity }}
                 people.
               </span>
             </div>
@@ -243,11 +216,11 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
             <MountainIcon class="icon" />
-            <span class="">{{ bivouac.altitude }} mt </span>
+            <span class="">{{ bivouac?.altitude }} mt </span>
           </div>
           <div class="icon-with-text">
             <BedIcon class="icon" />
-            <span>{{ bivouac.capacity }} {{ t('beds') }}</span>
+            <span>{{ bivouac?.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
             <ToiletIcon class="icon" /><span class="">N/A</span>
@@ -255,11 +228,11 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
           <div class="icon-with-text">
             <MapPinIcon class="icon" />
             <span class=""
-              >{{ bivouac.comune }}, {{ bivouac.mountainRange }}</span
+              >{{ bivouac?.comune }}, {{ bivouac?.mountainRange }}</span
             >
           </div>
           <div class="icon-with-text">
-            <HeartIcon
+            <!-- <HeartIcon
               :color="
                 isFavorite(bivouac._id)
                   ? 'var(--primary)'
@@ -276,7 +249,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             />
             <span class="value">{{
               isFavorite(bivouac._id) ? t('saved') : t('unsaved')
-            }}</span>
+            }}</span> -->
           </div>
         </div>
       </div>

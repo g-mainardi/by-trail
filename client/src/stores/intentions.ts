@@ -1,19 +1,41 @@
+import type { Intention } from '@/types';
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 import api from './utility/axiosInstance';
 
-export interface Intention {
-  _id: string;
-  bivouacId: string;
-  reservationDate: Date;
-  reservedPlaces: number;
+interface IntentionResponse {
+  success: boolean;
+  error?: string;
+  message?: string;
 }
 
 export const useIntentionStore = defineStore('intentions', () => {
-  async function sendIntention(
+  // State
+
+  const userIntentions = ref<Intention[]>([]);
+
+  // Action
+
+  const fetchUserIntentions = async () => {
+    try {
+      const res = await api.get(`/users/intentions`);
+
+      const data = res.data;
+      if (!data || !data.intentions || !Array.isArray(data.intentions))
+        throw new Error('Invalid data structure received');
+
+      userIntentions.value = data.intentions as Intention[];
+    } catch (error: any) {
+      console.error('Error fetching intentions:', error);
+      return [];
+    }
+  };
+
+  const sendIntention = async (
     bivouacId: string,
     date: Date,
     people: number
-  ): Promise<{ success: boolean; error?: string; message?: string }> {
+  ): Promise<IntentionResponse> => {
     try {
       const body = {
         bivouacId: bivouacId,
@@ -31,11 +53,11 @@ export const useIntentionStore = defineStore('intentions', () => {
       console.error('Error sending intention:', error);
       return { success: false, error: error.message };
     }
-  }
+  };
 
-  async function deleteIntention(
+  const deleteIntention = async (
     intentionId: string
-  ): Promise<{ success: boolean; error?: string; message?: string }> {
+  ): Promise<IntentionResponse> => {
     try {
       const body = {
         intentionId: intentionId,
@@ -51,53 +73,32 @@ export const useIntentionStore = defineStore('intentions', () => {
       console.error('Error deleting intention:', error);
       return { success: false, error: error.message };
     }
-  }
+  };
 
-  async function getUserIntentions(bivouacId?: string): Promise<Intention[]> {
-    try {
-      const res = await api.get(`/users/intentions`, {
-        params: { ID: bivouacId },
-      });
-
-      const data = res.data;
-      if (!data || !data.intentions || !Array.isArray(data.intentions))
-        throw new Error('Invalid data structure received');
-
-      const intentions: Intention[] = data.intentions;
-      return intentions;
-    } catch (error: any) {
-      console.error('Error fetching intentions:', error);
-      return [];
-    }
-  }
-
-  async function getBivouacIntentions(bivouacId: string): Promise<
-    {
-      date: Date;
-      people: number;
-    }[]
-  > {
-    console.log('OK:', bivouacId);
+  const fetchAnonymousBivouacIntentions = async (
+    bivouacId: string
+  ): Promise<{ date: Date; people: number }[]> => {
     try {
       const res = await api.get(`/bivouacs/intentions`, {
         params: { bivouacId },
       });
-      console.log(res.status);
+
       const data = res.data;
       if (!data || !data.intentions || !Array.isArray(data.intentions))
         throw new Error('Invalid data structure received');
 
-      return data.intentions;
+      return data.intentions as { date: Date; people: number }[];
     } catch (error: any) {
       console.error('Error fetching bivouac intentions:', error);
       return [];
     }
-  }
+  };
 
   return {
     sendIntention,
     deleteIntention,
-    getUserIntentions,
-    getBivouacIntentions,
+    fetchUserIntentions,
+    fetchAnonymousBivouacIntentions,
+    userIntentions,
   };
 });
