@@ -44,7 +44,7 @@ const favorites = ref<Bivouac[]>([]);
 const intentionStore = useIntentionStore();
 const userIntentions = ref<Intention[]>([]);
 
-const bivouacsIntentions = ref<{ date: Date; places: number }[]>([]);
+const bivouacsIntentions = ref<{ date: Date; people: number }[]>([]);
 
 const sendIntention = async () => {
   const res = await intentionStore.sendIntention(
@@ -55,6 +55,9 @@ const sendIntention = async () => {
   if (res.success) {
     toast.success(res.message ? res.message : 'Intention sent successfully!');
     userIntentions.value = await intentionStore.getUserIntentions(props.id);
+    bivouacsIntentions.value = await intentionStore.getBivouacIntentions(
+      props.id
+    );
   } else {
     toast.error(`Error: ${res.error}`);
   }
@@ -68,6 +71,9 @@ const cancelIntention = async (intentionId: string) => {
       res.message ? res.message : 'Intention cancelled successfully!'
     );
     userIntentions.value = await intentionStore.getUserIntentions(props.id);
+    bivouacsIntentions.value = await intentionStore.getBivouacIntentions(
+      props.id
+    );
   } else {
     toast.error(`Error: ${res.error}`);
   }
@@ -95,7 +101,6 @@ const toggleFavorite = async (bivouacId: string) => {
 const bivouacStore = useBivouacStore();
 const props = defineProps<{ id: string }>();
 let bivouac = ref<Bivouac>({} as Bivouac);
-const capacity = bivouac.value.capacity;
 
 const people = ref<number>(1);
 const selectedDate = ref(
@@ -114,6 +119,14 @@ onMounted(async () => {
     userIntentions.value = await intentionStore.getUserIntentions(props.id);
   } catch (error) {
     console.error('Error fetching intentions:', error);
+  }
+
+  try {
+    bivouacsIntentions.value = await intentionStore.getBivouacIntentions(
+      props.id
+    );
+  } catch (error) {
+    console.error('Error fetching bivouac intentions:', error);
   }
 });
 const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
@@ -211,21 +224,15 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
         <!-- AFFLUENCE INFO -->
         <H2>{{ t('affluence') }}</H2>
         <div class="flex flex-col gap-4 my-4">
-          <div class="date_icon">
-            {{ new Date().toDateString() }}
-            <Circle /><Circle /><Circle />
-          </div>
-          <div class="date_icon">
-            {{ new Date(Date.now() + 86400000).toDateString() }}
-            <Circle />
-          </div>
-          <div class="date_icon">
-            {{ new Date(Date.now() + 86400000 * 2).toDateString() }}
-            <Circle />
-          </div>
-          <div class="date_icon">
-            {{ new Date(Date.now() + 86400000 * 3).toDateString() }}
-            <Circle /><Circle />
+          <div v-for="intention in bivouacsIntentions">
+            <div class="icon-with-text">
+              <span class="date_icon">
+                <Circle />
+                {{ new Date(intention.date).toDateString() }}:
+                {{ intention.people }}/{{ bivouac.capacity }}
+                people.
+              </span>
+            </div>
           </div>
         </div>
 

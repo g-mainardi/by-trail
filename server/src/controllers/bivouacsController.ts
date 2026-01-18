@@ -57,14 +57,15 @@ export const fetchMapBivouacs = async (req: Request, res: Response) => {
 };
 
 export const fetchBivouacById = async (req: Request, res: Response) => {
-  const bivouacId = req.params.id;
+  const { id } = req.query;
+  console.log('Bivouac ID:', id);
 
-  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+  if (!mongoose.Types.ObjectId.isValid(String(id))) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });
   }
 
   try {
-    const bivouac = await Bivouac.findById(bivouacId).exec();
+    const bivouac = await Bivouac.findById(String(id)).exec();
     if (!bivouac) {
       return res.status(404).json({ message: 'Bivouac not found' });
     }

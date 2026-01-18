@@ -93,7 +93,7 @@ export const useBivouacStore = defineStore('bivouacs', () => {
 
   async function getBivouacById(id: UUID): Promise<Bivouac> {
     try {
-      const res = await api.get(`/bivouacs/${id}`);
+      const res = await api.get(`/bivouacs/bivouac`, { params: { id } });
       return res.data.bivouac as Bivouac;
     } catch (error) {
       throw new Error('Failed to fetch bivouac by ID');

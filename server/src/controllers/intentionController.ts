@@ -129,3 +129,29 @@ export const fetchUserBivouacIntentions = async (
     }
   }
 };
+
+export const fetchBivouacIntentions = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  const { bivouacId } = req.query;
+
+  if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId as string)) {
+    return res.status(400).json({ error: 'Invalid bivouacId' });
+  }
+
+  try {
+    const intentions = await Reservation.find({
+      bivouac: bivouacId,
+    });
+
+    return res.status(200).json({
+      intentions: intentions.map((i) => ({
+        date: i.reservationDate,
+        people: i.reservedPlaces,
+      })),
+    });
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
