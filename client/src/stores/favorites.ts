@@ -28,7 +28,7 @@ export const useFavoriteStore = defineStore('favorites', () => {
   ): Promise<FavoritesResponse> => {
     try {
       const body = { id: bivouacId };
-      const res = await api.post(`/users/favorites/bivouacs/`, body);
+      const res = await api.post(`/users/favorites/bivouacs`, body);
       if (res.status === 200 || res.status === 201) return { success: true };
       return {
         success: false,
@@ -141,6 +141,11 @@ export const useFavoriteStore = defineStore('favorites', () => {
   function isFavoriteRoute(routeId: string): boolean {
     return routeFavorites.value.some((route) => route._id === routeId);
   }
+
+  (async () => {
+    await fetchBivouacFavorites();
+    await fetchFavoriteRoutes();
+  })();
 
   return {
     bivouacFavorites,

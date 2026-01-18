@@ -1,5 +1,10 @@
 import express from 'express';
 import {
+  createIntention,
+  deleteIntention,
+  fetchUserIntentions,
+} from 'src/controllers/intentionController.js';
+import {
   addFavoriteBivouac,
   addFavoriteRoute,
   fetchFavoriteBivouacs,
@@ -28,5 +33,10 @@ router.delete('/favorites/bivouacs', removeFavoriteBivouac);
 router.get('/favorites/routes', fetchFavoriteRoutes);
 router.post('/favorites/routes', addFavoriteRoute);
 router.delete('/favorites/routes', removeFavoriteRoute);
+
+// /api/users/intention
+router.post('/intention', createIntention);
+router.delete('/intention', deleteIntention);
+router.get('/intentions', fetchUserIntentions);
 
 export default router;

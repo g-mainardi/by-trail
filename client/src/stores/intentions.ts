@@ -3,13 +3,13 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from './utility/axiosInstance';
 
-interface IntentionResponse {
+export interface IntentionResponse {
   success: boolean;
   error?: string;
   message?: string;
 }
 
-interface AnonymousIntention {
+export interface AnonymousIntention {
   date: Date;
   people: number;
 }

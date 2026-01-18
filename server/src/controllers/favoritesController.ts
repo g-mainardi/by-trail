@@ -1,5 +1,6 @@
 import type { Response } from 'express';
 import mongoose from 'mongoose';
+import console from 'node:console';
 import { Bivouac, Route, User } from '../models/models.js';
 import type { AuthRequest } from '../types/server_only.js';
 
@@ -27,6 +28,7 @@ export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const bivouacId = req.body.id;
 
+  console.log('Adding favorite bivouac:', bivouacId);
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid or missing bivouac ID' });
   }

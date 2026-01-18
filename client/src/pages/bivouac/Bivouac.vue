@@ -17,7 +17,10 @@ import H2 from '@/layouts/typography/H2.vue';
 import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
-import { useIntentionStore } from '@/stores/intentions';
+import {
+  useIntentionStore,
+  type AnonymousIntention,
+} from '@/stores/intentions';
 import type { Bivouac, Intention } from '@/types';
 import {
   fromDate,
@@ -28,6 +31,7 @@ import {
   Bed as BedIcon,
   CalendarIcon,
   Circle,
+  Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
   Toilet as ToiletIcon,
@@ -48,16 +52,18 @@ const intentionStore = useIntentionStore();
 
 const bivouac = ref<Bivouac>();
 const minDate = fromDate(new Date(), getLocalTimeZone());
-const bivouacsIntentions = ref<{ date: Date; people: number }[]>([]);
-const userIntentions = ref<Intention[]>([]);
+const bivouacsIntentions = ref<AnonymousIntention[]>([]);
+const userBivouacIntentions = ref<Intention[]>([]);
 
 async function updateIntentions() {
   await intentionStore.fetchUserIntentions();
-  userIntentions.value = intentionStore.userIntentions.filter(
-    (intention) => intention.bivouacId === props.id
+  userBivouacIntentions.value = intentionStore.userIntentions.filter(
+    (intention) => intention.bivouac === props.id
   );
-  bivouacsIntentions.value =
-    await intentionStore.fetchAnonymousBivouacIntentions(props.id);
+  console.log(userBivouacIntentions.value);
+  bivouacsIntentions.value = (
+    await intentionStore.fetchAnonymousBivouacIntentions(props.id)
+  ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
 
 const sendIntention = async () => {
@@ -75,7 +81,6 @@ const sendIntention = async () => {
 };
 
 const cancelIntention = async (intentionId: string) => {
-  console.log('Cancelling intention:', intentionId);
   const res = await intentionStore.deleteIntention(intentionId);
   if (res.success) {
     toast.success(
@@ -179,15 +184,17 @@ onMounted(async () => {
         <!-- MY INTENTIONS -->
         <H2>My Intentions</H2>
         <div class="flex flex-col gap-4 my-4">
-          <div v-for="intention in userIntentions">
+          <div v-for="intention in userBivouacIntentions">
             <div class="icon-with-text">
               <CalendarIcon class="icon" />
               <span class="">
-                {{ intention.reservationDate.toString().slice(0, 10) }} for
+                {{ new Date(intention.reservationDate).toDateString() }} for
                 {{ intention.reservedPlaces }} people.
               </span>
               <Button
+                class="rounded-full"
                 variant="destructive"
+                :size="'icon'"
                 @click="cancelIntention(intention._id || '')"
               >
                 <X class="icon" />
@@ -232,14 +239,14 @@ onMounted(async () => {
             >
           </div>
           <div class="icon-with-text">
-            <!-- <HeartIcon
+            <HeartIcon
               :color="
-                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                favoritesStore.isFavoriteBivouac(props.id)
                   ? 'var(--primary)'
                   : 'var(--muted-foreground)'
               "
               :fill="
-                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
+                favoritesStore.isFavoriteBivouac(props.id)
                   ? 'var(--primary)'
                   : 'var(--background)'
               "
@@ -247,15 +254,15 @@ onMounted(async () => {
               :aria-label="t('toggle_favorite')"
               role="button"
               :aria-pressed="
-                favoritesStore.isFavoriteBivouac(bivouac?._id || '')
-                  ? 'true'
-                  : 'false'
+                favoritesStore.isFavoriteBivouac(props.id) ? 'true' : 'false'
               "
-              @click="favoritesStore.toggleFavoriteBivouac(bivouac?._id || '')"
+              @click="favoritesStore.toggleFavoriteBivouac(props.id)"
             />
             <span class="value">{{
-              isFavorite(bivouac._id) ? t('saved') : t('unsaved')
-            }}</span> -->
+              favoritesStore.isFavoriteBivouac(props.id)
+                ? t('saved')
+                : t('unsaved')
+            }}</span>
           </div>
         </div>
       </div>
