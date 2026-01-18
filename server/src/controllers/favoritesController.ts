@@ -15,10 +15,6 @@ export const fetchFavoriteBivouacs = async (
     const favorites = await Bivouac.find({
       _id: { $in: favoriteBivouacsIds },
     });
-    if (!favorites) {
-      console.warn('Invalid bivouac IDs in user favorites');
-      return res.status(200).json({ bivouacs: [] });
-    }
 
     return res.status(200).json({ bivouacs: favorites });
   } catch (error) {
@@ -40,6 +36,10 @@ export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
     return res.status(409).json({ error: 'Bivouac already in favorites' });
   }
   try {
+    const exists = await Bivouac.findById(bivouacId);
+    if (!exists) {
+      return res.status(404).json({ error: 'Bivouac not found' });
+    }
     const success = await User.findByIdAndUpdate(userId, {
       $push: { favoritesBivouacs: bivouacId },
     });
@@ -94,10 +94,6 @@ export const fetchFavoriteRoutes = async (req: AuthRequest, res: Response) => {
     const favorites = await Route.find({
       _id: { $in: favoriteRoutesIds },
     });
-    if (!favorites) {
-      console.warn('Invalid route IDs in user favorites');
-      return res.status(200).json({ routes: [] });
-    }
 
     return res.status(200).json({ routes: favorites });
   } catch (error) {
@@ -119,6 +115,10 @@ export const addFavoriteRoute = async (req: AuthRequest, res: Response) => {
     return res.status(409).json({ error: 'Route already in favorites' });
   }
   try {
+    const exists = await Route.findById(routeId);
+    if (!exists) {
+      return res.status(404).json({ error: 'Route not found' });
+    }
     const success = await User.findByIdAndUpdate(userId, {
       $push: { favoritesRoutes: routeId },
     });
