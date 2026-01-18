@@ -1,14 +1,17 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { Bivouac, User, UserStatus } from '@/types';
+import type { User, UserStatus } from '@/types';
+import { useBivouacStore } from '@/stores/bivouacs';
 import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
 export const useAdminStore = defineStore('admin', () => {
+  const bivouacStore = useBivouacStore();
+  const { bivouacs } = storeToRefs(bivouacStore);
+  const { fetchBivouacs } = bivouacStore;
   const users = ref<User[]>([]);
-  const bivouacs = ref<Bivouac[]>([]);
   const isLoading = ref(false);
 
   const fetchUsers = async () => {
@@ -74,26 +77,6 @@ export const useAdminStore = defineStore('admin', () => {
     } catch (err: any) {
       console.error(`Error deleting user ${userId}:`, err);
       return false;
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-  const fetchBivouacs = async () => {
-    if (isLoading.value) return;
-    isLoading.value = true;
-
-    try {
-      const res = await api.post('/bivouacs/list', {});
-      const data = res.data;
-
-      if (!data || !Array.isArray(data.bivouacs)) {
-        throw new Error('Invalid data format received from server');
-      }
-
-      bivouacs.value = data.bivouacs;
-    } catch (err: any) {
-      console.error('Error fetching bivouacs:', err);
     } finally {
       isLoading.value = false;
     }
