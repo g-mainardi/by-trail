@@ -1,15 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router';
 import MainLayout from '@/layouts/MainLayout.vue';
+import Activities from '@/pages/activities/Activities.vue';
 import Login from '@/pages/login/Login.vue';
 import Maps from '@/pages/maps/Maps.vue';
 import Profile from '@/pages/profile/Profile.vue';
-import Activities from '@/pages/activities/Activities.vue';
+import { createRouter, createWebHistory } from 'vue-router';
 import Admin from './pages/admin/Admin.vue';
 import Bivouac from './pages/bivouac/Bivouac.vue';
 import Bivouacs from './pages/bivouacs/Bivouacs.vue';
+import Route from './pages/route/Route.vue';
+import Routes from './pages/routes/Routes.vue';
 import Settings from './pages/settings/Settings.vue';
 import Signup from './pages/signup/Signup.vue';
-import Routes from './pages/routes/Routes.vue';
 
 const routes = [
   {
@@ -57,6 +58,12 @@ const routes = [
         path: 'bivouac/:id',
         name: 'Bivouac',
         component: Bivouac,
+        props: true,
+      },
+      {
+        path: 'route/:id',
+        name: 'Route',
+        component: Route,
         props: true,
       },
     ],

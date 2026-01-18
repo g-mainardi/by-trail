@@ -27,8 +27,10 @@ export const useBivouacStore = defineStore('bivouacs', () => {
     try {
       const res = await api.get('/bivouacs/map', {
         params: {
-          topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
-          bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
+          latNw: northWest.lat,
+          lngNw: northWest.lng,
+          latSe: southEast.lat,
+          lngSe: southEast.lng,
         },
       });
       const data = res.data;

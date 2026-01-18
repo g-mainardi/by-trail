@@ -1,5 +1,4 @@
-import type { Bivouac } from '@/stores/bivouacs';
-import type { TrekkingRoute } from '@/stores/routes';
+import type { Bivouac, Route } from '@/types';
 import { ref } from 'vue';
 
 export interface BivouacFilter {
@@ -11,7 +10,7 @@ export interface BivouacFilter {
 export interface TrekkingRouteFilter {
   currentValue?: any;
   default: any;
-  predicate: (route: TrekkingRoute, value: any) => boolean;
+  predicate: (route: Route, value: any) => boolean;
 }
 
 const minDesiredBeds: BivouacFilter = {
@@ -41,7 +40,7 @@ const searchQuery: BivouacFilter = {
     if (!value) return true;
     const query = value.toLowerCase();
     return (
-      bivouac.name.toLowerCase().includes(query) ||
+      bivouac.name?.toLowerCase().includes(query) ||
       (bivouac.note !== undefined && bivouac.note.toLowerCase().includes(query))
     );
   },
@@ -50,7 +49,7 @@ const searchQuery: BivouacFilter = {
 const maxDurationFilter: TrekkingRouteFilter = {
   currentValue: { hours: 8, minutes: 0 },
   default: { hours: 8, minutes: 0 },
-  predicate: (route: TrekkingRoute, value: any) => {
+  predicate: (route: Route, value: any) => {
     if (route.duration !== undefined) {
       return route.duration <= value.hours * 60 + value.minutes;
     }
@@ -68,7 +67,7 @@ const currentValue = {
 const difficultyFilter: TrekkingRouteFilter = {
   currentValue: currentValue,
   default: currentValue,
-  predicate: (route: TrekkingRoute, value: any) => {
+  predicate: (route: Route, value: any) => {
     const difficulties = {
       T: value.t,
       E: value.e,
@@ -110,7 +109,7 @@ function getFilteredBivouacs(bivouacs: Bivouac[]): Bivouac[] {
   });
 }
 
-function getFilteredRoutes(routes: TrekkingRoute[]): TrekkingRoute[] {
+function getFilteredRoutes(routes: Route[]): Route[] {
   return routes.filter((route) => {
     return Object.values(routeFilters.value).every((filter) =>
       filter.predicate(route, filter.currentValue)

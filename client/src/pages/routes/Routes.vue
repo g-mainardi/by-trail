@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRouteStore, type TrekkingRoute } from '@/stores/routes';
-import { computed, onMounted, ref } from 'vue';
+import { useRouteStore } from '@/stores/routes';
+import { computed, onMounted } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
   bivouacFilters,
@@ -12,30 +12,13 @@ import {
 import RouteCard from './RouteCard.vue';
 
 const routeStore = useRouteStore();
-const routes = ref<TrekkingRoute[]>([]);
-const nextPage = ref<string | undefined>(undefined);
-const isLoading = ref(false);
 
-const loadRoutes = async () => {
-  isLoading.value = true;
-  try {
-    const response = await routeStore.fetchRoutes();
-    routes.value = response.routes;
-    nextPage.value = response.nextPage;
-  } catch (error) {
-    console.error('Error fetching routes:', error);
-    routes.value = [];
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-onMounted(() => {
-  loadRoutes();
+onMounted(async () => {
+  await routeStore.fetchRoutes();
 });
 
 const filteredRoutes = computed(() => {
-  return getFilteredRoutes(routes.value);
+  return getFilteredRoutes(routeStore.routes);
 });
 </script>
 

@@ -4,36 +4,6 @@ import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-type UUID = string;
-
-export const DifficultyLevels = {
-  T: 'T',
-  E: 'E',
-  EE: 'EE',
-  EEA: 'EEA',
-} as const;
-export type DifficultyLevel =
-  (typeof DifficultyLevels)[keyof typeof DifficultyLevels];
-
-export interface TrekkingRoute {
-  _id: UUID;
-  title: string;
-  region: string[];
-  difficulty: DifficultyLevel;
-  distance: number;
-  ascent: number;
-  descent: number;
-  duration: number;
-  routeType: string;
-  likes: number;
-  note?: string;
-  path?: {
-    type: 'LineString' | 'MultiLineString';
-    coordinates: number[][];
-  };
-  startPosition?: { lat: number; lng: number };
-}
-
 export const useRouteStore = defineStore('routes', () => {
   // State
 
@@ -44,7 +14,7 @@ export const useRouteStore = defineStore('routes', () => {
 
   const fetchRoutes = async () => {
     try {
-      const res = await api.post('/routes/list', {});
+      const res = await api.get('/routes/list');
       const data = res.data;
       routes.value = data.routes as Route[];
     } catch (error: any) {
@@ -57,22 +27,28 @@ export const useRouteStore = defineStore('routes', () => {
     try {
       const res = await api.get('/routes/map', {
         params: {
-          topLeftCoords: { lat: northWest.lat, lng: northWest.lng },
-          bottomRightCoords: { lat: southEast.lat, lng: southEast.lng },
+          latNw: northWest.lat,
+          lngNw: northWest.lng,
+          latSe: southEast.lat,
+          lngSe: southEast.lng,
         },
       });
       const data = res.data;
       const routes = data.routes as Route[];
+      // Trasformiamo le coordinate per ogni route
       mapRoutes.value = routes.map((route) => {
         if (
           route.path &&
           route.path.coordinates &&
           route.path.coordinates.length > 0
         ) {
-          const [lng, lat] = route.path.coordinates[0] as [number, number];
-          if (typeof lat === 'number' && typeof lng === 'number') {
-            route.path.coordinates[0] = { lat, lng };
-          }
+          // Mappiamo l'INTERO array di coordinate
+          // I dati arrivano come [Lng, Lat, Alt] -> Li trasformiamo in [Lat, Lng]
+          route.path.coordinates = route.path.coordinates.map((coord: any) => {
+            const [lng, lat] = coord as [number, number];
+            // Imposta tutte le coordinate come oggetto { lat, lng }
+            return { lat, lng };
+          });
         }
         return route;
       });
@@ -82,5 +58,16 @@ export const useRouteStore = defineStore('routes', () => {
     }
   };
 
-  return { fetchRoutes, fetchMapRoutes, routes, mapRoutes };
+  const fetchRouteById = async (id: string): Promise<Route> => {
+    try {
+      const res = await api.get(`/routes/route`, { params: { id } });
+      const data = res.data;
+      return data.route as Route;
+    } catch (error: any) {
+      console.error('Error fetching route by ID:', error);
+      throw new Error('Failed to fetch route by ID');
+    }
+  };
+
+  return { fetchRoutes, fetchMapRoutes, fetchRouteById, routes, mapRoutes };
 });
