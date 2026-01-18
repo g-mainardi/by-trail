@@ -6,7 +6,7 @@ import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
-export const useAdminUsersStore = defineStore('admin-users', () => {
+export const useAdminStore = defineStore('admin-users', () => {
   const users = ref<User[]>([]);
   const isLoading = ref(false);
 
@@ -60,7 +60,9 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
     isLoading.value = true;
 
     try {
-      await api.delete(`/users/${userId}`);
+      const success = await api.delete(`/users/${userId}`);
+      if (!success || success.status !== 204)
+        throw new Error('Failed to delete user');
 
       // Remove from the local users array
       users.value = users.value.filter(
