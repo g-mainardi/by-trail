@@ -1,4 +1,4 @@
-# ! /bin/sh
+#!/bin/sh
 # Copy types from server to client
 mkdir -p client/src/types
 cp server/src/types/index.ts client/src/types/index.ts
