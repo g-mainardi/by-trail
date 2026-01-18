@@ -22,7 +22,7 @@ onMounted(async () => {
     .then(() => {
       favoriteBivouacs.value = favoriteStore.bivouacFavorites;
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       console.error('Error fetching favorite bivouacs:', error);
     })
     .finally(() => {
