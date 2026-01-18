@@ -54,7 +54,7 @@ export const useFavoriteStore = defineStore('favorites', () => {
     try {
       const body = { id: bivouacId };
       const res = await api.delete(`/users/favorites/bivouacs`, { data: body });
-      if (res.status === 200) return { success: true };
+      if (res.status === 204) return { success: true };
       return {
         success: false,
         error: `Unexpected response status: ${res.status}`,
@@ -116,7 +116,7 @@ export const useFavoriteStore = defineStore('favorites', () => {
     try {
       const body = { id: routeId };
       const res = await api.delete(`/users/favorites/routes`, { data: body });
-      if (res.status === 200) return { success: true };
+      if (res.status === 204) return { success: true };
       return {
         success: false,
         error: `Unexpected response status: ${res.status}`,

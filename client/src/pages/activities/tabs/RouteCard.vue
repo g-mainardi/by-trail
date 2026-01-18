@@ -54,11 +54,11 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
           class="w-full rounded-sm object-cover"
         />
       </div>
-      <RouterLink :to="`#`" aria-label="View Route Details">
+      <RouterLink :to="`/routes/${route._id}`" aria-label="View Route Details">
         <H2>{{ route.title }}</H2>
       </RouterLink>
       <span class="text-xs text-muted-foreground uppercase tracking-wide">
-        {{ route.region[0] }}
+        {{ route.region && route.region.length ? route.region[0] : '-' }}
       </span>
       <div class="grid grid-cols-3 gap-2 mt-2">
         <div class="info">

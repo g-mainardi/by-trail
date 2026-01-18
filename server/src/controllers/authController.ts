@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
-import { AuthRequestWithPassword } from 'src/types/server_only.js';
+import { AuthRequestWithPassword } from '../types/server_only.js';
 
 let JWT_SECRET;
 try {
