@@ -22,70 +22,66 @@ const notifyPeers = async (
   people: number,
   bivouacName: string
 ) => {
-  try {
-    const targetDate = new Date(date);
+  const targetDate = new Date(date);
 
-    // We use Date.UTC to ensure we are building a timestamp based on the date components, independent of server timezone
-    const startOfDay = new Date(
-      Date.UTC(
-        targetDate.getUTCFullYear(),
-        targetDate.getUTCMonth(),
-        targetDate.getUTCDate(),
-        0,
-        0,
-        0,
-        0
-      )
+  // We use Date.UTC to ensure we are building a timestamp based on the date components, independent of server timezone
+  const startOfDay = new Date(
+    Date.UTC(
+      targetDate.getUTCFullYear(),
+      targetDate.getUTCMonth(),
+      targetDate.getUTCDate(),
+      0,
+      0,
+      0,
+      0
+    )
+  );
+
+  const endOfDay = new Date(
+    Date.UTC(
+      targetDate.getUTCFullYear(),
+      targetDate.getUTCMonth(),
+      targetDate.getUTCDate(),
+      23,
+      59,
+      59,
+      999
+    )
+  );
+
+  console.log(
+    `[NotifyPeers] Searching between: ${startOfDay.toISOString()} and ${endOfDay.toISOString()}`
+  );
+
+  const peers = await Reservation.find({
+    bivouac: bivouacId,
+    reservationDate: { $gte: startOfDay, $lte: endOfDay },
+    user: { $ne: currentUserId },
+  }).select('user');
+
+  if (peers.length === 0) return;
+
+  const formattedDate = formatDateForDisplay(date);
+
+  const notificationPromises = peers.map((peerId) => {
+    return sendNotification(
+      peerId.user.toString(),
+      'bivouac_reservation_users',
+      'info',
+      'New Hikers Arriving',
+      `Someone else just planned to sleep at ${bivouacName} on ${formattedDate} with ${people} people.`
     );
+  });
 
-    const endOfDay = new Date(
-      Date.UTC(
-        targetDate.getFullYear(),
-        targetDate.getMonth(),
-        targetDate.getUTCDate(),
-        23,
-        59,
-        59,
-        999
-      )
-    );
-
-    console.log(
-      `[NotifyPeers] Searching between: ${startOfDay.toISOString()} and ${endOfDay.toISOString()}`
-    );
-
-    const peers = await Reservation.find({
-      bivouac: bivouacId,
-      reservationDate: { $gte: startOfDay, $lte: endOfDay },
-      user: { $ne: currentUserId },
-    }).select('user');
-
-    if (peers.length === 0) return;
-
-    const formattedDate = formatDateForDisplay(date);
-
-    const notificationPromises = peers.map((peerId) => {
-      return sendNotification(
-        peerId.user.toString(),
-        'bivouac_reservation_users',
-        'info',
-        'New Hikers Arriving',
-        `Someone else just planned to sleep at ${bivouacName} on ${formattedDate} with ${people} people.`
-      );
-    });
-
-    await Promise.all(notificationPromises);
-    console.log(`Notified ${peers.length} peers.`);
-  } catch (error) {
-    console.error('Error in notifyPeers:', error);
-  }
+  await Promise.all(notificationPromises);
+  console.log(`Notified ${peers.length} peers.`);
 };
 
 export const createIntention = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const { bivouacId, date, people } = req.body;
   if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
@@ -129,7 +125,10 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
           bivouacName
         );
       } catch (notifyError) {
-        console.error('Error sending update notifications:', notifyError);
+        console.error(
+          'Intention updated, but peer notifications failed:',
+          notifyError
+        );
       }
       console.log('Intention already exists, updated reserved places.');
       return res.status(200).json({ message: 'Intention updated' });
@@ -159,7 +158,10 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
           bivouacName!
         );
       } catch (notifyError) {
-        console.error('Error sending creation notifications:', notifyError);
+        console.error(
+          'Intention created, but peer notifications failed:',
+          notifyError
+        );
       }
 
       return res.status(201).json({ message: 'Intention created' });
@@ -175,7 +177,7 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
   const { intentionId } = req.body;
 
   if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
@@ -214,7 +216,10 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
         `Your intention for ${bivName} on ${formattedDate} has been cancelled.`
       );
     } catch (notifyError) {
-      console.error('Error sending deletion notification', notifyError);
+      console.error(
+        'Intention deleted, but cancellation notification failed:',
+        notifyError
+      );
     }
 
     return res.status(200).json({ message: 'Intention deleted' });
@@ -227,7 +232,7 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
 export const fetchUserIntentions = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
   }
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
