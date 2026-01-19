@@ -1,7 +1,13 @@
 import type { Response } from 'express';
-import { UserStatusEnum, UserTypeEnum } from '../types/index.js';
+import {
+  EXCLUDED_UPDATE_FIELDS,
+  PathObj,
+  RoutePathTypeEnum,
+  UserStatusEnum,
+  UserTypeEnum,
+} from '../types/index.js';
 import { AuthRequest } from '../types/server_only.js';
-import { User, Bivouac } from '../models/models.js';
+import { User, Bivouac, Route } from '../models/models.js';
 import mongoose from 'mongoose';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
@@ -98,7 +104,7 @@ export const updateBivouac = async (req: AuthRequest, res: Response) => {
     if (!bivouac) return res.status(404).json({ error: 'Bivouac not found' });
     const requestUpdates = req.body as Record<string, unknown>;
     const allowedUpdatePaths = Object.keys(Bivouac.schema.paths).filter(
-      (path) => !['_id', '__v', 'createdAt', 'updatedAt'].includes(path)
+      (path) => !EXCLUDED_UPDATE_FIELDS.includes(path)
     );
     const sanitizedUpdates: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(requestUpdates)) {
@@ -144,6 +150,87 @@ export const deleteBivouac = async (req: AuthRequest, res: Response) => {
     return res.status(204).end();
   } catch (error) {
     console.error('Error deleting bivouac:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateRoute = async (req: AuthRequest, res: Response) => {
+  const routeId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(routeId))
+    return res.status(400).json({ error: 'Invalid route ID format' });
+
+  try {
+    const route = await Route.findById(routeId).exec();
+    if (!route) return res.status(404).json({ error: 'Route not found' });
+    const requestUpdates = req.body as Record<string, unknown>;
+    const allowedUpdatePaths = Object.keys(Route.schema.paths).filter(
+      (path) => !EXCLUDED_UPDATE_FIELDS.includes(path)
+    );
+    const sanitizedUpdates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(requestUpdates)) {
+      if (key === 'region' && Array.isArray(value)) {
+        // Ensure at least one region is provided
+        if (value.length === 0) {
+          return res
+            .status(400)
+            .json({ error: 'A route must have at least one region.' });
+        }
+        sanitizedUpdates[key] = value;
+      } else if (key === 'path') {
+        const pathObj = value as PathObj;
+        if (
+          !pathObj ||
+          !Object.values(RoutePathTypeEnum).includes(pathObj.type)
+        )
+          return res.status(400).json({ error: 'Invalid path type' });
+        const pathType = pathObj.type;
+        // Do not allow updating coordinates
+        sanitizedUpdates['path'] = {
+          type: pathType,
+          coordinates: route.path?.coordinates || [],
+        };
+      } else if (allowedUpdatePaths.includes(key)) {
+        sanitizedUpdates[key] = value;
+      }
+    }
+    if (Object.keys(sanitizedUpdates).length === 0) {
+      return res
+        .status(400)
+        .json({ error: 'No valid fields provided for route update' });
+    }
+    const result = await Route.updateOne(
+      { _id: routeId },
+      { $set: sanitizedUpdates },
+      { runValidators: true }
+    ).exec();
+
+    return res.status(200).json({
+      message:
+        result.modifiedCount === 0
+          ? 'No changes were made to the route'
+          : 'Route updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating route:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteRoute = async (req: AuthRequest, res: Response) => {
+  const routeId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(routeId)) {
+    return res.status(400).json({ error: 'Invalid route ID format' });
+  }
+
+  try {
+    const deletionResult = await Route.deleteOne({ _id: routeId }).exec();
+    if (deletionResult.deletedCount === 0)
+      return res.status(404).json({ error: 'Route not found' });
+
+    return res.status(204).end();
+  } catch (error) {
+    console.error('Error deleting route:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
