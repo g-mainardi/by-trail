@@ -103,9 +103,6 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = data.token;
       user.value = data.user;
 
-      console.log('Token: ', token.value);
-      console.log('User: ', user.value);
-
       // No need to manually set token on helper, the interceptor reads localStorage
       localStorage.setItem('token', token.value || '');
       localStorage.setItem('user', JSON.stringify(user.value));

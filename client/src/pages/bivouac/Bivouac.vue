@@ -60,7 +60,6 @@ async function updateIntentions() {
   userBivouacIntentions.value = intentionStore.userIntentions.filter(
     (intention) => intention.bivouac === props.id
   );
-  console.log(userBivouacIntentions.value);
   bivouacsIntentions.value = (
     await intentionStore.fetchAnonymousBivouacIntentions(props.id)
   ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
