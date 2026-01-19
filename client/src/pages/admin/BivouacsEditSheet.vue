@@ -29,12 +29,19 @@ const props = defineProps<{
   isLoading?: boolean;
 }>();
 
-const emit = defineEmits(['update:open', 'update:message', 'save']);
+const emit = defineEmits(['update:open', 'save']);
 const updates = ref<Partial<Bivouac>>({});
 
 const { t } = useI18n();
 
-const handleChange = (field: string, value: any) => {
+const wrapCoordChange = (key: 'latitude' | 'longitude', value: number) => {
+  return {
+    ...(props.bivouac?.coords || { latitude: 0, longitude: 0 }),
+    [key]: value,
+  };
+};
+
+const handleChange = <K extends keyof Bivouac>(field: K, value: Bivouac[K]) => {
   updates.value = {
     ...updates.value,
     [field]: value,
@@ -42,15 +49,7 @@ const handleChange = (field: string, value: any) => {
 };
 
 const handleSave = async () => {
-  if (!updates.value) {
-    emit('update:message', { error: true, message: t('error_occurred') });
-  } else if (Number(updates.value.capacity) < 0) {
-    emit('update:message', {
-      error: true,
-      message: t('capacity_must_be_positive'),
-    });
-  } else {
-    emit('update:message', { error: false, message: t('changes_saved') });
+  if (Object.keys(updates.value).length > 0) {
     emit('save', {
       id: props.bivouac?.id || props.bivouac?._id || '',
       updates: updates.value,
@@ -130,7 +129,12 @@ const handleSave = async () => {
                 type="number"
                 step="any"
                 :model-value="bivouac.coords?.latitude"
-                @change="handleChange('coords.latitude', $event.target.value)"
+                @change="
+                  handleChange(
+                    'coords',
+                    wrapCoordChange('latitude', $event.target.value)
+                  )
+                "
               />
             </div>
             <div class="grid w-full items-center gap-1.5">
@@ -140,7 +144,12 @@ const handleSave = async () => {
                 type="number"
                 step="any"
                 :model-value="bivouac.coords?.longitude"
-                @change="handleChange('coords.longitude', $event.target.value)"
+                @change="
+                  handleChange(
+                    'coords',
+                    wrapCoordChange('longitude', $event.target.value)
+                  )
+                "
               />
             </div>
           </div>
@@ -210,10 +219,7 @@ const handleSave = async () => {
     "latitude": "Latitude",
     "longitude": "Longitude",
     "select_region": "Select Region",
-    "save_modifications": "Save Changes",
-    "error_occurred": "An error occurred.",
-    "capacity_must_be_positive": "Capacity must be a positive number.",
-    "changes_saved": "Changes saved successfully."
+    "save_modifications": "Save Changes"
   },
   "it": {
     "edit_bivouac": "Modifica Bivacco",
@@ -229,10 +235,7 @@ const handleSave = async () => {
     "latitude": "Latitudine",
     "longitude": "Longitudine",
     "select_region": "Seleziona Regione",
-    "save_modifications": "Salva Modifiche",
-    "error_occurred": "Si è verificato un errore.",
-    "capacity_must_be_positive": "La capacità deve essere un numero positivo.",
-    "changes_saved": "Modifiche salvate con successo."
+    "save_modifications": "Salva Modifiche"
   },
   "es": {
     "edit_bivouac": "Editar Vivac",
@@ -248,10 +251,7 @@ const handleSave = async () => {
     "latitude": "Latitud",
     "longitude": "Longitud",
     "select_region": "Seleccionar Región",
-    "save_modifications": "Guardar Cambios",
-    "error_occurred": "Ocurrió un error.",
-    "capacity_must_be_positive": "La capacidad debe ser un número positivo.",
-    "changes_saved": "Cambios guardados con éxito."
+    "save_modifications": "Guardar Cambios"
   }
 }
 </i18n>

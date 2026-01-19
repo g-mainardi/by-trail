@@ -43,10 +43,59 @@ const onOpenEdit = (id: string) => {
 
 const onDeleteBivouac = async (id: string) => {
   if (confirm(t('confirm_delete'))) {
-    await adminStore.deleteBivouac(id);
-    await adminStore.fetchBivouacs();
+    const success = await adminStore.deleteBivouac(id);
+    if (success) {
+      feedbackMessage.value = t('changes_saved');
+      isError.value = false;
+    } else {
+      isError.value = true;
+      feedbackMessage.value = t('error_occurred');
+    }
   }
 };
+
+const handleSave = async (payload: {
+  id: string;
+  updates: Partial<Bivouac>;
+}) => {
+  feedbackMessage.value = '';
+  isError.value = false;
+  if (!payload.updates || Object.keys(payload.updates).length === 0) {
+    return;
+  }
+  if (payload.id === '') {
+    isError.value = true;
+    feedbackMessage.value = t('error_occurred');
+    return;
+  }
+  const success = await adminStore.updateBivouac(payload.id, payload.updates);
+  if (success) {
+    feedbackMessage.value = t('changes_saved');
+    isError.value = false;
+    await adminStore.fetchBivouacs();
+  } else {
+    isError.value = true;
+    feedbackMessage.value = t('error_occurred');
+  }
+};
+
+const updateAlertMessage = (payload: { error: boolean; message: string }) => {
+  isError.value = payload.error;
+  feedbackMessage.value = payload.message;
+};
+
+const alertConfig = computed(() => {
+  if (isError.value) {
+    return {
+      variant: 'destructive' as const,
+      icon: AlertCircle,
+    };
+  }
+  return {
+    variant: 'success' as const,
+    icon: CheckCircle,
+  };
+});
 
 // --- Columns ---
 const columns = [
@@ -92,42 +141,6 @@ const columns = [
     enableSorting: false,
   },
 ];
-
-// Handlers
-const handleSave = async (payload: {
-  id: string;
-  updates: Partial<Bivouac>;
-}) => {
-  feedbackMessage.value = '';
-  isError.value = false;
-  const success = await adminStore.updateBivouac(payload.id, payload.updates);
-  if (success) {
-    feedbackMessage.value = t('changes_saved');
-    isError.value = false;
-    await adminStore.fetchBivouacs();
-  } else {
-    isError.value = true;
-    feedbackMessage.value = t('error_occurred');
-  }
-};
-
-const updateAlertMessage = (payload: { error: boolean; message: string }) => {
-  isError.value = payload.error;
-  feedbackMessage.value = payload.message;
-};
-
-const alertConfig = computed(() => {
-  if (isError.value) {
-    return {
-      variant: 'destructive' as const,
-      icon: AlertCircle,
-    };
-  }
-  return {
-    variant: 'success' as const,
-    icon: CheckCircle,
-  };
-});
 </script>
 
 <template>
