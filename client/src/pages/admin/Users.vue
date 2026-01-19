@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAdminUsersStore } from '@/stores/admin';
+import { useAdminStore } from '@/stores/admin';
 import { storeToRefs } from 'pinia';
 import {
   type User,
@@ -21,9 +21,9 @@ import { Alert, AlertTitle } from '@/components/ui/alert';
 const { ACTIVE } = UserStatusEnum;
 const { ADMIN } = UserTypeEnum;
 const { t, locale } = useI18n();
-const adminUsersStore = useAdminUsersStore();
-const { users, isLoading } = storeToRefs(adminUsersStore);
-const { fetchUsers, toggleUserBlock, deleteUser } = adminUsersStore;
+const adminStore = useAdminStore();
+const { users, isLoading } = storeToRefs(adminStore);
+const { fetchUsers, toggleUserBlock, deleteUser } = adminStore;
 const feedbackMessage = ref('');
 const isError = ref(false);
 

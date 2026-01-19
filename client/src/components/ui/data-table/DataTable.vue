@@ -29,6 +29,7 @@ const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchKey?: string;
+  searchKeyLabel?: string;
 }>();
 
 const sorting = ref<SortingState>([]);
@@ -63,7 +64,7 @@ const table = useVueTable({
     <div v-if="searchKey" class="flex items-center py-4">
       <Input
         class="max-w-sm"
-        :placeholder="t('search_for') + searchKey + '...'"
+        :placeholder="t('search_for') + (searchKeyLabel || searchKey) + '...'"
         :model-value="table.getColumn(searchKey)?.getFilterValue() as string"
         @update:model-value="table.getColumn(searchKey)?.setFilterValue($event)"
       />
