@@ -64,11 +64,11 @@ services:
 
 secrets:
   db_uri:
-    file: ./etc/secrets/mongo_atlas_uri.txt
+    file: ./secrets/mongo_atlas_uri.txt
   jwt_secret:
-    file: ./etc/secrets/jwt_secret.txt
+    file: ./secrets/jwt_secret.txt
   map_api_key:
-    file: ./etc/secrets/thunderforest_map_key.txt
+    file: ./secrets/thunderforest_map_key.txt
 
 volumes:
   mongo-data: # named volume to not lost data on turn off
