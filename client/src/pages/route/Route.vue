@@ -196,6 +196,56 @@ const props = defineProps({
   font-family: monospace;
   font-size: 1rem;
 }
+
+:deep(.leaflet-bar) {
+  border: none;
+  box-shadow: none;
+}
+
+/* 2. Stile base dei pulsanti (+ e -) */
+:deep(.leaflet-control-zoom a) {
+  background-color: var(--card); /* Sfondo Card */
+  color: var(--foreground); /* Testo scuro/chiaro in base al tema */
+  border: 1px solid var(--border);
+
+  /* Dimensioni e Tipografia */
+  width: 36px; /* Un po' più grandi dello standard */
+  height: 36px;
+  line-height: 34px; /* Centratura verticale (height - borders) */
+  font-size: 1.2rem;
+  font-family: var(--font-sans); /* Quicksand */
+  font-weight: 500;
+
+  /* Forma */
+  border-radius: var(--radius) !important; /* Forza il radius del tema */
+  margin-bottom: 8px; /* Spazio tra i pulsanti */
+  box-shadow: var(--shadow-sm);
+
+  transition: all 0.2s;
+}
+
+/* 3. Stile Hover (Accent) */
+:deep(.leaflet-control-zoom a:hover) {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+/* 4. Stile Disabilitato (es. zoom massimo raggiunto) */
+:deep(.leaflet-control-zoom a.leaflet-disabled) {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  border-color: var(--border);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 5. Override specifico per Leaflet che a volte forza radius strani */
+:deep(.leaflet-touch .leaflet-control-zoom-in),
+:deep(.leaflet-touch .leaflet-control-zoom-out) {
+  border-radius: var(--radius) !important;
+}
 </style>
 
 <i18n>
