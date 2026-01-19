@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAdminStore } from '@/stores/admin';
 import { storeToRefs } from 'pinia';
 import type { Bivouac } from '@/types';
 
+import Spinner from '@/components/ui/spinner/Spinner.vue';
+import { AlertCircle, CheckCircle } from 'lucide-vue-next';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-vue-next';
 
@@ -14,7 +17,9 @@ import BivouacEditSheet from './BivouacsEditSheet.vue';
 
 const { t } = useI18n();
 const adminStore = useAdminStore();
-const { bivouacs } = storeToRefs(adminStore);
+const { isLoading, bivouacs } = storeToRefs(adminStore);
+const feedbackMessage = ref('');
+const isError = ref(false);
 
 // State for Edit Sheet
 const isEditOpen = ref(false);
@@ -87,10 +92,55 @@ const columns = [
     enableSorting: false,
   },
 ];
+
+// Handlers
+const handleSave = async (payload: {
+  id: string;
+  updates: Partial<Bivouac>;
+}) => {
+  feedbackMessage.value = '';
+  isError.value = false;
+  const success = await adminStore.updateBivouac(payload.id, payload.updates);
+  if (success) {
+    feedbackMessage.value = t('changes_saved');
+    isError.value = false;
+    await adminStore.fetchBivouacs();
+  } else {
+    isError.value = true;
+    feedbackMessage.value = t('error_occurred');
+  }
+};
+
+const updateAlertMessage = (payload: { error: boolean; message: string }) => {
+  isError.value = payload.error;
+  feedbackMessage.value = payload.message;
+};
+
+const alertConfig = computed(() => {
+  if (isError.value) {
+    return {
+      variant: 'destructive' as const,
+      icon: AlertCircle,
+    };
+  }
+  return {
+    variant: 'success' as const,
+    icon: CheckCircle,
+  };
+});
 </script>
 
 <template>
   <div class="space-y-4">
+    <Spinner v-if="isLoading" />
+    <Alert
+      v-else-if="feedbackMessage"
+      :variant="alertConfig.variant"
+      class="mb-6"
+    >
+      <component :is="alertConfig.icon" />
+      <AlertTitle>{{ feedbackMessage }}</AlertTitle>
+    </Alert>
     <DataTable :columns="columns" :data="bivouacs" search-key="name">
       <template #header-name="{ column }">
         <Button
@@ -117,7 +167,12 @@ const columns = [
       </template>
     </DataTable>
 
-    <BivouacEditSheet v-model:open="isEditOpen" :bivouac="selectedBivouac" />
+    <BivouacEditSheet
+      v-model:open="isEditOpen"
+      :bivouac="selectedBivouac"
+      @save="handleSave"
+      @update:message="updateAlertMessage"
+    />
   </div>
 </template>
 
@@ -137,7 +192,9 @@ const columns = [
     "latitude": "Latitude",
     "longitude": "Longitude",
     "actions": "Actions",
-    "confirm_delete": "Are you sure you want to delete this bivouac?"
+    "confirm_delete": "Are you sure you want to delete this bivouac?",
+    "error_occurred": "An error occurred.",
+    "changes_saved": "Changes saved successfully."
   },
   "it": {
     "edit_bivouac": "Modifica Bivacco",
@@ -153,7 +210,9 @@ const columns = [
     "latitude": "Latitudine",
     "longitude": "Longitudine",
     "actions": "Azioni",
-    "confirm_delete": "Sei sicuro di voler eliminare questo bivacco?"
+    "confirm_delete": "Sei sicuro di voler eliminare questo bivacco?",
+    "error_occurred": "Si è verificato un errore.",
+    "changes_saved": "Modifiche salvate con successo."
   },
   "es": {
     "edit_bivouac": "Editar Vivac",
@@ -169,7 +228,9 @@ const columns = [
     "latitude": "Latitud",
     "longitude": "Longitud",
     "actions": "Acciones",
-    "confirm_delete": "¿Estás seguro de que deseas eliminar este vivac?"
+    "confirm_delete": "¿Estás seguro de que deseas eliminar este vivac?",
+    "error_occurred": "Ocurrió un error.",
+    "changes_saved": "Cambios guardados con éxito."
   }
 }
 </i18n>
