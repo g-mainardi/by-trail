@@ -192,7 +192,7 @@ onMounted(async () => {
                 {{ intention.reservedPlaces }} people.
               </span>
               <Button
-                class="rounded-full"
+                class="rounded-full cursor-pointer"
                 variant="destructive"
                 :size="'icon'"
                 @click="cancelIntention(intention._id || '')"

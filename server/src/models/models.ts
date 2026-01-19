@@ -153,7 +153,8 @@ const notificationSchema = new Schema(
       type: String,
       enum: [
         'bivouac_reservation',
-        'bivouac_update',
+        'bivouac_reservation_update',
+        'bivouac_reservation_delete',
         'route_reservation',
         'weather_alert',
       ],
