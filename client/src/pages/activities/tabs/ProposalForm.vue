@@ -3,7 +3,13 @@ import { useI18n } from 'vue-i18n';
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useProposalStore } from '@/stores/proposal';
-import type { Proposal } from '@/types';
+import {
+  ProposalEnum,
+  RegionsEnum,
+  type Proposal,
+  type ProposalType,
+  type Region,
+} from '@/types';
 import { storeToRefs } from 'pinia';
 
 // --- UI Components ---
@@ -26,25 +32,22 @@ import {
 const proposalStore = useProposalStore();
 const authStore = useAuthStore();
 const { error, isLoading } = storeToRefs(authStore);
-const { proposalError, isSubmitting, email } = storeToRefs(proposalStore);
+const { proposalError, isSubmitting } = storeToRefs(proposalStore);
 
 const { t } = useI18n();
 
 // --- Form Local State ---
-const formData = ref({
-  senderEmail: '',
-  type: '',
-  locality: '',
-  subjectName: '',
-  description: '',
-});
+const proposalType = ref<ProposalType | null>();
+const region = ref<Region | null>();
+const locality = ref('');
+const subjectName = ref('');
+const description = ref('');
 
 const feedbackMessage = ref('');
 const isError = ref(false);
 
 onMounted(async () => {
   await authStore.fetchProfile();
-  formData.value.senderEmail = email.value || '';
 });
 
 // --- Handle Proposal Submission ---
@@ -53,11 +56,15 @@ const submitProposal = async () => {
   isError.value = false;
 
   // Prevent empty submission
+  locality.value = locality.value.trim();
+  subjectName.value = subjectName.value.trim();
+  description.value = description.value.trim();
   if (
-    !formData.value.type ||
-    !formData.value.locality ||
-    !formData.value.subjectName ||
-    !formData.value.description
+    !proposalType.value ||
+    !region.value ||
+    !locality.value ||
+    !subjectName.value ||
+    !description.value
   ) {
     isError.value = true;
     feedbackMessage.value = t('proposal_submit_incomplete');
@@ -66,20 +73,22 @@ const submitProposal = async () => {
 
   // Prepare payload
   const payload: Proposal = {
-    senderEmail: formData.value.senderEmail,
-    type: formData.value.type as Proposal['type'],
-    locality: formData.value.locality,
-    subjectName: formData.value.subjectName,
-    description: formData.value.description,
+    type: proposalType.value,
+    region: region.value,
+    locality: locality.value.trim(),
+    subjectName: subjectName.value.trim(),
+    description: description.value.trim(),
   };
 
   const success = await proposalStore.sendProposal(payload);
   if (success) {
     feedbackMessage.value = t('proposal_submit_success');
-    formData.value.type = '';
-    formData.value.locality = '';
-    formData.value.subjectName = '';
-    formData.value.description = '';
+    // Clear form
+    proposalType.value = null;
+    region.value = null;
+    locality.value = '';
+    subjectName.value = '';
+    description.value = '';
   } else {
     isError.value = true;
     feedbackMessage.value = `${t('proposal_submit_error')} "${getErrorMessage.value}"`;
@@ -120,7 +129,7 @@ const getErrorMessage = computed(() => {
         <FieldLabel for="type">
           {{ t('proposal_type_label') }}
         </FieldLabel>
-        <Select id="type" v-model="formData.type" class="w-full" required>
+        <Select id="type" v-model="proposalType" class="w-full" required>
           <SelectTrigger>
             <SelectValue :placeholder="t('proposal_type_placeholder')" />
           </SelectTrigger>
@@ -136,18 +145,18 @@ const getErrorMessage = computed(() => {
           </SelectContent>
         </Select>
       </Field>
-      <FieldGroup v-if="formData.type">
+      <FieldGroup v-if="proposalType">
         <Field>
           <FieldLabel for="name">{{ t('name') }} </FieldLabel>
           <Input
             id="name"
-            v-model="formData.subjectName"
+            v-model="subjectName"
             class="h-10"
             required
             :placeholder="
-              formData.type === 'route'
+              proposalType === ProposalEnum.ROUTE
                 ? t('route_name')
-                : formData.type === 'bivouac'
+                : proposalType === ProposalEnum.BIVOUAC
                   ? t('bivouac_name')
                   : ''
             "
@@ -157,18 +166,37 @@ const getErrorMessage = computed(() => {
           <FieldLabel for="description">{{ t('description') }}</FieldLabel>
           <TextArea
             id="description"
-            v-model="formData.description"
+            v-model="description"
             rows="5"
             class="resize-vertical"
             required
             :placeholder="t('description_placeholder')"
           />
         </Field>
+
+        <Field>
+          <FieldLabel for="region">{{ t('region') }}</FieldLabel>
+          <Select id="region" v-model="region" required>
+            <SelectTrigger>
+              <SelectValue :placeholder="t('region_placeholder')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="region in Object.values(RegionsEnum)"
+                :key="region"
+                :value="region"
+              >
+                {{ region }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </Field>
+
         <Field>
           <FieldLabel for="locality">{{ t('locality') }}</FieldLabel>
           <Input
             id="locality"
-            v-model="formData.locality"
+            v-model="locality"
             class="h-10"
             required
             :placeholder="t('locality_placeholder')"
@@ -207,6 +235,8 @@ const getErrorMessage = computed(() => {
     "bivouac_name": "Bivouac Name",
     "description": "Description",
     "description_placeholder": "Provide a detailed description here...",
+    "region": "Region",
+    "region_placeholder": "Select Region",
     "locality": "Locality",
     "locality_placeholder": "Enter the locality here...",
     "sending": "Sending...",
@@ -227,6 +257,8 @@ const getErrorMessage = computed(() => {
     "bivouac_name": "Nome del Bivacco",
     "description": "Descrizione",
     "description_placeholder": "Fornisci una descrizione dettagliata qui...",
+    "region": "Regione",
+    "region_placeholder": "Seleziona Regione",
     "locality": "Località",
     "locality_placeholder": "Inserisci la località qui...",
     "sending": "Invio in corso...",
@@ -247,6 +279,8 @@ const getErrorMessage = computed(() => {
     "bivouac_name": "Nombre del Bivouac",
     "description": "Descripción",
     "description_placeholder": "Proporciona una descripción detallada aquí...",
+    "region": "Región",
+    "region_placeholder": "Seleccionar Región",
     "locality": "Localidad",
     "locality_placeholder": "Introduce la localidad aquí...",
     "sending": "Enviando...",

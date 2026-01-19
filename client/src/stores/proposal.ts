@@ -1,19 +1,13 @@
 import api from '@/stores/utility/axiosInstance';
-import { useAuthStore } from '@/stores/auth';
-import { storeToRefs } from 'pinia';
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import type { Proposal } from '@/types';
 
 export const useProposalStore = defineStore('proposal', () => {
-  const authStore = useAuthStore();
-  const { user } = storeToRefs(authStore);
   const isSubmitting = ref(false);
   const proposalError = ref<string | null>(null);
 
   // --- State ---
-  const email = computed(() => user.value?.email || '');
-
   const sendProposal = async (proposalData: Proposal) => {
     isSubmitting.value = true;
     proposalError.value = null;
@@ -30,5 +24,5 @@ export const useProposalStore = defineStore('proposal', () => {
     }
   };
 
-  return { sendProposal, proposalError, isSubmitting, email };
+  return { sendProposal, proposalError, isSubmitting };
 });

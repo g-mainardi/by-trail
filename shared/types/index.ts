@@ -118,10 +118,10 @@ export interface Route {
 }
 
 export interface Proposal {
-  senderEmail: string;
   type: ProposalType;
   subjectName: string;
   description: string;
+  region: Region;
   locality: string;
 }
 

@@ -191,10 +191,11 @@ notificationSchema.index({ recipient: 1, createdAt: -1 });
 
 // PROPOSAL
 const proposalSchema = new Schema({
-  senderEmail: { type: String, required: true },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   type: { type: String, enum: Object.values(ProposalEnum), required: true },
   subjectName: { type: String, required: true },
   description: { type: String, required: true },
+  region: { type: String, required: true },
   locality: { type: String, required: true },
   submissionDate: { type: Date, default: Date.now },
 });

@@ -1,12 +1,14 @@
 import { Request } from 'express';
-import { User, Bivouac, Route } from './index.js';
+import { User, Bivouac, Route, Proposal } from './index.js';
 
 export interface UserDocument extends User {
   password: string;
 }
 export interface BivouacDocument extends Bivouac {}
 export interface RouteDocument extends Route {}
-export interface ProposalDocument {}
+export interface ProposalDocument extends Proposal {
+  senderId: string;
+}
 
 export interface AuthRequest extends Request {
   user?: User | null;
@@ -14,4 +16,8 @@ export interface AuthRequest extends Request {
 
 export interface AuthRequestWithPassword extends Request {
   user?: UserDocument | null;
+}
+
+export interface ProposalRequest extends AuthRequest {
+  body: Proposal;
 }
