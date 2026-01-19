@@ -97,7 +97,10 @@ const props = defineProps({
             style="height: 100%; width: 100%"
             @ready="onMapReady"
           >
-            <l-tile-layer :url="tileLayerUrl" />
+            <l-tile-layer
+              :url="tileLayerUrl"
+              attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
+            />
             <l-marker
               :lat-lng="
                 route.path?.coordinates[0]

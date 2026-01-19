@@ -86,7 +86,10 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
       @update:zoom="debouncedFetchBivouacs()"
       @update:center="debouncedFetchBivouacs()"
     >
-      <l-tile-layer :url="tileLayerUrl" />
+      <l-tile-layer
+        :url="tileLayerUrl"
+        attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
+      />
 
       <l-marker
         v-for="bivouac in filteredBivouacs"
