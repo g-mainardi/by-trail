@@ -14,6 +14,45 @@ const formatDateForDisplay = (dateInput: Date | string): string => {
   });
 };
 
+const notifyPeers = async (
+  bivouacId: string,
+  date: Date,
+  currentUserId: string,
+  people: number,
+  bivouacName: string
+) => {
+  try {
+    // Normalize date to search the entire day (00:00 to 23:59)
+    const startOfDay = new Date(new Date(date).setHours(0, 0, 0, 0));
+    const endOfDay = new Date(new Date(date).setHours(23, 59, 59, 999));
+
+    const peers = await Reservation.find({
+      bivouac: bivouacId,
+      reservationDate: { $gte: startOfDay, $lte: endOfDay },
+      user: { $ne: currentUserId },
+    }).select('user');
+
+    if (peers.length === 0) return;
+
+    const formattedDate = formatDateForDisplay(date);
+
+    const notificationPromises = peers.map((peerId) => {
+      return sendNotification(
+        peerId.user.toString(),
+        'bivouac_reservation_users',
+        'info',
+        'New Hikers Arriving',
+        `Someone else just planned to sleep at ${bivouacName} on ${formattedDate} with ${people} people.`
+      );
+    });
+
+    await Promise.all(notificationPromises);
+    console.log(`Notified ${peers.length} peers.`);
+  } catch (error) {
+    console.error('Error in notifyPeers:', error);
+  }
+};
+
 export const createIntention = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const { bivouacId, date, people } = req.body;
@@ -50,6 +89,14 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
           'Bivouac Intention Updated',
           `Your intention for ${bivouacName} on ${formattedDate} has been updated for ${people}.`
         );
+
+        await notifyPeers(
+          bivouacId,
+          new Date(date),
+          userId,
+          people,
+          bivouacName!
+        );
       } catch (updateError) {
         console.error('Error updating intention:', updateError);
         return res.status(500).json({ error: 'Internal server error' });
@@ -71,6 +118,14 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
         'success',
         'Bivouac Intention Created',
         `Your intention for ${bivouacName} on ${formattedDate} has been recorded for ${people}.`
+      );
+
+      await notifyPeers(
+        bivouacId,
+        new Date(date),
+        userId,
+        people,
+        bivouacName!
       );
 
       return res.status(201).json({ message: 'Intention created' });

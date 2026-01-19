@@ -155,6 +155,7 @@ const notificationSchema = new Schema(
         'bivouac_reservation',
         'bivouac_reservation_update',
         'bivouac_reservation_delete',
+        'bivouac_reservation_users',
         'route_reservation',
         'weather_alert',
       ],
