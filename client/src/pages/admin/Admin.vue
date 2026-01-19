@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from 'vue-i18n';
 import Alerts from './Alerts.vue';
 import Bivouacs from './Bivouacs.vue';
-import Paths from './Paths.vue';
+import Routes from './Routes.vue';
 import Users from './Users.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 import H1 from '@/layouts/typography/H1.vue';
@@ -67,7 +67,7 @@ const { t } = useI18n();
           </P>
         </CardHeader>
         <CardContent>
-          <Paths />
+          <Routes />
         </CardContent>
       </Card>
     </TabsContent>
