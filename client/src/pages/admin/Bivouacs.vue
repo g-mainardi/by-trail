@@ -141,7 +141,12 @@ const alertConfig = computed(() => {
       <component :is="alertConfig.icon" />
       <AlertTitle>{{ feedbackMessage }}</AlertTitle>
     </Alert>
-    <DataTable :columns="columns" :data="bivouacs" search-key="name">
+    <DataTable
+      :columns="columns"
+      :data="bivouacs"
+      search-key="name"
+      :search-key-label="t('name')"
+    >
       <template #header-name="{ column }">
         <Button
           variant="ghost"
