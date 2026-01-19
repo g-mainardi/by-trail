@@ -182,11 +182,11 @@ const getErrorMessage = computed(() => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem
-                v-for="region in Object.values(RegionsEnum)"
-                :key="region"
-                :value="region"
+                v-for="regionOption in Object.values(RegionsEnum)"
+                :key="regionOption"
+                :value="regionOption"
               >
-                {{ region }}
+                {{ regionOption }}
               </SelectItem>
             </SelectContent>
           </Select>
