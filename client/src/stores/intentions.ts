@@ -38,7 +38,7 @@ export const useIntentionStore = defineStore('intentions', () => {
 
   const sendIntention = async (
     bivouacId: string,
-    date: Date,
+    date: Date | string,
     people: number
   ): Promise<IntentionResponse> => {
     try {

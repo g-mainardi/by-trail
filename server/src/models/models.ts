@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { trusted } from 'mongoose';
 import {
   ProposalEnum,
   RegionsEnum,
@@ -123,16 +123,21 @@ const imageSchema = new Schema({
 });
 
 // RESERVATION
-const reservationSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  bivouac: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bivouac',
-    required: true,
+const reservationSchema = new Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    bivouac: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Bivouac',
+      required: true,
+    },
+    reservedPlaces: { type: Number, required: true },
+    reservationDate: { type: Date, default: Date.now },
   },
-  reservedPlaces: { type: Number, required: true },
-  reservationDate: { type: Date, default: Date.now },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // SETTING
 const settingSchema = new Schema({

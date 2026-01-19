@@ -11,20 +11,48 @@ const formatDateForDisplay = (dateInput: Date | string): string => {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 };
 
 const notifyPeers = async (
   bivouacId: string,
-  date: Date,
+  date: Date | string,
   currentUserId: string,
   people: number,
   bivouacName: string
 ) => {
   try {
-    // Normalize date to search the entire day (00:00 to 23:59)
-    const startOfDay = new Date(new Date(date).setHours(0, 0, 0, 0));
-    const endOfDay = new Date(new Date(date).setHours(23, 59, 59, 999));
+    const targetDate = new Date(date);
+
+    // We use Date.UTC to ensure we are building a timestamp based on the date components, independent of server timezone
+    const startOfDay = new Date(
+      Date.UTC(
+        targetDate.getUTCFullYear(),
+        targetDate.getUTCMonth(),
+        targetDate.getUTCDate(),
+        0,
+        0,
+        0,
+        0
+      )
+    );
+
+    const endOfDay = new Date(
+      Date.UTC(
+        targetDate.getFullYear(),
+        targetDate.getMonth(),
+        targetDate.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    );
+
+    console.log(
+      `[NotifyPeers] Searching between: ${startOfDay.toISOString()} and ${endOfDay.toISOString()}`
+    );
 
     const peers = await Reservation.find({
       bivouac: bivouacId,
