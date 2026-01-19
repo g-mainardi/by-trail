@@ -3,14 +3,18 @@ import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
 import type { User, UserStatus } from '@/types';
 import { useBivouacStore } from '@/stores/bivouacs';
+import { useRouteStore } from './routes';
 import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
 export const useAdminStore = defineStore('admin', () => {
   const bivouacStore = useBivouacStore();
+  const routeStore = useRouteStore();
   const { bivouacs } = storeToRefs(bivouacStore);
+  const { routes } = storeToRefs(routeStore);
   const { fetchBivouacs } = bivouacStore;
+  const { fetchRoutes } = routeStore;
   const users = ref<User[]>([]);
   const isLoading = ref(false);
 
@@ -125,9 +129,45 @@ export const useAdminStore = defineStore('admin', () => {
     }
   };
 
+  const updateRoute = async (routeId: string, updates: Record<string, any>) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      if (Object.keys(updates).length === 0) return true;
+      const res = await api.patch(`/routes/${routeId}`, updates);
+      if (!res || res.status !== 200) throw new Error('Failed to update route');
+      return true;
+    } catch (err: any) {
+      console.error(`Error updating route ${routeId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const deleteRoute = async (routeId: string) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      const response = await api.delete(`/routes/${routeId}`);
+      if (!response || response.status !== 204)
+        throw new Error('Failed to delete route');
+      routes.value = routes.value.filter((r) => (r.id || r._id) !== routeId);
+      return true;
+    } catch (err: any) {
+      console.error(`Error deleting route ${routeId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     users,
     bivouacs,
+    routes,
     isLoading,
     fetchUsers,
     toggleUserBlock,
@@ -135,5 +175,8 @@ export const useAdminStore = defineStore('admin', () => {
     fetchBivouacs,
     updateBivouac,
     deleteBivouac,
+    fetchRoutes,
+    updateRoute,
+    deleteRoute,
   };
 });
