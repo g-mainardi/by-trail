@@ -21,9 +21,9 @@ import { Alert, AlertTitle } from '@/components/ui/alert';
 const { ACTIVE } = UserStatusEnum;
 const { ADMIN } = UserTypeEnum;
 const { t, locale } = useI18n();
-const adminUsersStore = useAdminStore();
-const { users, isLoading } = storeToRefs(adminUsersStore);
-const { fetchUsers, toggleUserBlock, deleteUser } = adminUsersStore;
+const adminStore = useAdminStore();
+const { users, isLoading } = storeToRefs(adminStore);
+const { fetchUsers, toggleUserBlock, deleteUser } = adminStore;
 const feedbackMessage = ref('');
 const isError = ref(false);
 
