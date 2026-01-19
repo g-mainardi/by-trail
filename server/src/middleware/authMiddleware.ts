@@ -1,4 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import rateLimit from 'express-rate-limit';
+
 import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
 import { NextFunction, Response } from 'express';
@@ -55,3 +57,13 @@ export const protect = async (
     return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
+
+// Rate limiter for authentication endpoints
+export const authRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message:
+    'Too many authentication attempts from this IP, please try again after 15 minutes',
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
