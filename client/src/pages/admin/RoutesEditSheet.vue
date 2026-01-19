@@ -115,7 +115,7 @@ const onClose = () => {
             <Select
               :model-value="updates.region ?? route.region"
               @update:model-value="
-                (val) => handleChange('region', val as Region[])
+                (val) => handleChange('region', (val as Region[]).sort())
               "
               multiple
             >
