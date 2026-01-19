@@ -27,8 +27,8 @@ export const useAuthStore = defineStore('auth', () => {
     return null;
   };
 
-  const user = ref(safeParse('user')); // Usa ref se vuoi reattività, o lascia const se statico
-  const token = ref(safeParse('token')); // Idem
+  const user = ref<User | null>(safeParse('user')); // Usa ref se vuoi reattività, o lascia const se statico
+  const token = ref<string | null>(safeParse('token')); // Idem
 
   const error = ref<string | null>(null);
   const isLoading = ref(false);
@@ -102,6 +102,9 @@ export const useAuthStore = defineStore('auth', () => {
 
       token.value = data.token;
       user.value = data.user;
+
+      console.log('Token: ', token.value);
+      console.log('User: ', user.value);
 
       // No need to manually set token on helper, the interceptor reads localStorage
       localStorage.setItem('token', token.value || '');
