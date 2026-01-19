@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
+import { placeholderBivouac } from '@/services/placeholders';
 import type { Bivouac } from '@/types';
 import {
   Bed as BedIcon,
@@ -16,7 +17,6 @@ const props = defineProps<{
   bivouac: Bivouac;
   isFavorite?: boolean;
 }>();
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -24,7 +24,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     <CardContent class="px-0 flex-1 flex flex-col">
       <div class="relative w-full mb-2">
         <img
-          :src="placeholder"
+          :src="placeholderBivouac"
           :alt="`${bivouac.name} image`"
           class="w-full rounded-sm object-cover"
         />

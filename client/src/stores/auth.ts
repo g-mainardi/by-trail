@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const user = ref<User | null>(safeParse('user'));
-  const token = ref<string | null>(safeParse('token'));
+  const token = ref<string | null>(localStorage.getItem('token'));
 
   const error = ref<string | null>(null);
   const isLoading = ref(false);

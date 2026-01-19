@@ -62,7 +62,21 @@ export const useRouteStore = defineStore('routes', () => {
     try {
       const res = await api.get(`/routes/route`, { params: { id } });
       const data = res.data;
-      return data.route as Route;
+      const route = data.route as Route;
+      if (
+        route.path &&
+        route.path.coordinates &&
+        route.path.coordinates.length > 0
+      ) {
+        // Mappiamo l'INTERO array di coordinate
+        // I dati arrivano come [Lng, Lat, Alt] -> Li trasformiamo in [Lat, Lng]
+        route.path.coordinates = route.path.coordinates.map((coord: any) => {
+          const [lng, lat] = coord as [number, number];
+          // Imposta tutte le coordinate come oggetto { lat, lng }
+          return { lat, lng };
+        });
+      }
+      return route;
     } catch (error: any) {
       console.error('Error fetching route by ID:', error);
       throw new Error('Failed to fetch route by ID');

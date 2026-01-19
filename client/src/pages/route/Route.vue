@@ -1,14 +1,55 @@
 <script setup lang="ts">
+import Card from '@/components/ui/card/Card.vue';
+import CardContent from '@/components/ui/card/CardContent.vue';
+import CardFooter from '@/components/ui/card/CardFooter.vue';
+import CardTitle from '@/components/ui/card/CardTitle.vue';
 import H1 from '@/layouts/typography/H1.vue';
+import H2 from '@/layouts/typography/H2.vue';
+import { placeholderRoute } from '@/services/placeholders';
+import { getCoords, getDurationHM, routeIcon } from '@/services/utility';
 import { useRouteStore } from '@/stores/routes';
-import { type Route } from '@/types';
-import { onMounted, ref } from 'vue';
+import { RouteDifficultyEnum, type Route } from '@/types';
+import { LMap, LMarker, LPolyline, LTileLayer } from '@vue-leaflet/vue-leaflet';
+import type { Map } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import {
+  ChevronsRight,
+  Clock as ClockIcon,
+  Map as MapIcon,
+  MapPin as MapPinIcon,
+  SquareDot,
+  TrendingDown as TrendingDownIcon,
+  TrendingUp as TrendingUpIcon,
+} from 'lucide-vue-next';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const routeStore = useRouteStore();
 const route = ref<Route | null>(null);
+const fallbackCenter: [number, number] = [41.9028, 12.4964]; // Rome
+const zoom = ref(13);
+const center = ref<[number, number]>(fallbackCenter);
+
+const mapRef = ref<Map | null>(null);
+const onMapReady = (map: Map) => {
+  mapRef.value = map;
+};
+
+const tileLayerUrl = computed(() => {
+  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
+});
 
 onMounted(async () => {
-  route.value = await routeStore.fetchRouteById(props.id);
+  try {
+    route.value = await routeStore.fetchRouteById(props.id);
+  } catch (error) {
+    console.error('Error fetching route:', error);
+  }
+  center.value = [
+    route.value?.path?.coordinates[0]?.lat || fallbackCenter[0],
+    route.value?.path?.coordinates[0]?.lng || fallbackCenter[1],
+  ];
 });
 
 const props = defineProps({
@@ -20,7 +61,171 @@ const props = defineProps({
 </script>
 
 <template>
-  <H1>
-    {{ route?.title }}
-  </H1>
+  <Card class="p-4 gap-4">
+    <CardTitle>
+      <H1>
+        {{ route?.title }}
+      </H1>
+    </CardTitle>
+    <CardContent class="flex flex-col md:flex-row gap-4 w-full p-0">
+      <!-- LEFT PART -->
+      <div class="left w-full md:w-[70%]">
+        <!-- IMAGES -->
+        <H2>{{ t('images') }}</H2>
+        <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2 flex-row">
+          <img
+            v-for="i in 5"
+            :key="i"
+            :src="placeholderRoute"
+            :alt="`${route?.title} image ${i}`"
+            class="rounded-sm object-cover shrink-0 w-1/2"
+          />
+        </div>
+
+        <!-- TRACK -->
+        <H2>{{ t('track') }}</H2>
+        <div
+          v-if="route"
+          style="overflow: hidden; height: 400px; width: 100%"
+          class="rounded-lg shadow-lg mt-4"
+        >
+          <l-map
+            v-model:zoom="zoom"
+            v-model:center="center"
+            :useGlobalLeaflet="false"
+            class="w-full h-full z-0"
+            style="height: 100%; width: 100%"
+            @ready="onMapReady"
+          >
+            <l-tile-layer :url="tileLayerUrl" />
+            <l-marker
+              :lat-lng="
+                route.path?.coordinates[0]
+                  ? [
+                      route.path.coordinates[0].lat,
+                      route.path.coordinates[0].lng,
+                    ]
+                  : [0, 0]
+              "
+              :icon="routeIcon"
+            />
+            <l-polyline
+              :key="`poly-${route._id}`"
+              :lat-lngs="getCoords(route.path?.coordinates || [])"
+              :color="
+                route.difficulty === RouteDifficultyEnum.E
+                  ? 'var(--route-e)'
+                  : route.difficulty === RouteDifficultyEnum.EE
+                    ? 'var(--route-ee)'
+                    : route.difficulty === RouteDifficultyEnum.EEA
+                      ? 'var(--route-eea)'
+                      : route.difficulty === RouteDifficultyEnum.T
+                        ? 'var(--route-t)'
+                        : 'var(--route-t)'
+              "
+              :weight="4"
+              :opacity="1"
+            />
+          </l-map>
+        </div>
+        <div
+          v-else
+          class="h-full w-full flex items-center justify-center bg-gray-100 text-gray-500"
+        >
+          <span class="animate-pulse">{{ t('loadingMap') }}</span>
+        </div>
+      </div>
+
+      <!-- RIGHT PART -->
+      <div class="right w-full md:w-[30%]">
+        <H2>{{ t('specifications') }}</H2>
+        <div class="flex flex-col gap-4 my-4">
+          <div class="icon-with-text">
+            <ChevronsRight style="min-width: 1rem; min-height: 1rem" />
+            <span>{{ route?.routeType }}</span>
+          </div>
+          <div class="icon-with-text">
+            <SquareDot style="min-width: 1rem; min-height: 1rem" />
+            <span>{{ t('difficulty') }}: {{ route?.difficulty }}</span>
+          </div>
+          <div class="icon-with-text">
+            <MapPinIcon style="min-width: 1rem; min-height: 1rem" />
+            <span class="">{{ route?.region.join(', ') }} </span>
+          </div>
+          <div class="icon-with-text">
+            <MapIcon />
+            <span class="">{{ route?.distance }} km </span>
+          </div>
+          <div class="icon-with-text">
+            <ClockIcon />
+            <span class=""
+              >{{ getDurationHM(route?.duration ?? 0).hours }} h :
+              {{ getDurationHM(route?.duration ?? 0).minutes }} m
+            </span>
+          </div>
+          <div class="icon-with-text">
+            <TrendingUpIcon />
+            <span class="">{{ route?.ascent }} mt </span>
+          </div>
+          <div class="icon-with-text">
+            <TrendingDownIcon />
+            <span class="">{{ route?.descent }} mt </span>
+          </div>
+        </div>
+
+        <H2>{{ t('note') }}</H2>
+        <p v-if="route?.note">{{ route?.note }}</p>
+        <p v-else>{{ t('no_description_available') }}</p>
+      </div>
+    </CardContent>
+    <CardFooter></CardFooter>
+  </Card>
 </template>
+
+<style scoped>
+.icon-with-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-with-text span {
+  font-family: monospace;
+  font-size: 1rem;
+}
+</style>
+
+<i18n>
+{
+  "en": {
+    "images": "Images",
+    "note": "Note",
+    "specifications": "Specifications",
+    "track": "Track",
+    "loadingMap": "Loading map...",
+    "route_type": "Route Type",
+    "difficulty": "Difficulty",
+    "no_description_available": "No description available."
+  },
+  "it": {
+    "images": "Immagini",
+    "note": "Nota",
+    "specifications": "Specifiche",
+    "track": "Tracciato",
+    "loadingMap": "Caricamento mappa...",
+    "route_type": "Tipo di Percorso",
+    "difficulty": "Difficoltà",
+    "no_description_available": "Nessuna descrizione disponibile."
+  },
+  "es": {
+    "images": "Imágenes",
+    "note": "Nota",
+    "specifications": "Especificaciones",
+    "track": "Ruta",
+    "loadingMap": "Cargando mapa...",
+    "route_type": "Tipo de Ruta",
+    "difficulty": "Dificultad",
+    "no_description_available": "No hay descripción disponible."
+  }
+}
+</i18n>

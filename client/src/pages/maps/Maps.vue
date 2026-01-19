@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import {
+  bivouacIcon,
+  getCoords,
+  getDurationHM,
+  routeIcon,
+} from '@/services/utility';
 import { useBivouacStore } from '@/stores/bivouacs';
 import { useRouteStore } from '@/stores/routes';
 import { RouteDifficultyEnum } from '@/types';
@@ -10,10 +16,10 @@ import {
   LTileLayer,
 } from '@vue-leaflet/vue-leaflet';
 import { useDebounceFn } from '@vueuse/core';
-import type { Icon, IconOptions, Map } from 'leaflet';
-import L from 'leaflet';
+import type { Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import FilterBar from '../filterbar/FilterBar.vue';
 import {
   bivouacFilters,
@@ -23,63 +29,10 @@ import {
   resetRoutesFilters,
   routeFilters,
 } from '../filterbar/filters';
+const { t } = useI18n();
 
 const bivouacStore = useBivouacStore();
 const routeStore = useRouteStore();
-
-const mapPinHouseIconUrl = new URL(
-  '@/assets/map-pin-house.svg',
-  import.meta.url
-).href;
-
-const routeIconUrl = new URL('@/assets/route.svg', import.meta.url).href;
-
-const iconSize: [number, number] = [30, 30];
-const bivouacIcon = L.divIcon({
-  className: 'bivouac-icon-wrapper',
-  html: `
-    <div style="
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: ${iconSize[0]}px;
-      height: ${iconSize[1]}px;
-      background: var(--primary);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    ">
-      <img src="${mapPinHouseIconUrl}" alt="Bivouac" style="width: 60%; height: 60%; filter: brightness(0) invert(1);" />
-    </div>
-  `,
-  iconSize: iconSize as [number, number],
-  iconAnchor: [iconSize[0] / 2, iconSize[1] - iconSize[0] / 2] as [
-    number,
-    number,
-  ],
-}) as Icon<IconOptions>;
-
-const routeIcon = L.divIcon({
-  className: 'route-icon-wrapper',
-  html: `
-    <div style="
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: ${iconSize[0]}px;
-      height: ${iconSize[1]}px;
-      background: #bc6c25;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    ">
-      <img src="${routeIconUrl}" alt="Route" style="width: 60%; height: 60%; filter: brightness(0) invert(1);" />
-    </div>
-  `,
-  iconSize: iconSize as [number, number],
-  iconAnchor: [iconSize[0] / 2, iconSize[1] - iconSize[0] / 2] as [
-    number,
-    number,
-  ],
-}) as Icon<IconOptions>;
 
 const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
@@ -87,12 +40,6 @@ const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 const tileLayerUrl = computed(() => {
   return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
 });
-
-function getCoords(
-  coords: { lat: number; lng: number }[]
-): L.LatLngExpression[] {
-  return coords.map((coord) => [coord.lat, coord.lng]);
-}
 
 const mapRef = ref<Map | null>(null);
 const onMapReady = (map: Map) => {
@@ -117,7 +64,9 @@ const filteredRoutes = computed(() => {
   return getFilteredRoutes(routeStore.mapRoutes);
 });
 
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
+const placeholderBivouac = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
+  .href;
+const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -155,7 +104,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             aria-label="View Bivouac Details"
           >
             <img
-              :src="placeholder"
+              :src="placeholderBivouac"
               :alt="`${bivouac.name} image`"
               class="rounded-sm object-cover"
             />
@@ -204,7 +153,7 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
             aria-label="View Route Details"
           >
             <img
-              :src="placeholder"
+              :src="placeholderRoute"
               :alt="`${route.title} image`"
               class="rounded-sm object-cover"
             />
@@ -212,9 +161,18 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
               {{ route.title }}
             </h3>
           </RouterLink>
-          <p style="margin-top: 0rem; margin-bottom: 0rem">
-            {{ route.duration }} min -
-            {{ route.region.map((r) => r).join(', ') }}
+          <p
+            style="margin-top: 0rem; margin-bottom: 0rem"
+            class="flex flex-row justify-between"
+          >
+            <span
+              >{{ getDurationHM(route.duration).hours }} {{ t('hour') }}</span
+            >
+            <span
+              >{{ getDurationHM(route.duration).minutes }} {{ t('min') }}</span
+            >
+            <span>{{ t('difficulty') }}: {{ route.difficulty }}</span>
+            <span>{{ route.region.map((r) => r).join(', ') }}</span>
           </p>
         </l-popup>
       </l-marker>
@@ -312,3 +270,23 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
   text-align: center;
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "hour": "Hour",
+    "min": "Minutes",
+    "difficulty": "Difficulty"
+  },
+  "it": {
+    "hour": "Ora",
+    "min": "Minuti",
+    "difficulty": "Difficoltà"
+  },
+  "es": {
+    "hour": "Hora",
+    "min": "Minutos",
+    "difficulty": "Dificultad"
+  }
+}
+</i18n>
