@@ -1,12 +1,21 @@
 #!/bin/sh
-# Copy types from server to client
+# Create types directory in both client and server if they don't exist
+mkdir -p server/src/types
 mkdir -p client/src/types
-cp server/src/types/index.ts client/src/types/index.ts
 
+# Copy type definitions in both server and client
+cp -r shared/types/* server/src/types/
 if [ $? -ne 0 ]; then
-  echo "Error copying types!"
+  echo "Error copying types in server!"
   exit 1
 fi
+
+cp -r shared/types/* client/src/types/
+if [ $? -ne 0 ]; then
+  echo "Error copying types in client!"
+  exit 1
+fi
+
 git add client/src/types/index.ts
 
 # Run lint-staged
