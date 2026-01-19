@@ -17,7 +17,7 @@ const email = authStore.user?.email || '';
 const handleDeleteAccount = async () => {
   if (!password.value) return;
   await authStore.deleteAccount(email, password.value);
-  toast.success(t('delete_account_button') + ' ' + t('successful'));
+  toast.success(t('successful_delete_account_button'));
 };
 </script>
 
@@ -52,19 +52,19 @@ const handleDeleteAccount = async () => {
       "password": "Enter your password to confirm the deletion",
       "password_placeholder": "Enter your password here",
       "delete_account_button": "Delete account",
-      "successful": "successfully"
+      "successful_delete_account_button": "Account deleted successfully"
     },
     "it": {
       "password": "Inserisci la tua password per confermare l'eliminazione",
       "password_placeholder": "Inserisci qui la tua password",
       "delete_account_button": "Elimina account",
-      "successful": "riuscito"
+      "successful_delete_account_button": "Account eliminato con successo"
     },
     "es": {
       "password": "Introduce tu contraseña para confirmar la eliminación",
       "password_placeholder": "Introduce tu contraseña aquí",
       "delete_account_button": "Eliminar cuenta",
-      "successful": "exitosamente"
+      "successful_delete_account_button": "Cuenta eliminada con éxito"
     }
   }
 </i18n>

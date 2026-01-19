@@ -35,20 +35,13 @@ export const useRouteStore = defineStore('routes', () => {
       });
       const data = res.data;
       const routes = data.routes as Route[];
-      // Trasformiamo le coordinate per ogni route
       mapRoutes.value = routes.map((route) => {
         if (
           route.path &&
           route.path.coordinates &&
           route.path.coordinates.length > 0
         ) {
-          // Mappiamo l'INTERO array di coordinate
-          // I dati arrivano come [Lng, Lat, Alt] -> Li trasformiamo in [Lat, Lng]
-          route.path.coordinates = route.path.coordinates.map((coord: any) => {
-            const [lng, lat] = coord as [number, number];
-            // Imposta tutte le coordinate come oggetto { lat, lng }
-            return { lat, lng };
-          });
+          route.path.coordinates = normalizeCoordinates(route.path.coordinates);
         }
         return route;
       });
@@ -68,13 +61,7 @@ export const useRouteStore = defineStore('routes', () => {
         route.path.coordinates &&
         route.path.coordinates.length > 0
       ) {
-        // Mappiamo l'INTERO array di coordinate
-        // I dati arrivano come [Lng, Lat, Alt] -> Li trasformiamo in [Lat, Lng]
-        route.path.coordinates = route.path.coordinates.map((coord: any) => {
-          const [lng, lat] = coord as [number, number];
-          // Imposta tutte le coordinate come oggetto { lat, lng }
-          return { lat, lng };
-        });
+        route.path.coordinates = normalizeCoordinates(route.path.coordinates);
       }
       return route;
     } catch (error: any) {
@@ -82,6 +69,16 @@ export const useRouteStore = defineStore('routes', () => {
       throw new Error('Failed to fetch route by ID');
     }
   };
+
+  type Coordinate = { 0: number; 1: number; 2?: number };
+  type NormalizedCoordinate = { lat: number; lng: number };
+
+  function normalizeCoordinates(coords: Coordinate[]): NormalizedCoordinate[] {
+    return coords.map((coord) => {
+      const [lng, lat] = coord as [number, number];
+      return { lat, lng };
+    });
+  }
 
   return { fetchRoutes, fetchMapRoutes, fetchRouteById, routes, mapRoutes };
 });

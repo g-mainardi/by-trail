@@ -46,10 +46,20 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching route:', error);
   }
-  center.value = [
-    route.value?.path?.coordinates[0]?.lat || fallbackCenter[0],
-    route.value?.path?.coordinates[0]?.lng || fallbackCenter[1],
-  ];
+  const coordinates = route.value?.path?.coordinates;
+  const firstCoord =
+    Array.isArray(coordinates) && coordinates.length > 0
+      ? coordinates[0]
+      : null;
+  if (
+    firstCoord &&
+    typeof firstCoord.lat === 'number' &&
+    typeof firstCoord.lng === 'number'
+  ) {
+    center.value = [firstCoord.lat, firstCoord.lng];
+  } else {
+    center.value = [fallbackCenter[0], fallbackCenter[1]];
+  }
 });
 
 const props = defineProps({
@@ -202,29 +212,25 @@ const props = defineProps({
   box-shadow: none;
 }
 
-/* 2. Stile base dei pulsanti (+ e -) */
 :deep(.leaflet-control-zoom a) {
-  background-color: var(--card); /* Sfondo Card */
-  color: var(--foreground); /* Testo scuro/chiaro in base al tema */
+  background-color: var(--card);
+  color: var(--foreground);
   border: 1px solid var(--border);
 
-  /* Dimensioni e Tipografia */
-  width: 36px; /* Un po' più grandi dello standard */
+  width: 36px;
   height: 36px;
-  line-height: 34px; /* Centratura verticale (height - borders) */
+  line-height: 34px;
   font-size: 1.2rem;
-  font-family: var(--font-sans); /* Quicksand */
+  font-family: var(--font-sans);
   font-weight: 500;
 
-  /* Forma */
-  border-radius: var(--radius) !important; /* Forza il radius del tema */
-  margin-bottom: 8px; /* Spazio tra i pulsanti */
+  border-radius: var(--radius) !important;
+  margin-bottom: 8px;
   box-shadow: var(--shadow-sm);
 
   transition: all 0.2s;
 }
 
-/* 3. Stile Hover (Accent) */
 :deep(.leaflet-control-zoom a:hover) {
   background-color: var(--accent);
   color: var(--accent-foreground);
@@ -232,7 +238,6 @@ const props = defineProps({
   text-decoration: none;
 }
 
-/* 4. Stile Disabilitato (es. zoom massimo raggiunto) */
 :deep(.leaflet-control-zoom a.leaflet-disabled) {
   background-color: var(--muted);
   color: var(--muted-foreground);
@@ -241,7 +246,6 @@ const props = defineProps({
   cursor: not-allowed;
 }
 
-/* 5. Override specifico per Leaflet che a volte forza radius strani */
 :deep(.leaflet-touch .leaflet-control-zoom-in),
 :deep(.leaflet-touch .leaflet-control-zoom-out) {
   border-radius: var(--radius) !important;

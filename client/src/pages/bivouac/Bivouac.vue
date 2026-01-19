@@ -177,12 +177,11 @@ onMounted(async () => {
       <div class="right w-full md:w-[30%]">
         <!-- MY INTENTIONS -->
         <H2>My Intentions</H2>
-        <div class="flex flex-col gap-4 my-4">
-          <div
-            v-if="userBivouacIntentions.length > 0"
-            v-for="intention in userBivouacIntentions"
-            :key="intention._id"
-          >
+        <div
+          class="flex flex-col gap-4 my-4"
+          v-if="userBivouacIntentions.length > 0"
+        >
+          <div v-for="intention in userBivouacIntentions" :key="intention._id">
             <div class="icon-with-text">
               <CalendarIcon class="icon" />
               <span class="">
@@ -200,18 +199,18 @@ onMounted(async () => {
               </Button>
             </div>
           </div>
-          <div v-else>
-            <span>{{ t('explain_your_intentions') }}</span>
-          </div>
+        </div>
+        <div v-else>
+          <span>{{ t('explain_your_intentions') }}</span>
         </div>
 
         <!-- AFFLUENCE INFO -->
-        <H2>{{ t('affluence') }}</H2>
-        <div class="flex flex-col gap-4 my-4">
-          <div
-            v-if="bivouacsIntentions.length > 0"
-            v-for="intention in bivouacsIntentions"
-          >
+        <H2 class="mt-4">{{ t('affluence') }}</H2>
+        <div
+          class="flex flex-col gap-4 my-4"
+          v-if="bivouacsIntentions.length > 0"
+        >
+          <div v-for="intention in bivouacsIntentions">
             <div class="icon-with-text">
               <span class="date_icon">
                 <Circle />
@@ -221,13 +220,13 @@ onMounted(async () => {
               </span>
             </div>
           </div>
-          <div v-else>
-            <span>{{ t('explain_other_intentions') }}</span>
-          </div>
+        </div>
+        <div v-else>
+          <span>{{ t('explain_other_intentions') }}</span>
         </div>
 
         <!-- ADDITIONAL INFO -->
-        <H2>{{ t('additional_info') }}</H2>
+        <H2 class="mt-4">{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
             <MountainIcon />

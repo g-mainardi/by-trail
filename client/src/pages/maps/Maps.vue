@@ -169,7 +169,7 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
             class="flex flex-row justify-between"
           >
             <span
-              >{{ getDurationHM(route.duration).hours }} {{ t('hour') }}</span
+              >{{ getDurationHM(route.duration).hours }} {{ t('hours') }}</span
             >
             <span
               >{{ getDurationHM(route.duration).minutes }} {{ t('min') }}</span
@@ -277,17 +277,17 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
 <i18n>
 {
   "en": {
-    "hour": "Hour",
+    "hours": "Hours",
     "min": "Minutes",
     "difficulty": "Difficulty"
   },
   "it": {
-    "hour": "Ora",
+    "hours": "Ore",
     "min": "Minuti",
     "difficulty": "Difficoltà"
   },
   "es": {
-    "hour": "Hora",
+    "hours": "Horas",
     "min": "Minutos",
     "difficulty": "Dificultad"
   }
