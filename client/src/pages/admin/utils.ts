@@ -5,20 +5,34 @@ const toRawIfObject = (val: any) => {
 };
 
 export const isEqual = (val1: any, val2: any): boolean => {
-  // Simple strict equality for primitives
-  const isPrimitiveEqual = val1 === val2;
+  // Fast path: simple strict equality for primitives and identical references
+  if (val1 === val2) {
+    return true;
+  }
 
-  // JSON stringify hack for objects (like coords) to compare by value, not reference
-  // Unwrap proxies for object comparison
-  const isObjectEqual =
-    JSON.stringify(toRawIfObject(val1)) === JSON.stringify(toRawIfObject(val2));
+  // Array check with recursive deep comparison
+  if (Array.isArray(val1) && Array.isArray(val2)) {
+    if (val1.length !== val2.length) {
+      return false;
+    }
 
-  // Array check
-  const isArrayEqual: boolean =
-    Array.isArray(val1) && Array.isArray(val2)
-      ? val1.length === val2.length &&
-        val1.every((item, index) => isEqual(item, val2[index]))
-      : false;
+    return val1.every((item, index) => isEqual(item, val2[index]));
+  }
 
-  return isPrimitiveEqual || isObjectEqual || isArrayEqual;
+  // Object check (excluding arrays): compare by value, not reference
+  if (
+    val1 !== null &&
+    val2 !== null &&
+    typeof val1 === 'object' &&
+    typeof val2 === 'object'
+  ) {
+    // Unwrap proxies for object comparison
+    const raw1 = toRawIfObject(val1);
+    const raw2 = toRawIfObject(val2);
+
+    return JSON.stringify(raw1) === JSON.stringify(raw2);
+  }
+
+  // Fallback: values are not equal
+  return false;
 };
