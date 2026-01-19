@@ -1,6 +1,9 @@
 import { Request } from 'express';
 import { User, Bivouac, Route } from './index.js';
 
+// Constants
+export const EXCLUDED_UPDATE_FIELDS = ['_id', '__v', 'createdAt', 'updatedAt'];
+
 export interface UserDocument extends User {
   password: string;
 }
