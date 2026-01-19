@@ -14,30 +14,9 @@ const props = defineProps<{
   route: Route;
 }>();
 
-function formatDuration(minutes: number): string {
-  if (!minutes) return '-';
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${h}h : ${m}m`;
-}
-
 const route = props.route;
 
 // Helper to determine difficulty color
-const getDifficultyColor = (diff: string) => {
-  switch (diff) {
-    case 'T':
-      return 'text-green-600 border-green-200 bg-green-50';
-    case 'E':
-      return 'text-blue-600 border-blue-200 bg-blue-50';
-    case 'EE':
-      return 'text-orange-600 border-orange-200 bg-orange-50';
-    case 'EEA':
-      return 'text-red-600 border-red-200 bg-red-50';
-    default:
-      return 'text-gray-600';
-  }
-};
 </script>
 
 <template>
