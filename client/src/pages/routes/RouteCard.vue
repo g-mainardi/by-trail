@@ -110,7 +110,7 @@ const route = props.route;
           class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
           @click="$emit('toggle-favorite', route._id)"
         />
-        Non salvato
+        {{ props.isFavorite ? t('saved') : t('unsaved') }}
       </Button>
     </CardFooter>
   </Card>
@@ -150,7 +150,9 @@ const route = props.route;
     "descent": "Elevation Loss",
     "duration": "Duration",
     "distance": "Distance",
-    "routeType": "Route Type"
+    "routeType": "Route Type",
+    "saved": "Saved",
+    "unsaved": "Save"
   },
   "it": {
     "view": "Dettagli",
@@ -160,7 +162,9 @@ const route = props.route;
     "descent": "Dislivello Negativo",
     "duration": "Tempo",
     "distance": "Distanza",
-    "routeType": "Tipo di percorso"
+    "routeType": "Tipo di percorso",
+    "saved": "Salvato",
+    "unsaved": "Salva"
   },
   "es": {
     "view": "Detalles",
@@ -170,7 +174,11 @@ const route = props.route;
     "descent": "Desnivel Negativo",
     "duration": "Tiempo",
     "distance": "Distancia",
-    "routeType": "Tipo de ruta"
+    "routeType": "Tipo de ruta",
+    "remove": "Eliminar",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "unsaved": "Guardar"
   }
 }
 </i18n>
