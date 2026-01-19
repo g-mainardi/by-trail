@@ -39,7 +39,7 @@ import {
   Toilet as ToiletIcon,
   X,
 } from 'lucide-vue-next';
-import { onMounted, ref, type Ref } from 'vue';
+import { computed, onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 import 'vue-sonner/style.css';
@@ -54,6 +54,28 @@ const bivouac = ref<Bivouac>();
 const minDate = fromDate(new Date(), getLocalTimeZone());
 const bivouacsIntentions = ref<AnonymousIntention[]>([]);
 const userBivouacIntentions = ref<Intention[]>([]);
+
+const reducedBivouacIntentions = computed(() => {
+  const grouped = bivouacsIntentions.value.reduce(
+    (acc: AnonymousIntention[], curr: AnonymousIntention) => {
+      const date = new Date(curr.date).toDateString();
+      const existing = acc.find(
+        (item) => new Date(item.date).toDateString() === date
+      );
+      if (existing) {
+        existing.people += curr.people;
+      } else {
+        acc.push({ ...curr });
+      }
+      return acc;
+    },
+    []
+  );
+
+  return Object.values(grouped).sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+});
 
 async function updateIntentions() {
   await intentionStore.fetchUserIntentions();
@@ -212,7 +234,7 @@ onMounted(async () => {
           class="flex flex-col gap-4 my-4"
           v-if="bivouacsIntentions.length > 0"
         >
-          <div v-for="intention in bivouacsIntentions">
+          <div v-for="intention in reducedBivouacIntentions">
             <div class="icon-with-text">
               <span class="date_icon">
                 <Circle />
