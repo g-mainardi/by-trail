@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { type Bivouac, RegionsEnum } from '@/types';
+import { type Bivouac, type Region, RegionsEnum } from '@/types';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -85,8 +85,10 @@ const handleSave = async () => {
           <div class="grid w-full items-center gap-1.5">
             <Label>{{ t('region') }}</Label>
             <Select
-              :model-value="bivouac.region"
-              @value-change="handleChange('region', $event)"
+              :model-value="updates.region ?? bivouac.region"
+              @update:model-value="
+                (val) => handleChange('region', val as Region)
+              "
             >
               <SelectTrigger>
                 <SelectValue :placeholder="t('select_region')" />
