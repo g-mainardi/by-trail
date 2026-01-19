@@ -1,19 +1,33 @@
 import { socket } from '@/services/socket';
 import api from '@/stores/utility/axiosInstance'; // Import the global instance
+import type { User } from '@/types';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { User } from '@/types';
 
 export const useAuthStore = defineStore('auth', () => {
   // --- State ---
   const router = useRouter();
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
-  const token = ref<string | null>(localStorage.getItem('token'));
-  const user = ref<User | null>(
-    JSON.parse(localStorage.getItem('user') || 'null')
-  );
+
+  const safeParse = (key: string) => {
+    const item = localStorage.getItem(key);
+    if (item && item !== 'undefined' && item !== 'null') {
+      try {
+        return JSON.parse(item);
+      } catch (error) {
+        console.warn(`Errore nel parsing di ${key}, rimuovo il dato corrotto.`);
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const user = ref<User | null>(safeParse('user'));
+  const token = ref<string | null>(safeParse('token'));
+
   const error = ref<string | null>(null);
   const isLoading = ref(false);
 

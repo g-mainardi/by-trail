@@ -1,12 +1,16 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
 import type { User, UserStatus } from '@/types';
+import { useBivouacStore } from '@/stores/bivouacs';
 import { UserStatusEnum } from '@/types';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
-export const useAdminUsersStore = defineStore('admin-users', () => {
+export const useAdminStore = defineStore('admin', () => {
+  const bivouacStore = useBivouacStore();
+  const { bivouacs } = storeToRefs(bivouacStore);
+  const { fetchBivouacs } = bivouacStore;
   const users = ref<User[]>([]);
   const isLoading = ref(false);
 
@@ -60,7 +64,9 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
     isLoading.value = true;
 
     try {
-      await api.delete(`/users/${userId}`);
+      const response = await api.delete(`/users/${userId}`);
+      if (!response || response.status !== 204)
+        throw new Error('Failed to delete user');
 
       // Remove from the local users array
       users.value = users.value.filter(
@@ -76,11 +82,58 @@ export const useAdminUsersStore = defineStore('admin-users', () => {
     }
   };
 
+  const updateBivouac = async (
+    bivouacId: string,
+    updates: Record<string, any>
+  ) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      if (Object.keys(updates).length === 0) return true;
+
+      const res = await api.patch(`/bivouacs/${bivouacId}`, updates);
+      if (!res || res.status !== 200)
+        throw new Error('Failed to update bivouac');
+
+      return true;
+    } catch (err: any) {
+      console.error(`Error updating bivouac ${bivouacId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const deleteBivouac = async (bivouacId: string) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      const response = await api.delete(`/bivouacs/${bivouacId}`);
+      if (!response || response.status !== 204)
+        throw new Error('Failed to delete bivouac');
+      bivouacs.value = bivouacs.value.filter(
+        (b) => (b.id || b._id) !== bivouacId
+      );
+      return true;
+    } catch (err: any) {
+      console.error(`Error deleting bivouac ${bivouacId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     users,
+    bivouacs,
     isLoading,
     fetchUsers,
     toggleUserBlock,
     deleteUser,
+    fetchBivouacs,
+    updateBivouac,
+    deleteBivouac,
   };
 });

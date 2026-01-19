@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import fs from 'fs';
+import mongoose from 'mongoose';
 
 // Helper to read the secret
 export const getDbConfig = () => {
@@ -24,6 +24,7 @@ export const getDbConfig = () => {
 
 const connectDB = async () => {
   const { uri, type } = getDbConfig();
+  console.log('Database URI type:', type);
 
   if (type === 'ATLAS') {
     console.log('Loading Atlas URI from Docker Secret...');

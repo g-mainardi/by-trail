@@ -20,6 +20,7 @@ import {
 import Toggle from '@/components/ui/toggle/Toggle.vue';
 import {
   Bed as BedIcon,
+  Calendar as CalendarIcon,
   Clock,
   Heart as HeartIcon,
   Mountain as MountainIcon,
@@ -28,10 +29,10 @@ import {
   Toilet as ToiletIcon,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import { routeFilters, type BivouacFilter, type RouteFilter } from './filters';
+import { type BivouacFilter, type RouteFilter } from './filters';
 const { t } = useI18n();
 
-defineProps<{
+const props = defineProps<{
   bivouacFilters: {
     minDesiredBeds: BivouacFilter;
     altitudeFilter: BivouacFilter;
@@ -40,6 +41,7 @@ defineProps<{
   routeFilters: {
     maxDurationFilter: RouteFilter;
     difficultyFilter: RouteFilter;
+    searchQuery: RouteFilter;
   };
 }>();
 </script>

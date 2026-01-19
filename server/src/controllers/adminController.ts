@@ -1,7 +1,8 @@
 import type { Response } from 'express';
 import { UserStatusEnum, UserTypeEnum } from '../types/index.js';
 import { AuthRequest } from '../types/server_only.js';
-import { User } from '../models/models.js';
+import { User, Bivouac } from '../models/models.js';
+import mongoose from 'mongoose';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
   try {
@@ -80,9 +81,69 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
     if (deletionResult.deletedCount === 0)
       return res.status(404).json({ error: 'User not found' });
 
-    return res.status(200).json({ message: 'User deleted successfully' });
+    return res.status(204).end();
   } catch (error) {
     console.error('Error deleting user:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateBivouac = async (req: AuthRequest, res: Response) => {
+  const bivouacId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
+  try {
+    const bivouac = await Bivouac.findById(bivouacId).exec();
+    if (!bivouac) return res.status(404).json({ error: 'Bivouac not found' });
+    const requestUpdates = req.body as Record<string, unknown>;
+    const allowedUpdatePaths = Object.keys(Bivouac.schema.paths).filter(
+      (path) => !['_id', '__v', 'createdAt', 'updatedAt'].includes(path)
+    );
+    const sanitizedUpdates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(requestUpdates)) {
+      if (allowedUpdatePaths.includes(key)) {
+        sanitizedUpdates[key] = value;
+      }
+    }
+    if (Object.keys(sanitizedUpdates).length === 0) {
+      return res
+        .status(400)
+        .json({ error: 'No valid fields provided for bivouac update' });
+    }
+    const result = await Bivouac.updateOne(
+      { _id: bivouacId },
+      { $set: sanitizedUpdates },
+      { runValidators: true }
+    ).exec();
+
+    return res.status(200).json({
+      message:
+        result.modifiedCount === 0
+          ? 'No changes were made to the bivouac'
+          : 'Bivouac updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating bivouac:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteBivouac = async (req: AuthRequest, res: Response) => {
+  const bivouacId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
+
+  try {
+    const deletionResult = await Bivouac.deleteOne({ _id: bivouacId }).exec();
+    if (deletionResult.deletedCount === 0)
+      return res.status(404).json({ error: 'Bivouac not found' });
+
+    return res.status(204).end();
+  } catch (error) {
+    console.error('Error deleting bivouac:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
