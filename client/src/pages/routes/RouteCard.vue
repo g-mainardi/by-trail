@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
+import { placeholderRoute } from '@/services/placeholders';
 import type { Route } from '@/types';
 import {
   Clock as ClockIcon,
@@ -36,7 +37,6 @@ const getDifficultyColor = (diff: string) => {
       return 'text-gray-600';
   }
 };
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 
 const props = defineProps<{
   route: Route;
@@ -50,12 +50,12 @@ const route = props.route;
     <CardContent class="px-0 flex-1 flex flex-col justify-between">
       <div class="relative w-full mb-2">
         <img
-          :src="placeholder"
+          :src="placeholderRoute"
           :alt="`${route.title} image`"
           class="w-full rounded-sm object-cover"
         />
       </div>
-      <RouterLink :to="`#`" aria-label="View Route Details">
+      <RouterLink :to="`/route/${route._id}`" aria-label="View Route Details">
         <H2>{{ route.title }}</H2>
       </RouterLink>
       <span class="text-xs text-muted-foreground uppercase tracking-wide">

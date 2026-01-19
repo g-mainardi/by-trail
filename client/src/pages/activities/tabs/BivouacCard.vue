@@ -2,6 +2,7 @@
 import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
+import { placeholderBivouac } from '@/services/placeholders';
 import type { Bivouac } from '@/types';
 import { X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
@@ -10,9 +11,6 @@ const { t } = useI18n();
 const props = defineProps<{
   bivouac: Bivouac;
 }>();
-
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
-const bivouac = props.bivouac;
 </script>
 
 <template>
@@ -24,7 +22,7 @@ const bivouac = props.bivouac;
       <CardTitle class="flex flex-col">
         <div class="relative w-full mb-2">
           <img
-            :src="placeholder"
+            :src="placeholderBivouac"
             :alt="`${bivouac.name} image`"
             class="w-full rounded-sm object-cover"
           />

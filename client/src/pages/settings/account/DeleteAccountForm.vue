@@ -7,6 +7,7 @@ import Input from '@/components/ui/input/Input.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { toast } from 'vue-sonner';
 const { t } = useI18n();
 
 const password = ref('');
@@ -16,6 +17,7 @@ const email = authStore.user?.email || '';
 const handleDeleteAccount = async () => {
   if (!password.value) return;
   await authStore.deleteAccount(email, password.value);
+  toast.success(t('successful_delete_account_button'));
 };
 </script>
 
@@ -49,17 +51,20 @@ const handleDeleteAccount = async () => {
     "en": {
       "password": "Enter your password to confirm the deletion",
       "password_placeholder": "Enter your password here",
-      "delete_account_button": "Delete"
+      "delete_account_button": "Delete account",
+      "successful_delete_account_button": "Account deleted successfully"
     },
     "it": {
       "password": "Inserisci la tua password per confermare l'eliminazione",
       "password_placeholder": "Inserisci qui la tua password",
-      "delete_account_button": "Elimina"
+      "delete_account_button": "Elimina account",
+      "successful_delete_account_button": "Account eliminato con successo"
     },
     "es": {
       "password": "Introduce tu contraseña para confirmar la eliminación",
       "password_placeholder": "Introduce tu contraseña aquí",
-      "delete_account_button": "Eliminar"
+      "delete_account_button": "Eliminar cuenta",
+      "successful_delete_account_button": "Cuenta eliminada con éxito"
     }
   }
 </i18n>

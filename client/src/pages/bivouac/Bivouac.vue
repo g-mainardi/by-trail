@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
+import { placeholderBivouac } from '@/services/placeholders';
 import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
@@ -34,6 +35,7 @@ import {
   Heart as HeartIcon,
   MapPin as MapPinIcon,
   Mountain as MountainIcon,
+  Send,
   Toilet as ToiletIcon,
   X,
 } from 'lucide-vue-next';
@@ -42,8 +44,6 @@ import { useI18n } from 'vue-i18n';
 import { toast } from 'vue-sonner';
 import 'vue-sonner/style.css';
 const { t } = useI18n();
-
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 
 const props = defineProps<{ id: string }>();
 const bivouacStore = useBivouacStore();
@@ -130,18 +130,10 @@ onMounted(async () => {
         <H2>{{ t('images') }}</H2>
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
-            :src="placeholder"
-            :alt="`${bivouac?.name} image`"
-            class="rounded-sm object-cover shrink-0 w-1/2"
-          />
-          <img
-            :src="placeholder"
-            :alt="`${bivouac?.name} image`"
-            class="rounded-sm object-cover shrink-0 w-1/2"
-          />
-          <img
-            :src="placeholder"
-            :alt="`${bivouac?.name} image`"
+            v-for="i in 5"
+            :key="i"
+            :src="placeholderBivouac"
+            :alt="`${bivouac?.name} image ${i}`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
         </div>
@@ -175,7 +167,10 @@ onMounted(async () => {
             </div>
 
             <!-- Confirm Button -->
-            <Button @click="sendIntention">{{ t('send_intention') }}</Button>
+            <Button @click="sendIntention">
+              <Send />
+              {{ t('send_intention') }}
+            </Button>
           </div>
         </div>
       </div>
@@ -184,8 +179,11 @@ onMounted(async () => {
       <div class="right w-full md:w-[30%]">
         <!-- MY INTENTIONS -->
         <H2>My Intentions</H2>
-        <div class="flex flex-col gap-4 my-4">
-          <div v-for="intention in userBivouacIntentions">
+        <div
+          class="flex flex-col gap-4 my-4"
+          v-if="userBivouacIntentions.length > 0"
+        >
+          <div v-for="intention in userBivouacIntentions" :key="intention._id">
             <div class="icon-with-text">
               <CalendarIcon class="icon" />
               <span class="">
@@ -195,18 +193,25 @@ onMounted(async () => {
               <Button
                 class="rounded-full cursor-pointer"
                 variant="destructive"
-                :size="'icon'"
+                size="sm"
+                :style="{ width: '1.5rem', height: '1.5rem' }"
                 @click="cancelIntention(intention._id || '')"
               >
-                <X class="icon" />
+                <X class="icon" style="width: 1rem; height: 1rem" />
               </Button>
             </div>
           </div>
         </div>
+        <div v-else>
+          <span>{{ t('explain_your_intentions') }}</span>
+        </div>
 
         <!-- AFFLUENCE INFO -->
-        <H2>{{ t('affluence') }}</H2>
-        <div class="flex flex-col gap-4 my-4">
+        <H2 class="mt-4">{{ t('affluence') }}</H2>
+        <div
+          class="flex flex-col gap-4 my-4"
+          v-if="bivouacsIntentions.length > 0"
+        >
           <div v-for="intention in bivouacsIntentions">
             <div class="icon-with-text">
               <span class="date_icon">
@@ -218,9 +223,12 @@ onMounted(async () => {
             </div>
           </div>
         </div>
+        <div v-else>
+          <span>{{ t('explain_other_intentions') }}</span>
+        </div>
 
         <!-- ADDITIONAL INFO -->
-        <H2>{{ t('additional_info') }}</H2>
+        <H2 class="mt-4">{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
             <MountainIcon />
@@ -318,7 +326,7 @@ onMounted(async () => {
     "description": "Description",
     "additional_info": "Additional Info",
     "affluence": "Affluence",
-    "no_description_available": "No description available",
+    "no_description_available": "No description available.",
     "plan": "Plan",
     "altitude": "Altitude",
     "capacity": "Capacity",
@@ -334,13 +342,15 @@ onMounted(async () => {
     "send_intention": "Send intention",
     "explain_plan_functionality": "Here you can express the intention to go to a bivouac and know how many
         people have expressed the intention to go to the same bivouac on the
-        various days."
+        various days.",
+    "explain_your_intentions": "You have not expressed any intentions yet. Use the form above to plan your visit.",
+    "explain_other_intentions": "No one has expressed intentions yet. Be the first to plan your visit!"
   },
   "it": {
     "description": "Descrizione",
     "additional_info": "Informazioni aggiuntive",
     "affluence": "Affluenza",
-    "no_description_available": "Nessuna descrizione disponibile",
+    "no_description_available": "Nessuna descrizione disponibile.",
     "plan": "Pianifica",
     "altitude": "Altitudine",
     "capacity": "Capacità",
@@ -356,13 +366,15 @@ onMounted(async () => {
     "send_intention": "Invia intenzione",
     "explain_plan_functionality": "Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
         persone hanno espresso l'intenzione di andare nello stesso bivacco nei
-        vari giorni."
+        vari giorni.",
+    "explain_your_intentions": "Non hai ancora espresso intenzioni. Usa il modulo sopra per pianificare la tua visita.",
+    "explain_other_intentions": "Nessuno ha ancora espresso intenzioni. Sii il primo a pianificare la tua visita!"
   },
   "es": {
     "description": "Descripción",
     "additional_info": "Información adicional",
     "affluence": "Afluencia",
-    "no_description_available": "No hay descripción disponible",
+    "no_description_available": "No hay descripción disponible.",
     "plan": "Planificar",
     "altitude": "Altitud",
     "capacity": "Capacidad",
@@ -378,7 +390,9 @@ onMounted(async () => {
     "send_intention": "Enviar intención",
     "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
         personas han expresado la intención de ir al mismo bivouac en los
-        varios días."
+        varios días.",
+    "explain_your_intentions": "Aún no has expresado intenciones. Usa el formulario de arriba para planificar tu visita.",
+    "explain_other_intentions": "Nadie ha expresado intenciones todavía. ¡Sé el primero en planificar tu visita!"
   }
 }
 </i18n>

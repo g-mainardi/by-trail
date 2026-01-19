@@ -1,14 +1,11 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent } from '@/components/ui/card';
+import CardTitle from '@/components/ui/card/CardTitle.vue';
 import H2 from '@/layouts/typography/H2.vue';
+import { placeholderRoute } from '@/services/placeholders';
 import { type Route } from '@/types';
-import {
-  Clock as ClockIcon,
-  Map as MapIcon,
-  MapPin as MapPinIcon,
-  TrendingDown as TrendingDownIcon,
-  TrendingUp as TrendingUpIcon,
-} from 'lucide-vue-next';
+import { X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -41,63 +38,27 @@ const getDifficultyColor = (diff: string) => {
       return 'text-gray-600';
   }
 };
-const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
 </script>
 
 <template>
   <Card class="p-4 gap-4 h-full flex flex-col">
-    <CardContent class="px-0 flex-1 flex flex-col">
-      <div class="relative w-full mb-2">
-        <img
-          :src="placeholder"
-          :alt="`${route.title} image`"
-          class="w-full rounded-sm object-cover"
-        />
-      </div>
-      <RouterLink :to="`/routes/${route._id}`" aria-label="View Route Details">
+    <RouterLink :to="`/route/${route._id}`" aria-label="View Route Details">
+      <CardTitle>
+        <div class="relative w-full mb-2">
+          <img
+            :src="placeholderRoute"
+            :alt="`${route.title} image`"
+            class="w-full rounded-sm object-cover"
+          />
+        </div>
         <H2>{{ route.title }}</H2>
-      </RouterLink>
-      <span class="text-xs text-muted-foreground uppercase tracking-wide">
-        {{ route.region && route.region.length ? route.region[0] : '-' }}
-      </span>
-      <div class="grid grid-cols-3 gap-2 mt-2">
-        <div class="info">
-          <span class="value" :class="getDifficultyColor(route.difficulty)">{{
-            route.difficulty
-          }}</span>
-          <span class="label">{{ t('difficulty') }}</span>
-        </div>
-
-        <div class="info">
-          <TrendingUpIcon />
-          <span class="value">{{ route.ascent }}</span>
-          <span class="label">{{ t('ascent') }}</span>
-        </div>
-
-        <div class="info">
-          <TrendingDownIcon />
-          <span class="value">{{ route.descent }}</span>
-          <span class="label">{{ t('descent') }}</span>
-        </div>
-
-        <div class="info">
-          <ClockIcon />
-          <span class="value">{{ formatDuration(route.duration) }}</span>
-          <span class="label">{{ t('duration') }}</span>
-        </div>
-
-        <div class="info">
-          <MapIcon />
-          <span class="value">{{ route.distance }}km</span>
-          <span class="label">{{ t('distance') }}</span>
-        </div>
-
-        <div class="info">
-          <MapPinIcon />
-          <span class="value">{{ route.routeType }}</span>
-          <span class="label">{{ t('routeType') }}</span>
-        </div>
-      </div>
+      </CardTitle>
+    </RouterLink>
+    <CardContent class="px-0 gap-2 flex flex-col md:justify-between">
+      <Button variant="destructive" @click="$emit('remove', route._id)">
+        <X />
+        {{ t('remove') }}
+      </Button>
     </CardContent>
   </Card>
 </template>
@@ -136,7 +97,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "descent": "Elevation Loss",
     "duration": "Duration",
     "distance": "Distance",
-    "routeType": "Route Type"
+    "routeType": "Route Type",
+    "remove": "Remove"
   },
   "it": {
     "view": "Dettagli",
@@ -146,7 +108,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "descent": "Dislivello Negativo",
     "duration": "Tempo",
     "distance": "Distanza",
-    "routeType": "Tipo di percorso"
+    "routeType": "Tipo di percorso",
+    "remove": "Rimuovi"
   },
   "es": {
     "view": "Detalles",
@@ -156,7 +119,8 @@ const placeholder = new URL('@/assets/placeholder.jpg', import.meta.url).href;
     "descent": "Desnivel Negativo",
     "duration": "Tiempo",
     "distance": "Distancia",
-    "routeType": "Tipo de ruta"
+    "routeType": "Tipo de ruta",
+    "remove": "Eliminar"
   }
 }
 </i18n>
