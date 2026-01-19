@@ -65,7 +65,6 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
     const res = await Reservation.findOne({
       _id: intentionId,
     }).exec();
-    console.log(' -->> ', res);
 
     await Reservation.deleteMany({
       _id: intentionId,

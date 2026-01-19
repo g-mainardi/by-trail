@@ -201,7 +201,6 @@ proposalSchema.index(
 const User = mongoose.model<UserDocument>('User', userSchema);
 const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
 const Route = mongoose.model<RouteDocument>('Route', routeSchema);
-Route.schema.index({ path: '2dsphere' }); // 2dsphere index for geospatial queries
 const Image = mongoose.model('Image', imageSchema);
 const Reservation = mongoose.model('Reservation', reservationSchema);
 const Setting = mongoose.model('Setting', settingSchema);

@@ -11,11 +11,22 @@ export const useAuthStore = defineStore('auth', () => {
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
 
-  const userStr = localStorage.getItem('user');
-  const user = userStr ? JSON.parse(userStr) : null;
+  const safeParse = (key: string) => {
+    const item = localStorage.getItem(key);
+    if (item && item !== 'undefined' && item !== 'null') {
+      try {
+        return JSON.parse(item);
+      } catch (error) {
+        console.warn(`Errore nel parsing di ${key}, rimuovo il dato corrotto.`);
+        localStorage.removeItem(key);
+        return null;
+      }
+    }
+    return null;
+  };
 
-  const tokenStr = localStorage.getItem('token');
-  const token = tokenStr ? JSON.parse(tokenStr) : null;
+  const user = ref<User | null>(safeParse('user'));
+  const token = ref<string | null>(safeParse('token'));
 
   const error = ref<string | null>(null);
   const isLoading = ref(false);
