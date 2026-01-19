@@ -125,11 +125,11 @@ const columns = [
     accessorKey: 'duration',
   },
   {
-    header: t('type'),
-    accessorKey: 'type',
+    header: t('route_type'),
+    accessorKey: 'routeType',
   },
   {
-    header: t('path'),
+    header: t('path_type'),
     accessorKey: 'path',
   },
   {
@@ -169,12 +169,6 @@ const columns = [
           {{ t('title') }}
           <ArrowUpDown class="ml-2 h-4 w-4" />
         </Button>
-      </template>
-      <template #header-type>
-        {{ t('route_type') }}
-      </template>
-      <template #header-path>
-        {{ t('path_type') }}
       </template>
       <template #cell-title="{ row }">
         <span class="font-medium pl-4">{{ row.title }}</span>

@@ -5,8 +5,10 @@ import {
   type Region,
   type Route,
   type RouteDifficulty,
+  type RouteType,
   RegionsEnum,
   RouteDifficultyEnum,
+  RouteTypeEnum,
 } from '@/types';
 
 import { Input } from '@/components/ui/input';
@@ -68,11 +70,6 @@ const handleSave = async () => {
   onClose();
 };
 
-const onOpen = () => {
-  updates.value = {};
-  emit('update:open', true);
-};
-
 const onClose = () => {
   updates.value = {};
   emit('update:open', false);
@@ -85,7 +82,7 @@ const onClose = () => {
     @update:open="
       (val) => {
         if (!val) onClose();
-        else onOpen();
+        else emit('update:open', true);
       }
     "
   >
@@ -134,27 +131,51 @@ const onClose = () => {
             </Select>
           </div>
 
-          <div class="grid w-full items-center gap-1.5">
-            <Label>{{ t('difficulty') }}</Label>
-            <Select
-              :model-value="updates.difficulty ?? route.difficulty"
-              @update:modelValue="
-                (val) => handleChange('difficulty', val as RouteDifficulty)
-              "
-            >
-              <SelectTrigger>
-                <SelectValue :placeholder="t('select_difficulty')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  v-for="difficulty in Object.values(RouteDifficultyEnum)"
-                  :key="difficulty"
-                  :value="difficulty"
-                >
-                  {{ difficulty }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="grid w-full items-center gap-1.5">
+              <Label>{{ t('route_type') }}</Label>
+              <Select
+                :model-value="updates.routeType ?? route.routeType"
+                @update:modelValue="
+                  (val) => handleChange('routeType', val as RouteType)
+                "
+              >
+                <SelectTrigger>
+                  <SelectValue :placeholder="t('select_route_type')" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem
+                    v-for="routeType in Object.values(RouteTypeEnum)"
+                    :key="routeType"
+                    :value="routeType"
+                  >
+                    {{ routeType }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="grid w-full items-center gap-1.5">
+              <Label>{{ t('difficulty') }}</Label>
+              <Select
+                :model-value="updates.difficulty ?? route.difficulty"
+                @update:modelValue="
+                  (val) => handleChange('difficulty', val as RouteDifficulty)
+                "
+              >
+                <SelectTrigger>
+                  <SelectValue :placeholder="t('select_difficulty')" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem
+                    v-for="difficulty in Object.values(RouteDifficultyEnum)"
+                    :key="difficulty"
+                    :value="difficulty"
+                  >
+                    {{ difficulty }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -197,7 +218,7 @@ const onClose = () => {
                 id="descent"
                 type="number"
                 min="0"
-                :model-value="route.ascent"
+                :model-value="route.descent"
                 @change="handleChange('descent', Number($event.target.value))"
               />
             </div>
@@ -238,6 +259,8 @@ const onClose = () => {
     "title": "Title",
     "region": "Region",
     "select_region": "Select a region",
+    "route_type": "Route Type",
+    "select_route_type": "Select route type",
     "difficulty": "Difficulty",
     "select_difficulty": "Select difficulty",
     "distance": "Distance (m)",
@@ -254,6 +277,8 @@ const onClose = () => {
     "title": "Titolo",
     "region": "Regione",
     "select_region": "Seleziona una regione",
+    "route_type": "Tipo di Percorso",
+    "select_route_type": "Seleziona tipo di percorso",
     "difficulty": "Difficoltà",
     "select_difficulty": "Seleziona difficoltà",
     "distance": "Distanza (m)",
@@ -270,6 +295,8 @@ const onClose = () => {
     "title": "Título",
     "region": "Región",
     "select_region": "Selecciona una región",
+    "route_type": "Tipo de Ruta",
+    "select_route_type": "Selecciona tipo de ruta",
     "difficulty": "Dificultad",
     "select_difficulty": "Selecciona dificultad",
     "distance": "Distancia (m)",
