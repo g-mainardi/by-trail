@@ -94,7 +94,6 @@ export interface Bivouac {
   };
   altitude?: number;
   capacity?: number;
-  likes?: number;
   note?: string;
 }
 
@@ -109,7 +108,6 @@ export interface Route {
   descent: number;
   duration: number;
   routeType: RouteType;
-  likes?: number;
   note?: string;
   path?: {
     type: RoutePathType;
