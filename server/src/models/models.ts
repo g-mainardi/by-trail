@@ -60,7 +60,6 @@ const bivouacSchema = new Schema(
     },
     altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
-    likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
   },
   {
@@ -97,7 +96,6 @@ const routeSchema = new Schema(
       enum: Object.values(RouteTypeEnum),
       required: true,
     },
-    likes: { type: Number, default: 0, min: 0 },
     note: { type: String },
     path: {
       type: {
