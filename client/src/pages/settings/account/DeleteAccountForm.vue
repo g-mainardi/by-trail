@@ -51,19 +51,19 @@ const handleDeleteAccount = async () => {
     "en": {
       "password": "Enter your password to confirm the deletion",
       "password_placeholder": "Enter your password here",
-      "delete_account_button": "Account Deleted",
+      "delete_account_button": "Delete account",
       "successful": "successfully"
     },
     "it": {
       "password": "Inserisci la tua password per confermare l'eliminazione",
       "password_placeholder": "Inserisci qui la tua password",
-      "delete_account_button": "Account eliminato",
+      "delete_account_button": "Elimina account",
       "successful": "riuscito"
     },
     "es": {
       "password": "Introduce tu contraseña para confirmar la eliminación",
       "password_placeholder": "Introduce tu contraseña aquí",
-      "delete_account_button": "Cuenta eliminada",
+      "delete_account_button": "Eliminar cuenta",
       "successful": "exitosamente"
     }
   }

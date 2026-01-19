@@ -29,6 +29,7 @@ onMounted(async () => {
 async function handleRemove(id: string | undefined) {
   if (!id) return;
   await favoriteStore.deleteFavoriteRoute(id);
+  await favoriteStore.fetchFavoriteRoutes();
   favoriteRoutes.value = favoriteStore.routeFavorites;
 }
 </script>
