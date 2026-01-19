@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Save } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
+import { isEqual } from './utils';
 
 const props = defineProps<{
   open: boolean;
@@ -37,15 +38,25 @@ const { t } = useI18n();
 const wrapCoordChange = (key: 'latitude' | 'longitude', value: number) => {
   return {
     ...(props.bivouac?.coords || { latitude: 0, longitude: 0 }),
-    [key]: value,
+    [key]: Number(value),
   };
 };
 
 const handleChange = <K extends keyof Bivouac>(field: K, value: Bivouac[K]) => {
-  updates.value = {
-    ...updates.value,
-    [field]: value,
-  };
+  const originalValue = props.bivouac ? props.bivouac[field] : undefined;
+
+  if (isEqual(originalValue, value)) {
+    // Value matches original (either primitive or object content), remove pending update
+    const newUpdates = { ...updates.value };
+    delete newUpdates[field];
+    updates.value = newUpdates;
+  } else {
+    // Value is actually different, save it
+    updates.value = {
+      ...updates.value,
+      [field]: value,
+    };
+  }
 };
 
 const handleSave = async () => {
@@ -134,7 +145,7 @@ const handleSave = async () => {
                 @change="
                   handleChange(
                     'coords',
-                    wrapCoordChange('latitude', $event.target.value)
+                    wrapCoordChange('latitude', Number($event.target.value))
                   )
                 "
               />
@@ -149,7 +160,7 @@ const handleSave = async () => {
                 @change="
                   handleChange(
                     'coords',
-                    wrapCoordChange('longitude', $event.target.value)
+                    wrapCoordChange('longitude', Number($event.target.value))
                   )
                 "
               />
@@ -163,7 +174,7 @@ const handleSave = async () => {
                 id="altitude"
                 type="number"
                 :model-value="bivouac.altitude"
-                @change="handleChange('altitude', $event.target.value)"
+                @change="handleChange('altitude', Number($event.target.value))"
               />
             </div>
             <div class="grid w-full items-center gap-1.5">
@@ -173,7 +184,7 @@ const handleSave = async () => {
                 type="number"
                 min="0"
                 :model-value="bivouac.capacity"
-                @change="handleChange('capacity', $event.target.value)"
+                @change="handleChange('capacity', Number($event.target.value))"
               />
             </div>
           </div>
@@ -193,7 +204,7 @@ const handleSave = async () => {
 
         <Button
           @click="handleSave()"
-          :disabled="isLoading"
+          :disabled="isLoading || Object.keys(updates).length === 0"
           size="lg"
           class="w-full sm:w-auto"
         >

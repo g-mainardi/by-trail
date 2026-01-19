@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { type Route, RegionsEnum, RouteDifficultyEnum } from '@/types';
+import {
+  type Region,
+  type Route,
+  type RouteDifficulty,
+  RegionsEnum,
+  RouteDifficultyEnum,
+} from '@/types';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +28,7 @@ import {
 } from '@/components/ui/select';
 import { Save } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
+import { isEqual } from './utils';
 
 const props = defineProps<{
   open: boolean;
@@ -35,10 +42,20 @@ const updates = ref<Partial<Route>>({});
 const { t } = useI18n();
 
 const handleChange = <K extends keyof Route>(field: K, value: Route[K]) => {
-  updates.value = {
-    ...updates.value,
-    [field]: value,
-  };
+  const originalValue = props.route ? props.route[field] : undefined;
+
+  if (isEqual(originalValue, value)) {
+    // Value matches original (either primitive or object content), remove pending update
+    const newUpdates = { ...updates.value };
+    delete newUpdates[field];
+    updates.value = newUpdates;
+  } else {
+    // Value is actually different, save it
+    updates.value = {
+      ...updates.value,
+      [field]: value,
+    };
+  }
 };
 
 const handleSave = async () => {
@@ -78,12 +95,9 @@ const handleSave = async () => {
           <div class="grid w-full items-center gap-1.5">
             <Label>{{ t('region') }}</Label>
             <Select
-              :model-value="route.region"
-              @value-change="
-                handleChange(
-                  'region',
-                  Array.isArray($event) ? $event : [$event]
-                )
+              :model-value="updates.region ?? route.region"
+              @update:model-value="
+                (val) => handleChange('region', val as Region[])
               "
               multiple
             >
@@ -105,8 +119,10 @@ const handleSave = async () => {
           <div class="grid w-full items-center gap-1.5">
             <Label>{{ t('difficulty') }}</Label>
             <Select
-              :model-value="route.difficulty"
-              @value-change="handleChange('difficulty', $event)"
+              :model-value="updates.difficulty ?? route.difficulty"
+              @update:modelValue="
+                (val) => handleChange('difficulty', val as RouteDifficulty)
+              "
             >
               <SelectTrigger>
                 <SelectValue :placeholder="t('select_difficulty')" />
@@ -131,7 +147,7 @@ const handleSave = async () => {
                 type="number"
                 min="0"
                 :model-value="route.distance"
-                @change="handleChange('distance', $event.target.value)"
+                @change="handleChange('distance', Number($event.target.value))"
               />
             </div>
             <div class="grid w-full items-center gap-1.5">
@@ -141,7 +157,7 @@ const handleSave = async () => {
                 type="number"
                 min="0"
                 :model-value="route.duration"
-                @change="handleChange('duration', $event.target.value)"
+                @change="handleChange('duration', Number($event.target.value))"
               />
             </div>
           </div>
@@ -154,7 +170,7 @@ const handleSave = async () => {
                 type="number"
                 min="0"
                 :model-value="route.ascent"
-                @change="handleChange('ascent', $event.target.value)"
+                @change="handleChange('ascent', Number($event.target.value))"
               />
             </div>
             <div class="grid w-full items-center gap-1.5">
@@ -164,7 +180,7 @@ const handleSave = async () => {
                 type="number"
                 min="0"
                 :model-value="route.ascent"
-                @change="handleChange('descent', $event.target.value)"
+                @change="handleChange('descent', Number($event.target.value))"
               />
             </div>
           </div>
@@ -184,7 +200,7 @@ const handleSave = async () => {
 
         <Button
           @click="handleSave()"
-          :disabled="isLoading"
+          :disabled="isLoading || Object.keys(updates).length === 0"
           size="lg"
           class="w-full sm:w-auto"
         >
