@@ -7,7 +7,7 @@ export interface UserDocument extends User {
 export interface BivouacDocument extends Bivouac {}
 export interface RouteDocument extends Route {}
 export interface ProposalDocument extends Proposal {
-  senderId: string;
+  sender: string;
 }
 
 export interface AuthRequest extends Request {
