@@ -69,11 +69,6 @@ const handleSave = async () => {
   emit('update:open', false);
 };
 
-const onOpen = () => {
-  updates.value = {};
-  emit('update:open', true);
-};
-
 const onClose = () => {
   updates.value = {};
   emit('update:open', false);
@@ -86,7 +81,7 @@ const onClose = () => {
     @update:open="
       (val) => {
         if (!val) onClose();
-        else onOpen();
+        else emit('update:open', true);
       }
     "
   >
