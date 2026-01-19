@@ -1,12 +1,12 @@
 import type { Response } from 'express';
 import {
-  EXCLUDED_UPDATE_FIELDS,
   PathObj,
+  RoutePathType,
   RoutePathTypeEnum,
   UserStatusEnum,
   UserTypeEnum,
 } from '../types/index.js';
-import { AuthRequest } from '../types/server_only.js';
+import { AuthRequest, EXCLUDED_UPDATE_FIELDS } from '../types/server_only.js';
 import { User, Bivouac, Route } from '../models/models.js';
 import mongoose from 'mongoose';
 
@@ -177,12 +177,19 @@ export const updateRoute = async (req: AuthRequest, res: Response) => {
         }
         sanitizedUpdates[key] = value;
       } else if (key === 'path') {
-        const pathObj = value as PathObj;
+        // Validate that value is a non-null object with a valid type before casting
         if (
-          !pathObj ||
-          !Object.values(RoutePathTypeEnum).includes(pathObj.type)
-        )
+          !value ||
+          typeof value !== 'object' ||
+          Array.isArray(value) ||
+          !('type' in (value as Record<string, unknown>)) ||
+          !Object.values(RoutePathTypeEnum).includes(
+            (value as { type: RoutePathType }).type
+          )
+        ) {
           return res.status(400).json({ error: 'Invalid path type' });
+        }
+        const pathObj = value as PathObj;
         const pathType = pathObj.type;
         // Do not allow updating coordinates
         sanitizedUpdates['path'] = {
