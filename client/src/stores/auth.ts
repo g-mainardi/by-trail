@@ -11,11 +11,24 @@ export const useAuthStore = defineStore('auth', () => {
   const isAccountDeleteFailed = ref(false);
   const accountDeleteMessage = ref<string>('');
 
-  const userStr = localStorage.getItem('user');
-  const user = userStr ? JSON.parse(userStr) : null;
+  // Funzione helper per fare il parse sicuro
+  const safeParse = (key: string) => {
+    const item = localStorage.getItem(key);
+    // Controllo se esiste E se non è la stringa "undefined"
+    if (item && item !== 'undefined' && item !== 'null') {
+      try {
+        return JSON.parse(item);
+      } catch (error) {
+        console.warn(`Errore nel parsing di ${key}, rimuovo il dato corrotto.`);
+        localStorage.removeItem(key); // Rimuove il dato corrotto per il futuro
+        return null;
+      }
+    }
+    return null;
+  };
 
-  const tokenStr = localStorage.getItem('token');
-  const token = tokenStr ? JSON.parse(tokenStr) : null;
+  const user = ref(safeParse('user')); // Usa ref se vuoi reattività, o lascia const se statico
+  const token = ref(safeParse('token')); // Idem
 
   const error = ref<string | null>(null);
   const isLoading = ref(false);
