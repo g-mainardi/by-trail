@@ -68,10 +68,28 @@ const handleSave = async () => {
   }
   emit('update:open', false);
 };
+
+const onOpen = () => {
+  updates.value = {};
+  emit('update:open', true);
+};
+
+const onClose = () => {
+  updates.value = {};
+  emit('update:open', false);
+};
 </script>
 
 <template>
-  <Sheet :open="open" @update:open="$emit('update:open', $event)">
+  <Sheet
+    :open="open"
+    @update:open="
+      (val) => {
+        if (!val) onClose();
+        else onOpen();
+      }
+    "
+  >
     <SheetContent class="overflow-y-auto sm:max-w-md">
       <SheetHeader>
         <SheetTitle>{{ t('edit_bivouac') }}</SheetTitle>
