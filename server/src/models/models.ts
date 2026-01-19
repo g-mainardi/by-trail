@@ -123,16 +123,21 @@ const imageSchema = new Schema({
 });
 
 // RESERVATION
-const reservationSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  bivouac: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Bivouac',
-    required: true,
+const reservationSchema = new Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    bivouac: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Bivouac',
+      required: true,
+    },
+    reservedPlaces: { type: Number, required: true },
+    reservationDate: { type: Date, default: Date.now },
   },
-  reservedPlaces: { type: Number, required: true },
-  reservationDate: { type: Date, default: Date.now },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // SETTING
 const settingSchema = new Schema({
@@ -153,7 +158,9 @@ const notificationSchema = new Schema(
       type: String,
       enum: [
         'bivouac_reservation',
-        'bivouac_update',
+        'bivouac_reservation_update',
+        'bivouac_reservation_delete',
+        'bivouac_reservation_users',
         'route_reservation',
         'weather_alert',
       ],

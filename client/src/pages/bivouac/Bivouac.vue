@@ -66,9 +66,11 @@ async function updateIntentions() {
 }
 
 const sendIntention = async () => {
+  const dateString = selectedDate.value.toString();
+
   const res = await intentionStore.sendIntention(
     bivouac.value?._id || '',
-    selectedDate.value.toDate(getLocalTimeZone()),
+    dateString,
     people.value
   );
   if (res.success) {
@@ -191,7 +193,7 @@ onMounted(async () => {
                 {{ intention.reservedPlaces }} people.
               </span>
               <Button
-                class="rounded-full"
+                class="rounded-full cursor-pointer"
                 variant="destructive"
                 :size="'icon'"
                 @click="cancelIntention(intention._id || '')"
