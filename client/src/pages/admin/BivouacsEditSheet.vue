@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useAdminStore } from '@/stores/admin';
 import { type Bivouac, RegionsEnum } from '@/types';
 
 import { Input } from '@/components/ui/input';
@@ -21,58 +20,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-vue-next';
+import { Save } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
 
 const props = defineProps<{
   open: boolean;
   bivouac: Bivouac | null;
+  isLoading?: boolean;
 }>();
 
-const emit = defineEmits(['update:open']);
+const emit = defineEmits(['update:open', 'update:message', 'save']);
+const updates = ref<Partial<Bivouac>>({});
 
 const { t } = useI18n();
-const store = useAdminStore();
 
-// Local state to track which field is being saved
-const savingField = ref<string | null>(null);
+const handleChange = (field: string, value: any) => {
+  updates.value = {
+    ...updates.value,
+    [field]: value,
+  };
+};
 
-const onAutoSave = async (
-  key: keyof Bivouac | 'latitude' | 'longitude',
-  value: any
-) => {
-  if (!props.bivouac) return;
-  if (key === 'capacity' && Number(value) < 0) return;
-  const id = props.bivouac.id || props.bivouac._id || '';
-
-  savingField.value = key;
-
-  let payload: Partial<Bivouac> = {};
-
-  // Handle coordinates separately
-  if (key === 'latitude' || key === 'longitude') {
-    payload = {
-      coords: {
-        latitude: props.bivouac.coords?.latitude ?? 0,
-        longitude: props.bivouac.coords?.longitude ?? 0,
-        [key]: Number(value),
-      },
-    };
+const handleSave = async () => {
+  if (!updates.value) {
+    emit('update:message', { error: true, message: t('error_occurred') });
+  } else if (Number(updates.value.capacity) < 0) {
+    emit('update:message', {
+      error: true,
+      message: t('capacity_must_be_positive'),
+    });
   } else {
-    // Other fields
-    payload = { [key]: value };
+    emit('update:message', { error: false, message: t('changes_saved') });
+    emit('save', {
+      id: props.bivouac?.id || props.bivouac?._id || '',
+      updates: updates.value,
+    });
   }
-
-  try {
-    await store.updateBivouac(id, payload);
-
-    // Reset savingField after a short delay on success
-    setTimeout(() => {
-      savingField.value = null;
-    }, 1000);
-  } catch (error) {
-    console.error('Failed to auto-save bivouac changes:', error);
-    savingField.value = null;
-  }
+  emit('update:open', false);
 };
 </script>
 
@@ -81,159 +65,131 @@ const onAutoSave = async (
     <SheetContent class="overflow-y-auto sm:max-w-md">
       <SheetHeader>
         <SheetTitle>{{ t('edit_bivouac') }}</SheetTitle>
-        <SheetDescription>{{ t('auto_save_notice') }}</SheetDescription>
+        <SheetDescription>
+          {{ t('edit_bivouac_description') }}
+        </SheetDescription>
       </SheetHeader>
 
-      <div v-if="bivouac" class="grid gap-4 py-4">
-        <div class="grid w-full items-center gap-1.5">
-          <div class="flex justify-between">
-            <Label for="name">{{ t('name') }}</Label>
-            <span
-              v-if="savingField === 'name'"
-              class="text-xs text-muted-foreground flex items-center"
+      <div class="flex flex-col px-4 gap-4">
+        <div v-if="bivouac" class="flex flex-col gap-4">
+          <div class="grid w-full items-center gap-1.5">
+            <div class="flex justify-between">
+              <Label for="name">{{ t('name') }}</Label>
+            </div>
+            <Input
+              id="name"
+              :model-value="bivouac.name"
+              @change="handleChange('name', $event.target.value)"
+            />
+          </div>
+
+          <div class="grid w-full items-center gap-1.5">
+            <Label>{{ t('region') }}</Label>
+            <Select
+              :model-value="bivouac.region"
+              @value-change="handleChange('region', $event)"
             >
-              <Loader2 class="h-3 w-3 animate-spin mr-1" /> {{ t('saving') }}
-            </span>
+              <SelectTrigger>
+                <SelectValue :placeholder="t('select_region')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="region in Object.values(RegionsEnum)"
+                  :key="region"
+                  :value="region"
+                >
+                  {{ region }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Input
-            id="name"
-            :model-value="bivouac.name"
-            @change="
-              onAutoSave('name', ($event.target as HTMLInputElement).value)
-            "
-          />
-        </div>
 
-        <div class="grid w-full items-center gap-1.5">
-          <Label>{{ t('region') }}</Label>
-          <Select
-            :model-value="bivouac.region"
-            @update:model-value="(val) => onAutoSave('region', val)"
-          >
-            <SelectTrigger>
-              <SelectValue :placeholder="t('select_region')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="region in Object.values(RegionsEnum)"
-                :key="region"
-                :value="region"
-              >
-                {{ region }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div class="grid w-full items-center gap-1.5">
-          <Label for="mountainRange">{{ t('mountainRange') }}</Label>
-          <Input
-            id="mountainRange"
-            :model-value="bivouac.mountainRange"
-            @change="
-              onAutoSave(
-                'mountainRange',
-                ($event.target as HTMLInputElement).value
-              )
-            "
-          />
-        </div>
-
-        <div class="grid w-full items-center gap-1.5">
-          <Label for="comune">{{ t('comune') }}</Label>
-          <Input
-            id="comune"
-            :model-value="bivouac.comune"
-            @change="
-              onAutoSave('comune', ($event.target as HTMLInputElement).value)
-            "
-          />
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
           <div class="grid w-full items-center gap-1.5">
-            <Label for="lat">{{ t('latitude') }}</Label>
+            <Label for="mountainRange">{{ t('mountainRange') }}</Label>
             <Input
-              id="lat"
-              type="number"
-              step="any"
-              :model-value="bivouac.coords?.latitude"
-              @change="
-                onAutoSave(
-                  'latitude',
-                  ($event.target as HTMLInputElement).value
-                )
-              "
+              id="mountainRange"
+              :model-value="bivouac.mountainRange"
+              @change="handleChange('mountainRange', $event.target.value)"
             />
           </div>
-          <div class="grid w-full items-center gap-1.5">
-            <Label for="lng">{{ t('longitude') }}</Label>
-            <Input
-              id="lng"
-              type="number"
-              step="any"
-              :model-value="bivouac.coords?.longitude"
-              @change="
-                onAutoSave(
-                  'longitude',
-                  ($event.target as HTMLInputElement).value
-                )
-              "
-            />
-          </div>
-        </div>
 
-        <div class="grid grid-cols-2 gap-4">
           <div class="grid w-full items-center gap-1.5">
-            <Label for="altitude">{{ t('altitude') }}</Label>
+            <Label for="comune">{{ t('comune') }}</Label>
             <Input
-              id="altitude"
-              type="number"
-              :model-value="bivouac.altitude"
-              @change="
-                onAutoSave(
-                  'altitude',
-                  Number(($event.target as HTMLInputElement).value)
-                )
-              "
+              id="comune"
+              :model-value="bivouac.comune"
+              @change="handleChange('comune', $event.target.value)"
             />
           </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="grid w-full items-center gap-1.5">
+              <Label for="lat">{{ t('latitude') }}</Label>
+              <Input
+                id="lat"
+                type="number"
+                step="any"
+                :model-value="bivouac.coords?.latitude"
+                @change="handleChange('coords.latitude', $event.target.value)"
+              />
+            </div>
+            <div class="grid w-full items-center gap-1.5">
+              <Label for="lng">{{ t('longitude') }}</Label>
+              <Input
+                id="lng"
+                type="number"
+                step="any"
+                :model-value="bivouac.coords?.longitude"
+                @change="handleChange('coords.longitude', $event.target.value)"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="grid w-full items-center gap-1.5">
+              <Label for="altitude">{{ t('altitude') }}</Label>
+              <Input
+                id="altitude"
+                type="number"
+                :model-value="bivouac.altitude"
+                @change="handleChange('altitude', $event.target.value)"
+              />
+            </div>
+            <div class="grid w-full items-center gap-1.5">
+              <Label for="capacity">{{ t('capacity') }}</Label>
+              <Input
+                id="capacity"
+                type="number"
+                min="0"
+                :model-value="bivouac.capacity"
+                @change="handleChange('capacity', $event.target.value)"
+              />
+            </div>
+          </div>
+
           <div class="grid w-full items-center gap-1.5">
-            <Label for="capacity">{{ t('capacity') }}</Label>
-            <Input
-              id="capacity"
-              type="number"
-              min="0"
-              :model-value="bivouac.capacity"
-              @change="
-                onAutoSave(
-                  'capacity',
-                  Number(($event.target as HTMLInputElement).value)
-                )
-              "
+            <div class="flex justify-between">
+              <Label for="note">{{ t('note') }}</Label>
+            </div>
+            <Textarea
+              id="note"
+              :model-value="bivouac.note"
+              @change="handleChange('note', $event.target.value)"
+              class="min-h-[100px]"
             />
           </div>
         </div>
 
-        <div class="grid w-full items-center gap-1.5">
-          <div class="flex justify-between">
-            <Label for="note">{{ t('note') }}</Label>
-            <span
-              v-if="savingField === 'note'"
-              class="text-xs text-muted-foreground flex items-center"
-            >
-              <Loader2 class="h-3 w-3 animate-spin mr-1" /> {{ t('saving') }}
-            </span>
-          </div>
-          <Textarea
-            id="note"
-            :model-value="bivouac.note"
-            class="min-h-[100px]"
-            @change="
-              onAutoSave('note', ($event.target as HTMLTextAreaElement).value)
-            "
-          />
-        </div>
+        <Button
+          @click="handleSave()"
+          :disabled="isLoading"
+          size="lg"
+          class="w-full sm:w-auto"
+        >
+          <Save class="w-4 h-4 mr-2" />
+          <span v-if="isLoading">{{ t('saving') }}</span>
+          <span v-else>{{ t('save_modifications') }}</span>
+        </Button>
       </div>
     </SheetContent>
   </Sheet>
@@ -242,7 +198,7 @@ const onAutoSave = async (
 {
   "en": {
     "edit_bivouac": "Edit Bivouac",
-    "auto_save_notice": "Changes are saved automatically.",
+    "edit_bivouac_description": "Remember to save the modifications with the button at the end of the sheet.",
     "name": "Name",
     "region": "Region",
     "altitude": "Altitude",
@@ -253,11 +209,15 @@ const onAutoSave = async (
     "comune": "Comune",
     "latitude": "Latitude",
     "longitude": "Longitude",
-    "select_region": "Select Region"  
+    "select_region": "Select Region",
+    "save_modifications": "Save Changes",
+    "error_occurred": "An error occurred.",
+    "capacity_must_be_positive": "Capacity must be a positive number.",
+    "changes_saved": "Changes saved successfully."
   },
   "it": {
     "edit_bivouac": "Modifica Bivacco",
-    "auto_save_notice": "Le modifiche vengono salvate automaticamente.",
+    "edit_bivouac_description": "Ricorda di salvare le modifiche con il pulsante in fondo alla scheda.",
     "name": "Nome",
     "region": "Regione",
     "altitude": "Altitudine",
@@ -268,11 +228,15 @@ const onAutoSave = async (
     "comune": "Comune",
     "latitude": "Latitudine",
     "longitude": "Longitudine",
-    "select_region": "Seleziona Regione"
+    "select_region": "Seleziona Regione",
+    "save_modifications": "Salva Modifiche",
+    "error_occurred": "Si è verificato un errore.",
+    "capacity_must_be_positive": "La capacità deve essere un numero positivo.",
+    "changes_saved": "Modifiche salvate con successo."
   },
   "es": {
     "edit_bivouac": "Editar Vivac",
-    "auto_save_notice": "Los cambios se guardan automáticamente.",
+    "edit_bivouac_description": "Recuerda guardar las modificaciones con el botón al final de la hoja.",
     "name": "Nombre",
     "region": "Región",
     "altitude": "Altitud",
@@ -283,7 +247,11 @@ const onAutoSave = async (
     "comune": "Municipio",
     "latitude": "Latitud",
     "longitude": "Longitud",
-    "select_region": "Seleccionar Región"
+    "select_region": "Seleccionar Región",
+    "save_modifications": "Guardar Cambios",
+    "error_occurred": "Ocurrió un error.",
+    "capacity_must_be_positive": "La capacidad debe ser un número positivo.",
+    "changes_saved": "Cambios guardados con éxito."
   }
 }
 </i18n>
