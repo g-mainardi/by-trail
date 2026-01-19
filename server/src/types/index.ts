@@ -1,6 +1,3 @@
-// Constants
-export const EXCLUDED_UPDATE_FIELDS = ['_id', '__v', 'createdAt', 'updatedAt'];
-
 // Enums
 export const UserStatusEnum = {
   ACTIVE: 'active',
