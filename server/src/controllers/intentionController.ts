@@ -90,12 +90,15 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
   }
+  if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
+    return res.status(400).json({ error: 'Invalid bivouac ID format' });
+  }
 
   const formattedDate = formatDateForDisplay(date);
 
   try {
     const targetBivouac = await Bivouac.findById(bivouacId);
-    const bivouacName = targetBivouac ? targetBivouac.name : 'the bivouac';
+    const bivouacName: string = targetBivouac?.name || 'the bivouac';
 
     const existingReservation = await Reservation.findOne({
       user: userId,
@@ -105,11 +108,11 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
 
     if (existingReservation) {
       // --- UPDATE EXISTING RESERVATION ---
-      try {
-        await Reservation.findByIdAndUpdate(existingReservation._id, {
-          $set: { reservedPlaces: people },
-        }).exec();
+      await Reservation.findByIdAndUpdate(existingReservation._id, {
+        $set: { reservedPlaces: people },
+      }).exec();
 
+      try {
         await sendNotification(
           userId,
           'bivouac_reservation_update',
@@ -123,11 +126,10 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
           new Date(date),
           userId,
           people,
-          bivouacName!
+          bivouacName
         );
-      } catch (updateError) {
-        console.error('Error updating intention:', updateError);
-        return res.status(500).json({ error: 'Internal server error' });
+      } catch (notifyError) {
+        console.error('Error sending update notifications:', notifyError);
       }
       console.log('Intention already exists, updated reserved places.');
       return res.status(200).json({ message: 'Intention updated' });
@@ -140,21 +142,25 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
         reservationDate: new Date(date),
       }).save();
 
-      await sendNotification(
-        userId,
-        'bivouac_reservation',
-        'success',
-        'Bivouac Intention Created',
-        `Your intention for ${bivouacName} on ${formattedDate} has been recorded for ${people}.`
-      );
+      try {
+        await sendNotification(
+          userId,
+          'bivouac_reservation',
+          'success',
+          'Bivouac Intention Created',
+          `Your intention for ${bivouacName} on ${formattedDate} has been recorded for ${people}.`
+        );
 
-      await notifyPeers(
-        bivouacId,
-        new Date(date),
-        userId,
-        people,
-        bivouacName!
-      );
+        await notifyPeers(
+          bivouacId,
+          new Date(date),
+          userId,
+          people,
+          bivouacName!
+        );
+      } catch (notifyError) {
+        console.error('Error sending creation notifications:', notifyError);
+      }
 
       return res.status(201).json({ message: 'Intention created' });
     }
@@ -187,26 +193,35 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
     if (!reservationToDelete) {
       return res.status(404).json({ error: 'Intention not found' });
     }
-    const bivName = (reservationToDelete.bivouac as any)?.name || 'the bivouac';
+
+    const populatedBivouac = reservationToDelete.bivouac as unknown as {
+      name: string;
+    } | null;
+    const bivName = populatedBivouac?.name || 'the bivouac';
+
     const formattedDate = formatDateForDisplay(
       reservationToDelete.reservationDate
     );
 
     await Reservation.deleteOne({ _id: intentionId }).exec();
 
-    await sendNotification(
-      userId,
-      'bivouac_reservation_delete',
-      'alert',
-      'Bivouac Intention Cancelled',
-      `Your intention for ${bivName} on ${formattedDate} has been cancelled.`
-    );
+    try {
+      await sendNotification(
+        userId,
+        'bivouac_reservation_delete',
+        'alert',
+        'Bivouac Intention Cancelled',
+        `Your intention for ${bivName} on ${formattedDate} has been cancelled.`
+      );
+    } catch (notifyError) {
+      console.error('Error sending deletion notification', notifyError);
+    }
+
+    return res.status(200).json({ message: 'Intention deleted' });
   } catch (error) {
     console.error('Error deleting intention:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
-
-  return res.status(200).json({ message: 'Intention deleted' });
 };
 
 export const fetchUserIntentions = async (req: AuthRequest, res: Response) => {
