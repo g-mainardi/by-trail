@@ -1,7 +1,3 @@
-// Constants
-export const EXCLUDED_UPDATE_FIELDS = ['_id', '__v', 'createdAt', 'updatedAt'];
-
-// Enums
 export const UserStatusEnum = {
   ACTIVE: 'active',
   BANNED: 'banned',
@@ -72,7 +68,6 @@ export type ProposalType = (typeof ProposalEnum)[keyof typeof ProposalEnum];
 
 export type UUID = string;
 
-// Interfaces
 export interface User {
   _id?: UUID;
   id?: string;
@@ -99,13 +94,9 @@ export interface Bivouac {
   };
   altitude?: number;
   capacity?: number;
+  likes?: number;
   note?: string;
 }
-
-export type PathObj = {
-  type: RoutePathType;
-  coordinates: any[];
-};
 
 export interface Route {
   _id?: UUID;
@@ -118,8 +109,12 @@ export interface Route {
   descent: number;
   duration: number;
   routeType: RouteType;
+  likes?: number;
   note?: string;
-  path?: PathObj;
+  path?: {
+    type: RoutePathType;
+    coordinates: any[];
+  };
 }
 
 export interface Proposal {

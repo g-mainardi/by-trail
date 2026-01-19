@@ -29,12 +29,12 @@ onMounted(() => {
   adminStore.fetchRoutes();
 });
 
-const getRouteId = (b: Route) => b.id || b._id || '';
+const getRouteId = (route: Route) => route.id || route._id || '';
 
 // --- Handlers ---
 
 const onOpenEdit = (id: string) => {
-  const route = routes.value.find((b) => getRouteId(b) === id);
+  const route = routes.value.find((route) => getRouteId(route) === id);
   if (route) {
     selectedRoute.value = route;
     isEditOpen.value = true;
@@ -74,11 +74,6 @@ const handleSave = async (payload: { id: string; updates: Partial<Route> }) => {
     isError.value = true;
     feedbackMessage.value = t('error_occurred');
   }
-};
-
-const updateAlertMessage = (payload: { error: boolean; message: string }) => {
-  isError.value = payload.error;
-  feedbackMessage.value = payload.message;
 };
 
 const alertConfig = computed(() => {
@@ -190,7 +185,6 @@ const columns = [
       v-model:open="isEditOpen"
       :route="selectedRoute"
       @save="handleSave"
-      @update:message="updateAlertMessage"
     />
   </div>
 </template>

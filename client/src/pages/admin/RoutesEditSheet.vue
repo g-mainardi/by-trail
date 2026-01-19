@@ -136,7 +136,7 @@ const onClose = () => {
               <Label>{{ t('route_type') }}</Label>
               <Select
                 :model-value="updates.routeType ?? route.routeType"
-                @update:modelValue="
+                @update:model-value="
                   (val) => handleChange('routeType', val as RouteType)
                 "
               >
@@ -158,7 +158,7 @@ const onClose = () => {
               <Label>{{ t('difficulty') }}</Label>
               <Select
                 :model-value="updates.difficulty ?? route.difficulty"
-                @update:modelValue="
+                @update:model-value="
                   (val) => handleChange('difficulty', val as RouteDifficulty)
                 "
               >
