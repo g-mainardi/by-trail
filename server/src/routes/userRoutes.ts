@@ -34,9 +34,9 @@ router.get('/favorites/routes', fetchFavoriteRoutes);
 router.post('/favorites/routes', addFavoriteRoute);
 router.delete('/favorites/routes', removeFavoriteRoute);
 
-// /api/users/intention
-router.post('/intention', createIntention);
-router.delete('/intention', deleteIntention);
+// /api/users/intentions
+router.post('/intentions', createIntention);
+router.delete('/intentions', deleteIntention);
 router.get('/intentions', fetchUserIntentions);
 
 export default router;

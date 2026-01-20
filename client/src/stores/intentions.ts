@@ -47,7 +47,7 @@ export const useIntentionStore = defineStore('intentions', () => {
         date: date,
         people: people,
       };
-      const res = await api.post(`/users/intention`, body);
+      const res = await api.post(`/users/intentions`, body);
       if (res.status === 200 || res.status === 201)
         return { success: true, message: res.data.message };
       return {
@@ -67,7 +67,7 @@ export const useIntentionStore = defineStore('intentions', () => {
       const body = {
         intentionId: intentionId,
       };
-      const res = await api.delete(`/users/intention`, { data: body });
+      const res = await api.delete(`/users/intentions`, { data: body });
       if (res.status === 200)
         return { success: true, message: res.data.message };
       return {
