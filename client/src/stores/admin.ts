@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { User, UserStatus } from '@/types';
+import type { Proposal, User, UserStatus } from '@/types';
 import { useBivouacStore } from '@/stores/bivouacs';
 import { useRouteStore } from './routes';
 import { UserStatusEnum } from '@/types';
@@ -16,6 +16,7 @@ export const useAdminStore = defineStore('admin', () => {
   const { fetchBivouacs } = bivouacStore;
   const { fetchRoutes } = routeStore;
   const users = ref<User[]>([]);
+  const proposals = ref<Proposal[]>([]);
   const isLoading = ref(false);
 
   const fetchUsers = async () => {
@@ -164,10 +165,53 @@ export const useAdminStore = defineStore('admin', () => {
     }
   };
 
+  const fetchProposals = async () => {
+    if (isLoading.value) return;
+    isLoading.value = true;
+    try {
+      const res = await api.get('/proposals');
+      const data = res.data;
+
+      if (!data || !Array.isArray(data.proposals)) {
+        throw new Error('Invalid data format received from server');
+      }
+
+      proposals.value = data.proposals;
+    } catch (err: any) {
+      console.error('Error fetching proposals:', err);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const deleteProposal = async (proposalId: string) => {
+    if (isLoading.value) return false;
+    isLoading.value = true;
+
+    try {
+      const response = await api.delete(`/proposals/${proposalId}`);
+      if (!response || response.status !== 204)
+        throw new Error('Failed to delete proposal');
+
+      // Remove from the local proposals array
+      proposals.value = proposals.value.filter(
+        (p) => p.id !== proposalId && p._id !== proposalId
+      );
+
+      return true;
+    } catch (err: any) {
+      console.error(`Error deleting proposal ${proposalId}:`, err);
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     users,
     bivouacs,
     routes,
+    proposals,
     isLoading,
     fetchUsers,
     toggleUserBlock,
@@ -178,5 +222,7 @@ export const useAdminStore = defineStore('admin', () => {
     fetchRoutes,
     updateRoute,
     deleteRoute,
+    fetchProposals,
+    deleteProposal,
   };
 });
