@@ -127,6 +127,7 @@ export interface Proposal {
   description: string;
   region: Region;
   locality: string;
+  submissionDate?: Date;
 }
 
 export interface Intention {
