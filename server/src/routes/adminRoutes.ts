@@ -18,7 +18,7 @@ const router = express.Router();
 // All routes here are protected -- admin only
 router.use(protect, admin);
 
-// /api/...
+// /api/admin
 router.get('/users', fetchUsers);
 router.patch('/users/:id/status', updateUserStatus);
 router.delete('/users/:id', deleteUser);

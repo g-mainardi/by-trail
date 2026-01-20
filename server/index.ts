@@ -82,7 +82,7 @@ app.get('/api', (_, res) => {
   console.log(welcomeMessage);
   res.send(welcomeMessage);
 });
-app.use('/api', adminRoutes);
+app.use('/api/admin', adminRoutes);
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening at: http://localhost:${PORT}/`);
