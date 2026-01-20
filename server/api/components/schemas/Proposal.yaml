@@ -1,26 +1,19 @@
 type: object
+description: User proposal for a new route or bivouac.
 properties:
-  id:
+  _id:
     type: string
     format: uuid
   type:
-    type: string
-    enum:
-      - route
-      - bivouac
-  senderEmail:
-    type: string
-    format: email
+    $ref: './Enums.yaml#/ProposalType'
   subjectName:
     type: string
   description:
     type: string
+  region:
+    $ref: './Enums.yaml#/Region'
   locality:
     type: string
-required:
-  - id
-  - type
-  - senderEmail
-  - subjectName
-  - description
-  - locality
+  submissionDate:
+    type: string
+    format: date-time

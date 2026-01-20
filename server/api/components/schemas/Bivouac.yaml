@@ -1,14 +1,17 @@
 type: object
+description: Represents a mountain shelter or bivouac.
 properties:
   _id:
     type: string
     format: uuid
   name:
     type: string
+    example: 'Bivacco Orobico'
   region:
-    type: string
+    $ref: './Enums.yaml#/Region'
   mountainRange:
     type: string
+    example: 'Alpi Orobie'
   comune:
     type: string
   coords:
@@ -16,27 +19,15 @@ properties:
     properties:
       latitude:
         type: number
+        format: double
       longitude:
         type: number
-    required:
-      - latitude
-      - longitude
+        format: double
   altitude:
     type: number
   capacity:
     type: number
-  likes:
-    type: number
+    description: Number of people the bivouac can accommodate.
   note:
     type: string
-required:
-  - _id
-  - name
-  - region
-  - mountainRange
-  - comune
-  - coords
-  - altitude
-  - capacity
-  - likes
-
+    nullable: true

@@ -1,39 +1,43 @@
 type: object
+description: Represents a registered user in the system.
 properties:
-  id:
+  _id:
     type: string
     format: uuid
-  username:
+    description: The internal database ID (UUID)
+  name:
     type: string
+    example: 'Mario Rossi'
   email:
     type: string
     format: email
+    example: 'mario.rossi@example.com'
   password:
     type: string
     format: password
-    writeOnly: true # Passwords should not be exposed in responses
-  createdAt:
+    writeOnly: true
+    description: Hashed password
+  type:
+    $ref: './Enums.yaml#/UserRole'
+  status:
+    $ref: './Enums.yaml#/UserStatus'
+  creationDate:
     type: string
     format: date-time
-  interestingRegions:
+  favRegions:
     type: array
+    description: List of favorite regions
+    items:
+      $ref: './Enums.yaml#/Region'
+  favoritesBivouacs:
+    type: array
+    description: List of favorite bivouac IDs
     items:
       type: string
-    description: |
-      A list of region identifiers that the user finds interesting. Each string should be a region name. This allows users to bookmark or follow specific geographic regions.
-    example:
-      - 'Emilia-Romagna'
-      - 'Toscana'
-      - 'Sicilia'
-  status:
-    type: string
-    enum:
-      - active
-      - inactive
-required:
-  - id
-  - username
-  - email
-  - password
-  - createdAt
-  - status
+      format: uuid
+  favoritesRoutes:
+    type: array
+    description: List of favorite route IDs
+    items:
+      type: string
+      format: uuid
