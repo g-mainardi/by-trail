@@ -12,6 +12,6 @@ router.use(protect);
 
 router.get('/list', fetchRoutes);
 router.get('/map', fetchMapRoutes);
-router.get('/route', fetchRouteById);
+router.get('/route/:id', fetchRouteById);
 
 export default router;
