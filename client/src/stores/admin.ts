@@ -23,7 +23,7 @@ export const useAdminStore = defineStore('admin', () => {
     if (isLoading.value) return;
     isLoading.value = true;
     try {
-      const res = await api.get('/users');
+      const res = await api.get('/admin/users');
       const data = res.data;
 
       if (!data || !Array.isArray(data.users)) {
@@ -44,7 +44,7 @@ export const useAdminStore = defineStore('admin', () => {
 
     try {
       const newStatus = currentStatus === ACTIVE ? BANNED : ACTIVE;
-      await api.patch(`/users/${userId}/status`, { status: newStatus });
+      await api.patch(`/admin/users/${userId}/status`, { status: newStatus });
 
       // Local update
       const userIndex = users.value.findIndex(
@@ -69,7 +69,7 @@ export const useAdminStore = defineStore('admin', () => {
     isLoading.value = true;
 
     try {
-      const response = await api.delete(`/users/${userId}`);
+      const response = await api.delete(`/admin/users/${userId}`);
       if (!response || response.status !== 204)
         throw new Error('Failed to delete user');
 
@@ -97,7 +97,7 @@ export const useAdminStore = defineStore('admin', () => {
     try {
       if (Object.keys(updates).length === 0) return true;
 
-      const res = await api.patch(`/bivouacs/${bivouacId}`, updates);
+      const res = await api.patch(`/admin/bivouacs/${bivouacId}`, updates);
       if (!res || res.status !== 200)
         throw new Error('Failed to update bivouac');
 
@@ -115,7 +115,7 @@ export const useAdminStore = defineStore('admin', () => {
     isLoading.value = true;
 
     try {
-      const response = await api.delete(`/bivouacs/${bivouacId}`);
+      const response = await api.delete(`/admin/bivouacs/${bivouacId}`);
       if (!response || response.status !== 204)
         throw new Error('Failed to delete bivouac');
       bivouacs.value = bivouacs.value.filter(
@@ -136,7 +136,7 @@ export const useAdminStore = defineStore('admin', () => {
 
     try {
       if (Object.keys(updates).length === 0) return true;
-      const res = await api.patch(`/routes/${routeId}`, updates);
+      const res = await api.patch(`/admin/routes/${routeId}`, updates);
       if (!res || res.status !== 200) throw new Error('Failed to update route');
       return true;
     } catch (err: any) {
@@ -152,7 +152,7 @@ export const useAdminStore = defineStore('admin', () => {
     isLoading.value = true;
 
     try {
-      const response = await api.delete(`/routes/${routeId}`);
+      const response = await api.delete(`/admin/routes/${routeId}`);
       if (!response || response.status !== 204)
         throw new Error('Failed to delete route');
       routes.value = routes.value.filter((r) => (r.id || r._id) !== routeId);
@@ -169,7 +169,7 @@ export const useAdminStore = defineStore('admin', () => {
     if (isLoading.value) return;
     isLoading.value = true;
     try {
-      const res = await api.get('/proposals');
+      const res = await api.get('/admin/proposals');
       const data = res.data;
 
       if (!data || !Array.isArray(data.proposals)) {
@@ -189,7 +189,7 @@ export const useAdminStore = defineStore('admin', () => {
     isLoading.value = true;
 
     try {
-      const response = await api.delete(`/proposals/${proposalId}`);
+      const response = await api.delete(`/admin/proposals/${proposalId}`);
       if (!response || response.status !== 204)
         throw new Error('Failed to delete proposal');
 
