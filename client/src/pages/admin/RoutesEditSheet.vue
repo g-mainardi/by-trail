@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/select';
 import { Save } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import { isEqual } from './utils';
+import { isEqual } from '@/services/utility';
 
 const props = defineProps<{
   open: boolean;
