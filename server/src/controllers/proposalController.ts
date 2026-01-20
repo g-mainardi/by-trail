@@ -1,35 +1,27 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { Proposal } from '../models/models.js';
-
-interface ProposalRequest extends Request {
-  body: {
-    senderEmail: string;
-    type: string;
-    subjectName: string;
-    description: string;
-    locality: string;
-  };
-}
+import type { ProposalRequest } from '../types/server_only.js';
 
 // POST /api/proposal
 export const sendProposal = async (req: ProposalRequest, res: Response) => {
   try {
-    const { senderEmail, type, subjectName, description, locality } = req.body;
+    const sender = req.user?.id;
+    const { type, subjectName, description, region, locality } = req.body;
 
-    if (!senderEmail) {
+    if (!sender) {
       return res.status(401).json({
-        message: 'Unauthorized: Authentication required (missing email)',
+        message: 'Unauthorized: Authentication required (missing id)',
       });
     }
 
-    if (!type || !subjectName || !description || !locality) {
+    if (!type || !subjectName || !description || !region || !locality) {
       return res
         .status(400)
         .json({ message: 'Please fill in all required fields' });
     }
 
     const existingProposal = await Proposal.findOne({
-      senderEmail,
+      sender,
       type,
       subjectName,
       locality,
@@ -41,10 +33,11 @@ export const sendProposal = async (req: ProposalRequest, res: Response) => {
     }
 
     const newProposal = new Proposal({
-      senderEmail,
+      sender,
       type,
       subjectName,
       description,
+      region,
       locality,
     });
 
