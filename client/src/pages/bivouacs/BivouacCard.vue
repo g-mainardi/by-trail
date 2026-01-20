@@ -67,7 +67,7 @@ const props = defineProps<{
             :color="
               props.isFavorite ? 'var(--primary)' : 'var(--muted-foreground)'
             "
-            :fill="props.isFavorite ? 'var(--primary)' : 'var(--background)'"
+            :fill="props.isFavorite ? 'var(--primary)' : 'none'"
             class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
             @click="$emit('toggle-favorite', bivouac._id)"
           />

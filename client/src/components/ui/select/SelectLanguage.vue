@@ -23,7 +23,7 @@ const changeLanguage = (newLocale: string | null) => {
     @update:model-value="(val) => changeLanguage(val as string)"
     :aria-label="t('selectLanguage')"
   >
-    <SelectTrigger class="mt-6">
+    <SelectTrigger>
       <SelectValue />
     </SelectTrigger>
     <SelectContent>

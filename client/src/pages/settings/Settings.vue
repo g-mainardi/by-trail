@@ -57,6 +57,10 @@ const { t } = useI18n();
   padding: calc(var(--spacing) * 6);
 }
 .card-content {
+  /* flex flex-col gap-4 */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   padding: 0;
 }
 </style>
