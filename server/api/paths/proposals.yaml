@@ -1,4 +1,4 @@
-/proposal:
+sendProposal:
   post:
     tags:
       - Proposals
@@ -8,9 +8,9 @@
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/Proposal.yaml"
+            $ref: '../components/schemas/Proposal.yaml'
     responses:
-      "201":
+      '201':
         description: Proposal registered successfully!
         content:
           application/json:
@@ -22,10 +22,10 @@
                 message:
                   type: string
             example:
-              id: "65a1b2c3d4e5f6g7h8i9j0k1"
-              message: "Proposal registered successfully!"
+              id: '65a1b2c3d4e5f6g7h8i9j0k1'
+              message: 'Proposal registered successfully!'
 
-      "400":
+      '400':
         description: Bad Request - Validation or Logic Error
         content:
           application/json:
@@ -38,25 +38,25 @@
               MissingFields:
                 summary: Missing required fields
                 value:
-                  error: "Please fill in all required fields"
+                  error: 'Please fill in all required fields'
               DuplicateEntry:
                 summary: Proposal already exists
                 value:
                   error: "You have already submitted a route proposal with subject 'Sentiero degli Dei' in 'Bologna'"
 
-      "401":
+      '401':
         description: Unauthorized - Authentication required
         content:
           application/json:
             schema:
               type: object
               properties:
-                message: 
+                message:
                   type: string
             example:
-              message: "Missing email or invalid token"
+              message: 'Missing email or invalid token'
 
-      "500":
+      '500':
         description: Internal server error
         content:
           application/json:
@@ -69,8 +69,8 @@
               DatabaseError:
                 summary: Database Save Failed
                 value:
-                  error: "Error saving proposal to database"
+                  error: 'Error saving proposal to database'
               ServerExplosion:
                 summary: Generic Server Error
                 value:
-                  error: "Server error during Proposal Sending"
+                  error: 'Server error during Proposal Sending'

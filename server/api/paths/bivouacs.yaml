@@ -1,5 +1,7 @@
-/bivouacs/list:
+list:
   post:
+    tags:
+      - Bivouacs
     summary: Retrieve a list of bivouacs with optional filtering and pagination
     requestBody:
       required: true
@@ -46,8 +48,31 @@
                 bivouacs:
                   type: array
                   items:
-                    $ref: '#/components/schemas/Bivouac'
+                    $ref: '../components/schemas/Bivouac.yaml'
                 nextPage:
                   type: string
                   format: uuid
                   description: Identifier for the next page of results (if more results are available)
+
+map:
+  get:
+    tags:
+      - Bivouacs
+    summary: Retrieve bivouacs for map display within a specified bounding box
+
+getById:
+  get:
+    tags:
+      - Bivouacs
+    summary: Get a specific bivouac by ID
+    operationId: getBivouacById
+    parameters:
+      - $ref: '../components/parameters.yaml#/bivouacId'
+
+getIntentions:
+  get:
+    tags:
+      - Bivouacs
+      - Intentions
+    summary: Get anonymous intentions for a specific bivouac
+    operationId: getBivouacIntentions

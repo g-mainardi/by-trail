@@ -1,0 +1,41 @@
+type: object
+properties:
+  _id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  region:
+    type: string
+  mountainRange:
+    type: string
+  comune:
+    type: string
+  coords:
+    type: object
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    required:
+      - latitude
+      - longitude
+  altitude:
+    type: number
+  capacity:
+    type: number
+  likes:
+    type: number
+  note:
+    type: string
+required:
+  - _id
+  - name
+  - region
+  - mountainRange
+  - comune
+  - coords
+  - altitude
+  - capacity
+  - likes

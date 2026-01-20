@@ -1,0 +1,39 @@
+userId:
+  name: id
+  in: path
+  required: true
+  description: User ID
+  schema:
+    type: string
+
+bivouacId:
+  name: id
+  in: path
+  required: true
+  description: Bivouac ID
+  schema:
+    type: string
+
+routeId:
+  name: id
+  in: path
+  required: true
+  description: Route ID
+  schema:
+    type: string
+
+proposalId:
+  name: id
+  in: path
+  required: true
+  description: Proposal ID
+  schema:
+    type: string
+
+notificationId:
+  name: id
+  in: path
+  required: true
+  description: Notification ID
+  schema:
+    type: string

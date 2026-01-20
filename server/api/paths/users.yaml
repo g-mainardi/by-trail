@@ -1,74 +1,21 @@
-/users:
-  get:
-    tags:
-      - Users
-    summary: Retrieve a list of users
-    responses:
-      '200':
-        description: A list of users
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  username:
-                    type: string
-                  email:
-                    type: string
-                    format: email
-      '500':
-        description: Internal server error
-/profile:
+profile:
   get:
     tags:
       - Users
     summary: Retrieve the profile of the authenticated user
-    responses:
-      "200":
-        description: User profile retrieved successfully
-        content:
-          application/json:
-            schema:
-              $ref: "../components/schemas/User.yaml"
-      "404":
-        description: User not found
-      "500":
-        description: Error retrieving profile
-  put:
+favorites:
+  bivouacs:
+    get:
+      tags:
+        - Users
+      summary: Retrieve the list of favorite bivouacs for the authenticated user
+  routes:
+    get:
+      tags:
+        - Users
+      summary: Retrieve the list of favorite routes for the authenticated user
+intentions:
+  post:
     tags:
       - Users
-    summary: Update the profile of the authenticated user
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              email:
-                type: string
-                format: email
-              interestingRegions:
-                type: array
-                items:
-                  type: string
-                description: |
-                  A list of region identifiers that the user finds interesting. Each string should be a region name.
-            required:
-              - username
-              - email
-    responses:
-      "200":
-        description: User profile updated successfully
-        content:
-          application/json:
-            schema:
-              $ref: "../components/schemas/User.yaml"
-      "404":
-        description: User not found
-      "500":
-        description: Error updating profile
+    summary: Create a new bivouac intention for the authenticated user

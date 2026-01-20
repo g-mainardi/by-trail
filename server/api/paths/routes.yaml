@@ -1,0 +1,20 @@
+list:
+  post:
+    tags:
+      - Routes
+    summary: Retrieve a list of routes with optional filtering and pagination
+
+map:
+  get:
+    tags:
+      - Routes
+    summary: Retrieve routes for map display within a specified bounding box
+
+getById:
+  get:
+    tags:
+      - Routes
+    summary: Get a specific route by ID
+    operationId: getRouteById
+    parameters:
+      - $ref: '../components/parameters.yaml#/routeId'

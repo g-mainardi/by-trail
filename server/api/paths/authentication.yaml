@@ -1,4 +1,4 @@
-/login:
+login:
   security: [] # Public endpoint, no authentication required
   post:
     tags:
@@ -75,7 +75,7 @@
                 error:
                   type: string
 
-/signup:
+signup:
   security: [] # Public endpoint, no authentication required
   post:
     tags:
@@ -104,7 +104,7 @@
                 message:
                   type: string
 
-/delete:
+delete:
   post:
     summary: Delete user account
     description: Deletes the user account and all associated data.
