@@ -147,7 +147,7 @@ const alertConfig = computed(() => {
 </template>
 <style scoped>
 .route {
-  background-color: #fab375;
+  background-color: var(--primary-2);
 }
 </style>
 <i18n>
