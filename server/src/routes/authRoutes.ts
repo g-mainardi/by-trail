@@ -7,6 +7,6 @@ const router = express.Router();
 // /api/auth
 router.post('/signup', authRateLimiter, signup);
 router.post('/login', authRateLimiter, login);
-router.post('/delete', protect, deleteAccount);
+router.post('/delete', authRateLimiter, protect, deleteAccount);
 
 export default router;
