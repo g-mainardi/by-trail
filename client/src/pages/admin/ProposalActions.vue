@@ -49,11 +49,11 @@ function copySenderEmail() {
       </DropdownMenuItem>
       <DropdownMenuSeparator />
 
-      <DropdownMenuItem v-if="props.proposal.email" @click="copySenderEmail">
+      <DropdownMenuItem v-if="proposal.email" @click="copySenderEmail">
         <Copy class="mr-2 h-4 w-4" />
         {{ t('copy_sender_email') }}
       </DropdownMenuItem>
-      <DropdownMenuSeparator v-if="props.proposal.email" />
+      <DropdownMenuSeparator v-if="proposal.email" />
 
       <DropdownMenuItem
         class="text-red-600 focus:text-red-600"
