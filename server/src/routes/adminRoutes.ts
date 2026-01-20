@@ -7,6 +7,8 @@ import {
   deleteBivouac,
   updateRoute,
   deleteRoute,
+  fetchProposals,
+  deleteProposal,
 } from '../controllers/adminController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { admin } from '../middleware/adminMiddleware.js';
@@ -24,5 +26,7 @@ router.patch('/bivouacs/:id', updateBivouac);
 router.delete('/bivouacs/:id', deleteBivouac);
 router.patch('/routes/:id', updateRoute);
 router.delete('/routes/:id', deleteRoute);
+router.get('/proposals', fetchProposals);
+router.delete('/proposals/:id', deleteProposal);
 
 export default router;
