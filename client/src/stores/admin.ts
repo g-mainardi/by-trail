@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { Proposal, User, UserStatus } from '@/types';
+import type { ProposalWithEmail, User, UserStatus } from '@/types';
 import { useBivouacStore } from '@/stores/bivouacs';
 import { useRouteStore } from './routes';
 import { UserStatusEnum } from '@/types';
@@ -16,7 +16,7 @@ export const useAdminStore = defineStore('admin', () => {
   const { fetchBivouacs } = bivouacStore;
   const { fetchRoutes } = routeStore;
   const users = ref<User[]>([]);
-  const proposals = ref<Proposal[]>([]);
+  const proposals = ref<ProposalWithEmail[]>([]);
   const isLoading = ref(false);
 
   const fetchUsers = async () => {
