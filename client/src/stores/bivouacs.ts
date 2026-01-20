@@ -8,33 +8,19 @@ export const useBivouacStore = defineStore('bivouacs', () => {
   // State
 
   const bivouacs = ref<Bivouac[]>([]);
-  const mapBivouacs = ref<Bivouac[]>([]);
 
-  // Actions
-
-  const fetchBivouacs = async () => {
+  const fetchBivouacs = async (northWest?: LatLng, southEast?: LatLng) => {
     try {
-      const res = await api.get('/bivouacs/list');
-      const data = res.data;
-      bivouacs.value = data.bivouacs as Bivouac[];
-    } catch (error: any) {
-      console.error('Error fetching bivouacs:', error);
-      throw new Error('Failed to fetch bivouacs');
-    }
-  };
-
-  const fetchMapBivouacs = async (northWest: LatLng, southEast: LatLng) => {
-    try {
-      const res = await api.get('/bivouacs/map', {
+      const res = await api.get('/bivouacs', {
         params: {
-          latNw: northWest.lat,
-          lngNw: northWest.lng,
-          latSe: southEast.lat,
-          lngSe: southEast.lng,
+          latNw: northWest?.lat,
+          lngNw: northWest?.lng,
+          latSe: southEast?.lat,
+          lngSe: southEast?.lng,
         },
       });
       const data = res.data;
-      mapBivouacs.value = data.bivouacs as Bivouac[];
+      bivouacs.value = data.bivouacs as Bivouac[];
     } catch (error: any) {
       console.error('Error fetching map bivouacs:', error);
       throw new Error('Failed to fetch map bivouacs');
@@ -43,7 +29,11 @@ export const useBivouacStore = defineStore('bivouacs', () => {
 
   const getBivouacById = async (id: string): Promise<Bivouac> => {
     try {
-      const res = await api.get(`/bivouacs/bivouac/${id}`);
+      const cachedBivouac = bivouacs.value.find(
+        (bivouac) => bivouac._id === id
+      );
+      if (cachedBivouac) return cachedBivouac;
+      const res = await api.get(`/bivouacs/${id}`);
       const data = res.data;
       return data.bivouac as Bivouac;
     } catch (error: any) {
@@ -54,9 +44,7 @@ export const useBivouacStore = defineStore('bivouacs', () => {
 
   return {
     fetchBivouacs,
-    fetchMapBivouacs,
     getBivouacById,
-    mapBivouacs,
     bivouacs,
   };
 });

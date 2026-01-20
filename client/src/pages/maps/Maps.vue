@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { placeholderEmpty } from '@/services/placeholders';
 import {
   bivouacIcon,
   getCoords,
@@ -52,21 +53,17 @@ const debouncedFetchBivouacs = useDebounceFn(async () => {
   const bounds = mapRef.value.getBounds();
   const northWest = bounds.getNorthWest();
   const southEast = bounds.getSouthEast();
-  await bivouacStore.fetchMapBivouacs(northWest, southEast);
-  await routeStore.fetchMapRoutes(northWest, southEast);
+  await bivouacStore.fetchBivouacs(northWest, southEast);
+  await routeStore.fetchRoutes(northWest, southEast);
 }, 500);
 
 const filteredBivouacs = computed(() => {
-  return getFilteredBivouacs(bivouacStore.mapBivouacs);
+  return getFilteredBivouacs(bivouacStore.bivouacs);
 });
 
 const filteredRoutes = computed(() => {
-  return getFilteredRoutes(routeStore.mapRoutes);
+  return getFilteredRoutes(routeStore.routes);
 });
-
-const placeholderBivouac = new URL('@/assets/bivouac-ph-1.jpg', import.meta.url)
-  .href;
-const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
 </script>
 
 <template>
@@ -107,7 +104,7 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
             aria-label="View Bivouac Details"
           >
             <img
-              :src="placeholderBivouac"
+              :src="placeholderEmpty"
               :alt="`${bivouac.name} image`"
               class="rounded-sm object-cover"
             />
@@ -156,7 +153,7 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
             aria-label="View Route Details"
           >
             <img
-              :src="placeholderRoute"
+              :src="placeholderEmpty"
               :alt="`${route.title} image`"
               class="rounded-sm object-cover"
             />
@@ -168,6 +165,7 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
             style="margin-top: 0rem; margin-bottom: 0rem"
             class="flex flex-row justify-between"
           >
+            <span>{{ route.region.map((r) => r).join(', ') }}</span>
             <span
               >{{ getDurationHM(route.duration).hours }} {{ t('hours') }}</span
             >
@@ -175,7 +173,6 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
               >{{ getDurationHM(route.duration).minutes }} {{ t('min') }}</span
             >
             <span>{{ t('difficulty') }}: {{ route.difficulty }}</span>
-            <span>{{ route.region.map((r) => r).join(', ') }}</span>
           </p>
         </l-popup>
       </l-marker>

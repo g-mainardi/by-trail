@@ -3,7 +3,6 @@ import { fetchAnonymousBivouacIntentions } from 'src/controllers/intentionContro
 import {
   fetchBivouacById,
   fetchBivouacs,
-  fetchMapBivouacs,
 } from '../controllers/bivouacsController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -12,9 +11,8 @@ const router = express.Router();
 router.use(protect);
 
 // /api/bivouacs
-router.get('/list', fetchBivouacs);
-router.get('/map', fetchMapBivouacs);
-router.get('/bivouac/:id', fetchBivouacById);
+router.get('', fetchBivouacs);
+router.get('/:id', fetchBivouacById);
 
 // /api/intentions
 router.get('/intentions/:id', fetchAnonymousBivouacIntentions);
