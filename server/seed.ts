@@ -34,10 +34,7 @@ const loadData = (fileName: string) => {
 
 const seedData = async () => {
   try {
-    const { uri, type } = {
-      uri: 'mongodb+srv://elvisperlika_db_user:Rc2vY4H0s1RW9k0M@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0',
-      type: 'ATLAS',
-    }; // getDbConfig();
+    const { uri, type } = getDbConfig();
 
     if (!uri) {
       throw new Error(
