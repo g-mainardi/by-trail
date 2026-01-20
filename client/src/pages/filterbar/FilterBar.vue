@@ -8,6 +8,7 @@ import {
   NumberFieldIncrement,
   NumberFieldInput,
 } from '@/components/ui/number-field';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import Separator from '@/components/ui/separator/Separator.vue';
 import {
   Sheet,
@@ -67,45 +68,187 @@ const props = defineProps<{
           {{ t('bar_description') }}
         </SheetDescription>
       </SheetHeader>
+      <ScrollArea class="h-full">
+        <!-- Bivouac filter options -->
+        <div class="flex flex-col px-4 gap-4">
+          <div
+            v-if="
+              $route.path.includes('maps') || $route.path.includes('bivouacs')
+            "
+            class="flex flex-col gap-4"
+          >
+            <h3>{{ t('bivouac_filters') }}</h3>
+            <!-- SEARCH -->
+            <div class="flex items-center gap-2">
+              <SearchIcon />
+              <Input
+                :placeholder="t('search')"
+                v-model="bivouacFilters.searchQuery.currentValue"
+              />
+            </div>
 
-      <!-- Bivouac filter options -->
-      <div class="flex flex-col px-4 gap-4">
+            <!-- CAPACITY -->
+            <div class="flex items-center gap-2">
+              <BedIcon
+                :fill="
+                  bivouacFilters.minDesiredBeds.currentValue >= 1
+                    ? 'green'
+                    : 'none'
+                "
+                :color="
+                  bivouacFilters.minDesiredBeds.currentValue >= 1
+                    ? 'green'
+                    : 'currentColor'
+                "
+              />
+              <NumberField
+                id="beds"
+                :default-value="0"
+                :min="0"
+                v-model="bivouacFilters.minDesiredBeds.currentValue"
+                class="w-full"
+              >
+                <NumberFieldContent>
+                  <NumberFieldDecrement />
+                  <NumberFieldInput />
+                  <NumberFieldIncrement />
+                </NumberFieldContent>
+              </NumberField>
+            </div>
+
+            <!-- ALTITUDE -->
+            <div class="flex items-center gap-2">
+              <MountainIcon
+                :fill="
+                  bivouacFilters.altitudeFilter.currentValue.min >
+                    bivouacFilters.altitudeFilter.default.min ||
+                  bivouacFilters.altitudeFilter.currentValue.max <
+                    bivouacFilters.altitudeFilter.default.max
+                    ? 'purple'
+                    : 'none'
+                "
+              />
+              Min
+              <NumberField
+                id="altitude-min"
+                :default-value="bivouacFilters.altitudeFilter.default.min"
+                :min="bivouacFilters.altitudeFilter.default.min"
+                :max="bivouacFilters.altitudeFilter.default.max"
+                v-model="bivouacFilters.altitudeFilter.currentValue.min"
+              >
+                <NumberFieldContent>
+                  <NumberFieldInput />
+                </NumberFieldContent>
+              </NumberField>
+              Max
+              <NumberField
+                id="altitude-max"
+                :default-value="bivouacFilters.altitudeFilter.default.max"
+                :min="bivouacFilters.altitudeFilter.default.min"
+                :max="bivouacFilters.altitudeFilter.default.max"
+                v-model="bivouacFilters.altitudeFilter.currentValue.max"
+              >
+                <NumberFieldContent>
+                  <NumberFieldInput />
+                </NumberFieldContent>
+              </NumberField>
+            </div>
+
+            <!-- TOILETS -->
+            <Toggle
+              variant="outline"
+              aria-label="With toilets only"
+              class="w-full"
+              disabled
+            >
+              <ToiletIcon />
+              {{ t('with_toilets_only') }}
+            </Toggle>
+
+            <!-- FAVORITES -->
+            <Toggle
+              variant="outline"
+              aria-label="Favorites only"
+              class="w-full"
+              disabled
+            >
+              <HeartIcon /> {{ t('favorites_only') }}
+            </Toggle>
+
+            <Toggle
+              variant="outline"
+              aria-label="Only open bivouacs"
+              class="w-full"
+              disabled
+            >
+              <CalendarIcon /> {{ t('only_open') }}
+            </Toggle>
+
+            <Separator orientation="horizontal" />
+
+            <!-- RESET -->
+            <Button
+              variant="destructive"
+              @click="$emit('resetBivouacFilters')"
+              class="w-1/3 self-end"
+              >{{ t('reset') }}
+            </Button>
+          </div>
+        </div>
+
+        <!-- Route filter options -->
         <div
-          v-if="
-            $route.path.includes('maps') || $route.path.includes('bivouacs')
-          "
-          class="flex flex-col gap-4"
+          v-if="$route.path.includes('maps') || $route.path.includes('routes')"
+          class="flex flex-col px-4 gap-4 mb-40"
         >
-          <h3>{{ t('bivouac_filters') }}</h3>
+          <h3>{{ t('route_filters') }}</h3>
+
           <!-- SEARCH -->
           <div class="flex items-center gap-2">
             <SearchIcon />
             <Input
               :placeholder="t('search')"
-              v-model="bivouacFilters.searchQuery.currentValue"
+              v-model="routeFilters.searchQuery.currentValue"
             />
           </div>
 
-          <!-- CAPACITY -->
-          <div class="flex items-center gap-2">
-            <BedIcon
-              :fill="
-                bivouacFilters.minDesiredBeds.currentValue >= 1
-                  ? 'green'
-                  : 'none'
-              "
-              :color="
-                bivouacFilters.minDesiredBeds.currentValue >= 1
-                  ? 'green'
-                  : 'currentColor'
-              "
-            />
-            <NumberField
-              id="beds"
-              :default-value="0"
-              :min="0"
-              v-model="bivouacFilters.minDesiredBeds.currentValue"
+          <!-- DIFFICULTY -->
+          <div class="flex items-center gap-2 w-full">
+            {{ t('difficulty') }}
+            <Toggle
               class="w-full"
+              v-model="routeFilters.difficultyFilter.currentValue.t"
+            >
+              T
+            </Toggle>
+            <Toggle
+              class="w-full"
+              v-model="routeFilters.difficultyFilter.currentValue.e"
+              >E</Toggle
+            >
+            <Toggle
+              class="w-full"
+              v-model="routeFilters.difficultyFilter.currentValue.ee"
+              >EE</Toggle
+            >
+            <Toggle
+              class="w-full"
+              v-model="routeFilters.difficultyFilter.currentValue.eea"
+              >EEA</Toggle
+            >
+          </div>
+
+          <!-- MAX DURATION -->
+          <div class="flex items-center gap-2 w-full">
+            <Clock />
+            Max
+            <NumberField
+              id="hour_duration"
+              :default-value="6"
+              :min="0"
+              :max="999999"
+              :step="1"
+              v-model="routeFilters.maxDurationFilter.currentValue.hours"
             >
               <NumberFieldContent>
                 <NumberFieldDecrement />
@@ -113,175 +256,34 @@ const props = defineProps<{
                 <NumberFieldIncrement />
               </NumberFieldContent>
             </NumberField>
-          </div>
-
-          <!-- ALTITUDE -->
-          <div class="flex items-center gap-2">
-            <MountainIcon
-              :fill="
-                bivouacFilters.altitudeFilter.currentValue.min >
-                  bivouacFilters.altitudeFilter.default.min ||
-                bivouacFilters.altitudeFilter.currentValue.max <
-                  bivouacFilters.altitudeFilter.default.max
-                  ? 'purple'
-                  : 'none'
-              "
-            />
-            Min
+            h
             <NumberField
-              id="altitude-min"
-              :default-value="bivouacFilters.altitudeFilter.default.min"
-              :min="bivouacFilters.altitudeFilter.default.min"
-              :max="bivouacFilters.altitudeFilter.default.max"
-              v-model="bivouacFilters.altitudeFilter.currentValue.min"
+              id="min_duration"
+              :default-value="0"
+              :min="0"
+              :max="60"
+              :step="15"
+              v-model="routeFilters.maxDurationFilter.currentValue.minutes"
             >
               <NumberFieldContent>
+                <NumberFieldDecrement />
                 <NumberFieldInput />
+                <NumberFieldIncrement />
               </NumberFieldContent>
             </NumberField>
-            Max
-            <NumberField
-              id="altitude-max"
-              :default-value="bivouacFilters.altitudeFilter.default.max"
-              :min="bivouacFilters.altitudeFilter.default.min"
-              :max="bivouacFilters.altitudeFilter.default.max"
-              v-model="bivouacFilters.altitudeFilter.currentValue.max"
-            >
-              <NumberFieldContent>
-                <NumberFieldInput />
-              </NumberFieldContent>
-            </NumberField>
+            m
           </div>
-
-          <!-- TOILETS -->
-          <Toggle
-            variant="outline"
-            aria-label="With toilets only"
-            class="w-full"
-            disabled
-          >
-            <ToiletIcon />
-            {{ t('with_toilets_only') }}
-          </Toggle>
-
-          <!-- FAVORITES -->
-          <Toggle
-            variant="outline"
-            aria-label="Favorites only"
-            class="w-full"
-            disabled
-          >
-            <HeartIcon /> {{ t('favorites_only') }}
-          </Toggle>
-
-          <Toggle
-            variant="outline"
-            aria-label="Only open bivouacs"
-            class="w-full"
-            disabled
-          >
-            <CalendarIcon /> {{ t('only_open') }}
-          </Toggle>
 
           <Separator orientation="horizontal" />
 
-          <!-- RESET -->
           <Button
             variant="destructive"
-            @click="$emit('resetBivouacFilters')"
+            @click="$emit('resetRouteFilters')"
             class="w-1/3 self-end"
-            >{{ t('reset') }}
-          </Button>
-        </div>
-      </div>
-
-      <!-- Route filter options -->
-      <div
-        v-if="$route.path.includes('maps') || $route.path.includes('routes')"
-        class="flex flex-col px-4 gap-4"
-      >
-        <h3>{{ t('route_filters') }}</h3>
-
-        <!-- SEARCH -->
-        <div class="flex items-center gap-2">
-          <SearchIcon />
-          <Input
-            :placeholder="t('search')"
-            v-model="routeFilters.searchQuery.currentValue"
-          />
-        </div>
-
-        <!-- DIFFICULTY -->
-        <div class="flex items-center gap-2 w-full">
-          {{ t('difficulty') }}
-          <Toggle
-            class="w-full"
-            v-model="routeFilters.difficultyFilter.currentValue.t"
-          >
-            T
-          </Toggle>
-          <Toggle
-            class="w-full"
-            v-model="routeFilters.difficultyFilter.currentValue.e"
-            >E</Toggle
-          >
-          <Toggle
-            class="w-full"
-            v-model="routeFilters.difficultyFilter.currentValue.ee"
-            >EE</Toggle
-          >
-          <Toggle
-            class="w-full"
-            v-model="routeFilters.difficultyFilter.currentValue.eea"
-            >EEA</Toggle
+            >{{ t('reset') }}</Button
           >
         </div>
-
-        <!-- MAX DURATION -->
-        <div class="flex items-center gap-2 w-full">
-          <Clock />
-          Max
-          <NumberField
-            id="hour_duration"
-            :default-value="6"
-            :min="0"
-            :max="999999"
-            :step="1"
-            v-model="routeFilters.maxDurationFilter.currentValue.hours"
-          >
-            <NumberFieldContent>
-              <NumberFieldDecrement />
-              <NumberFieldInput />
-              <NumberFieldIncrement />
-            </NumberFieldContent>
-          </NumberField>
-          h
-          <NumberField
-            id="min_duration"
-            :default-value="0"
-            :min="0"
-            :max="60"
-            :step="15"
-            v-model="routeFilters.maxDurationFilter.currentValue.minutes"
-          >
-            <NumberFieldContent>
-              <NumberFieldDecrement />
-              <NumberFieldInput />
-              <NumberFieldIncrement />
-            </NumberFieldContent>
-          </NumberField>
-          m
-        </div>
-
-        <Separator orientation="horizontal" />
-
-        <Button
-          variant="destructive"
-          @click="$emit('resetRouteFilters')"
-          class="w-1/3 self-end"
-          >{{ t('reset') }}</Button
-        >
-      </div>
+      </ScrollArea>
     </SheetContent>
   </Sheet>
 </template>
