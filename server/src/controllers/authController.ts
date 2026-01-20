@@ -3,8 +3,8 @@ import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
 import { User } from '../models/models.js';
-import { getSecret } from '../utils/secrets.js';
 import { AuthRequestWithPassword } from '../types/server_only.js';
+import { getSecret } from '../utils/secrets.js';
 
 let JWT_SECRET;
 try {
@@ -110,7 +110,9 @@ export const login = async (req: Request, res: Response) => {
 
     // 2. Check if user is banned
     if (user.status === 'banned') {
-      return res.status(403).json({ message: 'Invalid credentials' });
+      return res.status(403).json({
+        message: 'Your account has been banned. Please contact support.',
+      });
     }
 
     // 3. Validate password
