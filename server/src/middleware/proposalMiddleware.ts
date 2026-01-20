@@ -3,7 +3,7 @@ import { minsToMillis } from 'src/utils/middleware.js';
 
 const windowDurationMins = 15;
 const maxRequestPerWindow = 10;
-const message = `Too many proposals, please try again after ${windowDurationMins} minutes.`;
+const message = `Too many proposal submissions, please try again after ${windowDurationMins} minutes.`;
 
 // Rate limiter for proposal submission endpoints
 export const proposalRateLimiter = rateLimit({

@@ -10,7 +10,7 @@ import { minsToMillis } from 'src/utils/middleware.js';
 
 const windowDurationMins = 15;
 const maxRequestPerWindow = 10;
-const message = `Too many requests, please try again after ${windowDurationMins} minutes.`;
+const message = `Too many authentication attempts, please try again after ${windowDurationMins} minutes.`;
 
 export const protect = async (
   req: AuthRequest,
