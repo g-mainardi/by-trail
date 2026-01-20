@@ -105,6 +105,12 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('token', token.value || '');
       localStorage.setItem('user', JSON.stringify(user.value));
 
+      socket.auth = { token: data.token };
+
+      if (!socket.connected) {
+        socket.connect();
+      }
+
       // Fetch the latest profile to sync state (skip nested loading state management)
       const profileSuccess = await fetchProfile(true);
       if (!profileSuccess) {
@@ -131,6 +137,7 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     socket.disconnect();
+    socket.auth = { token: null };
     router.push('/login');
   };
 

@@ -42,8 +42,10 @@ onMounted(() => {
 
   notificationStore.listenForNotifications(handleNewNotification);
 
+  const token = localStorage.getItem('token');
   // Checks if already connected to avoid double-connect attempts during hot-reloads
-  if (!socket.connected) {
+  if (token && !socket.connected) {
+    socket.auth = { token };
     socket.connect();
   }
 });
