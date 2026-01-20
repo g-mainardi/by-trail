@@ -120,6 +120,8 @@ export interface Route {
 }
 
 export interface Proposal {
+  _id?: UUID;
+  id?: string;
   type: ProposalType;
   subjectName: string;
   description: string;
