@@ -14,9 +14,9 @@ router.use(protect);
 // /api/bivouacs
 router.get('/list', fetchBivouacs);
 router.get('/map', fetchMapBivouacs);
-router.get('/bivouac', fetchBivouacById);
+router.get('/bivouac/:id', fetchBivouacById);
 
 // /api/intentions
-router.get('/intentions', fetchAnonymousBivouacIntentions);
+router.get('/intentions/:id', fetchAnonymousBivouacIntentions);
 
 export default router;

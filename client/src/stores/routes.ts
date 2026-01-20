@@ -53,7 +53,7 @@ export const useRouteStore = defineStore('routes', () => {
 
   const fetchRouteById = async (id: string): Promise<Route> => {
     try {
-      const res = await api.get(`/routes/route`, { params: { id } });
+      const res = await api.get(`/routes/route/${id}`);
       const data = res.data;
       const route = data.route as Route;
       if (
