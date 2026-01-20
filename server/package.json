@@ -15,6 +15,7 @@
   "dependencies": {
     "@mapbox/togeojson": "^0.16.2",
     "@xmldom/xmldom": "^0.8.11",
+    "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -23,6 +24,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "7.0",
     "mongoose": "^8.20.1",
+    "node-cron": "^4.2.1",
     "socket.io": "^4.8.3",
     "validator": "^13.15.23"
   },
@@ -32,6 +34,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.8",
+    "@types/node-cron": "^3.0.11",
     "@types/validator": "^13.15.10",
     "cross-env": "^10.1.0",
     "nodemon": "^3.1.11",

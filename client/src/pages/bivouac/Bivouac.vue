@@ -87,6 +87,8 @@ async function updateIntentions() {
 }
 
 const sendIntention = async () => {
+  const dateString = selectedDate.value.toString(); // dateString: YYYY-MM-DD
+
   const res = await intentionStore.sendIntention(
     bivouac.value?._id || '',
     selectedDate.value.toDate(getLocalTimeZone()),

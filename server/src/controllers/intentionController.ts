@@ -35,7 +35,9 @@ const notifyPeers = async (
       0,
       0
     )
-  );
+  ); // Wed Dec 31 2025 00:00:00 GMT+0000 (Coordinated Universal Time)
+
+  console.log('startOfDay: ' + startOfDay);
 
   const endOfDay = new Date(
     Date.UTC(
@@ -47,11 +49,7 @@ const notifyPeers = async (
       59,
       999
     )
-  );
-
-  console.log(
-    `[NotifyPeers] Searching between: ${startOfDay.toISOString()} and ${endOfDay.toISOString()}`
-  );
+  ); // Wed Dec 31 2025 23:59:59 GMT+0000 (Coordinated Universal Time)
 
   const peers = await Reservation.find({
     bivouac: bivouacId,
@@ -79,12 +77,12 @@ const notifyPeers = async (
 
 export const createIntention = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id!;
-  const { bivouacId, date, people } = req.body;
+  const { bivouacId, date, people } = req.body; // date: YYYY-MM-DD
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });
   }
 
-  const formattedDate = formatDateForDisplay(date);
+  const formattedDate = formatDateForDisplay(date); // DD January YYYY
 
   try {
     const targetBivouac = await Bivouac.findById(bivouacId);

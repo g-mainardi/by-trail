@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { initSocket } from './src/config/socket.js';
 import connectDB from './src/config/db.js';
+import { initWeatherJob } from './src/jobs/weatherJob.js';
 import authRoutes from './src/routes/authRoutes.js';
 import bivouacsRoutes from './src/routes/bivouacsRoutes.js';
 import routesRoutes from './src/routes/routesRoutes.js';
@@ -68,6 +69,8 @@ app.use(
 );
 
 initSocket(httpServer, app, CLIENT_ORIGIN);
+
+initWeatherJob();
 
 const welcomeMessage = 'Welcome to the By Trail API';
 const welcome = (_: Request, res: Response) => {
