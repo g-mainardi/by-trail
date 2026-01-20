@@ -13,6 +13,8 @@ export interface RouteFilter {
   predicate: (route: Route, value: any) => boolean;
 }
 
+// Bivouac Filters
+
 const minDesiredBeds: BivouacFilter = {
   currentValue: 0,
   default: 0,
@@ -45,6 +47,16 @@ const searchBivouacQuery: BivouacFilter = {
     );
   },
 };
+
+const dontShowAnyBivouac: BivouacFilter = {
+  currentValue: false,
+  default: false,
+  predicate: (_bivouac: Bivouac, value: boolean) => {
+    return !value;
+  },
+};
+
+// Route Filters
 
 const maxDurationFilter: RouteFilter = {
   currentValue: { hours: 8, minutes: 0 },
@@ -88,16 +100,26 @@ const searchRouteQuery: RouteFilter = {
   },
 };
 
+const dontShowAnyRoute: RouteFilter = {
+  currentValue: false,
+  default: false,
+  predicate: (_route: Route, value: boolean) => {
+    return !value;
+  },
+};
+
 const bivouacFilters = ref({
   minDesiredBeds: minDesiredBeds,
   altitudeFilter: altitudeFilter,
   searchQuery: searchBivouacQuery,
+  dontShowAnyBivouac: dontShowAnyBivouac,
 });
 
 const routeFilters = ref({
   maxDurationFilter: maxDurationFilter,
   difficultyFilter: difficultyFilter,
   searchQuery: searchRouteQuery,
+  dontShowAnyRoute: dontShowAnyRoute,
 });
 
 function resetBivouacFilters() {

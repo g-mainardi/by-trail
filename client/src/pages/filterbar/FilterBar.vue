@@ -23,6 +23,7 @@ import {
   Bed as BedIcon,
   Calendar as CalendarIcon,
   Clock,
+  EyeOff,
   Heart as HeartIcon,
   Mountain as MountainIcon,
   Search as SearchIcon,
@@ -38,11 +39,13 @@ const props = defineProps<{
     minDesiredBeds: BivouacFilter;
     altitudeFilter: BivouacFilter;
     searchQuery: BivouacFilter;
+    dontShowAnyBivouac: BivouacFilter;
   };
   routeFilters: {
     maxDurationFilter: RouteFilter;
     difficultyFilter: RouteFilter;
     searchQuery: RouteFilter;
+    dontShowAnyRoute: RouteFilter;
   };
 }>();
 </script>
@@ -175,6 +178,7 @@ const props = defineProps<{
               <HeartIcon /> {{ t('favorites_only') }}
             </Toggle>
 
+            <!-- ONLY OPEN -->
             <Toggle
               variant="outline"
               aria-label="Only open bivouacs"
@@ -182,6 +186,16 @@ const props = defineProps<{
               disabled
             >
               <CalendarIcon /> {{ t('only_open') }}
+            </Toggle>
+
+            <!-- DONT SHOW ANY BIVOUAC -->
+            <Toggle
+              variant="outline"
+              aria-label="Don't show any bivouac"
+              class="w-full"
+              v-model="bivouacFilters.dontShowAnyBivouac.currentValue"
+            >
+              <EyeOff /> {{ t('hide_bivouacs') }}
             </Toggle>
 
             <Separator orientation="horizontal" />
@@ -274,6 +288,16 @@ const props = defineProps<{
             m
           </div>
 
+          <!-- DONT SHOW ANY ROUTE -->
+          <Toggle
+            variant="outline"
+            aria-label="Don't show any route"
+            class="w-full"
+            v-model="routeFilters.dontShowAnyRoute.currentValue"
+          >
+            <EyeOff /> {{ t('hide_routes') }}
+          </Toggle>
+
           <Separator orientation="horizontal" />
 
           <Button
@@ -308,7 +332,9 @@ h3 {
       "set_minimum_beds": "Set minimum beds:",
       "set_altitude_range": "Set Altitude Range (mt):",
       "difficulty": "Difficulty",
-      "reset": "Reset"
+      "reset": "Reset",
+      "hide_bivouacs": "Hide All Bivouacs",
+      "hide_routes": "Hide All Routes"
     },
     it: {
       "search": "Cerca",
@@ -322,7 +348,9 @@ h3 {
       "set_minimum_beds": "Imposta letti minimi:",
       "set_altitude_range": "Imposta intervallo di altitudine (mt):",
       "difficulty": "Difficoltà",
-      "reset": "Reimposta"
+      "reset": "Reimposta",
+      "hide_bivouacs": "Nascondi tutti i bivacchi",
+      "hide_routes": "Nascondi tutti i percorsi"
     },
     es: {
       "search": "Buscar",
@@ -336,7 +364,9 @@ h3 {
       "set_minimum_beds": "Establecer camas mínimas:",
       "set_altitude_range": "Establecer rango de altitud (mt):",
       "difficulty": "Dificultad",
-      "reset": "Reiniciar"
+      "reset": "Reiniciar",
+      "hide_bivouacs": "Ocultar todos los bivouacs",
+      "hide_routes": "Ocultar todas las rutas"
     }
   }
 </i18n>
