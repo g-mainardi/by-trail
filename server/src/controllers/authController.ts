@@ -148,41 +148,36 @@ export const deleteAccount = async (
   req: AuthRequestWithPassword,
   res: Response
 ) => {
-  const { email, password } = req.body;
-  // Input validation: check for missing or empty email/password
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required.' });
-  }
+  const userId = req.user?._id;
+  const { password } = req.body;
+  if (!userId)
+    return res.status(401).json({ error: 'Unauthorized: No user ID found' });
+  if (!password) return res.status(400).json({ error: 'Password is required' });
+
   try {
-    // 1. Find user by email
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.status(400).json({ error: 'Invalid credentials' });
-    }
+    // Fetch only the password field from the user document
+    const user = await User.findById(userId).select('+password').exec();
+    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
 
     // --- DEFENSIVE CHECK ---
     // Prevents server crash (500) if the user record is corrupted (missing password)
     if (!user.password) {
-      console.error(`Error: User ${email} has no password field in DB.`);
+      console.error(`Error: User ${userId} has no password field in DB.`);
       return res.status(400).json({
         error:
           'There was a problem with your account. Please contact support at support@example.com.',
       });
     }
 
-    // 2. Validate password
+    // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
-    }
+    if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
-    // 3. Delete user account
-    let result = await User.deleteOne({ _id: user._id });
-    if (result.deletedCount === 1) {
-      res.status(200).json({ message: 'Account deleted successfully' });
-    } else {
-      res.status(500).json({ error: 'Error deleting account' });
-    }
+    // Delete user account
+    const result = await User.deleteOne({ _id: userId }).exec();
+    if (result.deletedCount === 1)
+      res.status(204).json({ message: 'Account deleted successfully' });
+    else res.status(500).json({ error: 'Error deleting account' });
   } catch (error) {
     console.error('Delete Account Error:', error);
     res.status(500).json({ error: 'Server error during account deletion' });

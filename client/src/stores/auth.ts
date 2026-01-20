@@ -163,7 +163,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const deleteAccount = async (email: string, password: string) => {
+  const deleteAccount = async (password: string) => {
     // For safety, we check if token exists before attempting account deletion.
     if (!token.value) return;
 
@@ -172,7 +172,7 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
 
     try {
-      const body = { email: email, password: password };
+      const body = { password: password };
       await api.post('/auth/delete', body);
 
       clearAuthenticationStore();
