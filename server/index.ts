@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { initSocket } from './src/config/socket.js';
 import connectDB from './src/config/db.js';
@@ -70,6 +70,10 @@ app.use(
 initSocket(httpServer, app, CLIENT_ORIGIN);
 
 const welcomeMessage = 'Welcome to the By Trail API';
+const welcome = async (_: Request, res: Response) => {
+  console.log(welcomeMessage);
+  res.send(welcomeMessage);
+};
 
 // Routes
 app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
@@ -78,11 +82,8 @@ app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/routes', routesRoutes);
 app.use('/api/proposal', proposalRoutes);
 app.use('/api/notifications', notificationsRoutes);
-app.get('/api', (_, res) => {
-  console.log(welcomeMessage);
-  res.send(welcomeMessage);
-});
 app.use('/api/admin', adminRoutes);
+app.get('/api', welcome);
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening at: http://localhost:${PORT}/`);
