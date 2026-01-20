@@ -260,12 +260,12 @@ export const fetchProposals = async (req: AuthRequest, res: Response) => {
       (proposal) => {
         // Because of lean(), we can treat 'sender' as a plain object or check if it exists
         // Check if sender is populated and has an email (handle deleted users edge case)
-        const sender = proposal.sender as unknown as UserDocument | null;
-
+        // Exclude the sender field from the serialized response to avoid leaking internal IDs
+        const { sender: sender, ...proposalWithoutSender } = proposal;
         return {
-          ...proposal,
-          senderEmail: sender?.email,
-        };
+          ...proposalWithoutSender,
+          senderEmail: (sender as unknown as UserDocument | null)?.email,
+        } as ProposalWithEmail;
       }
     );
 
