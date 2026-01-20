@@ -1,8 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
+import { RoutePathTypeEnum } from '../types/index.js';
 import toGeoJSON from '@mapbox/togeojson';
 import { FeatureCollection, LineString, MultiLineString } from 'geojson';
+
+const { LINE_STRING, MULTI_LINE_STRING } = RoutePathTypeEnum;
 
 export const getGeoJsonFromGpx = (
   fileName: string
@@ -22,8 +25,7 @@ export const getGeoJsonFromGpx = (
 
     const track = geoJSON.features.find(
       (f) =>
-        f.geometry.type === 'LineString' ||
-        f.geometry.type === 'MultiLineString'
+        f.geometry.type === LINE_STRING || f.geometry.type === MULTI_LINE_STRING
     );
 
     if (!track) return null;

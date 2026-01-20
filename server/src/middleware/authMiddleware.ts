@@ -5,6 +5,12 @@ import { User } from '../models/models.js';
 import { getSecret } from '../utils/secrets.js';
 import { NextFunction, Response } from 'express';
 import { AuthRequest } from '../types/server_only.js';
+import { UserStatusEnum } from 'src/types/index.js';
+import { minsToMillis } from 'src/utils/middleware.js';
+
+const windowDurationMins = 15;
+const maxRequestPerWindow = 10;
+const message = `Too many authentication attempts, please try again after ${windowDurationMins} minutes.`;
 
 export const protect = async (
   req: AuthRequest,
@@ -41,7 +47,7 @@ export const protect = async (
       }
 
       // 6. Check if user is banned
-      if (req.user.status === 'banned') {
+      if (req.user.status === UserStatusEnum.BANNED) {
         return res.status(403).json({ message: 'User is banned' });
       }
 
@@ -60,10 +66,9 @@ export const protect = async (
 
 // Rate limiter for authentication endpoints
 export const authRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit each IP to 10 requests per windowMs
-  message:
-    'Too many authentication attempts from this IP, please try again after 15 minutes',
+  windowMs: minsToMillis(windowDurationMins),
+  max: maxRequestPerWindow, // Limit each IP to n requests per windowMs
+  message: message,
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });

@@ -5,6 +5,7 @@ import validator from 'validator';
 import { User } from '../models/models.js';
 import { AuthRequestWithPassword } from '../types/server_only.js';
 import { getSecret } from '../utils/secrets.js';
+import { UserStatusEnum, UserTypeEnum } from 'src/types/index.js';
 
 let JWT_SECRET;
 try {
@@ -70,8 +71,8 @@ export const signup = async (req: Request, res: Response) => {
       email: validator.normalizeEmail(email), // Normalize email
       password: hashedPassword,
       favRegions: favRegions || [], // Optional
-      status: 'active', // Default status
-      type: 'user', // Default type
+      status: UserStatusEnum.ACTIVE, // Default status
+      type: UserTypeEnum.USER, // Default type
     });
 
     // 7. Save user to database
@@ -109,7 +110,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // 2. Check if user is banned
-    if (user.status === 'banned') {
+    if (user.status === UserStatusEnum.BANNED) {
       return res.status(403).json({
         message: 'Your account has been banned. Please contact support.',
       });
