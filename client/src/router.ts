@@ -12,6 +12,7 @@ import Route from './pages/route/Route.vue';
 import Routes from './pages/routes/Routes.vue';
 import Settings from './pages/settings/Settings.vue';
 import Signup from './pages/signup/Signup.vue';
+import { i18n } from '@/i18n';
 
 const routes = [
   {
@@ -24,53 +25,63 @@ const routes = [
         path: 'maps',
         name: 'Maps',
         component: Maps,
+        meta: { titleKey: 'maps' },
       },
       {
         path: 'routes',
         name: 'Routes',
         component: Routes,
+        meta: { titleKey: 'routes' },
       },
       {
         path: 'bivouacs',
         name: 'Bivouacs',
         component: Bivouacs,
+        meta: { titleKey: 'bivouacs' },
       },
       {
         path: 'profile',
         name: 'Profile',
         component: Profile,
+        meta: { titleKey: 'profile' },
       },
       {
         path: 'activities',
         name: 'Activities',
         component: Activities,
+        meta: { titleKey: 'activities' },
       },
       {
         path: 'notifications',
         name: 'Notifications',
         component: Notification,
+        meta: { titleKey: 'notifications' },
       },
       {
         path: 'settings',
         name: 'Settings',
         component: Settings,
+        meta: { titleKey: 'settings' },
       },
       {
         path: 'admin',
         name: 'Admin',
         component: Admin,
+        meta: { titleKey: 'admin' },
       },
       {
         path: 'bivouac/:id',
         name: 'Bivouac',
         component: Bivouac,
         props: true,
+        meta: { titleKey: 'bivouacs' },
       },
       {
         path: 'route/:id',
         name: 'Route',
         component: Route,
         props: true,
+        meta: { titleKey: 'routes' },
       },
     ],
   },
@@ -78,11 +89,13 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: { titleKey: 'login' },
   },
   {
     path: '/signup',
     name: 'Signup',
     component: Signup,
+    meta: { titleKey: 'signup' },
   },
 ];
 
@@ -96,8 +109,18 @@ const isAuthenticated = (): boolean => {
   return !!localStorage.getItem('token');
 };
 
-// Apply the navigation guard
+// Apply the navigation guard and translations
 router.beforeEach((to, _from, next) => {
+  // Handle Title Translation
+  const titleKey = to.meta.titleKey as string;
+  if (titleKey) {
+    // Access the global translation function
+    document.title = `${i18n.global.t(titleKey)} | By Trail`;
+  } else {
+    document.title = 'By Trail';
+  }
+
+  // Handle Auth
   if (
     to.matched.some((record) => record.meta.requiresAuth) &&
     !isAuthenticated()
