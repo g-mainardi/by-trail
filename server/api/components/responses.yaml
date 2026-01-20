@@ -1,0 +1,157 @@
+# 200 - OK
+SuccessfulUpdate:
+  description: Resource updated successfully.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example:
+              - 'Resource updated successfully'
+              - 'No changes were made to the resource'
+
+# 400 - Bad Request
+BadUpdateRequest:
+  description: Invalid update request format or validation error.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example:
+              - 'Invalid ID format'
+              - 'No valid fields provided for update'
+
+InvalidIdFormat:
+  description: The provided ID format is invalid.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Invalid ID format'
+
+# 401 - Unauthorized
+UnauthorizedError:
+  description: Authentication failed. Token missing, invalid, or expired.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Not authorized, token failed'
+
+# 403 - Forbidden
+ForbiddenError_onlyAdmin:
+  description: Access denied. User lacks necessary permissions (Admin required).
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Admin access required'
+
+ForbiddenError_bannedUser:
+  description: Access denied. User is banned.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'User is banned'
+
+ForbiddenError_admin:
+  description: Access denied. Cannot perform this action on admin users.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example:
+              - 'Cannot perform delete an admin user'
+              - 'Cannot change status of an admin user'
+
+# 404 - Not Found
+UserNotFound:
+  description: The requested user does not exist.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'User not found'
+BivouacNotFound:
+  description: The requested bivouac does not exist.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Bivouac not found'
+RouteNotFound:
+  description: The requested route does not exist.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Route not found'
+ProposalNotFound:
+  description: The requested proposal does not exist.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Proposal not found'
+
+# 429 - Too Many Requests
+TooManyRequestsError:
+  description: Rate limit exceeded.
+  headers:
+    Retry-After:
+      description: The number of seconds to wait before retrying.
+      schema:
+        type: integer
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Too many requests, please try again later.'
+
+# 500 - Internal Server Error
+ServerError:
+  description: Unexpected server error.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Server Error'
