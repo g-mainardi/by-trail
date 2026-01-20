@@ -4,7 +4,21 @@ import path from 'path';
 import { getDbConfig } from './src/config/db.js';
 import { getGeoJsonFromGpx } from './src/utils/seedHelpers.js';
 
-import { Bivouac, Route } from './src/models/models.js';
+import { Bivouac, Route, Image } from './src/models/models.js';
+
+const bivouacsImages: string[] = [
+  './src/data/bivouacs/bivouac-2.jpg',
+  './src/data/bivouacs/bivouac-3.jpg',
+  './src/data/bivouacs/bivouac-4.jpg',
+  './src/data/bivouacs/bivouac-5.jpg',
+];
+
+const routesImages: string[] = [
+  './src/data/routes/route-2.jpg',
+  './src/data/routes/route-3.jpg',
+  './src/data/routes/route-4.jpg',
+  './src/data/routes/route-5.jpg',
+];
 
 const loadData = (fileName: string) => {
   try {
@@ -20,7 +34,10 @@ const loadData = (fileName: string) => {
 
 const seedData = async () => {
   try {
-    const { uri, type } = getDbConfig();
+    const { uri, type } = {
+      uri: 'mongodb+srv://elvisperlika_db_user:Rc2vY4H0s1RW9k0M@cluster0.s5pavkk.mongodb.net/by_trail?appName=Cluster0',
+      type: 'ATLAS',
+    }; // getDbConfig();
 
     if (!uri) {
       throw new Error(
@@ -34,14 +51,39 @@ const seedData = async () => {
 
     await mongoose.connect(uri);
 
+    // SEED IMAGES
+    await Image.deleteMany({});
+    for (const imagePath of bivouacsImages) {
+      const imgData = fs.readFileSync(path.join(process.cwd(), imagePath));
+      const newImage = new Image({
+        name: path.basename(imagePath),
+        img: {
+          data: imgData,
+          contentType: 'image/jpeg',
+        },
+      });
+      await newImage.save();
+    }
+    for (const imagePath of routesImages) {
+      const imgData = fs.readFileSync(path.join(process.cwd(), imagePath));
+      const newImage = new Image({
+        name: path.basename(imagePath),
+        img: {
+          data: imgData,
+          contentType: 'image/jpeg',
+        },
+      });
+      await newImage.save();
+    }
+
     // SEED BIVOUACS
-    const bivouacsData = loadData('bivaccos.json');
+    const bivouacsData = loadData('bivouacs.json');
 
     await Bivouac.deleteMany({});
     await Bivouac.insertMany(bivouacsData.bivouacs);
 
     // SEED ROUTES
-    const routesMeta = loadData('routes_meta.json');
+    const routesMeta = loadData('routes.json');
     const routesToInsert = [];
 
     for (const meta of routesMeta.routes) {

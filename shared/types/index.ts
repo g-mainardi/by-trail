@@ -97,6 +97,7 @@ export interface Bivouac {
   altitude?: number;
   capacity?: number;
   note?: string;
+  images?: string[];
 }
 
 export type PathObj = {
@@ -117,6 +118,7 @@ export interface Route {
   routeType: RouteType;
   note?: string;
   path?: PathObj;
+  images?: string[];
 }
 
 export interface Proposal {

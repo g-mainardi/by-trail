@@ -116,7 +116,11 @@ const routeSchema = new Schema(
 
 // IMAGE
 const imageSchema = new Schema({
-  url: { type: String },
+  name: String,
+  img: {
+    data: Buffer,
+    contentType: String,
+  },
   uploadedDate: { type: Date, default: Date.now },
 });
 
