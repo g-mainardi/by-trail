@@ -98,7 +98,6 @@ const alertConfig = computed(() => {
         <div class="font-medium pl-4">{{ row.subjectName }}</div>
       </template>
 
-      <!-- make the #cell-senderEmail template cell to visualize the email with the link to emailto -->
       <template #cell-senderEmail="{ row }">
         <a
           v-if="row.senderEmail"
@@ -148,7 +147,7 @@ const alertConfig = computed(() => {
 </template>
 <style scoped>
 .route {
-  background-color: lightblue;
+  background-color: #fab375;
 }
 </style>
 <i18n>
