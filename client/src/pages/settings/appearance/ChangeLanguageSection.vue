@@ -6,8 +6,10 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <H1>{{ t('change_language') }}</H1>
-  <SelectLanguage />
+  <div class="flex flex-col gap-4">
+    <H1>{{ t('change_language') }}</H1>
+    <SelectLanguage />
+  </div>
 </template>
 
 <i18n>

@@ -10,12 +10,12 @@ const auth = useAuthStore();
 </script>
 
 <template>
-  <H1 class="mb-6">{{ t('delete_account_title') }}</H1>
+  <H1>{{ t('delete_account_title') }}</H1>
   <DeleteAccountForm />
   <Alert
     variant="destructive"
     v-if="auth.isAccountDeleteFailed"
-    class="mt-2 w-[50%]"
+    class="w-[50%]"
   >
     <AlertCircleIcon />
     <AlertTitle>{{ t('delete_account_failed') }}</AlertTitle>

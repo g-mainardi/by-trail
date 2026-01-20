@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue';
 import {
   useNotificationStore,
   type NotificationItem,
 } from '@/stores/notifications';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import NotificationCard from '@/pages/notifications/NotificationCard.vue';
-import Card from '@/components/ui/card/Card.vue';
-import CardHeader from '@/components/ui/card/CardHeader.vue';
-import CardContent from '@/components/ui/card/CardContent.vue';
 import Button from '@/components/ui/button/Button.vue';
+import Card from '@/components/ui/card/Card.vue';
+import CardContent from '@/components/ui/card/CardContent.vue';
+import CardHeader from '@/components/ui/card/CardHeader.vue';
 import H3 from '@/layouts/typography/H3.vue';
+import NotificationCard from '@/pages/notifications/NotificationCard.vue';
 import { MailOpen } from 'lucide-vue-next';
 
 const notificationStore = useNotificationStore();
@@ -160,9 +160,7 @@ onUnmounted(() => {
 
     <div v-if="notifications.length === 0" class="mt-10 text-center">
       <MailOpen class="mx-auto" />
-      <H3 class="mt-2 text-sm font-medium text-gray-900">{{
-        t('no_notifications')
-      }}</H3>
+      <H3 class="mt-2 text-sm font-medium">{{ t('no_notifications') }}</H3>
     </div>
   </Card>
 </template>

@@ -20,7 +20,7 @@ const route = props.route;
 </script>
 
 <template>
-  <Card class="p-4 gap-4 h-full flex flex-col">
+  <Card class="p-4 gap-4 h-full flex flex-col justify-between">
     <RouterLink :to="`/route/${route._id}`" aria-label="View Route Details">
       <CardTitle>
         <div class="relative w-full mb-2">
