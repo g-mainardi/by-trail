@@ -80,7 +80,7 @@ app.use('/api/auth', authRoutes); // Auth routes (e.g., /api/auth/login)
 app.use('/api/users', userRoutes); // User routes (e.g., /api/users/profile)
 app.use('/api/bivouacs', bivouacsRoutes);
 app.use('/api/routes', routesRoutes);
-app.use('/api/proposal', proposalRoutes);
+app.use('/api/proposals', proposalRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/admin', adminRoutes);
 app.get('/api', welcome);

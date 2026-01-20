@@ -13,7 +13,7 @@ export const useProposalStore = defineStore('proposal', () => {
     proposalError.value = null;
 
     try {
-      await api.post('/proposal', proposalData);
+      await api.post('/proposals', proposalData);
       // If we are here, status is 2xx
       return true;
     } catch (err: any) {
