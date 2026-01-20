@@ -1,41 +1,39 @@
 type: object
+description: Represents a hiking route or trail.
 properties:
   _id:
     type: string
     format: uuid
-  name:
+  title:
     type: string
   region:
-    type: string
-  mountainRange:
-    type: string
-  comune:
-    type: string
-  coords:
-    type: object
-    properties:
-      latitude:
-        type: number
-      longitude:
-        type: number
-    required:
-      - latitude
-      - longitude
-  altitude:
+    type: array
+    description: Regions crossed by the route
+    items:
+      $ref: './Enums.yaml#/Region'
+  difficulty:
+    $ref: './Enums.yaml#/Difficulty'
+  distance:
     type: number
-  capacity:
+    description: Total distance in km
+  ascent:
     type: number
-  likes:
+  descent:
     type: number
+  duration:
+    type: number
+    description: Estimated duration in minutes
+  routeType:
+    $ref: './Enums.yaml#/RouteType'
   note:
     type: string
-required:
-  - _id
-  - name
-  - region
-  - mountainRange
-  - comune
-  - coords
-  - altitude
-  - capacity
-  - likes
+  path:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [LineString, MultiLineString]
+      coordinates:
+        type: array
+        items:
+          type: array

@@ -1,0 +1,64 @@
+Region:
+  type: string
+  description: The Italian region where the resource is located.
+  enum:
+    - Abruzzo
+    - Basilicata
+    - Calabria
+    - Campania
+    - Emilia-Romagna
+    - Friuli Venezia Giulia
+    - Lazio
+    - Liguria
+    - Lombardia
+    - Marche
+    - Molise
+    - Piemonte
+    - Puglia
+    - Sardegna
+    - Sicilia
+    - Toscana
+    - Trentino-Alto Adige
+    - Umbria
+    - Valle d'Aosta
+    - Veneto
+
+UserRole:
+  type: string
+  description: The permission level of the user.
+  enum:
+    - admin
+    - user
+  default: user
+
+UserStatus:
+  type: string
+  description: The current status of the user account.
+  enum:
+    - active
+    - banned
+
+Difficulty:
+  type: string
+  description: 'CAI Difficulty Scale: T (Turistico), E (Escursionistico), EE (Escursionisti Esperti), EEA (Attrezzato)'
+  enum:
+    - T
+    - E
+    - EE
+    - EEA
+
+RouteType:
+  type: string
+  description: The topology of the route.
+  enum:
+    - circular
+    - out-and-back
+    - point-to-point
+    - stage
+
+ProposalType:
+  type: string
+  description: The type of resource being proposed.
+  enum:
+    - route
+    - bivouac
