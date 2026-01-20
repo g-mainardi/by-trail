@@ -14,6 +14,7 @@ import { useI18n } from 'vue-i18n';
 const props = defineProps<{
   proposal: {
     id: string;
+    email?: string;
   };
 }>();
 
@@ -25,6 +26,10 @@ const { t } = useI18n();
 
 function copyId() {
   navigator.clipboard.writeText(props.proposal.id);
+}
+
+function copySenderEmail() {
+  navigator.clipboard.writeText(props.proposal.email ?? '');
 }
 </script>
 
@@ -44,6 +49,12 @@ function copyId() {
       </DropdownMenuItem>
       <DropdownMenuSeparator />
 
+      <DropdownMenuItem v-if="props.proposal.email" @click="copySenderEmail">
+        <Copy class="mr-2 h-4 w-4" />
+        {{ t('copy_sender_email') }}
+      </DropdownMenuItem>
+      <DropdownMenuSeparator v-if="props.proposal.email" />
+
       <DropdownMenuItem
         class="text-red-600 focus:text-red-600"
         @click="$emit('delete', proposal.id)"
@@ -60,18 +71,21 @@ function copyId() {
     "open_menu": "Open menu",
     "actions": "Actions",
     "copy_id": "Copy ID",
+    "copy_sender_email": "Copy Sender Email",
     "delete_proposal": "Delete Proposal"
   },
   "it": {
     "open_menu": "Apri menu",
     "actions": "Azioni",
     "copy_id": "Copia ID",
+    "copy_sender_email": "Copia Email Mittente",
     "delete_proposal": "Elimina Proposta"
   },
   "es": {
     "open_menu": "Abrir menú",
     "actions": "Acciones",
     "copy_id": "Copiar ID",
+    "copy_sender_email": "Copiar Correo del Remitente",
     "delete_proposal": "Eliminar Propuesta"
   }
 }

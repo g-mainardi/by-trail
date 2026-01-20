@@ -5,8 +5,13 @@ import {
   RoutePathTypeEnum,
   UserStatusEnum,
   UserTypeEnum,
+  ProposalWithEmail,
 } from '../types/index.js';
-import { AuthRequest, EXCLUDED_UPDATE_FIELDS } from '../types/server_only.js';
+import {
+  AuthRequest,
+  EXCLUDED_UPDATE_FIELDS,
+  UserDocument,
+} from '../types/server_only.js';
 import { User, Bivouac, Route, Proposal } from '../models/models.js';
 import mongoose from 'mongoose';
 
@@ -244,9 +249,27 @@ export const deleteRoute = async (req: AuthRequest, res: Response) => {
 
 export const fetchProposals = async (req: AuthRequest, res: Response) => {
   try {
-    const proposals = await Proposal.find().exec();
+    // Fetch proposals and populate only the necessary sender fields (email)
+    // Using lean() converts Mongoose Documents into plain JavaScript objects immediately
+    const proposals = await Proposal.find()
+      .populate('sender', 'email')
+      .lean()
+      .exec();
 
-    return res.status(200).json({ proposals });
+    const proposalsWithEmail: ProposalWithEmail[] = proposals.map(
+      (proposal) => {
+        // Because of lean(), we can treat 'sender' as a plain object or check if it exists
+        // Check if sender is populated and has an email (handle deleted users edge case)
+        const sender = proposal.sender as unknown as UserDocument | null;
+
+        return {
+          ...proposal,
+          senderEmail: sender?.email,
+        };
+      }
+    );
+
+    return res.status(200).json({ proposals: proposalsWithEmail });
   } catch (error) {
     console.error('Error fetching proposals:', error);
     return res.status(500).json({ error: 'Internal server error' });

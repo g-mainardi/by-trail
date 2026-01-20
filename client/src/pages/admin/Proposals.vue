@@ -30,6 +30,7 @@ const getProposalId = (proposal: Proposal): string => {
 
 const columns = [
   { accessorKey: 'subjectName', header: t('subject_name') },
+  { accessorKey: 'senderEmail', header: t('sender_email') },
   { accessorKey: 'type', header: t('type') },
   { accessorKey: 'region', header: t('region') },
   { accessorKey: 'locality', header: t('locality') },
@@ -97,6 +98,17 @@ const alertConfig = computed(() => {
         <div class="font-medium pl-4">{{ row.subjectName }}</div>
       </template>
 
+      <!-- make the #cell-senderEmail template cell to visualize the email with the link to emailto -->
+      <template #cell-senderEmail="{ row }">
+        <a
+          v-if="row.senderEmail"
+          :href="`mailto:${row.senderEmail}`"
+          class="text-blue-600 hover:underline"
+          >{{ row.senderEmail }}</a
+        >
+        <span v-else class="text-muted-foreground">-</span>
+      </template>
+
       <template #cell-type="{ row }">
         <span
           class="capitalize badge badge-outline px-2 py-1 rounded-full text-xs bg-secondary"
@@ -126,6 +138,7 @@ const alertConfig = computed(() => {
           :proposal="{
             ...row,
             id: getProposalId(row),
+            email: row.senderEmail,
           }"
           @delete="onDeleteProposal(row)"
         />
@@ -142,6 +155,7 @@ const alertConfig = computed(() => {
 {
   "en": {
     "subject_name": "Subject Name",
+    "sender_email": "Sender Email",
     "type": "Type",
     "region": "Region",
     "locality": "Locality",
@@ -154,6 +168,7 @@ const alertConfig = computed(() => {
   },
   "it": {
     "subject_name": "Nome Soggetto",
+    "sender_email": "Email Mittente",
     "type": "Tipo",
     "region": "Regione",
     "locality": "Località",
@@ -166,6 +181,7 @@ const alertConfig = computed(() => {
   },
   "es": {
     "subject_name": "Nombre del Sujeto",
+    "sender_email": "Correo del Remitente",
     "type": "Tipo",
     "region": "Región",
     "locality": "Localidad",
