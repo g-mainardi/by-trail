@@ -24,6 +24,8 @@ import {
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import type { RouteFilter } from '../filterbar/filters';
+import { RouteDifficultyEnum } from '@/types';
+
 const { t } = useI18n();
 
 defineProps<{
@@ -33,7 +35,7 @@ defineProps<{
   };
 }>();
 
-const difficulties = ['All', 'T', 'E', 'EE', 'EEA'];
+const difficulties = ['All', ...Object.values(RouteDifficultyEnum)];
 </script>
 
 <template>

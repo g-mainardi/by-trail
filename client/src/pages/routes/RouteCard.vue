@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
 import { placeholderRoute } from '@/services/placeholders';
-import type { Route } from '@/types';
+import { RouteDifficultyEnum, type Route } from '@/types';
 import {
   Clock as ClockIcon,
   Heart,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
+const { T, E, EE, EEA } = RouteDifficultyEnum;
 
 function formatDuration(minutes: number): string {
   if (!minutes) return '-';
@@ -25,13 +26,13 @@ function formatDuration(minutes: number): string {
 // Helper to determine difficulty color
 const getDifficultyColor = (diff: string) => {
   switch (diff) {
-    case 'T':
+    case T:
       return 'text-green-600 border-green-200 bg-green-50';
-    case 'E':
+    case E:
       return 'text-blue-600 border-blue-200 bg-blue-50';
-    case 'EE':
+    case EE:
       return 'text-orange-600 border-orange-200 bg-orange-50';
-    case 'EEA':
+    case EEA:
       return 'text-red-600 border-red-200 bg-red-50';
     default:
       return 'text-gray-600';
