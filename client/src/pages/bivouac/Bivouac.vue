@@ -3,7 +3,6 @@ import Button from '@/components/ui/button/Button.vue';
 import Calendar from '@/components/ui/calendar/Calendar.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
-import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import {
   Select,
@@ -88,11 +87,9 @@ async function updateIntentions() {
 }
 
 const sendIntention = async () => {
-  const dateString = selectedDate.value.toString();
-
   const res = await intentionStore.sendIntention(
     bivouac.value?._id || '',
-    dateString,
+    selectedDate.value.toDate(getLocalTimeZone()),
     people.value
   );
   if (res.success) {
@@ -200,7 +197,7 @@ onMounted(async () => {
       <!-- RIGHT SIDE -->
       <div class="right w-full md:w-[30%]">
         <!-- MY INTENTIONS -->
-        <H2>My Intentions</H2>
+        <H2>{{ t('my_programs') }}</H2>
         <div
           class="flex flex-col gap-4 my-4"
           v-if="userBivouacIntentions.length > 0"
@@ -219,7 +216,7 @@ onMounted(async () => {
                 :style="{ width: '1.5rem', height: '1.5rem' }"
                 @click="cancelIntention(intention._id || '')"
               >
-                <X class="icon" style="width: 1rem; height: 1rem" />
+                <X class="icon" />
               </Button>
             </div>
           </div>
@@ -237,7 +234,7 @@ onMounted(async () => {
           <div v-for="intention in reducedBivouacIntentions">
             <div class="icon-with-text">
               <span class="date_icon">
-                <Circle />
+                <Circle class="icon" />
                 {{ new Date(intention.date).toDateString() }}:
                 {{ intention.people }}/{{ bivouac?.capacity }}
                 people.
@@ -253,15 +250,15 @@ onMounted(async () => {
         <H2 class="mt-4">{{ t('additional_info') }}</H2>
         <div class="flex flex-col gap-4 my-4">
           <div class="icon-with-text">
-            <MountainIcon />
+            <MountainIcon class="icon" />
             <span class="">{{ bivouac?.altitude }} mt </span>
           </div>
           <div class="icon-with-text">
-            <BedIcon />
+            <BedIcon class="icon" />
             <span>{{ bivouac?.capacity }} {{ t('beds') }}</span>
           </div>
           <div class="icon-with-text">
-            <ToiletIcon class="icon" /><span class="">N/A</span>
+            <ToiletIcon class="icon" /><span class="">N/A Info</span>
           </div>
           <div class="icon-with-text">
             <MapPinIcon class="icon" />
@@ -298,7 +295,6 @@ onMounted(async () => {
         </div>
       </div>
     </CardContent>
-    <CardFooter></CardFooter>
   </Card>
 </template>
 
@@ -310,6 +306,8 @@ onMounted(async () => {
 }
 
 .icon {
+  width: 1.25rem;
+  height: 1.25rem;
   min-width: 1.25rem;
   min-height: 1.25rem;
 }
@@ -366,7 +364,8 @@ onMounted(async () => {
         people have expressed the intention to go to the same bivouac on the
         various days.",
     "explain_your_intentions": "You have not expressed any intentions yet. Use the form above to plan your visit.",
-    "explain_other_intentions": "No one has expressed intentions yet. Be the first to plan your visit!"
+    "explain_other_intentions": "No one has expressed intentions yet. Be the first to plan your visit!",
+    "my_programs": "My programs"
   },
   "it": {
     "description": "Descrizione",
@@ -390,7 +389,8 @@ onMounted(async () => {
         persone hanno espresso l'intenzione di andare nello stesso bivacco nei
         vari giorni.",
     "explain_your_intentions": "Non hai ancora espresso intenzioni. Usa il modulo sopra per pianificare la tua visita.",
-    "explain_other_intentions": "Nessuno ha ancora espresso intenzioni. Sii il primo a pianificare la tua visita!"
+    "explain_other_intentions": "Nessuno ha ancora espresso intenzioni. Sii il primo a pianificare la tua visita!",
+    "my_programs": "I miei programmi"
   },
   "es": {
     "description": "Descripción",
@@ -414,7 +414,8 @@ onMounted(async () => {
         personas han expresado la intención de ir al mismo bivouac en los
         varios días.",
     "explain_your_intentions": "Aún no has expresado intenciones. Usa el formulario de arriba para planificar tu visita.",
-    "explain_other_intentions": "Nadie ha expresado intenciones todavía. ¡Sé el primero en planificar tu visita!"
+    "explain_other_intentions": "Nadie ha expresado intenciones todavía. ¡Sé el primero en planificar tu visita!",
+    "my_programs": "Mis programas"
   }
 }
 </i18n>
