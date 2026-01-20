@@ -253,15 +253,17 @@ export const fetchAnonymousBivouacIntentions = async (
   req: AuthRequest,
   res: Response
 ) => {
-  const { bivouacId } = req.query;
-
-  if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId as string)) {
+  const { id } = req.params;
+  console.log(
+    `[FetchAnonymousBivouacIntentions] Received request for bivouacId: ${id}`
+  );
+  if (!id || !mongoose.Types.ObjectId.isValid(id as string)) {
     return res.status(400).json({ error: 'Invalid bivouacId' });
   }
 
   try {
     const intentions = await Reservation.find({
-      bivouac: bivouacId,
+      bivouac: id,
     });
 
     return res.status(200).json({

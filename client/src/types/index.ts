@@ -120,11 +120,18 @@ export interface Route {
 }
 
 export interface Proposal {
+  _id?: UUID;
+  id?: string;
   type: ProposalType;
   subjectName: string;
   description: string;
   region: Region;
   locality: string;
+  submissionDate?: Date;
+}
+
+export interface ProposalWithEmail extends Proposal {
+  senderEmail?: string;
 }
 
 export interface Intention {

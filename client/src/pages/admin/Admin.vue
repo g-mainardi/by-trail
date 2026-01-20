@@ -2,7 +2,7 @@
 import Card from '@/components/ui/card/Card.vue';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from 'vue-i18n';
-import Alerts from './Alerts.vue';
+import Proposals from './Proposals.vue';
 import Bivouacs from './Bivouacs.vue';
 import Routes from './Routes.vue';
 import Users from './Users.vue';
@@ -25,8 +25,8 @@ const { t } = useI18n();
       <TabsTrigger value="paths">
         {{ t('tab_paths') }}
       </TabsTrigger>
-      <TabsTrigger value="alerts">
-        {{ t('tab_alerts') }}
+      <TabsTrigger value="proposals">
+        {{ t('tab_proposals') }}
       </TabsTrigger>
     </TabsList>
 
@@ -72,16 +72,16 @@ const { t } = useI18n();
       </Card>
     </TabsContent>
 
-    <TabsContent value="alerts">
+    <TabsContent value="proposals">
       <Card class="card">
         <CardHeader>
-          <H1>{{ t('alerts_management') }}</H1>
+          <H1>{{ t('proposals_management') }}</H1>
           <P :no-margin="true" class="text-muted-foreground">
-            {{ t('manage_alerts_description') }}
+            {{ t('manage_proposals_description') }}
           </P>
         </CardHeader>
         <CardContent>
-          <Alerts />
+          <Proposals />
         </CardContent>
       </Card>
     </TabsContent>
@@ -94,43 +94,43 @@ const { t } = useI18n();
     "tab_users": "Users",
     "tab_bivouacs": "Bivouacs",
     "tab_paths": "Paths",
-    "tab_alerts": "Alerts",
+    "tab_proposals": "Proposals",
     "users_management": "Users Management",
     "manage_users_description": "Manage user accounts and permissions",
     "bivouacs_management": "Bivouacs Management",
     "manage_bivouacs_description": "Manage bivouac listings and details",
     "paths_management": "Paths Management",
     "manage_paths_description": "Oversee and update trail paths information",
-    "alerts_management": "Alerts Management",
-    "manage_alerts_description": "Handle user-reported alerts and issues"
+    "proposals_management": "Proposals Management",
+    "manage_proposals_description": "Handle user-reported proposals"
   },
   "it": {
     "tab_users": "Utenti",
     "tab_bivouacs": "Bivacchi",
     "tab_paths": "Sentieri",
-    "tab_alerts": "Segnalazioni",
+    "tab_proposals": "Proposte",
     "users_management": "Gestione Utenti",
     "manage_users_description": "Gestisci gli account utente e i permessi",
     "bivouacs_management": "Gestione Bivacchi",
     "manage_bivouacs_description": "Gestisci le liste e i dettagli dei bivacchi",
     "paths_management": "Gestione Sentieri",
     "manage_paths_description": "Supervisiona e aggiorna le informazioni sui sentieri",
-    "alerts_management": "Gestione Segnalazioni",
-    "manage_alerts_description": "Gestisci le segnalazioni e i problemi riportati dagli utenti"
+    "proposals_management": "Gestione Proposte",
+    "manage_proposals_description": "Gestisci le proposte segnalate dagli utenti"
   },
   "es": {
     "tab_users": "Usuarios",
     "tab_bivouacs": "Vivacs",
     "tab_paths": "Caminos",
-    "tab_alerts": "Alertas",
+    "tab_proposals": "Propuestas",
     "users_management": "Gestión de Usuarios",
     "manage_users_description": "Gestiona las cuentas de usuario y los permisos",
     "bivouacs_management": "Gestión de Vivacs",
     "manage_bivouacs_description": "Gestiona las listas y detalles de los vivacs",
     "paths_management": "Gestión de Caminos",
     "manage_paths_description": "Supervisa y actualiza la información de los senderos",
-    "alerts_management": "Gestión de Alertas",
-    "manage_alerts_description": "Maneja las alertas e incidencias reportadas por los usuarios"
+    "proposals_management": "Gestión de Propuestas",
+    "manage_proposals_description": "Maneja las propuestas reportadas por los usuarios"
   }
 }
 </i18n>

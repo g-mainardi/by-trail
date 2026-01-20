@@ -5,9 +5,14 @@ import {
   RoutePathTypeEnum,
   UserStatusEnum,
   UserTypeEnum,
+  ProposalWithEmail,
 } from '../types/index.js';
-import { AuthRequest, EXCLUDED_UPDATE_FIELDS } from '../types/server_only.js';
-import { User, Bivouac, Route } from '../models/models.js';
+import {
+  AuthRequest,
+  EXCLUDED_UPDATE_FIELDS,
+  UserDocument,
+} from '../types/server_only.js';
+import { User, Bivouac, Route, Proposal } from '../models/models.js';
 import mongoose from 'mongoose';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
@@ -238,6 +243,54 @@ export const deleteRoute = async (req: AuthRequest, res: Response) => {
     return res.status(204).end();
   } catch (error) {
     console.error('Error deleting route:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const fetchProposals = async (req: AuthRequest, res: Response) => {
+  try {
+    // Fetch proposals and populate only the necessary sender fields (email)
+    // Using lean() converts Mongoose Documents into plain JavaScript objects immediately
+    const proposals = await Proposal.find()
+      .populate('sender', 'email')
+      .lean()
+      .exec();
+
+    const proposalsWithEmail: ProposalWithEmail[] = proposals.map(
+      (proposal) => {
+        // Because of lean(), we can treat 'sender' as a plain object or check if it exists
+        // Check if sender is populated and has an email (handle deleted users edge case)
+        // Exclude the sender field from the serialized response to avoid leaking internal IDs
+        const { sender: sender, ...proposalWithoutSender } = proposal;
+        return {
+          ...proposalWithoutSender,
+          senderEmail: (sender as unknown as UserDocument | null)?.email,
+        } as ProposalWithEmail;
+      }
+    );
+
+    return res.status(200).json({ proposals: proposalsWithEmail });
+  } catch (error) {
+    console.error('Error fetching proposals:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteProposal = async (req: AuthRequest, res: Response) => {
+  const proposalId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(proposalId)) {
+    return res.status(400).json({ error: 'Invalid proposal ID format' });
+  }
+
+  try {
+    const deletionResult = await Proposal.deleteOne({ _id: proposalId }).exec();
+    if (deletionResult.deletedCount === 0)
+      return res.status(404).json({ error: 'Proposal not found' });
+
+    return res.status(204).end();
+  } catch (error) {
+    console.error('Error deleting proposal:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
