@@ -70,7 +70,7 @@ app.use(
 initSocket(httpServer, app, CLIENT_ORIGIN);
 
 const welcomeMessage = 'Welcome to the By Trail API';
-const welcome = async (_: Request, res: Response) => {
+const welcome = (_: Request, res: Response) => {
   console.log(welcomeMessage);
   res.send(welcomeMessage);
 };

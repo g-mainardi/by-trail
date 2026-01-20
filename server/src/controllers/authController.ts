@@ -175,8 +175,7 @@ export const deleteAccount = async (
 
     // Delete user account
     const result = await User.deleteOne({ _id: userId }).exec();
-    if (result.deletedCount === 1)
-      res.status(204).json({ message: 'Account deleted successfully' });
+    if (result.deletedCount === 1) res.status(204).json();
     else res.status(500).json({ error: 'Error deleting account' });
   } catch (error) {
     console.error('Delete Account Error:', error);
