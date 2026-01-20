@@ -1,7 +1,16 @@
 import { createI18n } from 'vue-i18n';
 
-const savedLocale = localStorage.getItem('locale') || 'en';
+function getSavedLocale(): string {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const stored = window.localStorage.getItem('locale');
+    if (stored) {
+      return stored;
+    }
+  }
+  return 'en';
+}
 
+const savedLocale = getSavedLocale();
 const messages = {
   en: {
     maps: 'Maps',
