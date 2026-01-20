@@ -130,6 +130,10 @@ export interface Proposal {
   submissionDate?: Date;
 }
 
+export interface ProposalWithEmail extends Proposal {
+  senderEmail?: string;
+}
+
 export interface Intention {
   _id: string;
   user: string;
