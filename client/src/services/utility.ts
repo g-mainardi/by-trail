@@ -30,7 +30,7 @@ export const routeIcon = L.divIcon({
       justify-content: center;
       width: ${iconSize[0]}px;
       height: ${iconSize[1]}px;
-      background: #bc6c25;
+      background: var(--primary-2);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     ">

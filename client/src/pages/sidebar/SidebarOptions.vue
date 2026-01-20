@@ -36,9 +36,11 @@ defineProps<{
               <component
                 :is="item.icon"
                 v-if="item.icon"
-                :class="item.color || 'text-black'"
+                :class="item.color || 'var(--primary)'"
               />
-              <span :class="item.color || 'text-black'">{{ item.title }}</span>
+              <span :class="item.color || 'var(--primary)'">{{
+                item.title
+              }}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </RouterLink>
