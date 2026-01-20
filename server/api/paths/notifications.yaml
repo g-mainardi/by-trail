@@ -1,0 +1,37 @@
+list:
+  get:
+    tags:
+      - Notifications
+    summary: Retrieve the list of notifications for the authenticated user
+
+deleteById:
+  delete:
+    tags:
+      - Notifications
+    summary: Delete a specific notification by ID
+    operationId: deleteNotificationById
+    parameters:
+      - $ref: '../components/parameters.yaml#/notificationId'
+
+markReadById:
+  patch:
+    tags:
+      - Notifications
+    summary: Mark a specific notification as read by ID
+    operationId: markNotificationAsReadById
+    parameters:
+      - $ref: '../components/parameters.yaml#/notificationId'
+
+markAllRead:
+  patch:
+    tags:
+      - Notifications
+    summary: Mark all notifications as read for the authenticated user
+    operationId: markAllNotificationsAsRead
+
+testRealtimeReservation:
+  post:
+    tags:
+      - Notifications
+    summary: Test real-time reservation notification for the authenticated user
+    operationId: testRealtimeReservationNotification

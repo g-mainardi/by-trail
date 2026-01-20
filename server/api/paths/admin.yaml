@@ -1,0 +1,102 @@
+listUsers:
+  get:
+    tags:
+      - Admin
+    summary: List all users
+    operationId: listAllUsers
+    responses:
+      '200':
+        description: A list of users
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/User.yaml'
+
+deleteUserById:
+  delete:
+    tags:
+      - Admin
+    summary: Delete a user by ID
+    operationId: deleteUserById
+    parameters:
+      - $ref: '../components/parameters.yaml#/userId'
+
+updateUserStatus:
+  patch:
+    tags:
+      - Admin
+    summary: Update a user's status (active, banned)
+    operationId: updateUserStatus
+    parameters:
+      - $ref: '../components/parameters.yaml#/userId'
+
+manageBivouacById:
+  delete:
+    tags:
+      - Admin
+    summary: Delete a bivouac by ID
+    operationId: deleteBivouacById
+    parameters:
+      - $ref: '../components/parameters.yaml#/bivouacId'
+  patch:
+    tags:
+      - Admin
+    summary: Update a bivouac by ID
+    operationId: updateBivouacById
+    parameters:
+      - $ref: '../components/parameters.yaml#/bivouacId'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Bivouac.yaml'
+
+manageRouteById:
+  delete:
+    tags:
+      - Admin
+    summary: Delete a route by ID
+    operationId: deleteRouteById
+    parameters:
+      - $ref: '../components/parameters.yaml#/routeId'
+  patch:
+    tags:
+      - Admin
+    summary: Update a route by ID
+    operationId: updateRouteById
+    parameters:
+      - $ref: '../components/parameters.yaml#/routeId'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/Route.yaml'
+
+listProposals:
+  get:
+    tags:
+      - Admin
+    summary: List all proposals
+    operationId: listAllProposals
+    responses:
+      '200':
+        description: A list of proposals
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/Proposal.yaml'
+
+deleteProposalById:
+  delete:
+    tags:
+      - Admin
+    summary: Delete a proposal by ID
+    operationId: deleteProposalById
+    parameters:
+      - $ref: '../components/parameters.yaml#/proposalId'

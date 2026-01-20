@@ -7,13 +7,17 @@ info:
 
     Useful links:
     - [The By Trail repository](https://github.com/g-mainardi/by-trail)
+    - [The By Trail client application](https://by-trail-client.onrender.com)
+    - [The By Trail server application](https://by-trail-server.onrender.com/api)
 
     Note: authenticated users are identified via a JWT token passed in the
     `Authorization` header as a Bearer token and their requests are handled first by an authentication middleware.
   version: 1.0.2
 servers:
   - url: http://localhost:3000/api
-    description: Local Docker Server
+    description: Local Docker Development Server
+  - url: https://by-trail-server.onrender.com/api
+    description: Production Server
 
 security:
   - bearerAuth: []
@@ -21,17 +25,17 @@ security:
 tags:
   - name: Authentication
     description: User authentication and authorization
-  - name: Alerts
-    description: Management of user alerts and notifications
+  - name: Notifications
+    description: User notifications management
   - name: Admin
     description: Administrative operations and management
   - name: Users
     description: User profiles, settings, and lists
-  - name: Bivacchi
+  - name: Bivouacs
     description: Management of shelters and bivouacs
-  - name: Trails
-    description: Management of hiking trails
-  - name: Reservations
+  - name: Routes
+    description: Management of hiking routes
+  - name: Intentions
     description: Bivouac booking management
   - name: Proposals
     description: Route or Bivouac proposals by users
@@ -39,38 +43,76 @@ tags:
 paths:
   # Authentication
   /auth/login:
-    $ref: './paths/authentication.yaml#/~1login'
+    $ref: './paths/authentication.yaml#/login'
   /auth/signup:
-    $ref: './paths/authentication.yaml#/~1signup'
+    $ref: './paths/authentication.yaml#/signup'
   /auth/delete:
-    $ref: './paths/authentication.yaml#/~1delete'
+    $ref: './paths/authentication.yaml#/delete'
+
   # Users
-  /users:
-    $ref: './paths/users.yaml#/~1users'
+  /users/profile:
+    $ref: './paths/users.yaml#/profile'
+  /users/favorites/bivouacs:
+    $ref: './paths/users.yaml#/favorites/bivouacs'
+  /users/favorites/routes:
+    $ref: './paths/users.yaml#/favorites/routes'
+  /users/intentions:
+    $ref: './paths/users.yaml#/intentions'
+
   # Bivacchi
+  /bivouacs/list:
+    $ref: './paths/bivouacs.yaml#/list'
+  /bivouacs/map:
+    $ref: './paths/bivouacs.yaml#/map'
+  /bivouacs/bivouac/{id}:
+    $ref: './paths/bivouacs.yaml#/getById'
+  /bivouacs/intentions/{id}:
+    $ref: './paths/bivouacs.yaml#/getIntentions'
 
-  # Trails
-
-  # Reservations
+  # Routes
+  /routes/list:
+    $ref: './paths/routes.yaml#/list'
+  /routes/map:
+    $ref: './paths/routes.yaml#/map'
+  /routes/route/{id}:
+    $ref: './paths/routes.yaml#/getById'
 
   # Proposals
-  /proposal:
-    $ref: './paths/proposal.yaml#/~1proposal'
+  /proposals:
+    $ref: './paths/proposals.yaml#/sendProposal'
 
-  # Favorites
-  /bivouacs/favorites:
-    $ref: './paths/favorites.yaml#/~1bivouacs~1favorites'
-
-  # Alerts
+  # Notifications
+  /notifications:
+    $ref: './paths/notifications.yaml#/list'
+  /notifications/{id}:
+    $ref: './paths/notifications.yaml#/deleteById'
+  /notifications/{id}/read:
+    $ref: './paths/notifications.yaml#/markReadById'
+  /notifications/read-all:
+    $ref: './paths/notifications.yaml#/markAllRead'
+  /notifications/test-realtime-reservation:
+    $ref: './paths/notifications.yaml#/testRealtimeReservation'
 
   # Admin
+  /admin/users:
+    $ref: './paths/admin.yaml#/listUsers'
+  /admin/users/{id}:
+    $ref: './paths/admin.yaml#/deleteUserById'
+  /admin/users/{id}/status:
+    $ref: './paths/admin.yaml#/updateUserStatus'
+  /admin/bivouacs/{id}:
+    $ref: './paths/admin.yaml#/manageBivouacById'
+  /admin/routes/{id}:
+    $ref: './paths/admin.yaml#/manageRouteById'
+  /admin/proposals:
+    $ref: './paths/admin.yaml#/listProposals'
+  /admin/proposals/{id}:
+    $ref: './paths/admin.yaml#/deleteProposalById'
 
 components:
   securitySchemes:
     bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT # JSON Web Token
+      $ref: './components/security.yaml#/bearerAuth'
   schemas:
     User:
       $ref: './components/schemas/User.yaml'
@@ -78,3 +120,5 @@ components:
       $ref: './components/schemas/Proposal.yaml'
     Bivouac:
       $ref: './components/schemas/Bivouac.yaml'
+    Route:
+      $ref: './components/schemas/Route.yaml'
