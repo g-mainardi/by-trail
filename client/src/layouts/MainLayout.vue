@@ -15,9 +15,15 @@ import Spinner from '@/components/ui/spinner/Spinner.vue';
 import AppSidebar from '@/pages/sidebar/AppSidebar.vue';
 import { computed, Suspense } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const route = useRoute();
-const pageName = computed(() => (route.name ? route.name.toString() : 'Home'));
+const pageName = computed(() => {
+  return route.meta.titleKey
+    ? t(route.meta.titleKey as string)
+    : route.name?.toString() || 'Home';
+});
 </script>
 
 <template>
