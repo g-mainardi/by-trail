@@ -1,23 +1,25 @@
 import type { Request, Response } from 'express';
 import { Route } from 'src/models/models.js';
+import { AuthRequest } from 'src/types/server_only.js';
 
-export const fetchRoutes = async (req: Request, res: Response) => {
-  try {
-    const routes = await Route.find().exec();
-    if (!routes || routes.length === 0) {
-      return res.status(200).json({ routes: [] });
-    }
-    return res.status(200).json({ routes });
-  } catch (error) {
-    console.error('Error fetching routes:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+export const fetchRoutes = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
-};
 
-export const fetchMapRoutes = async (req: Request, res: Response) => {
   const { latNw, lngNw, latSe, lngSe } = req.query;
   if (!latNw || !lngNw || !latSe || !lngSe) {
-    return res.status(400).json({ error: 'Missing coordinates' });
+    try {
+      const routes = await Route.find().exec();
+      if (!routes || routes.length === 0) {
+        return res.status(200).json({ routes: [] });
+      }
+      return res.status(200).json({ routes });
+    } catch (error) {
+      console.error('Error fetching routes:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
   const nwLng = parseFloat(lngNw as string);
   const nwLat = parseFloat(latNw as string);

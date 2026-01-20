@@ -4,21 +4,23 @@ import { Bivouac } from '../models/models.js';
 import type { AuthRequest } from '../types/server_only.js';
 
 export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
-  try {
-    const userId = req.user?.id!;
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
-    const bivouacs = await Bivouac.find().exec();
-    if (!bivouacs || bivouacs.length === 0) {
-      return res.status(200).json({ bivouacs: [] });
-    }
-    return res.status(200).json({ bivouacs });
-  } catch (error) {}
-};
-
-export const fetchMapBivouacs = async (req: AuthRequest, res: Response) => {
   const { latNw, lngNw, latSe, lngSe } = req.query;
   if (!latNw || !lngNw || !latSe || !lngSe) {
-    return res.status(400).json({ error: 'Missing coordinates' });
+    try {
+      const bivouacs = await Bivouac.find().exec();
+      if (!bivouacs || bivouacs.length === 0) {
+        return res.status(200).json({ bivouacs: [] });
+      }
+      return res.status(200).json({ bivouacs });
+    } catch (error) {
+      console.error('Error fetching bivouacs:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
   const northWest = {

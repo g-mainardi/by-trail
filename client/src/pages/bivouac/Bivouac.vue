@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
-import { placeholderBivouac } from '@/services/placeholders';
+import { placeholderEmpty } from '@/services/placeholders';
 import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
@@ -150,9 +150,8 @@ onMounted(async () => {
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
             v-for="i in 5"
-            :key="i"
-            :src="placeholderBivouac"
-            :alt="`${bivouac?.name} image ${i}`"
+            :src="placeholderEmpty"
+            :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />
         </div>

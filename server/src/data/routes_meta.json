@@ -1,37 +1,37 @@
 {
-    "routes": [
-        {
-            "title": "Pradimezzo - Bivacco Bedin",
-            "region": ["Veneto"],
-            "difficulty": "E",
-            "distance": 6.7,
-            "ascent": 1474,
-            "descent": 138,
-            "duration": 390,
-            "routeType": "point-to-point",
-            "gpxFile": "pradimezzo_bivacco_bedin.gpx"
-        },
-        {
-            "title": "Escursione intorno al Lago di Garda",
-            "region": ["Veneto"],
-            "difficulty": "T",
-            "distance": 21.1,
-            "ascent": 582,
-            "descent": 582,
-            "duration": 385,
-            "routeType": "circular",
-            "gpxFile": "lago_di_garda.gpx"
-        },
-        {
-            "title": "Percorso ad anello Tre Cime di Lavaredo",
-            "region": ["Veneto"],
-            "difficulty": "T",
-            "distance": 10,
-            "ascent": 392,
-            "descent": 392,
-            "duration": 192,
-            "routeType": "circular",
-            "gpxFile": "tre_cime_lavaredo.gpx"
-        }
-    ]
+  "routes": [
+    {
+      "title": "Pradimezzo - Bivacco Bedin",
+      "region": ["Veneto"],
+      "difficulty": "E",
+      "distance": 6.7,
+      "ascent": 1474,
+      "descent": 138,
+      "duration": 390,
+      "routeType": "P2P",
+      "gpxFile": "pradimezzo_bivacco_bedin.gpx"
+    },
+    {
+      "title": "Escursione intorno al Lago di Garda",
+      "region": ["Veneto"],
+      "difficulty": "T",
+      "distance": 21.1,
+      "ascent": 582,
+      "descent": 582,
+      "duration": 385,
+      "routeType": "Circular",
+      "gpxFile": "lago_di_garda.gpx"
+    },
+    {
+      "title": "Percorso ad anello Tre Cime di Lavaredo",
+      "region": ["Veneto"],
+      "difficulty": "T",
+      "distance": 10,
+      "ascent": 392,
+      "descent": 392,
+      "duration": 192,
+      "routeType": "Circular",
+      "gpxFile": "tre_cime_lavaredo.gpx"
+    }
+  ]
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import { placeholderBivouac } from '@/services/placeholders';
+import { placeholderEmpty } from '@/services/placeholders';
 import type { Bivouac } from '@/types';
 import {
   Bed as BedIcon,
@@ -22,17 +22,17 @@ const props = defineProps<{
 <template>
   <Card class="p-4 gap-4 h-full flex flex-col">
     <CardContent class="px-0 flex-1 flex flex-col">
-      <div class="relative w-full mb-2">
-        <img
-          :src="placeholderBivouac"
-          :alt="`${bivouac.name} image`"
-          class="w-full rounded-sm object-cover"
-        />
-      </div>
       <RouterLink
         :to="`/bivouac/${bivouac._id}`"
         aria-label="View Bivouac Details"
       >
+        <div class="relative w-full mb-2">
+          <img
+            :src="placeholderEmpty"
+            :alt="`${bivouac.name} image`"
+            class="w-full rounded-sm object-cover"
+          />
+        </div>
         <H2>{{ bivouac.name }}</H2>
       </RouterLink>
       <span v-if="!bivouac.note">

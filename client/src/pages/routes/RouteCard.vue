@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import { placeholderRoute } from '@/services/placeholders';
+import { placeholderEmpty } from '@/services/placeholders';
 import { type Route } from '@/types';
 import {
   Clock as ClockIcon,
@@ -32,14 +32,14 @@ const route = props.route;
 <template>
   <Card class="p-4 gap-4 h-full flex flex-col">
     <CardContent class="px-0 flex-1 flex flex-col justify-between">
-      <div class="relative w-full mb-2">
-        <img
-          :src="placeholderRoute"
-          :alt="`${route.title} image`"
-          class="w-full rounded-sm object-cover"
-        />
-      </div>
       <RouterLink :to="`/route/${route._id}`" aria-label="View Route Details">
+        <div class="relative w-full mb-2">
+          <img
+            :src="placeholderEmpty"
+            :alt="`${route.title} image`"
+            class="w-full rounded-sm object-cover"
+          />
+        </div>
         <H2>{{ route.title }}</H2>
       </RouterLink>
       <span class="text-xs text-muted-foreground uppercase tracking-wide">

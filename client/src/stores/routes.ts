@@ -8,34 +8,22 @@ export const useRouteStore = defineStore('routes', () => {
   // State
 
   const routes = ref<Route[]>([]);
-  const mapRoutes = ref<Route[]>([]);
 
   // Actions
 
-  const fetchRoutes = async () => {
+  const fetchRoutes = async (northWest?: LatLng, southEast?: LatLng) => {
     try {
-      const res = await api.get('/routes/list');
-      const data = res.data;
-      routes.value = data.routes as Route[];
-    } catch (error: any) {
-      console.error('Error fetching routes:', error);
-      throw new Error('Failed to fetch routes');
-    }
-  };
-
-  const fetchMapRoutes = async (northWest: LatLng, southEast: LatLng) => {
-    try {
-      const res = await api.get('/routes/map', {
+      const res = await api.get('/routes', {
         params: {
-          latNw: northWest.lat,
-          lngNw: northWest.lng,
-          latSe: southEast.lat,
-          lngSe: southEast.lng,
+          latNw: northWest?.lat,
+          lngNw: northWest?.lng,
+          latSe: southEast?.lat,
+          lngSe: southEast?.lng,
         },
       });
       const data = res.data;
-      const routes = data.routes as Route[];
-      mapRoutes.value = routes.map((route) => {
+      const receivedRoutes = data.routes as Route[];
+      routes.value = receivedRoutes.map((route) => {
         if (
           route.path &&
           route.path.coordinates &&
@@ -53,7 +41,10 @@ export const useRouteStore = defineStore('routes', () => {
 
   const fetchRouteById = async (id: string): Promise<Route> => {
     try {
-      const res = await api.get(`/routes/route/${id}`);
+      const cachedRoute = routes.value.find((route) => route._id === id);
+      if (cachedRoute) return cachedRoute;
+
+      const res = await api.get(`/routes/${id}`);
       const data = res.data;
       const route = data.route as Route;
       if (
@@ -80,5 +71,5 @@ export const useRouteStore = defineStore('routes', () => {
     });
   }
 
-  return { fetchRoutes, fetchMapRoutes, fetchRouteById, routes, mapRoutes };
+  return { fetchRoutes, fetchRouteById, routes };
 });
