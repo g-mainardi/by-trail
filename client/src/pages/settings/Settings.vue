@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useI18n } from 'vue-i18n';
 import DeleteAccountSection from './account/DeleteAccountSection.vue';
 import ChangeLanguageSection from './appearance/ChangeLanguageSection.vue';
+import ChangeThemeSection from './appearance/ChangeThemeSection.vue';
 import SubscriptionSection from './notifications/SubscriptionSection.vue';
 const { t } = useI18n();
 </script>
@@ -34,6 +35,7 @@ const { t } = useI18n();
       <Card class="card">
         <CardContent class="card-content">
           <ChangeLanguageSection />
+          <ChangeThemeSection />
         </CardContent>
         <CardFooter> </CardFooter>
       </Card>

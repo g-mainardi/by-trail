@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
-import { Toaster, toast } from 'vue-sonner';
 import { socket } from '@/services/socket.ts';
 import { useNotificationStore } from '@/stores/notifications.ts';
+import { useColorMode } from '@vueuse/core';
+import { onMounted, onUnmounted } from 'vue';
+import { Toaster, toast } from 'vue-sonner';
 
 const notificationStore = useNotificationStore();
 
@@ -57,6 +58,11 @@ onUnmounted(() => {
 
   socket.disconnect();
 });
+const mode = useColorMode();
+if (localStorage.getItem('theme') === null) {
+  mode.value = 'auto';
+  localStorage.theme = mode.value;
+}
 </script>
 
 <template>

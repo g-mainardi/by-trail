@@ -160,7 +160,7 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
               :alt="`${route.title} image`"
               class="rounded-sm object-cover"
             />
-            <h3 class="text-lg font-semibold" style="color: var(--primary)">
+            <h3 class="text-lg font-semibold" style="color: var(--primary-2)">
               {{ route.title }}
             </h3>
           </RouterLink>
@@ -194,14 +194,6 @@ const placeholderRoute = new URL('@/assets/trail-ph.jpg', import.meta.url).href;
   background: transparent;
   border: none;
   box-shadow: none;
-}
-
-.bivouac-icon {
-  color: var(--card);
-  background-color: var(--primary);
-  border-radius: calc(var(--radius) / 2);
-  padding: 4px;
-  box-shadow: var(--shadow);
 }
 
 /* --- STILE PULSANTI ZOOM (Shadcn Button/Outline Style) --- */

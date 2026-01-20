@@ -22,22 +22,6 @@ function formatDuration(minutes: number): string {
   return `${h}h : ${m}m`;
 }
 
-// Helper to determine difficulty color
-const getDifficultyColor = (diff: string) => {
-  switch (diff) {
-    case 'T':
-      return 'text-green-600 border-green-200 bg-green-50';
-    case 'E':
-      return 'text-blue-600 border-blue-200 bg-blue-50';
-    case 'EE':
-      return 'text-orange-600 border-orange-200 bg-orange-50';
-    case 'EEA':
-      return 'text-red-600 border-red-200 bg-red-50';
-    default:
-      return 'text-gray-600';
-  }
-};
-
 const props = defineProps<{
   route: Route;
   isFavorite?: boolean;
@@ -63,9 +47,7 @@ const route = props.route;
       </span>
       <div class="grid grid-cols-3 gap-2 mt-2">
         <div class="info">
-          <span class="value" :class="getDifficultyColor(route.difficulty)">{{
-            route.difficulty
-          }}</span>
+          <span class="value">{{ route.difficulty }}</span>
           <span class="label">{{ t('difficulty') }}</span>
         </div>
 
