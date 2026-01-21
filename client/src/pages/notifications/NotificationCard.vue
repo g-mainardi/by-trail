@@ -5,6 +5,7 @@ import CardContent from '@/components/ui/card/CardContent.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import {
   Bell,
+  MapPin,
   RefreshCcw,
   Tent,
   ThermometerSun,
@@ -23,7 +24,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  notificationType: 'bivouac_reservation',
+  notificationType: 'bivouac_intention',
   uiType: 'info',
 });
 
@@ -33,10 +34,11 @@ defineEmits<{
 }>();
 
 const iconMap: Record<string, any> = {
-  bivouac_reservation: Tent,
-  bivouac_reservation_update: RefreshCcw,
-  bivouac_reservation_delete: X,
-  bivouac_reservation_users: UsersRound,
+  bivouac_intention: Tent,
+  bivouac_intention_update: RefreshCcw,
+  bivouac_intention_delete: X,
+  bivouac_intention_users: UsersRound,
+  route_intention: MapPin,
   weather_alert: ThermometerSun,
 };
 

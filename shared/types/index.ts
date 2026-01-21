@@ -141,7 +141,7 @@ export interface Intention {
   user: string;
   bivouac: string;
   reservedPlaces: number;
-  reservationDate: Date;
+  intentionDate: Date;
 }
 
 export interface Image {
