@@ -122,3 +122,21 @@ components:
       $ref: './components/schemas/Route.yaml'
     Reservation:
       $ref: './components/schemas/Reservation.yaml'
+    Error:
+      $ref: './components/messages.yaml#/Error'
+    Success:
+      $ref: './components/messages.yaml#/Success'
+    CreateReservationRequest:
+      $ref: './components/requests.yaml#/CreateReservationRequest'
+    RequestWithinBoundingBox:
+      $ref: './components/requests.yaml#/RequestWithinBoundingBox'
+    LoginRequest:
+      $ref: './components/requests.yaml#/LoginRequest'
+    SignupRequest:
+      $ref: './components/requests.yaml#/SignupRequest'
+    UserUpdateRequest:
+      $ref: './components/requests.yaml#/UserUpdateRequest'
+  parameters:
+    $ref: './components/parameters.yaml'
+  responses:
+    $ref: './components/responses.yaml'
