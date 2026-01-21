@@ -7,9 +7,6 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Button from '@/components/ui/button/Button.vue';
-import Card from '@/components/ui/card/Card.vue';
-import CardContent from '@/components/ui/card/CardContent.vue';
-import CardHeader from '@/components/ui/card/CardHeader.vue';
 import H3 from '@/layouts/typography/H3.vue';
 import NotificationCard from '@/pages/notifications/NotificationCard.vue';
 import { MailOpen } from 'lucide-vue-next';
@@ -103,46 +100,32 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Card class="card">
-    <CardHeader
-      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
+  <div class="flex justify-end">
+    <Button
+      v-if="hasUnread"
+      @click="handleAllRead"
+      class="text-sm font-bold cursor-pointer mb-4"
     >
-      <Button
-        v-if="hasUnread"
-        @click="handleAllRead"
-        class="w-full sm:w-auto text-sm font-bold cursor-pointer"
-      >
-        {{ t('notifications_mark_all_read') }}
-      </Button>
-    </CardHeader>
-
-    <div
-      v-if="notificationStore.error"
-      class="mx-6 mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm flex items-center gap-2"
-    >
-      <span>{{ notificationStore.error }}</span>
-    </div>
-
-    <CardContent>
-      <NotificationCard
-        v-for="notif in notifications"
-        :key="notif._id"
-        :title="notif.title"
-        :message="notif.message"
-        :time="formatTime(notif.createdAt)"
-        :read="notif.isRead"
-        :notificationType="notif.type"
-        :uiType="notif.uiType"
-        @read="handleRead(notif._id)"
-        @delete="handleDelete(notif._id)"
-      />
-    </CardContent>
-
-    <div v-if="notifications.length === 0" class="mt-10 text-center">
-      <MailOpen class="mx-auto" />
-      <H3 class="mt-2 text-sm font-medium">{{ t('no_notifications') }}</H3>
-    </div>
-  </Card>
+      {{ t('notifications_mark_all_read') }}
+    </Button>
+  </div>
+  <NotificationCard
+    v-for="notif in notifications"
+    :key="notif._id"
+    :title="notif.title"
+    :message="notif.message"
+    :time="formatTime(notif.createdAt)"
+    :read="notif.isRead"
+    :notificationType="notif.type"
+    :uiType="notif.uiType"
+    @read="handleRead(notif._id)"
+    @delete="handleDelete(notif._id)"
+    class="my-1"
+  />
+  <div v-if="notifications.length === 0" class="mt-10 text-center">
+    <MailOpen class="mx-auto" />
+    <H3 class="mt-2 text-sm font-medium">{{ t('no_notifications') }}</H3>
+  </div>
 </template>
 <i18n>
   {
