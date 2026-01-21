@@ -11,6 +11,7 @@ import proposalRoutes from './src/routes/proposalRoutes.js';
 import adminRoutes from './src/routes/adminRoutes.js';
 import userRoutes from './src/routes/userRoutes.js';
 import notificationsRoutes from './src/routes/notificationsRoutes.js';
+import testRoutes from './src/routes/testRoutes.js';
 
 // Environment variables setup
 const PORT = process.env.PORT || 3000; // Default port for Express
@@ -86,6 +87,8 @@ app.use('/api/routes', routesRoutes);
 app.use('/api/proposals', proposalRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/test', testRoutes);
+
 app.get('/api', welcome);
 
 httpServer.listen(PORT, () => {
