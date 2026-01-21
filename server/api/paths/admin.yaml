@@ -17,8 +17,6 @@ listUsers:
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -49,8 +47,6 @@ deleteUserById:
         $ref: '../components/responses.yaml#/ForbiddenError_admin'
       '404':
         $ref: '../components/responses.yaml#/UserNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -92,8 +88,6 @@ updateUserStatus:
         $ref: '../components/responses.yaml#/ForbiddenError_admin'
       '404':
         $ref: '../components/responses.yaml#/UserNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -116,8 +110,6 @@ manageBivouacById:
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
       '404':
         $ref: '../components/responses.yaml#/BivouacNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
   patch:
@@ -144,8 +136,6 @@ manageBivouacById:
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
       '404':
         $ref: '../components/responses.yaml#/BivouacNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -168,8 +158,6 @@ manageRouteById:
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
       '404':
         $ref: '../components/responses.yaml#/RouteNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
   patch:
@@ -211,8 +199,6 @@ manageRouteById:
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
       '404':
         $ref: '../components/responses.yaml#/RouteNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -235,8 +221,6 @@ listProposals:
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -259,7 +243,5 @@ deleteProposalById:
         $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
       '404':
         $ref: '../components/responses.yaml#/ProposalNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
