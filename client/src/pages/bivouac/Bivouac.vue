@@ -91,7 +91,7 @@ const sendIntention = async () => {
 
   const res = await intentionStore.sendIntention(
     bivouac.value?._id || '',
-    selectedDate.value.toDate(getLocalTimeZone()),
+    dateString,
     people.value
   );
   if (res.success) {
