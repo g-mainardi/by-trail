@@ -2,6 +2,7 @@
 import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
+import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import {
   Bell,
@@ -13,6 +14,8 @@ import {
   X,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 interface Props {
   title: string;
@@ -45,18 +48,6 @@ const iconMap: Record<string, any> = {
 const currentIcon = computed(() => {
   return iconMap[props.notificationType] || Bell;
 });
-
-const colorClasses = computed(() => {
-  switch (props.uiType) {
-    case 'alert':
-      return 'text-red-600';
-    case 'success':
-      return 'text-green-600';
-    case 'info':
-    default:
-      return 'text-blue-600';
-  }
-});
 </script>
 
 <template>
@@ -70,24 +61,54 @@ const colorClasses = computed(() => {
     ]"
     @click="$emit('read')"
   >
-    <CardTitle class="flex flex-row items-center gap-4 text-lg">
-      <component :is="currentIcon" :size="20" stroke-width="2" />
-      {{ title }}
-      <div class="ml-auto text-xs flex items-center gap-2">
-        {{ time }}
-        <Button
-          variant="destructive"
-          class="rounded-full"
-          style="font-size: 10px"
-          @click.stop="$emit('delete')"
-          title="Delete notification"
-        >
-          <X :size="2" />
-        </Button>
+    <CardTitle class="flex flex-row items-start gap-4 text-lg">
+      <div class="flex flex-row items-ce gap-4 text-lg">
+        <component :is="currentIcon" :size="20" stroke-width="2" />
+        <span>{{ title }}</span>
       </div>
+      <span class="ml-auto text-xs flex items-center gap-2">{{ time }}</span>
     </CardTitle>
     <CardContent class="p-0">
       {{ message }}
     </CardContent>
+    <CardFooter class="p-0 flex justify-between items-end">
+      <span v-if="!read" class="text-xs italic text-muted-foreground">
+        {{ t('new') }}
+      </span>
+      <span v-else class="text-xs italic text-muted-foreground">
+        {{ t('read') }}
+      </span>
+      <Button
+        variant="destructive"
+        style="font-size: 10px"
+        @click.stop="$emit('delete')"
+        :title="t('delete_notification')"
+      >
+        {{ t('delete') }}
+      </Button>
+    </CardFooter>
   </Card>
 </template>
+
+<i18n>
+{
+  "en": {
+    "delete_notification": "Delete notification",
+    "new": "New",
+    "read": "Read",
+    "delete": "Delete"
+  },
+  "it": {
+    "delete_notification": "Elimina notifica",
+    "new": "Nuovo",
+    "read": "Letto",
+    "delete": "Elimina"
+  },
+  "es": {
+    "delete_notification": "Eliminar notificación",
+    "new": "Nuevo",
+    "read": "Leído",
+    "delete": "Eliminar"
+  }
+}
+</i18n>
