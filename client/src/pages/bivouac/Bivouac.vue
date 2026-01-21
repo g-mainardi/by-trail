@@ -208,7 +208,7 @@ onMounted(async () => {
             <div class="icon-with-text">
               <CalendarIcon class="icon" />
               <span class="">
-                {{ new Date(intention.reservationDate).toDateString() }} for
+                {{ new Date(intention.intentionDate).toDateString() }} for
                 {{ intention.reservedPlaces }} people.
               </span>
               <Button

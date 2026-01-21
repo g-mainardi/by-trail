@@ -136,8 +136,8 @@ const imageSchema = new Schema({
   uploadedDate: { type: Date, default: Date.now },
 });
 
-// RESERVATION
-const reservationSchema = new Schema(
+// INTENTION
+const intentionSchema = new Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     bivouac: {
@@ -146,7 +146,7 @@ const reservationSchema = new Schema(
       required: true,
     },
     reservedPlaces: { type: Number, required: true },
-    reservationDate: { type: Date, default: Date.now },
+    intentionDate: { type: Date, default: Date.now },
   },
   {
     timestamps: true,
@@ -171,11 +171,11 @@ const notificationSchema = new Schema(
     type: {
       type: String,
       enum: [
-        'bivouac_reservation',
-        'bivouac_reservation_update',
-        'bivouac_reservation_delete',
-        'bivouac_reservation_users',
-        'route_reservation',
+        'bivouac_intention',
+        'bivouac_intention_update',
+        'bivouac_intention_delete',
+        'bivouac_intention_users',
+        'route_intention',
         'weather_alert',
       ],
       required: true,
@@ -224,7 +224,7 @@ const User = mongoose.model<UserDocument>('User', userSchema);
 const Bivouac = mongoose.model<BivouacDocument>('Bivouac', bivouacSchema);
 const Route = mongoose.model<RouteDocument>('Route', routeSchema);
 const Image = mongoose.model('Image', imageSchema);
-const Reservation = mongoose.model('Reservation', reservationSchema);
+const Intention = mongoose.model('Intention', intentionSchema);
 const Setting = mongoose.model('Setting', settingSchema);
 const Notification = mongoose.model('Notification', notificationSchema);
 const Proposal = mongoose.model<ProposalDocument>('Proposal', proposalSchema);
@@ -236,7 +236,7 @@ export {
   Image,
   Notification,
   Proposal,
-  Reservation,
+  Intention,
   Route,
   Setting,
   User,
