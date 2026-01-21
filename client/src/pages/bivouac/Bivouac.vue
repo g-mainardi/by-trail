@@ -129,6 +129,19 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching bivouac intentions:', error);
   }
+
+  const images = bivouac.value?.images || [];
+  /* const image0 = routesImages[0];
+      const imgData = fs.readFileSync(path.join(process.cwd(), image0));
+      route.images = [
+        {
+          data: imgData,
+          contentType: 'image/jpeg',
+        },
+      ];
+      routesImages.push(...routesImages.slice(1));
+      return route;
+      */
 });
 </script>
 
