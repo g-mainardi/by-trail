@@ -1,0 +1,24 @@
+LoginRequest:
+  type: object
+  properties:
+    email:
+      $ref: './parameters.yaml#/email'
+    password:
+      $ref: './parameters.yaml#/password'
+  required:
+    - email
+    - password
+
+SignupRequest:
+  type: object
+  properties:
+    name:
+      $ref: './parameters.yaml#/name'
+    email:
+      $ref: './parameters.yaml#/email'
+    password:
+      $ref: './parameters.yaml#/password'
+  required:
+    - name
+    - email
+    - password

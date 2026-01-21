@@ -9,18 +9,7 @@ login:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              email:
-                type: string
-                example: gino@gino.it
-              password:
-                type: string
-                format: password
-                example: Gino1234
-            required:
-              - email
-              - password
+            $ref: '../components/requests.yaml#/LoginRequest'
     responses:
       '200':
         description: Successful login
@@ -29,22 +18,10 @@ login:
             schema:
               type: object
               properties:
-                token: string
+                token:
+                  $ref: '../components/parameters.yaml#/token'
                 user:
-                  id: string
-                  name: string
-                  email: string
-                  favRegions: array<string>
-                  type: string
-              example:
-                token: '...long.jwt.token...'
-                user:
-                  id: '695244f63542e2c7bb6df27c'
-                  name: 'Paolo Cannone'
-                  email: 'gino@gino.it'
-                  favRegions: ['Emilia-Romagna', 'Abruzzo']
-                  type: 'admin'
-
+                  $ref: '../components/parameters.yaml#/userLoginInfo'
       '400':
         description: Bad Request - Invalid input (e.g., missing username or password)
         content:
@@ -52,28 +29,19 @@ login:
             schema:
               type: object
               properties:
-                error:
+                message:
                   type: string
+              example:
+                - 'Invalid credentials'
+                - 'There was a problem with your account. Please contact support at support@example.com.'
       '401':
-        description: Unauthorized
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '429':
-        description: Too Many Requests - Rate limit exceeded
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                error:
-                  type: string
+        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
-        description: Internal server error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                error:
-                  type: string
+        $ref: '../components/responses.yaml#/ServerError'
 
 signup:
   security: [] # Public endpoint, no authentication required
@@ -86,7 +54,7 @@ signup:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas/User.yaml'
+            $ref: '../components/requests.yaml#/SignupRequest'
     responses:
       '201':
         description: User created successfully
@@ -95,7 +63,7 @@ signup:
             schema:
               $ref: '../components/schemas/User.yaml'
       '400':
-        description: Bad Request - Invalid input (e.g., malformed email, missing required fields, duplicate username/email)
+        description: Bad Request - Invalid input (e.g., malformed email, missing required fields, duplicate email)
         content:
           application/json:
             schema:
@@ -103,39 +71,41 @@ signup:
               properties:
                 message:
                   type: string
+              example:
+                - 'Please fill in all required fields'
+                - 'Please provide a valid email address'
+                - 'Email already registered'
+                - 'Password must be at least 8 characters long'
+                - 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '429':
+        $ref: '../components/responses.yaml#/TooManyRequestsError'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 delete:
   post:
     summary: Delete user account
-    description: Deletes the user account and all associated data.
+    description: Deletes the authenticated user account and all associated data.
     tags:
       - Authentication
     requestBody:
+      description: User password for account deletion
       required: true
       content:
         application/json:
           schema:
             type: object
             required:
-              - email
               - password
             properties:
-              email:
-                type: string
-                format: email
               password:
-                type: string
-                format: password
+                $ref: '../components/parameters.yaml#/password'
+
     responses:
-      '200':
+      '204':
         description: Account deleted successfully
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
       '400':
         description: Bad Request - Missing or invalid input
         content:
@@ -143,14 +113,15 @@ delete:
             schema:
               type: object
               properties:
-                error:
+                message:
                   type: string
+              example:
+                - 'Invalid credentials'
+                - 'Password is required'
+                - 'There was a problem with your account. Please contact support at support@example.com.'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '429':
+        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                error:
-                  type: string
+        $ref: '../components/responses.yaml#/ServerError'

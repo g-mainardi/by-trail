@@ -2,28 +2,19 @@ type: object
 description: Represents a registered user in the system.
 properties:
   _id:
-    type: string
-    format: uuid
-    description: The internal database ID (UUID)
+    $ref: '../parameters.yaml#/userId'
   name:
-    type: string
-    example: 'Mario Rossi'
+    $ref: '../parameters.yaml#/name'
   email:
-    type: string
-    format: email
-    example: 'mario.rossi@example.com'
+    $ref: '../parameters.yaml#/email'
   password:
-    type: string
-    format: password
-    writeOnly: true
-    description: Hashed password
+    $ref: '../parameters.yaml#/password'
   type:
     $ref: './Enums.yaml#/UserRole'
   status:
     $ref: './Enums.yaml#/UserStatus'
   creationDate:
-    type: string
-    format: date-time
+    $ref: '../parameters.yaml#/date'
   favRegions:
     type: array
     description: List of favorite regions
@@ -33,11 +24,9 @@ properties:
     type: array
     description: List of favorite bivouac IDs
     items:
-      type: string
-      format: uuid
+      $ref: '../parameters.yaml#/bivouacId'
   favoritesRoutes:
     type: array
     description: List of favorite route IDs
     items:
-      type: string
-      format: uuid
+      $ref: '../parameters.yaml#/routeId'

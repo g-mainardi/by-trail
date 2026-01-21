@@ -1,6 +1,7 @@
 userId:
   name: id
   in: path
+  format: uuid
   required: true
   description: User ID
   schema:
@@ -9,6 +10,7 @@ userId:
 bivouacId:
   name: id
   in: path
+  format: uuid
   required: true
   description: Bivouac ID
   schema:
@@ -17,6 +19,7 @@ bivouacId:
 routeId:
   name: id
   in: path
+  format: uuid
   required: true
   description: Route ID
   schema:
@@ -25,6 +28,7 @@ routeId:
 proposalId:
   name: id
   in: path
+  format: uuid
   required: true
   description: Proposal ID
   schema:
@@ -33,7 +37,71 @@ proposalId:
 notificationId:
   name: id
   in: path
+  format: uuid
   required: true
   description: Notification ID
   schema:
     type: string
+
+password:
+  name: password
+  in: body
+  required: true
+  description: User password
+  schema:
+    type: string
+    format: password
+  example: Gino1234
+
+email:
+  name: email
+  in: body
+  required: true
+  description: User email address
+  schema:
+    type: string
+    format: email
+  example: gino@gino.it
+
+name:
+  name: name
+  in: body
+  required: true
+  description: User full name
+  schema:
+    type: string
+  example: Paolo Cannone
+
+date:
+  name: date
+  in: body
+  required: true
+  description: Date in ISO 8601 format
+  schema:
+    type: string
+    format: date-time
+  example: '2023-10-05T14:48:00.000Z'
+
+token:
+  name: token
+  in: body
+  required: true
+  description: Authentication token
+  type: string
+  example: '...long.jwt.token...'
+
+userLoginInfo:
+  name: user
+  in: body
+  required: true
+  description: Basic information about the user
+  type: object
+  properties:
+    _id:
+      $ref: './parameters.yaml#/userId'
+    name:
+      $ref: './parameters.yaml#/name'
+    email:
+      $ref: './parameters.yaml#/email'
+    type:
+      $ref: './schemas/Enums.yaml#/UserRole'
