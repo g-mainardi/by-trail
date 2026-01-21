@@ -65,11 +65,20 @@ UnauthorizedError:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: 'Not authorized, token failed'
+        $ref: '../components/messages.yaml#/Error'
+      examples:
+        UserNotFound:
+          summary: User not found
+          value:
+            message: 'User not found / Token invalid'
+        MissingUserID:
+          summary: User ID missing
+          value:
+            message: 'User ID missing / Token invalid'
+        AuthMiddlewareErrors:
+          summary: Auth Middleware Error
+          value:
+            message: 'Not authorized, token failed'
 
 # 403 - Forbidden
 ForbiddenError_onlyAdmin:
