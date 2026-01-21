@@ -158,7 +158,6 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = err.response?.data?.message || err.message;
       return false;
     } finally {
-      console.log('Account creation process finished.');
       isLoading.value = false;
     }
   };

@@ -125,7 +125,6 @@ export const useFavoriteStore = defineStore('favorites', () => {
       success: false,
     };
     if (isFavoriteRoute(routeId)) {
-      console.log('Removing favorite route:', routeId);
       res = await deleteFavoriteRoute(routeId);
     } else {
       res = await addFavoriteRoute(routeId);

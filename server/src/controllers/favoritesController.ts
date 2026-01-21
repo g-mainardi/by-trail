@@ -28,7 +28,6 @@ export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const bivouacId = req.body.id;
 
-  console.log('Adding favorite bivouac:', bivouacId);
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid or missing bivouac ID' });
   }
