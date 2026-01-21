@@ -105,6 +105,12 @@ paths:
   /admin/proposals/{id}:
     $ref: './paths/admin.yaml#/deleteProposalById'
 
+  # Test
+  /test/realtime-weather:
+    $ref: './paths/test.yaml#/realtimeWeather'
+  /test/realtime-reservation:
+    $ref: './paths/test.yaml#/realtimeReservation'
+
 components:
   securitySchemes:
     bearerAuth:

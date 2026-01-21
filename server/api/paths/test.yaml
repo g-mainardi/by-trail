@@ -1,0 +1,43 @@
+realtimeWeather:
+  post:
+    tags:
+      - Test
+    summary: Manual Test Trigger for Real-time Weather Update
+    description: Simulates a real-time weather update event for testing purposes.
+    responses:
+      '200':
+        description: Real-time weather update event simulated successfully.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/messages.yaml#/Success'
+            example:
+              message: 'Real-time weather update event simulated successfully.'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
+
+realtimeReservation:
+  post:
+    tags:
+      - Test
+    summary: Test Real-time Reservation Notification
+    description: Simulates a real-time reservation notification event for testing purposes.
+    responses:
+      '200':
+        description: Real-time reservation notification event simulated successfully.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/messages.yaml#/Success'
+            example:
+              message: 'Test notification sent successfully.'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
