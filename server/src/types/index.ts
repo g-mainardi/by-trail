@@ -97,11 +97,7 @@ export interface Bivouac {
   altitude?: number;
   capacity?: number;
   note?: string;
-  images?: {
-    _id?: UUID;
-    data: Buffer;
-    contentType: string;
-  }[];
+  images?: Image[];
 }
 
 export type PathObj = {
@@ -122,11 +118,7 @@ export interface Route {
   routeType: RouteType;
   note?: string;
   path?: PathObj;
-  images?: {
-    _id?: UUID;
-    data: Buffer;
-    contentType: string;
-  }[];
+  images?: Image[];
 }
 
 export interface Proposal {
@@ -150,4 +142,10 @@ export interface Intention {
   bivouac: string;
   reservedPlaces: number;
   reservationDate: Date;
+}
+
+interface Image {
+  _id?: UUID;
+  data: Uint8Array;
+  contentType: string;
 }
