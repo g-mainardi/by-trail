@@ -144,7 +144,7 @@ export interface Intention {
   reservationDate: Date;
 }
 
-interface Image {
+export interface Image {
   _id?: UUID;
   data: Uint8Array;
   contentType: string;
