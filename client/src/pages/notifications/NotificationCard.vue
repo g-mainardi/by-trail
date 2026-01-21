@@ -62,7 +62,7 @@ const currentIcon = computed(() => {
     @click="$emit('read')"
   >
     <CardTitle class="flex flex-row items-start gap-4 text-lg">
-      <div class="flex flex-row items-ce gap-4 text-lg">
+      <div class="flex flex-row items-center gap-4 text-lg">
         <component :is="currentIcon" :size="20" stroke-width="2" />
         <span>{{ title }}</span>
       </div>
