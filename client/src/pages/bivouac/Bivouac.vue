@@ -95,7 +95,6 @@ const sendIntention = async () => {
     people.value
   );
   if (res.success) {
-    toast.success(res.message ? res.message : 'Intention sent successfully!');
     await updateIntentions();
   } else {
     toast.error(`Error: ${res.error}`);
@@ -105,9 +104,6 @@ const sendIntention = async () => {
 const cancelIntention = async (intentionId: string) => {
   const res = await intentionStore.deleteIntention(intentionId);
   if (res.success) {
-    toast.success(
-      res.message ? res.message : t('intention_cancelled_successfully')
-    );
     await updateIntentions();
   } else {
     toast.error(`Error: ${res.error}`);

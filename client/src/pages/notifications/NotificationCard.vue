@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import Card from '@/components/ui/card/Card.vue';
+import CardContent from '@/components/ui/card/CardContent.vue';
+import CardTitle from '@/components/ui/card/CardTitle.vue';
 import {
   Bell,
   RefreshCcw,
@@ -54,42 +58,34 @@ const colorClasses = computed(() => {
 </script>
 
 <template>
-  <div
-    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-gray-300 p-2 mb-1 transition-all duration-200 hover:shadow-md"
-    :class="[read ? 'bg-white' : 'bg-blue-50/70']"
+  <Card
+    class="p-4 gap-2"
+    :class="[
+      !read
+        ? 'bg-accent hover:border-accent-foreground border-2 transition-colors duration-200 hover:cursor-pointer'
+        : '',
+      !read ? 'cursor-pointer' : '',
+    ]"
     @click="$emit('read')"
   >
-    <div class="flex-shrink-0">
-      <div
-        class="flex h-10 w-10 items-center justify-center rounded-full bg-white ring-1"
-        :class="colorClasses"
-      >
-        <component :is="currentIcon" :size="20" stroke-width="2" />
-      </div>
-    </div>
-
-    <div class="flex-1 min-w-0">
-      <div class="flex justify-between items-start">
-        <h3
-          class="text-sm font-semibold text-gray-900 pr-4"
-          :class="{ 'font-bold': !read }"
+    <CardTitle class="flex flex-row items-center gap-4 text-lg">
+      <component :is="currentIcon" :size="20" stroke-width="2" />
+      {{ title }}
+      <div class="ml-auto text-xs flex items-center gap-2">
+        {{ time }}
+        <Button
+          variant="destructive"
+          class="rounded-full"
+          style="font-size: 10px"
+          @click.stop="$emit('delete')"
+          title="Delete notification"
         >
-          {{ title }}
-        </h3>
-        <span class="whitespace-nowrap text-xs text-gray-400">{{ time }}</span>
+          <X :size="2" />
+        </Button>
       </div>
-
-      <p class="mt-1 text-sm text-gray-600 leading-relaxed">
-        {{ message }}
-      </p>
-    </div>
-
-    <button
-      @click.stop="$emit('delete')"
-      class="absolute -top-2 -right-2 hidden h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-red-100 hover:text-red-600 group-hover:flex"
-      title="Dismiss"
-    >
-      &times;
-    </button>
-  </div>
+    </CardTitle>
+    <CardContent class="p-0">
+      {{ message }}
+    </CardContent>
+  </Card>
 </template>
