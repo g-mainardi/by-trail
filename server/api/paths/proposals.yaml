@@ -34,7 +34,7 @@ sendProposal:
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':
-        $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '429':
         $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':

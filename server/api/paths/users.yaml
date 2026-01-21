@@ -12,6 +12,8 @@ profile:
               $ref: '../components/parameters.yaml#/userBasicInfo'
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '404':
         $ref: '../components/responses.yaml#/UserNotFound'
       '429':
@@ -33,6 +35,8 @@ profile:
         $ref: '../components/responses.yaml#/SuccessfulUpdate'
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '404':
         $ref: '../components/responses.yaml#/UserNotFound'
       '429':
@@ -53,6 +57,8 @@ favorites:
             $ref: '../components/responses.yaml#/BivouacsListContent'
         '401':
           $ref: '../components/responses.yaml#/UnauthorizedError'
+        '403':
+          $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
         '429':
           $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
@@ -83,6 +89,8 @@ favorites:
           $ref: '../components/responses.yaml#/InvalidIdFormat'
         '401':
           $ref: '../components/responses.yaml#/UnauthorizedError'
+        '403':
+          $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
         '404':
           description: Bad Request
           content:
@@ -122,6 +130,8 @@ favorites:
           $ref: '../components/responses.yaml#/InvalidIdFormat'
         '401':
           $ref: '../components/responses.yaml#/UnauthorizedError'
+        '403':
+          $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
         '404':
           description: Bad Request
           content:
@@ -149,6 +159,8 @@ favorites:
             $ref: '../components/responses.yaml#/RoutesListContent'
         '401':
           $ref: '../components/responses.yaml#/UnauthorizedError'
+        '403':
+          $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
         '429':
           $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
@@ -179,6 +191,8 @@ favorites:
           $ref: '../components/responses.yaml#/InvalidIdFormat'
         '401':
           $ref: '../components/responses.yaml#/UnauthorizedError'
+        '403':
+          $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
         '404':
           description: Bad Request
           content:
@@ -218,6 +232,8 @@ favorites:
           $ref: '../components/responses.yaml#/InvalidIdFormat'
         '401':
           $ref: '../components/responses.yaml#/UnauthorizedError'
+        '403':
+          $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
         '404':
           description: Bad Request
           content:
