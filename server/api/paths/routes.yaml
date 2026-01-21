@@ -2,13 +2,23 @@ list:
   post:
     tags:
       - Routes
-    summary: Retrieve a list of routes with optional filtering and pagination
-
-map:
-  get:
-    tags:
-      - Routes
-    summary: Retrieve routes for map display within a specified bounding box
+    summary: Retrieve a list of routes, optionally including coordinates within a bounding box.
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/requests.yaml#/RequestWithinBoundingBox'
+    responses:
+      '200':
+        description: Routes list retrieved successfully
+        content:
+          $ref: '../components/responses.yaml#/RoutesListContent'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 getById:
   get:
@@ -18,3 +28,18 @@ getById:
     operationId: getRouteById
     parameters:
       - $ref: '../components/parameters.yaml#/routeId'
+    responses:
+      '200':
+        description: Route retrieved successfully
+        content:
+          $ref: '../components/responses.yaml#/RouteContent'
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '404':
+        $ref: '../components/responses.yaml#/RouteNotFound'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'

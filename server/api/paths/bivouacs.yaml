@@ -2,63 +2,23 @@ list:
   post:
     tags:
       - Bivouacs
-    summary: Retrieve a list of bivouacs with optional filtering and pagination
+    summary: Retrieve a list of bivouacs, optionally including coordinates within a bounding box.
     requestBody:
-      required: true
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              token:
-                type: string
-                description: User authentication token (mandatory)
-              options:
-                type: object
-                description: Filtering options
-                properties:
-                  region:
-                    type: string
-                    description: Filter bivouacs by region name
-                  favoritesOnly:
-                    type: boolean
-                    description: If true, only return favorite bivouacs
-                  sortByLikes:
-                    type: string
-                    enum: [asc, desc]
-                    description: Sort bivouacs by likes in ascending or descending order
-                  pageSize:
-                    type: integer
-                    description: Number of bivouacs to return per page
-                    default: 50
-              nextPage:
-                type: string
-                format: uuid
-                description: Identifier for the next page of results (for pagination)
-            required:
-              - token
+            $ref: '../components/requests.yaml#/RequestWithinBoundingBox'
     responses:
       '200':
-        description: A list of bivouacs with pagination info
+        description: Bivouacs list retrieved successfully
         content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                bivouacs:
-                  type: array
-                  items:
-                    $ref: '../components/schemas/Bivouac.yaml'
-                nextPage:
-                  type: string
-                  format: uuid
-                  description: Identifier for the next page of results (if more results are available)
-
-map:
-  get:
-    tags:
-      - Bivouacs
-    summary: Retrieve bivouacs for map display within a specified bounding box
+          $ref: '../components/responses.yaml#/BivouacsListContent'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 getById:
   get:
@@ -68,6 +28,21 @@ getById:
     operationId: getBivouacById
     parameters:
       - $ref: '../components/parameters.yaml#/bivouacId'
+    responses:
+      '200':
+        description: Bivouac retrieved successfully
+        content:
+          $ref: '../components/responses.yaml#/BivouacContent'
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '404':
+        $ref: '../components/responses.yaml#/BivouacNotFound'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 getIntentions:
   get:
@@ -75,3 +50,16 @@ getIntentions:
       - Intentions
     summary: Get anonymous intentions for a specific bivouac
     operationId: getBivouacIntentions
+    parameters:
+      - $ref: '../components/parameters.yaml#/bivouacId'
+    responses:
+      '200':
+        $ref: '../components/responses.yaml#/BivouacIntention'
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
