@@ -70,6 +70,16 @@ ReservationListContent:
           items:
             $ref: '../components/schemas/Reservation.yaml'
 
+NotificationListContent:
+  application/json:
+    schema:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '../components/schemas/Notification.yaml'
+
 # 400 - Bad Request
 BadUpdateRequest:
   description: Invalid update request format or validation error.
@@ -205,6 +215,16 @@ ReservationNotFound:
           message:
             type: string
             example: 'Reservation not found'
+NotificationNotFound:
+  description: The requested notification does not exist.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Notification not found'
 
 # 409 - Conflict
 BivouacAlreadyFavorited:

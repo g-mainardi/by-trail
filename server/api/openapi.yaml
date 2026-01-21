@@ -88,8 +88,6 @@ paths:
     $ref: './paths/notifications.yaml#/markReadById'
   /notifications/read-all:
     $ref: './paths/notifications.yaml#/markAllRead'
-  /notifications/test-realtime-reservation:
-    $ref: './paths/notifications.yaml#/testRealtimeReservation'
 
   # Admin
   /admin/users:
@@ -122,6 +120,8 @@ components:
       $ref: './components/schemas/Route.yaml'
     Reservation:
       $ref: './components/schemas/Reservation.yaml'
+    Notification:
+      $ref: './components/schemas/Notification.yaml'
     Error:
       $ref: './components/messages.yaml#/Error'
     Success:
