@@ -17,14 +17,10 @@ sendProposal:
             schema:
               type: object
               properties:
-                id:
-                  type: string
                 message:
                   type: string
             example:
-              id: '65a1b2c3d4e5f6g7h8i9j0k1'
               message: 'Proposal registered successfully!'
-
       '400':
         description: Bad Request - Validation or Logic Error
         content:
@@ -32,45 +28,20 @@ sendProposal:
             schema:
               type: object
               properties:
-                error:
+                message:
                   type: string
             examples:
               MissingFields:
-                summary: Missing required fields
-                value:
-                  error: 'Please fill in all required fields'
+                $ref: '../components/messages.yaml#/MissingFields'
               DuplicateEntry:
                 summary: Proposal already exists
                 value:
-                  error: "You have already submitted a route proposal with subject 'Sentiero degli Dei' in 'Bologna'"
-
+                  message: "You have already submitted a route proposal with subject 'Sentiero degli Dei' in 'Bologna'"
       '401':
-        description: Unauthorized - Authentication required
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-            example:
-              message: 'Missing email or invalid token'
-
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_onlyAdmin'
+      '429':
+        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
-        description: Internal server error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                error:
-                  type: string
-            examples:
-              DatabaseError:
-                summary: Database Save Failed
-                value:
-                  error: 'Error saving proposal to database'
-              ServerExplosion:
-                summary: Generic Server Error
-                value:
-                  error: 'Server error during Proposal Sending'
+        $ref: '../components/responses.yaml#/ServerError'

@@ -1,0 +1,9 @@
+MissingFields:
+  summary: Missing required fields
+  value:
+    message:: 'Please fill in all required fields'
+
+# DuplicateEntry:
+#   summary: Proposal already exists
+#   value:
+#     message: "You have already submitted a route proposal with subject 'Sentiero degli Dei' in 'Bologna'"
