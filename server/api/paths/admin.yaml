@@ -68,23 +68,24 @@ updateUserStatus:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: 'User status updated successfully'
+              $ref: '../components/responses.yaml#/SuccessMessage'
+            example:
+              message: 'User status updated successfully'
       '400':
         description: Bad Request
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example:
-                    - 'Invalid status value'
-                    - 'Cannot change status of your own account'
+              $ref: '../components/responses.yaml#/ErrorMessage'
+            examples:
+              CannotChangeOwnStatus:
+                summary: Cannot change own status
+                value:
+                  message: 'Cannot change status of your own account'
+              InvalidStatusType:
+                summary: Invalid status value
+                value:
+                  message: "Status must be one of 'active' or 'banned'"
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':
@@ -192,14 +193,18 @@ manageRouteById:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example:
-                    - 'Invalid ID format'
-                    - 'A route must have at least one region'
-                    - 'Invalid path type'
+              $ref: '../components/responses.yaml#/ErrorMessage'
+            examples:
+              InvalidIdFormat:
+                $ref: '../components/messages.yaml#/InvalidIdFormat'
+              RouteAtLeastOneRegion:
+                summary: Route must have at least one region
+                value:
+                  message: 'A route must have at least one region'
+              InvalidPathType:
+                summary: Invalid path type
+                value:
+                  message: "Path type must be one of 'hiking', 'cycling', or 'mountain_biking'"
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':

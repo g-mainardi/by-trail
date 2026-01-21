@@ -27,13 +27,12 @@ login:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-              example:
-                - 'Invalid credentials'
-                - 'There was a problem with your account. Please contact support at support@example.com.'
+              $ref: '../components/responses.yaml#/ErrorMessage'
+            examples:
+              InvalidCredentials:
+                $ref: '../components/messages.yaml#/InvalidCredentials'
+              AccountIssue:
+                $ref: '../components/messages.yaml#/ContactSupport'
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':
@@ -67,16 +66,26 @@ signup:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-              example:
-                - 'Please fill in all required fields'
-                - 'Please provide a valid email address'
-                - 'Email already registered'
-                - 'Password must be at least 8 characters long'
-                - 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+              $ref: '../components/responses.yaml#/ErrorMessage'
+            examples:
+              MissingFields:
+                $ref: '../components/messages.yaml#/MissingFields'
+              InvalidEmailFormat:
+                summary: Invalid email format
+                value:
+                  message: 'Please provide a valid email address'
+              DuplicateEmail:
+                summary: Email already registered
+                value:
+                  message: 'Email already registered'
+              WeakPassword:
+                summary: Weak password
+                value:
+                  message: 'Password must be at least 8 characters long'
+              PasswordCriteriaNotMet:
+                summary: Password criteria not met
+                value:
+                  message: 'Password must contain at least one uppercase letter, one lowercase letter, and one digit'
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '429':
@@ -102,7 +111,6 @@ delete:
             properties:
               password:
                 $ref: '../components/parameters.yaml#/password'
-
     responses:
       '204':
         description: Account deleted successfully
@@ -111,14 +119,16 @@ delete:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-              example:
-                - 'Invalid credentials'
-                - 'Password is required'
-                - 'There was a problem with your account. Please contact support at support@example.com.'
+              $ref: '../components/responses.yaml#/ErrorMessage'
+            examples:
+              InvalidCredentials:
+                $ref: '../components/messages.yaml#/InvalidCredentials'
+              AccountIssue:
+                $ref: '../components/messages.yaml#/ContactSupport'
+              PasswordIsRequired:
+                summary: Password is required
+                value:
+                  message: 'Password is required'
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '429':

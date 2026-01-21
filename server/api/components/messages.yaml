@@ -3,7 +3,22 @@ MissingFields:
   value:
     message:: 'Please fill in all required fields'
 
-# DuplicateEntry:
-#   summary: Proposal already exists
-#   value:
-#     message: "You have already submitted a route proposal with subject 'Sentiero degli Dei' in 'Bologna'"
+InvalidIdFormat:
+  summary: Invalid ID format
+  value:
+    message: 'Invalid ID format'
+
+NoValidFields:
+  summary: No valid fields for update
+  value:
+    message: 'No valid fields provided for update'
+
+InvalidCredentials:
+  summary: Invalid credentials
+  value:
+    message: 'Invalid credentials'
+
+ContactSupport:
+  summary: Account issue
+  value:
+    message: 'There was a problem with your account. Please contact support at support@example.com.'
