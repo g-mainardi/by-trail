@@ -1,0 +1,43 @@
+type: object
+description: Notification sent to a user.
+properties:
+  _id:
+    type: string
+    format: uuid
+  recipient:
+    type: string
+    format: uuid
+    description: ID of the user receiving the notification
+  type:
+    type: string
+    enum:
+      - bivouac_reservation
+      - bivouac_reservation_update
+      - bivouac_reservation_delete
+      - bivouac_reservation_users
+      - route_reservation
+      - weather_alert
+    description: Type of notification
+  uiType:
+    type: string
+    enum:
+      - info
+      - success
+      - alert
+    description: UI representation type of the notification
+  title:
+    type: string
+    description: Title of the notification
+  message:
+    type: string
+    description: Message content of the notification
+  data:
+    type: object
+    description: Flexible container for additional data related to the notification
+  referenceUrl:
+    type: string
+    format: uri
+    description: URL to navigate to when the notification is clicked
+  isRead:
+    type: boolean
+    description: Indicates whether the notification has been read

@@ -3,6 +3,18 @@ list:
     tags:
       - Notifications
     summary: Retrieve the list of notifications for the authenticated user
+    operationId: getNotifications
+    responses:
+      '200':
+        description: Notifications list retrieved successfully
+        content:
+          $ref: '../components/responses.yaml#/NotificationListContent'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 deleteById:
   delete:
@@ -12,6 +24,27 @@ deleteById:
     operationId: deleteNotificationById
     parameters:
       - $ref: '../components/parameters.yaml#/notificationId'
+    responses:
+      '200':
+        description: Notification deleted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Notification deleted successfully'
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '404':
+        $ref: '../components/responses.yaml#/NotificationNotFound'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 markReadById:
   patch:
@@ -21,6 +54,27 @@ markReadById:
     operationId: markNotificationAsReadById
     parameters:
       - $ref: '../components/parameters.yaml#/notificationId'
+    responses:
+      '200':
+        description: Notification marked as read successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Notification marked as read successfully'
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '404':
+        $ref: '../components/responses.yaml#/NotificationNotFound'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
 
 markAllRead:
   patch:
@@ -28,10 +82,20 @@ markAllRead:
       - Notifications
     summary: Mark all notifications as read for the authenticated user
     operationId: markAllNotificationsAsRead
-
-testRealtimeReservation:
-  post:
-    tags:
-      - Notifications
-    summary: Test real-time reservation notification for the authenticated user
-    operationId: testRealtimeReservationNotification
+    responses:
+      '200':
+        description: All notifications marked as read successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'All notifications marked as read successfully'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
