@@ -60,6 +60,16 @@ RoutesListContent:
           items:
             $ref: '../components/schemas/Route.yaml'
 
+ReservationListContent:
+  application/json:
+    schema:
+      type: object
+      properties:
+        reservations:
+          type: array
+          items:
+            $ref: '../components/schemas/Reservation.yaml'
+
 # 400 - Bad Request
 BadUpdateRequest:
   description: Invalid update request format or validation error.
@@ -185,6 +195,16 @@ ProposalNotFound:
           message:
             type: string
             example: 'Proposal not found'
+ReservationNotFound:
+  description: The requested reservation does not exist.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Reservation not found'
 
 # 409 - Conflict
 BivouacAlreadyFavorited:

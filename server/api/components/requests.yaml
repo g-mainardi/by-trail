@@ -54,3 +54,19 @@ RequestWithinBoundingBox:
       format: float
       description: Longitude of the southeast corner of the bounding box
       example: 9.8321
+
+CreateReservationRequest:
+  type: object
+  properties:
+    bivouacId:
+      $ref: './parameters.yaml#/bivouacId'
+    date:
+      $ref: './parameters.yaml#/date'
+    people:
+      type: integer
+      description: Number of people for the reservation
+      example: 3
+  required:
+    - bivouacId
+    - userId
+    - reservationDate
