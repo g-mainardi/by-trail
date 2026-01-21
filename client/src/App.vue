@@ -25,8 +25,7 @@ const handleNewNotification = (notification: any) => {
   console.log('Real-time notification received:', notification);
 
   const toastType = notification.uiType || 'info';
-  const message =
-    'You have received a new message, please go to Notifications page to view it.';
+  const message = 'You have a new message. Check Notifications.';
 
   const toastOptions = {
     description: message,
@@ -73,7 +72,7 @@ onMounted(async () => {
           label: 'Check',
           onClick: () => router.push('/notifications'),
         },
-        duration: 6000, // Stay visible a bit longer
+        duration: 6000,
       });
     }
   }
