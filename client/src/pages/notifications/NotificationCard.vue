@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   Bell,
+  MapPin,
   RefreshCcw,
   Tent,
   ThermometerSun,
@@ -33,6 +34,7 @@ const iconMap: Record<string, any> = {
   bivouac_intention_update: RefreshCcw,
   bivouac_intention_delete: X,
   bivouac_intention_users: UsersRound,
+  route_intention: MapPin,
   weather_alert: ThermometerSun,
 };
 

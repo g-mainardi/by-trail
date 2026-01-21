@@ -204,7 +204,7 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
       );
     }
 
-    return res.status(204).json();
+    return res.status(204).end();
   } catch (error) {
     console.error('Error deleting intention:', error);
     return res.status(500).json({ error: 'Internal server error' });
