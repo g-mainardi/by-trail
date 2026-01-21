@@ -73,111 +73,106 @@ const filteredRoutes = computed(() => {
     @resetBivouacFilters="resetBivouacFilters"
     @resetRouteFilters="resetRoutesFilters"
   />
-  <div class="h-full w-full overflow-hidden rounded-lg shadow-lg">
-    <l-map
-      v-model:zoom="zoom"
-      v-model:center="center"
-      :useGlobalLeaflet="false"
-      class="w-full h-full z-0"
-      @ready="onMapReady"
-      @update:zoom="debouncedFetchBivouacs()"
-      @update:center="debouncedFetchBivouacs()"
+  <l-map
+    v-model:zoom="zoom"
+    v-model:center="center"
+    :useGlobalLeaflet="false"
+    class="w-full h-full z-0"
+    @ready="onMapReady"
+    @update:zoom="debouncedFetchBivouacs()"
+    @update:center="debouncedFetchBivouacs()"
+  >
+    <l-tile-layer
+      :url="tileLayerUrl"
+      attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
+    />
+
+    <l-marker
+      v-for="bivouac in filteredBivouacs"
+      :key="bivouac._id"
+      :lat-lng="
+        bivouac.coords
+          ? [bivouac.coords.latitude, bivouac.coords.longitude]
+          : [0, 0]
+      "
+      :icon="bivouacIcon"
     >
-      <l-tile-layer
-        :url="tileLayerUrl"
-        attribution="Maps © Thunderforest, Data © OpenStreetMap contributors"
-      />
+      <l-popup :options="{ minWidth: 300, maxWidth: 300 }">
+        <RouterLink
+          :to="`/bivouac/${bivouac._id}`"
+          aria-label="View Bivouac Details"
+        >
+          <img
+            :src="placeholderBivouac"
+            :alt="`${bivouac.name} image`"
+            class="rounded-sm object-cover"
+          />
+          <h3 class="text-lg font-semibold" style="color: var(--primary)">
+            {{ bivouac.name }}
+          </h3>
+        </RouterLink>
+        <p style="margin-top: 0rem; margin-bottom: 0rem">
+          {{ bivouac.comune }}, {{ bivouac.region }}
+        </p>
+      </l-popup>
+    </l-marker>
 
-      <l-marker
-        v-for="bivouac in filteredBivouacs"
-        :key="bivouac._id"
-        :lat-lng="
-          bivouac.coords
-            ? [bivouac.coords.latitude, bivouac.coords.longitude]
-            : [0, 0]
-        "
-        :icon="bivouacIcon"
-      >
-        <l-popup :options="{ minWidth: 300, maxWidth: 300 }">
-          <RouterLink
-            :to="`/bivouac/${bivouac._id}`"
-            aria-label="View Bivouac Details"
-          >
-            <img
-              :src="placeholderBivouac"
-              :alt="`${bivouac.name} image`"
-              class="rounded-sm object-cover"
-            />
-            <h3 class="text-lg font-semibold" style="color: var(--primary)">
-              {{ bivouac.name }}
-            </h3>
-          </RouterLink>
-          <p style="margin-top: 0rem; margin-bottom: 0rem">
-            {{ bivouac.comune }}, {{ bivouac.region }}
-          </p>
-        </l-popup>
-      </l-marker>
+    <l-polyline
+      v-for="route in filteredRoutes"
+      :key="`poly-${route._id}`"
+      :lat-lngs="getCoords(route.path?.coordinates || [])"
+      :color="
+        route.difficulty === RouteDifficultyEnum.E
+          ? 'var(--route-e)'
+          : route.difficulty === RouteDifficultyEnum.EE
+            ? 'var(--route-ee)'
+            : route.difficulty === RouteDifficultyEnum.EEA
+              ? 'var(--route-eea)'
+              : route.difficulty === RouteDifficultyEnum.T
+                ? 'var(--route-t)'
+                : 'var(--route-t)'
+      "
+      :weight="4"
+      :opacity="1"
+    />
 
-      <l-polyline
-        v-for="route in filteredRoutes"
-        :key="`poly-${route._id}`"
-        :lat-lngs="getCoords(route.path?.coordinates || [])"
-        :color="
-          route.difficulty === RouteDifficultyEnum.E
-            ? 'var(--route-e)'
-            : route.difficulty === RouteDifficultyEnum.EE
-              ? 'var(--route-ee)'
-              : route.difficulty === RouteDifficultyEnum.EEA
-                ? 'var(--route-eea)'
-                : route.difficulty === RouteDifficultyEnum.T
-                  ? 'var(--route-t)'
-                  : 'var(--route-t)'
-        "
-        :weight="4"
-        :opacity="1"
-      />
-
-      <l-marker
-        v-for="route in filteredRoutes"
-        :key="route._id"
-        :lat-lng="
-          route.path?.coordinates[0]
-            ? [route.path.coordinates[0].lat, route.path.coordinates[0].lng]
-            : [0, 0]
-        "
-        :icon="routeIcon"
-      >
-        <l-popup>
-          <RouterLink
-            :to="`/route/${route._id}`"
-            aria-label="View Route Details"
+    <l-marker
+      v-for="route in filteredRoutes"
+      :key="route._id"
+      :lat-lng="
+        route.path?.coordinates[0]
+          ? [route.path.coordinates[0].lat, route.path.coordinates[0].lng]
+          : [0, 0]
+      "
+      :icon="routeIcon"
+    >
+      <l-popup>
+        <RouterLink :to="`/route/${route._id}`" aria-label="View Route Details">
+          <img
+            :src="placeholderRoute"
+            :alt="`${route.title} image`"
+            class="rounded-sm object-cover"
+          />
+          <h3 class="text-lg font-semibold" style="color: var(--primary-2)">
+            {{ route.title }}
+          </h3>
+        </RouterLink>
+        <p
+          style="margin-top: 0rem; margin-bottom: 0rem"
+          class="flex flex-row justify-between"
+        >
+          <span>{{ route.region.map((r) => r).join(', ') }}</span>
+          <span
+            >{{ getDurationHM(route.duration).hours }} {{ t('hours') }}</span
           >
-            <img
-              :src="placeholderRoute"
-              :alt="`${route.title} image`"
-              class="rounded-sm object-cover"
-            />
-            <h3 class="text-lg font-semibold" style="color: var(--primary-2)">
-              {{ route.title }}
-            </h3>
-          </RouterLink>
-          <p
-            style="margin-top: 0rem; margin-bottom: 0rem"
-            class="flex flex-row justify-between"
+          <span
+            >{{ getDurationHM(route.duration).minutes }} {{ t('min') }}</span
           >
-            <span>{{ route.region.map((r) => r).join(', ') }}</span>
-            <span
-              >{{ getDurationHM(route.duration).hours }} {{ t('hours') }}</span
-            >
-            <span
-              >{{ getDurationHM(route.duration).minutes }} {{ t('min') }}</span
-            >
-            <span>{{ t('difficulty') }}: {{ route.difficulty }}</span>
-          </p>
-        </l-popup>
-      </l-marker>
-    </l-map>
-  </div>
+          <span>{{ t('difficulty') }}: {{ route.difficulty }}</span>
+        </p>
+      </l-popup>
+    </l-marker>
+  </l-map>
 </template>
 
 <style scoped>

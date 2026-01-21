@@ -57,7 +57,7 @@ const props = defineProps<{
         aria-label="Filter options"
         :class="[
           'fixed z-50 text-lg rounded-full shadow-lg py-6 px-12 group',
-          $route.path.includes('maps') ? 'top-12 right-6' : 'top-4 right-4',
+          'top-12 right-4',
         ]"
       >
         <SearchIcon class="w-6 h-6" /><Settings2Icon class="w-6 h-6" />

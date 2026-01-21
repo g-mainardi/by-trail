@@ -50,7 +50,12 @@ const pageName = computed(() => {
         </Breadcrumb>
       </div>
 
-      <div class="flex flex-1 flex-col px-4 pb-4 pt-4">
+      <div
+        :class="[
+          'flex flex-1 flex-col',
+          route.meta.titleKey === 'maps' ? 'p-0' : 'p-4',
+        ]"
+      >
         <Suspense>
           <template #default>
             <RouterView />
