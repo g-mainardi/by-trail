@@ -4,11 +4,6 @@ import { Bivouac } from '../models/models.js';
 import type { AuthRequest } from '../types/server_only.js';
 
 export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
   const { latNw, lngNw, latSe, lngSe } = req.query;
   if (!latNw || !lngNw || !latSe || !lngSe) {
     try {

@@ -150,6 +150,7 @@ onMounted(async () => {
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
             v-for="i in 5"
+            :key="i"
             :src="placeholderBivouac"
             :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"

@@ -3,11 +3,6 @@ import { Route } from 'src/models/models.js';
 import { AuthRequest } from 'src/types/server_only.js';
 
 export const fetchRoutes = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
   const { latNw, lngNw, latSe, lngSe } = req.query;
   if (!latNw || !lngNw || !latSe || !lngSe) {
     try {
@@ -55,15 +50,11 @@ export const fetchRoutes = async (req: AuthRequest, res: Response) => {
 export const fetchRouteById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (!id) {
-    return res.status(400).json({ error: 'Route ID is required' });
-  }
+  if (!id) return res.status(400).json({ error: 'Route ID is required' });
 
   try {
     const route = await Route.findById(id).exec();
-    if (!route) {
-      return res.status(404).json({ message: 'Route not found' });
-    }
+    if (!route) return res.status(404).json({ message: 'Route not found' });
     return res.status(200).json({ route });
   } catch (error) {
     console.error('Error fetching route by ID:', error);
