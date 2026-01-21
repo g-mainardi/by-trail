@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import { placeholderEmpty } from '@/services/placeholders';
+import { placeholderBivouac } from '@/services/placeholders';
 import type { Bivouac } from '@/types';
 import {
   Bed as BedIcon,
@@ -28,7 +28,7 @@ const props = defineProps<{
       >
         <div class="relative w-full mb-2">
           <img
-            :src="placeholderEmpty"
+            :src="placeholderBivouac"
             :alt="`${bivouac.name} image`"
             class="w-full rounded-sm object-cover"
           />

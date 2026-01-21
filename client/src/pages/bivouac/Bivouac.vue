@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select';
 import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
-import { placeholderEmpty } from '@/services/placeholders';
+import { placeholderBivouac } from '@/services/placeholders';
 import { useBivouacStore } from '@/stores/bivouacs';
 // todo: change to type from '@/types' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
@@ -129,19 +129,6 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching bivouac intentions:', error);
   }
-
-  const images = bivouac.value?.images || [];
-  /* const image0 = routesImages[0];
-      const imgData = fs.readFileSync(path.join(process.cwd(), image0));
-      route.images = [
-        {
-          data: imgData,
-          contentType: 'image/jpeg',
-        },
-      ];
-      routesImages.push(...routesImages.slice(1));
-      return route;
-      */
 });
 </script>
 
@@ -163,7 +150,7 @@ onMounted(async () => {
         <div class="flex overflow-x-auto gap-4 mt-4 mb-4 pb-2">
           <img
             v-for="i in 5"
-            :src="placeholderEmpty"
+            :src="placeholderBivouac"
             :alt="`${bivouac?.name} image`"
             class="rounded-sm object-cover shrink-0 w-1/2"
           />

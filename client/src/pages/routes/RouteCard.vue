@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
-import { placeholderEmpty } from '@/services/placeholders';
+import { placeholderRoute } from '@/services/placeholders';
 import { type Route } from '@/types';
 import {
   Clock as ClockIcon,
@@ -35,7 +35,7 @@ const route = props.route;
       <RouterLink :to="`/route/${route._id}`" aria-label="View Route Details">
         <div class="relative w-full mb-2">
           <img
-            :src="placeholderEmpty"
+            :src="placeholderRoute"
             :alt="`${route.title} image`"
             class="w-full rounded-sm object-cover"
           />
