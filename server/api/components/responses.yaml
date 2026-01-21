@@ -4,7 +4,7 @@ SuccessfulUpdate:
   content:
     application/json:
       schema:
-        $ref: '../components/responses.yaml#/SuccessMessage'
+        $ref: '../components/messages.yaml#/Success'
       examples:
         UpdateSuccess:
           summary: Successful update
@@ -15,13 +15,33 @@ SuccessfulUpdate:
           value:
             message: 'No changes were made to the resource'
 
+BivouacsListContent:
+  application/json:
+    schema:
+      type: object
+      properties:
+        bivouacs:
+          type: array
+          items:
+            $ref: '../components/schemas/Bivouac.yaml'
+
+RoutesListContent:
+  application/json:
+    schema:
+      type: object
+      properties:
+        bivouacs:
+          type: array
+          items:
+            $ref: '../components/schemas/Route.yaml'
+
 # 400 - Bad Request
 BadUpdateRequest:
   description: Invalid update request format or validation error.
   content:
     application/json:
       schema:
-        $ref: '../components/responses.yaml#/ErrorMessage'
+        $ref: '../components/messages.yaml#/Error'
       examples:
         InvalidIdFormat:
           $ref: '../components/messages.yaml#/InvalidIdFormat'
@@ -79,7 +99,7 @@ ForbiddenError_admin:
   content:
     application/json:
       schema:
-        $ref: '../components/responses.yaml#/ErrorMessage'
+        $ref: '../components/messages.yaml#/Error'
       examples:
         CannotChangeAdminAction:
           summary: Cannot perform action on admin user
@@ -132,6 +152,24 @@ ProposalNotFound:
             type: string
             example: 'Proposal not found'
 
+# 409 - Conflict
+BivouacAlreadyFavorited:
+  description: The bivouac is already in the user's favorites.
+  content:
+    application/json:
+      schema:
+        $ref: '../components/messages.yaml#/Error'
+      example:
+        message: 'Bivouac is already in favorites'
+RouteAlreadyFavorited:
+  description: The route is already in the user's favorites.
+  content:
+    application/json:
+      schema:
+        $ref: '../components/messages.yaml#/Error'
+      example:
+        message: 'Route is already in favorites'
+
 # 429 - Too Many Requests
 TooManyRequestsError:
   description: Rate limit exceeded.
@@ -160,21 +198,3 @@ ServerError:
           message:
             type: string
             example: 'Server Error'
-
-# Generic Error Message Schema
-ErrorMessage:
-  type: object
-  properties:
-    message:
-      type: string
-  example:
-    message: 'An unexpected error occurred'
-
-# Generic Success Message Schema
-SuccessMessage:
-  type: object
-  properties:
-    message:
-      type: string
-  example:
-    message: 'Operation completed successfully'

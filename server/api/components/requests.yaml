@@ -22,3 +22,11 @@ SignupRequest:
     - name
     - email
     - password
+
+UserUpdateRequest:
+  type: object
+  properties:
+    name:
+      $ref: './parameters.yaml#/name'
+    favRegions:
+      $ref: './parameters.yaml#/favRegions'

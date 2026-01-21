@@ -3,19 +3,247 @@ profile:
     tags:
       - Users
     summary: Retrieve the profile of the authenticated user
+    responses:
+      '200':
+        description: User profile retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/parameters.yaml#/userBasicInfo'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '404':
+        $ref: '../components/responses.yaml#/UserNotFound'
+      '429':
+        $ref: '../components/responses.yaml#/TooManyRequestsError'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
+  patch:
+    tags:
+      - Users
+    summary: Update the profile of the authenticated user
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/requests.yaml#/UserUpdateRequest'
+    responses:
+      '200':
+        $ref: '../components/responses.yaml#/SuccessfulUpdate'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '404':
+        $ref: '../components/responses.yaml#/UserNotFound'
+      '429':
+        $ref: '../components/responses.yaml#/TooManyRequestsError'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
+
 favorites:
   bivouacs:
     get:
       tags:
-        - Users
+        - Favorites
       summary: Retrieve the list of favorite bivouacs for the authenticated user
+      responses:
+        '200':
+          description: Favorite bivouacs retrieved successfully
+          content:
+            $ref: '../components/responses.yaml#/BivouacsListContent'
+        '401':
+          $ref: '../components/responses.yaml#/UnauthorizedError'
+        '429':
+          $ref: '../components/responses.yaml#/TooManyRequestsError'
+        '500':
+          $ref: '../components/responses.yaml#/ServerError'
+    post:
+      tags:
+        - Favorites
+      summary: Add a bivouac to the authenticated user's favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bivouacId:
+                  $ref: '../components/parameters.yaml#/bivouacId'
+              required:
+                - bivouacId
+      responses:
+        '201':
+          description: Bivouac added to favorites successfully
+          content:
+            application/json:
+              schema:
+                $ref: '../components/messages.yaml#/Success'
+        '400':
+          $ref: '../components/responses.yaml#/InvalidIdFormat'
+        '401':
+          $ref: '../components/responses.yaml#/UnauthorizedError'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/messages.yaml#/Error'
+              examples:
+                UserNotFound:
+                  $ref: '../components/messages.yaml#/UserNotFound'
+                BivouacNotFound:
+                  $ref: '../components/messages.yaml#/BivouacNotFound'
+        '409':
+          $ref: '../components/responses.yaml#/BivouacAlreadyFavorited'
+        '429':
+          $ref: '../components/responses.yaml#/TooManyRequestsError'
+        '500':
+          $ref: '../components/responses.yaml#/ServerError'
+    delete:
+      tags:
+        - Favorites
+      summary: Remove a bivouac from the authenticated user's favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bivouacId:
+                  $ref: '../components/parameters.yaml#/bivouacId'
+              required:
+                - bivouacId
+      responses:
+        '204':
+          description: Bivouac removed from favorites successfully
+        '400':
+          $ref: '../components/responses.yaml#/InvalidIdFormat'
+        '401':
+          $ref: '../components/responses.yaml#/UnauthorizedError'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/messages.yaml#/Error'
+              examples:
+                UserNotFound:
+                  $ref: '../components/messages.yaml#/UserNotFound'
+                BivouacNotInFavorites:
+                  $ref: '../components/messages.yaml#/BivouacNotFound'
+        '429':
+          $ref: '../components/responses.yaml#/TooManyRequestsError'
+        '500':
+          $ref: '../components/responses.yaml#/ServerError'
   routes:
     get:
       tags:
-        - Users
+        - Favorites
       summary: Retrieve the list of favorite routes for the authenticated user
+      responses:
+        '200':
+          description: Favorite routes retrieved successfully
+          content:
+            $ref: '../components/responses.yaml#/RoutesListContent'
+        '401':
+          $ref: '../components/responses.yaml#/UnauthorizedError'
+        '429':
+          $ref: '../components/responses.yaml#/TooManyRequestsError'
+        '500':
+          $ref: '../components/responses.yaml#/ServerError'
+    post:
+      tags:
+        - Favorites
+      summary: Add a route to the authenticated user's favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                routeId:
+                  $ref: '../components/parameters.yaml#/routeId'
+              required:
+                - routeId
+      responses:
+        '201':
+          description: Route added to favorites successfully
+          content:
+            application/json:
+              schema:
+                $ref: '../components/messages.yaml#/Success'
+        '400':
+          $ref: '../components/responses.yaml#/InvalidIdFormat'
+        '401':
+          $ref: '../components/responses.yaml#/UnauthorizedError'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/messages.yaml#/Error'
+              examples:
+                UserNotFound:
+                  $ref: '../components/messages.yaml#/UserNotFound'
+                RouteNotFound:
+                  $ref: '../components/messages.yaml#/RouteNotFound'
+        '409':
+          $ref: '../components/responses.yaml#/RouteAlreadyFavorited'
+        '429':
+          $ref: '../components/responses.yaml#/TooManyRequestsError'
+        '500':
+          $ref: '../components/responses.yaml#/ServerError'
+    delete:
+      tags:
+        - Favorites
+      summary: Remove a route from the authenticated user's favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                routeId:
+                  $ref: '../components/parameters.yaml#/routeId'
+              required:
+                - routeId
+      responses:
+        '204':
+          description: Route removed from favorites successfully
+        '400':
+          $ref: '../components/responses.yaml#/InvalidIdFormat'
+        '401':
+          $ref: '../components/responses.yaml#/UnauthorizedError'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/messages.yaml#/Error'
+              examples:
+                UserNotFound:
+                  $ref: '../components/messages.yaml#/UserNotFound'
+                RouteNotInFavorites:
+                  $ref: '../components/messages.yaml#/RouteNotFound'
+        '429':
+          $ref: '../components/responses.yaml#/TooManyRequestsError'
+        '500':
+          $ref: '../components/responses.yaml#/ServerError'
+
 intentions:
+  get:
+    tags:
+      - Intentions
+    summary: Retrieve the list of bivouac intentions for the authenticated user
   post:
     tags:
-      - Users
+      - Intentions
     summary: Create a new bivouac intention for the authenticated user
+  delete:
+    tags:
+      - Intentions
+    summary: Delete a bivouac intention for the authenticated user

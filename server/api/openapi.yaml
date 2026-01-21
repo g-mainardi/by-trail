@@ -30,7 +30,9 @@ tags:
   - name: Admin
     description: Administrative operations and management
   - name: Users
-    description: User profiles, settings, and lists
+    description: User profile, settings, and preferences
+  - name: Favorites
+    description: Management of user favorite bivouacs and routes
   - name: Bivouacs
     description: Management of shelters and bivouacs
   - name: Routes

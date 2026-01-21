@@ -72,6 +72,37 @@ name:
     type: string
   example: Paolo Cannone
 
+favRegions:
+  name: favRegions
+  in: body
+  required: false
+  description: List of favorite regions
+  schema:
+    type: array
+    items:
+      $ref: './schemas/Enums.yaml#/Region'
+  example: ['Marche', 'Emilia-Romagna']
+
+favoritesBivouacs:
+  name: favoritesBivouacs
+  in: body
+  required: false
+  description: List of favorite bivouac IDs
+  schema:
+    type: array
+    items:
+      $ref: './parameters.yaml#/bivouacId'
+
+favoritesRoutes:
+  name: favoritesRoutes
+  in: body
+  required: false
+  description: List of favorite route IDs
+  schema:
+    type: array
+    items:
+      $ref: './parameters.yaml#/routeId'
+
 date:
   name: date
   in: body
@@ -90,7 +121,7 @@ token:
   type: string
   example: '...long.jwt.token...'
 
-userLoginInfo:
+userBasicInfo:
   name: user
   in: body
   required: true

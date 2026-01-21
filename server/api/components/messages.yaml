@@ -22,3 +22,36 @@ ContactSupport:
   summary: Account issue
   value:
     message: 'There was a problem with your account. Please contact support at support@example.com.'
+
+UserNotFound:
+  summary: User not found
+  value:
+    message: 'User not found'
+
+BivouacNotFound:
+  summary: Bivouac not found
+  value:
+    message: 'Bivouac not found'
+
+RouteNotFound:
+  summary: Route not found
+  value:
+    message: 'Route not found'
+
+# Generic Success Message Schema
+Success:
+  type: object
+  properties:
+    message:
+      type: string
+  example:
+    message: 'Operation completed successfully'
+
+# Generic Error Message Schema
+Error:
+  type: object
+  properties:
+    message:
+      type: string
+  example:
+    message: 'An unexpected error occurred'
