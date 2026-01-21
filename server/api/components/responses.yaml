@@ -4,13 +4,16 @@ SuccessfulUpdate:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example:
-              - 'Resource updated successfully'
-              - 'No changes were made to the resource'
+        $ref: '../components/responses.yaml#/SuccessMessage'
+      examples:
+        UpdateSuccess:
+          summary: Successful update
+          value:
+            message: 'Resource updated successfully'
+        NoChange:
+          summary: No changes made
+          value:
+            message: 'No changes were made to the resource'
 
 # 400 - Bad Request
 BadUpdateRequest:
@@ -18,13 +21,12 @@ BadUpdateRequest:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example:
-              - 'Invalid ID format'
-              - 'No valid fields provided for update'
+        $ref: '../components/responses.yaml#/ErrorMessage'
+      examples:
+        InvalidIdFormat:
+          $ref: '../components/messages.yaml#/InvalidIdFormat'
+        NoValidFields:
+          $ref: '../components/messages.yaml#/NoValidFields'
 
 InvalidIdFormat:
   description: The provided ID format is invalid.
@@ -77,13 +79,16 @@ ForbiddenError_admin:
   content:
     application/json:
       schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example:
-              - 'Cannot perform delete an admin user'
-              - 'Cannot change status of an admin user'
+        $ref: '../components/responses.yaml#/ErrorMessage'
+      examples:
+        CannotChangeAdminAction:
+          summary: Cannot perform action on admin user
+          value:
+            message: 'Cannot perform delete an admin user'
+        CannotChangeAdminStatus:
+          summary: Cannot change status of admin user
+          value:
+            message: 'Cannot change status of an admin user'
 
 # 404 - Not Found
 UserNotFound:
@@ -155,3 +160,21 @@ ServerError:
           message:
             type: string
             example: 'Server Error'
+
+# Generic Error Message Schema
+ErrorMessage:
+  type: object
+  properties:
+    message:
+      type: string
+  example:
+    message: 'An unexpected error occurred'
+
+# Generic Success Message Schema
+SuccessMessage:
+  type: object
+  properties:
+    message:
+      type: string
+  example:
+    message: 'Operation completed successfully'
