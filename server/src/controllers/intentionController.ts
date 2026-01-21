@@ -37,8 +37,6 @@ const notifyPeers = async (
     )
   ); // Wed Dec 31 2025 00:00:00 GMT+0000 (Coordinated Universal Time)
 
-  console.log('startOfDay: ' + startOfDay);
-
   const endOfDay = new Date(
     Date.UTC(
       targetDate.getUTCFullYear(),

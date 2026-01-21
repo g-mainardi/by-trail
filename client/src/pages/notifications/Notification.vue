@@ -152,7 +152,8 @@ onUnmounted(() => {
         :message="notif.message"
         :time="formatTime(notif.createdAt)"
         :read="notif.isRead"
-        :type="notif.uiType"
+        :notificationType="notif.type"
+        :uiType="notif.uiType"
         @read="handleRead(notif._id)"
         @delete="handleDelete(notif._id)"
       />

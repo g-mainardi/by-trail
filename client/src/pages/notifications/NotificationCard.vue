@@ -1,50 +1,70 @@
 <script setup lang="ts">
-// 1. Define specific types for the props
-type NotificationType = 'alert' | 'success' | 'info';
+import {
+  Bell,
+  RefreshCcw,
+  Tent,
+  ThermometerSun,
+  UsersRound,
+  X,
+} from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface Props {
   title: string;
   message: string;
   time: string;
   read: boolean;
-  type?: NotificationType; // Optional because we provide a default
+  notificationType: string;
+  uiType?: 'alert' | 'success' | 'info';
 }
 
-// 2. Use withDefaults to handle the default 'info' value
-withDefaults(defineProps<Props>(), {
-  type: 'info',
+const props = withDefaults(defineProps<Props>(), {
+  notificationType: 'bivouac_reservation',
+  uiType: 'info',
 });
 
-// 3. Typed Emits
 defineEmits<{
   (e: 'read'): void;
   (e: 'delete'): void;
 }>();
 
-// 4. Record type ensures the keys match our NotificationType
-const typeStyles: Record<NotificationType, string> = {
-  alert: 'border-l-4 border-l-red-500',
-  success: 'border-l-4 border-l-green-500',
-  info: 'border-l-4 border-l-blue-400',
+const iconMap: Record<string, any> = {
+  bivouac_reservation: Tent,
+  bivouac_reservation_update: RefreshCcw,
+  bivouac_reservation_delete: X,
+  bivouac_reservation_users: UsersRound,
+  weather_alert: ThermometerSun,
 };
+
+const currentIcon = computed(() => {
+  return iconMap[props.notificationType] || Bell;
+});
+
+const colorClasses = computed(() => {
+  switch (props.uiType) {
+    case 'alert':
+      return 'text-red-600';
+    case 'success':
+      return 'text-green-600';
+    case 'info':
+    default:
+      return 'text-blue-600';
+  }
+});
 </script>
 
 <template>
   <div
-    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-gray-100 p-3 mb-1 transition-all duration-200 hover:shadow-md"
-    :class="[
-      read ? 'bg-white' : 'bg-blue-50/50',
-      typeStyles[type] || 'border-l-4 border-l-gray-300',
-    ]"
+    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-black-600 p-2 mb-1 transition-all duration-200 hover:shadow-md"
+    :class="[read ? 'bg-white' : 'bg-blue-50/70']"
     @click="$emit('read')"
   >
     <div class="flex-shrink-0">
       <div
-        class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-gray-200"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-white ring-1"
+        :class="colorClasses"
       >
-        <span v-if="type === 'alert'" class="text-xl">⛈️</span>
-        <span v-else-if="type === 'success'" class="text-xl">🎒</span>
-        <span v-else class="text-xl">📍</span>
+        <component :is="currentIcon" :size="20" stroke-width="2" />
       </div>
     </div>
 
