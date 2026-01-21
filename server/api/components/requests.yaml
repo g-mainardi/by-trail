@@ -30,3 +30,27 @@ UserUpdateRequest:
       $ref: './parameters.yaml#/name'
     favRegions:
       $ref: './parameters.yaml#/favRegions'
+
+RequestWithinBoundingBox:
+  type: object
+  properties:
+    latNw:
+      type: number
+      format: float
+      description: Latitude of the northwest corner of the bounding box
+      example: 45.8321
+    lonNw:
+      type: number
+      format: float
+      description: Longitude of the northwest corner of the bounding box
+      example: 9.1234
+    latSe:
+      type: number
+      format: float
+      description: Latitude of the southeast corner of the bounding box
+      example: 45.1234
+    lonSe:
+      type: number
+      format: float
+      description: Longitude of the southeast corner of the bounding box
+      example: 9.8321

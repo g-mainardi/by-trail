@@ -15,6 +15,31 @@ SuccessfulUpdate:
           value:
             message: 'No changes were made to the resource'
 
+BivouacIntention:
+  description: Resource updated successfully.
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          date:
+            $ref: './parameters.yaml#/date'
+            description: Date of the intention
+          people:
+            type: integer
+            description: Number of people for the intention
+            example: 2
+
+BivouacContent:
+  application/json:
+    schema:
+      $ref: '../components/schemas/Bivouac.yaml'
+
+RouteContent:
+  application/json:
+    schema:
+      $ref: '../components/schemas/Route.yaml'
+
 BivouacsListContent:
   application/json:
     schema:

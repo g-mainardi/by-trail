@@ -62,21 +62,17 @@ paths:
     $ref: './paths/users.yaml#/intentions'
 
   # Bivacchi
-  /bivouacs/list:
+  /bivouacs:
     $ref: './paths/bivouacs.yaml#/list'
-  /bivouacs/map:
-    $ref: './paths/bivouacs.yaml#/map'
-  /bivouacs/bivouac/{id}:
+  /bivouacs/{id}:
     $ref: './paths/bivouacs.yaml#/getById'
   /bivouacs/intentions/{id}:
     $ref: './paths/bivouacs.yaml#/getIntentions'
 
   # Routes
-  /routes/list:
+  /routes:
     $ref: './paths/routes.yaml#/list'
-  /routes/map:
-    $ref: './paths/routes.yaml#/map'
-  /routes/route/{id}:
+  /routes/{id}:
     $ref: './paths/routes.yaml#/getById'
 
   # Proposals
