@@ -21,7 +21,7 @@ export const initWeatherJob = () => {
       }).populate('bivouac');
 
       console.log(
-        `[WeatherJob] Checking ${upcomingReservations.length} reservations beetwen ${startWindow.toISOString()} and ${endWindow.toISOString()}`
+        `[WeatherJob] Checking ${upcomingReservations.length} reservations between ${startWindow.toISOString()} and ${endWindow.toISOString()}`
       );
 
       for (const reservation of upcomingReservations) {
