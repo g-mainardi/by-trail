@@ -19,13 +19,21 @@ const router = express.Router();
 router.use(protect, admin);
 
 // /api/admin
+
+// Users management
 router.get('/users', fetchUsers);
 router.patch('/users/:id/status', updateUserStatus);
 router.delete('/users/:id', deleteUser);
+
+// Bivouacs management
 router.patch('/bivouacs/:id', updateBivouac);
 router.delete('/bivouacs/:id', deleteBivouac);
+
+// Routes management
 router.patch('/routes/:id', updateRoute);
 router.delete('/routes/:id', deleteRoute);
+
+// Proposals management
 router.get('/proposals', fetchProposals);
 router.delete('/proposals/:id', deleteProposal);
 

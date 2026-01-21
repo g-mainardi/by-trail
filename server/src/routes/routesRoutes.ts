@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.use(protect);
 
+// /api/routes
 router.get('', fetchRoutes);
 router.get('/:id', fetchRouteById);
 
