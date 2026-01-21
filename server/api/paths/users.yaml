@@ -16,8 +16,6 @@ profile:
         $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '404':
         $ref: '../components/responses.yaml#/UserNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
   patch:
@@ -39,8 +37,6 @@ profile:
         $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '404':
         $ref: '../components/responses.yaml#/UserNotFound'
-      '429':
-        $ref: '../components/responses.yaml#/TooManyRequestsError'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
 
@@ -59,8 +55,6 @@ favorites:
           $ref: '../components/responses.yaml#/UnauthorizedError'
         '403':
           $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
-        '429':
-          $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
           $ref: '../components/responses.yaml#/ServerError'
     post:
@@ -104,8 +98,6 @@ favorites:
                   $ref: '../components/messages.yaml#/BivouacNotFound'
         '409':
           $ref: '../components/responses.yaml#/BivouacAlreadyFavorited'
-        '429':
-          $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
           $ref: '../components/responses.yaml#/ServerError'
     delete:
@@ -143,8 +135,6 @@ favorites:
                   $ref: '../components/messages.yaml#/UserNotFound'
                 BivouacNotInFavorites:
                   $ref: '../components/messages.yaml#/BivouacNotFound'
-        '429':
-          $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
           $ref: '../components/responses.yaml#/ServerError'
   routes:
@@ -161,8 +151,6 @@ favorites:
           $ref: '../components/responses.yaml#/UnauthorizedError'
         '403':
           $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
-        '429':
-          $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
           $ref: '../components/responses.yaml#/ServerError'
     post:
@@ -206,8 +194,6 @@ favorites:
                   $ref: '../components/messages.yaml#/RouteNotFound'
         '409':
           $ref: '../components/responses.yaml#/RouteAlreadyFavorited'
-        '429':
-          $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
           $ref: '../components/responses.yaml#/ServerError'
     delete:
@@ -245,8 +231,6 @@ favorites:
                   $ref: '../components/messages.yaml#/UserNotFound'
                 RouteNotInFavorites:
                   $ref: '../components/messages.yaml#/RouteNotFound'
-        '429':
-          $ref: '../components/responses.yaml#/TooManyRequestsError'
         '500':
           $ref: '../components/responses.yaml#/ServerError'
 
