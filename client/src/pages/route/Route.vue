@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import CardFooter from '@/components/ui/card/CardFooter.vue';
@@ -7,6 +8,7 @@ import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { placeholderRoute } from '@/services/placeholders';
 import { getCoords, getDurationHM, routeIcon } from '@/services/utility';
+import { useFavoriteStore } from '@/stores/favorites';
 import { useRouteStore } from '@/stores/routes';
 import { RouteDifficultyEnum, type Route } from '@/types';
 import { LMap, LMarker, LPolyline, LTileLayer } from '@vue-leaflet/vue-leaflet';
@@ -15,6 +17,7 @@ import 'leaflet/dist/leaflet.css';
 import {
   ChevronsRight,
   Clock as ClockIcon,
+  Heart,
   Map as MapIcon,
   MapPin as MapPinIcon,
   SquareDot,
@@ -25,11 +28,15 @@ import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
+const favoritesStore = useFavoriteStore();
 const routeStore = useRouteStore();
 const route = ref<Route | null>(null);
 const fallbackCenter: [number, number] = [41.9028, 12.4964]; // Rome
 const zoom = ref(13);
 const center = ref<[number, number]>(fallbackCenter);
+const isFavorite = computed(() => {
+  return route.value ? favoritesStore.isFavoriteRoute(route.value._id!) : false;
+});
 
 const mapRef = ref<Map | null>(null);
 const onMapReady = (map: Map) => {
@@ -43,6 +50,7 @@ const tileLayerUrl = computed(() => {
 onMounted(async () => {
   try {
     route.value = await routeStore.fetchRouteById(props.id);
+    await favoritesStore.fetchFavoriteRoutes();
   } catch (error) {
     console.error('Error fetching route:', error);
   }
@@ -189,6 +197,17 @@ const props = defineProps({
         <H2>{{ t('note') }}</H2>
         <p v-if="route?.note">{{ route?.note }}</p>
         <p v-else>{{ t('no_description_available') }}</p>
+
+        <Button
+          class="rounded-full w-full mt-4"
+          @click="favoritesStore.toggleFavoriteRoute(route!._id!)"
+        >
+          <Heart
+            :fill="isFavorite ? 'var(--background)' : 'var(--primary)'"
+            class="transition-all duration-300 cursor-pointer hover:scale-110 active:scale-95"
+          />
+          {{ isFavorite ? t('saved') : t('unsaved') }}
+        </Button>
       </div>
     </CardContent>
     <CardFooter></CardFooter>
@@ -262,7 +281,9 @@ const props = defineProps({
     "loadingMap": "Loading map...",
     "route_type": "Route Type",
     "difficulty": "Difficulty",
-    "no_description_available": "No description available."
+    "no_description_available": "No description available.",
+    "saved": "Saved",
+    "unsaved": "Unsaved"
   },
   "it": {
     "images": "Immagini",
@@ -272,7 +293,9 @@ const props = defineProps({
     "loadingMap": "Caricamento mappa...",
     "route_type": "Tipo di Percorso",
     "difficulty": "Difficoltà",
-    "no_description_available": "Nessuna descrizione disponibile."
+    "no_description_available": "Nessuna descrizione disponibile.",
+    "saved": "Salvato",
+    "unsaved": "Non salvato"
   },
   "es": {
     "images": "Imágenes",
@@ -282,7 +305,9 @@ const props = defineProps({
     "loadingMap": "Cargando mapa...",
     "route_type": "Tipo de Ruta",
     "difficulty": "Dificultad",
-    "no_description_available": "No hay descripción disponible."
+    "no_description_available": "No hay descripción disponible.",
+    "saved": "Guardado",
+    "unsaved": "No guardado"
   }
 }
 </i18n>
