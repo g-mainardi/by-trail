@@ -40,10 +40,10 @@ export const RouteDifficultyEnum = {
 } as const;
 
 export const RouteTypeEnum = {
-  CIRCULAR: 'circular',
-  OUT_AND_BACK: 'out-and-back',
-  POINT_TO_POINT: 'point-to-point',
-  STAGE: 'stage',
+  CIRCULAR: 'Circular',
+  OUT_AND_BACK: 'Out-and-Back',
+  POINT_TO_POINT: 'Point-to-Point',
+  STAGE: 'Stage',
 } as const;
 
 export const RoutePathTypeEnum = {
@@ -97,7 +97,7 @@ export interface Bivouac {
   altitude?: number;
   capacity?: number;
   note?: string;
-  images?: string[];
+  images?: Image[];
 }
 
 export type PathObj = {
@@ -118,7 +118,7 @@ export interface Route {
   routeType: RouteType;
   note?: string;
   path?: PathObj;
-  images?: string[];
+  images?: Image[];
 }
 
 export interface Proposal {
@@ -142,4 +142,10 @@ export interface Intention {
   bivouac: string;
   reservedPlaces: number;
   reservationDate: Date;
+}
+
+interface Image {
+  _id?: UUID;
+  data: Buffer;
+  contentType: string;
 }
