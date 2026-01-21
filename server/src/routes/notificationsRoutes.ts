@@ -16,12 +16,7 @@ router.use(protect);
 router.post(
   '/test-realtime-reservation',
   async (req: AuthRequest, res: Response): Promise<void> => {
-    const userId = req.user?.id;
-
-    if (!userId) {
-      res.status(401).json({ message: 'User ID not found in request' });
-      return;
-    }
+    const userId = req.user?.id!;
 
     await sendNotification(
       userId,

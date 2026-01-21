@@ -5,10 +5,7 @@ import type { AuthRequest } from '../types/server_only.js';
 
 export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+    const userId = req.user?.id!;
 
     const bivouacs = await Bivouac.find().exec();
     if (!bivouacs || bivouacs.length === 0) {

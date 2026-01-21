@@ -31,9 +31,6 @@ export const updateUserStatus = async (req: AuthRequest, res: Response) => {
   const targetUserId = req.params.id;
   const { status } = req.body;
 
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
   if (!status || !Object.values(UserStatusEnum).includes(status)) {
     return res.status(400).json({ error: 'Invalid status value' });
   }
@@ -70,9 +67,6 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
   const targetUserId = req.params.id;
 
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
   if (userId === targetUserId) {
     return res.status(400).json({
       error:

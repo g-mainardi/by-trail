@@ -78,14 +78,8 @@ const notifyPeers = async (
 };
 
 export const createIntention = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
+  const userId = req.user?.id!;
   const { bivouacId, date, people } = req.body;
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: 'Invalid user ID format' });
-  }
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });
   }
@@ -173,15 +167,9 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
 };
 
 export const deleteIntention = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
+  const userId = req.user?.id!;
   const { intentionId } = req.body;
 
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: 'Invalid user ID format' });
-  }
   if (!mongoose.Types.ObjectId.isValid(intentionId)) {
     return res.status(400).json({ error: 'Invalid intention ID format' });
   }
@@ -230,13 +218,7 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
 };
 
 export const fetchUserIntentions = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ error: 'Invalid user ID format' });
-  }
+  const userId = req.user?.id!;
 
   try {
     const intentions = await Reservation.find({ user: userId })

@@ -1,14 +1,9 @@
 import type { Response } from 'express';
 import type { AuthRequest } from '../types/server_only.js';
-import mongoose from 'mongoose';
 import { Notification } from '../models/models.js';
 
 export const fetchNotifications = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized: User ID missing' });
-  }
+  const userId = req.user?.id!;
 
   // Standard limit to prevent payload bloat
   const DEFAULT_SIZE_LIMIT = 50;
@@ -29,13 +24,7 @@ export const fetchNotifications = async (req: AuthRequest, res: Response) => {
 
 export const markNotificationRead = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const userId = req.user?.id;
-
-  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'Invalid notification ID format' });
-  }
+  const userId = req.user?.id!;
 
   try {
     const notification = await Notification.findOneAndUpdate(
@@ -59,9 +48,7 @@ export const markAllNotificationsRead = async (
   req: AuthRequest,
   res: Response
 ) => {
-  const userId = req.user?.id;
-  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-
+  const userId = req.user?.id!;
   try {
     await Notification.updateMany(
       { recipient: userId, isRead: false },
@@ -76,13 +63,7 @@ export const markAllNotificationsRead = async (
 
 export const deleteNotification = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const userId = req.user?.id;
-
-  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'Invalid notification ID format' });
-  }
+  const userId = req.user?.id!;
 
   try {
     const deleted = await Notification.findOneAndDelete({

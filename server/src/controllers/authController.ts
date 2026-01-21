@@ -15,6 +15,8 @@ try {
   process.exit(1);
 }
 
+const jwtTokenExpiry = '24h';
+
 // --- REGISTER LOGIC ---
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -77,9 +79,9 @@ export const signup = async (req: Request, res: Response) => {
 
     // 7. Save user to database
     const savedUser = await newUser.save();
-    if (!savedUser) {
+    if (!savedUser)
       return res.status(500).json({ message: 'Error saving user to database' });
-    }
+
     res.status(201).json({ message: 'User registered successfully!' });
   } catch (error) {
     console.error('Signup Error:', error);
@@ -95,9 +97,7 @@ export const login = async (req: Request, res: Response) => {
     // 1. Find user and explicitly select the password field
     // This is crucial if your schema has { select: false } on password
     const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
+    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
     // --- DEFENSIVE CHECK ---
     // Prevents server crash (500) if the user record is corrupted (missing password)
@@ -118,23 +118,20 @@ export const login = async (req: Request, res: Response) => {
 
     // 3. Validate password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    if (!isMatch)
       return res.status(400).json({ message: 'Invalid credentials' });
-    }
 
     // 4. Generate JWT Token
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: '24h',
+      expiresIn: jwtTokenExpiry,
     });
 
     // 5. Send response
     res.status(200).json({
       token,
       user: {
-        id: user._id,
         name: user.name,
         email: user.email,
-        favRegions: user.favRegions,
         type: user.type,
       },
     });
@@ -150,8 +147,6 @@ export const deleteAccount = async (
 ) => {
   const userId = req.user?._id;
   const { password } = req.body;
-  if (!userId)
-    return res.status(401).json({ error: 'Unauthorized: No user ID found' });
   if (!password) return res.status(400).json({ error: 'Password is required' });
 
   try {

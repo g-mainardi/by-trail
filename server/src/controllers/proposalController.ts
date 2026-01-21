@@ -5,14 +5,8 @@ import type { ProposalRequest } from '../types/server_only.js';
 // POST /api/proposal
 export const sendProposal = async (req: ProposalRequest, res: Response) => {
   try {
-    const sender = req.user?.id;
+    const sender = req.user?.id!;
     const { type, subjectName, description, region, locality } = req.body;
-
-    if (!sender) {
-      return res.status(401).json({
-        message: 'Unauthorized: Authentication required (missing id)',
-      });
-    }
 
     if (!type || !subjectName || !description || !region || !locality) {
       return res
