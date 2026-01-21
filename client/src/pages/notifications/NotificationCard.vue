@@ -55,7 +55,7 @@ const colorClasses = computed(() => {
 
 <template>
   <div
-    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-black-600 p-2 mb-1 transition-all duration-200 hover:shadow-md"
+    class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-gray-300 p-2 mb-1 transition-all duration-200 hover:shadow-md"
     :class="[read ? 'bg-white' : 'bg-blue-50/70']"
     @click="$emit('read')"
   >
