@@ -15,7 +15,7 @@ sendProposal:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/SuccessMessage'
+              $ref: '../components/messages.yaml#/Success'
             example:
               message: 'Proposal registered successfully!'
       '400':
@@ -23,7 +23,7 @@ sendProposal:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/ErrorMessage'
+              $ref: '../components/messages.yaml#/Error'
             examples:
               MissingFields:
                 $ref: '../components/messages.yaml#/MissingFields'

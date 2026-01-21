@@ -72,7 +72,6 @@ getById:
 getIntentions:
   get:
     tags:
-      - Bivouacs
       - Intentions
     summary: Get anonymous intentions for a specific bivouac
     operationId: getBivouacIntentions

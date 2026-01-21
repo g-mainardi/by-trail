@@ -16,17 +16,8 @@ properties:
   creationDate:
     $ref: '../parameters.yaml#/date'
   favRegions:
-    type: array
-    description: List of favorite regions
-    items:
-      $ref: './Enums.yaml#/Region'
+    $ref: '../parameters.yaml#/favRegions'
   favoritesBivouacs:
-    type: array
-    description: List of favorite bivouac IDs
-    items:
-      $ref: '../parameters.yaml#/bivouacId'
+    $ref: '../parameters.yaml#/favoritesBivouacs'
   favoritesRoutes:
-    type: array
-    description: List of favorite route IDs
-    items:
-      $ref: '../parameters.yaml#/routeId'
+    $ref: '../parameters.yaml#/favoritesRoutes'

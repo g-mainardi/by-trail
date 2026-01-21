@@ -68,7 +68,7 @@ updateUserStatus:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/SuccessMessage'
+              $ref: '../components/messages.yaml#/Success'
             example:
               message: 'User status updated successfully'
       '400':
@@ -76,7 +76,7 @@ updateUserStatus:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/ErrorMessage'
+              $ref: '../components/messages.yaml#/Error'
             examples:
               CannotChangeOwnStatus:
                 summary: Cannot change own status
@@ -193,7 +193,7 @@ manageRouteById:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/ErrorMessage'
+              $ref: '../components/messages.yaml#/Error'
             examples:
               InvalidIdFormat:
                 $ref: '../components/messages.yaml#/InvalidIdFormat'

@@ -21,13 +21,13 @@ login:
                 token:
                   $ref: '../components/parameters.yaml#/token'
                 user:
-                  $ref: '../components/parameters.yaml#/userLoginInfo'
+                  $ref: '../components/parameters.yaml#/userBasicInfo'
       '400':
         description: Bad Request - Invalid input (e.g., missing username or password)
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/ErrorMessage'
+              $ref: '../components/messages.yaml#/Error'
             examples:
               InvalidCredentials:
                 $ref: '../components/messages.yaml#/InvalidCredentials'
@@ -66,7 +66,7 @@ signup:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/ErrorMessage'
+              $ref: '../components/messages.yaml#/Error'
             examples:
               MissingFields:
                 $ref: '../components/messages.yaml#/MissingFields'
@@ -119,7 +119,7 @@ delete:
         content:
           application/json:
             schema:
-              $ref: '../components/responses.yaml#/ErrorMessage'
+              $ref: '../components/messages.yaml#/Error'
             examples:
               InvalidCredentials:
                 $ref: '../components/messages.yaml#/InvalidCredentials'
