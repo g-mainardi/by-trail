@@ -51,29 +51,36 @@ onMounted(async () => {
   socket.on('connect', onConnect);
   socket.on('disconnect', onDisconnect);
   socket.on('connect_error', onConnectError);
-
   socket.on('notification:new', handleNewNotification);
 
   const token = localStorage.getItem('token');
+
   // Checks if already connected to avoid double-connect attempts during hot-reloads
-  if (token && !socket.connected) {
-    socket.auth = { token };
-    socket.connect();
-  }
+  if (token) {
+    if (!socket.connected) {
+      socket.auth = { token };
+      socket.connect();
+    }
 
-  if (localStorage.getItem('token')) {
-    const notifications = await notificationStore.fetchNotifications();
-    const unreadCount = notifications.filter((n) => !n.isRead).length;
+    try {
+      const notifications = await notificationStore.fetchNotifications();
 
-    if (unreadCount > 0) {
-      toast.info('Welcome back!', {
-        description: `You have ${unreadCount} unread notifications.`,
-        action: {
-          label: 'Check',
-          onClick: () => router.push('/notifications'),
-        },
-        duration: 6000,
-      });
+      if (Array.isArray(notifications)) {
+        const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+        if (unreadCount > 0) {
+          toast.info('Welcome back!', {
+            description: `You have ${unreadCount} unread notifications.`,
+            action: {
+              label: 'Check',
+              onClick: () => router.push('/notifications'),
+            },
+            duration: 6000,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch initial notifications:', error);
     }
   }
 });
