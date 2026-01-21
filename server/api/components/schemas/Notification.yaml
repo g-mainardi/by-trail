@@ -11,11 +11,11 @@ properties:
   type:
     type: string
     enum:
-      - bivouac_reservation
-      - bivouac_reservation_update
-      - bivouac_reservation_delete
-      - bivouac_reservation_users
-      - route_reservation
+      - bivouac_intention
+      - bivouac_intention_update
+      - bivouac_intention_delete
+      - bivouac_intention_users
+      - route_intention
       - weather_alert
     description: Type of notification
   uiType:

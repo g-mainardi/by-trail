@@ -34,12 +34,12 @@ proposalId:
   schema:
     type: string
 
-reservationId:
+intentionId:
   name: id
   in: path
   format: uuid
   required: true
-  description: Reservation ID
+  description: Intention ID
   schema:
     type: string
 

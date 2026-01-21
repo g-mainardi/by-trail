@@ -243,7 +243,7 @@ intentions:
       '200':
         description: Bivouac intentions retrieved successfully
         content:
-          $ref: '../components/responses.yaml#/ReservationListContent'
+          $ref: '../components/responses.yaml#/IntentionListContent'
       '401':
         $ref: '../components/responses.yaml#/UnauthorizedError'
       '403':
@@ -259,7 +259,7 @@ intentions:
       content:
         application/json:
           schema:
-            $ref: '../components/requests.yaml#/CreateReservationRequest'
+            $ref: '../components/requests.yaml#/CreateIntentionRequest'
     responses:
       '200':
         $ref: '../components/responses.yaml#/SuccessfulUpdate'
@@ -288,7 +288,7 @@ intentions:
       content:
         application/json:
           schema:
-            $ref: '../components/parameters.yaml#/reservationId'
+            $ref: '../components/parameters.yaml#/intentionId'
     responses:
       '204':
         description: Bivouac intention deleted successfully
@@ -299,6 +299,6 @@ intentions:
       '403':
         $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
       '404':
-        $ref: '../components/responses.yaml#/ReservationNotFound'
+        $ref: '../components/responses.yaml#/IntentionNotFound'
       '500':
         $ref: '../components/responses.yaml#/ServerError'
