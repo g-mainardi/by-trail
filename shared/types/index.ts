@@ -146,6 +146,6 @@ export interface Intention {
 
 interface Image {
   _id?: UUID;
-  data: Buffer;
+  data: Uint8Array;
   contentType: string;
 }
