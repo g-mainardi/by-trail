@@ -1,6 +1,7 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path';
+import { getDbConfig } from './src/config/db.js';
 import { getGeoJsonFromGpx } from './src/utils/seedHelpers.js';
 
 import { Bivouac, Image, Route } from './src/models/models.js';
@@ -63,36 +64,12 @@ const seedData = async () => {
 
     // SEED BIVOUACS
     const bivouacsData = loadData('bivouacs.json');
-    bivouacsData.bivouacs = bivouacsData.bivouacs.map((bivouac: any) => {
-      const image0 = bivouacsImages[0];
-      const imgData = fs.readFileSync(path.join(process.cwd(), image0));
-      bivouac.images = [
-        {
-          data: imgData,
-          contentType: 'image/jpeg',
-        },
-      ];
-      bivouacsImages.push(...bivouacsImages.slice(1));
-      return bivouac;
-    });
 
     await Bivouac.deleteMany({});
     await Bivouac.insertMany(bivouacsData.bivouacs);
 
     // SEED ROUTES
     const routesMeta = loadData('routes.json');
-    routesMeta.routes = routesMeta.routes.map((route: any) => {
-      const image0 = routesImages[0];
-      const imgData = fs.readFileSync(path.join(process.cwd(), image0));
-      route.images = [
-        {
-          data: imgData,
-          contentType: 'image/jpeg',
-        },
-      ];
-      routesImages.push(...routesImages.slice(1));
-      return route;
-    });
     const routesToInsert = [];
 
     for (const meta of routesMeta.routes) {

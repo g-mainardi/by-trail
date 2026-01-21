@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { placeholderEmpty } from '@/services/placeholders';
+import { placeholderBivouac, placeholderRoute } from '@/services/placeholders';
 import {
   bivouacIcon,
   getCoords,
@@ -104,7 +104,7 @@ const filteredRoutes = computed(() => {
             aria-label="View Bivouac Details"
           >
             <img
-              :src="placeholderEmpty"
+              :src="placeholderBivouac"
               :alt="`${bivouac.name} image`"
               class="rounded-sm object-cover"
             />
@@ -153,7 +153,7 @@ const filteredRoutes = computed(() => {
             aria-label="View Route Details"
           >
             <img
-              :src="placeholderEmpty"
+              :src="placeholderRoute"
               :alt="`${route.title} image`"
               class="rounded-sm object-cover"
             />
