@@ -17,7 +17,6 @@ import { MailOpen } from 'lucide-vue-next';
 const notificationStore = useNotificationStore();
 const notifications = ref<NotificationItem[]>([]);
 const isLoading = ref(false);
-const isTesting = ref(false);
 const { t } = useI18n();
 
 const hasUnread = computed(() => notifications.value.some((n) => !n.isRead));
@@ -37,7 +36,6 @@ const formatTime = (dateString: string) => {
   return date.toLocaleDateString();
 };
 
-// 1. Load History
 const loadNotifications = async () => {
   isLoading.value = true;
   try {
@@ -49,7 +47,6 @@ const loadNotifications = async () => {
   }
 };
 
-// 2. Handle real-time
 const handleNewNotification = (newNotification: NotificationItem) => {
   // Add new item to the TOP of the list
   notifications.value.unshift(newNotification);
@@ -95,17 +92,6 @@ const handleDelete = async (id: string) => {
   }
 };
 
-const handleTestNotification = async () => {
-  isTesting.value = true;
-  try {
-    await notificationStore.triggerTestNotification();
-  } catch (e) {
-    console.error('Failed to trigger test', e);
-  } finally {
-    isTesting.value = false;
-  }
-};
-
 onMounted(() => {
   loadNotifications();
   notificationStore.listenForNotifications(handleNewNotification);
@@ -121,13 +107,6 @@ onUnmounted(() => {
     <CardHeader
       class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
     >
-      <Button
-        @click="handleTestNotification"
-        :disabled="isTesting"
-        class="w-full sm:w-auto text-sm font-bold bg-gray-600 hover:bg-gray-500 cursor-pointer"
-      >
-        {{ isTesting ? t('sending') : t('test_real_time') }}
-      </Button>
       <Button
         v-if="hasUnread"
         @click="handleAllRead"
