@@ -2,7 +2,7 @@ import express, { Response } from 'express';
 import { protect } from '../middleware/authMiddleware.js';
 import { sendNotification } from '../utils/notificationHelper.js';
 import { AuthRequest } from '../types/server_only.js';
-import { Reservation } from '../models/models.js';
+import { Intention } from '../models/models.js';
 import { getForecast } from '../utils/weatherHelper.js';
 
 const router = express.Router();
@@ -37,18 +37,18 @@ router.post('/realtime-weather', async (req, res) => {
       )
     );
 
-    const reservations = await Reservation.find({
-      reservationDate: { $gte: startOfDay, $lte: endOfDay },
+    const intentions = await Intention.find({
+      intentionDate: { $gte: startOfDay, $lte: endOfDay },
     }).populate('bivouac');
 
-    console.log(`Found ${reservations.length} reservations`);
+    console.log(`Found ${intentions.length} intentions`);
 
-    for (const r of reservations) {
+    for (const r of intentions) {
       const biv = r.bivouac as any;
 
       if (!biv || !biv.coords) {
         console.warn(
-          `Skipping reservation ${r._id}: Bivouac not found or invalid.`
+          `Skipping intention ${r._id}: Bivouac not found or invalid.`
         );
         continue;
       }
@@ -59,7 +59,7 @@ router.post('/realtime-weather', async (req, res) => {
       const weather = await getForecast(lat, lng, targetDate);
 
       if (weather) {
-        const message = `Forecast for ${biv.name} on ${r.reservationDate}: ${weather.description}, Min Temp: ${weather.minTemp}°C, Max Temp: ${weather.maxTemp}°C.\n
+        const message = `Forecast for ${biv.name} on ${r.intentionDate}: ${weather.description}, Min Temp: ${weather.minTemp}°C, Max Temp: ${weather.maxTemp}°C.\n
                     Precipitation: ${weather.precipitationSum}mm over ${weather.precipitationHours} hours. Max Wind Speed: ${weather.maxWindSpeed} km/h.\n
                     Sunrise: ${new Date(weather.sunrise).toLocaleTimeString()}, Sunset: ${new Date(weather?.sunset).toLocaleTimeString()}.`;
 
@@ -77,7 +77,7 @@ router.post('/realtime-weather', async (req, res) => {
       }
     }
 
-    res.json({ message: 'Test run complete', found: reservations.length });
+    res.json({ message: 'Test run complete', found: intentions.length });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });
@@ -85,13 +85,13 @@ router.post('/realtime-weather', async (req, res) => {
 });
 
 router.post(
-  '/realtime-reservation',
+  '/realtime-intention',
   async (req: AuthRequest, res: Response): Promise<void> => {
     const userId = req.user?.id!;
 
     await sendNotification(
       userId,
-      'bivouac_reservation',
+      'bivouac_intention',
       'success',
       'Real-time Test!',
       'You have confirmed your intention to stay overnight at the [BIVOUAC_NAME] on [DATE], reserving [NUMBER_OF_BEDS] places.'

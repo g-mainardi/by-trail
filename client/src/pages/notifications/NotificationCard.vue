@@ -19,7 +19,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  notificationType: 'bivouac_reservation',
+  notificationType: 'bivouac_intention',
   uiType: 'info',
 });
 
@@ -29,10 +29,10 @@ defineEmits<{
 }>();
 
 const iconMap: Record<string, any> = {
-  bivouac_reservation: Tent,
-  bivouac_reservation_update: RefreshCcw,
-  bivouac_reservation_delete: X,
-  bivouac_reservation_users: UsersRound,
+  bivouac_intention: Tent,
+  bivouac_intention_update: RefreshCcw,
+  bivouac_intention_delete: X,
+  bivouac_intention_users: UsersRound,
   weather_alert: ThermometerSun,
 };
 
@@ -56,7 +56,7 @@ const colorClasses = computed(() => {
 <template>
   <div
     class="group relative flex w-full cursor-pointer items-start space-x-4 rounded-xl border border-gray-300 p-2 mb-1 transition-all duration-200 hover:shadow-md"
-    :class="[read ? 'bg-white' : 'bg-blue-50/70']"
+    :class="[read ? 'bg-blue-50/70' : 'bg-white']"
     @click="$emit('read')"
   >
     <div class="flex-shrink-0">
