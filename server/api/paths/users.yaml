@@ -238,12 +238,67 @@ intentions:
   get:
     tags:
       - Intentions
-    summary: Retrieve the list of bivouac intentions for the authenticated user
+    summary: Retrieve the list of bivouac intentions for the authenticated user sorted by date
+    responses:
+      '200':
+        description: Bivouac intentions retrieved successfully
+        content:
+          $ref: '../components/responses.yaml#/ReservationListContent'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
   post:
     tags:
       - Intentions
-    summary: Create a new bivouac intention for the authenticated user
+    summary: Create a new bivouac intention for the authenticated user and notify other participants
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/requests.yaml#/CreateReservationRequest'
+    responses:
+      '200':
+        $ref: '../components/responses.yaml#/SuccessfulUpdate'
+      '201':
+        description: Bivouac intention created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/messages.yaml#/Success'
+            example:
+              message: 'Intention created'
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'
   delete:
     tags:
       - Intentions
     summary: Delete a bivouac intention for the authenticated user
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/parameters.yaml#/reservationId'
+    responses:
+      '204':
+        description: Bivouac intention deleted successfully
+      '400':
+        $ref: '../components/responses.yaml#/InvalidIdFormat'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
+      '403':
+        $ref: '../components/responses.yaml#/ForbiddenError_bannedUser'
+      '404':
+        $ref: '../components/responses.yaml#/ReservationNotFound'
+      '500':
+        $ref: '../components/responses.yaml#/ServerError'

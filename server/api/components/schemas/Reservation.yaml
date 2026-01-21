@@ -1,0 +1,19 @@
+type: object
+properties:
+  user:
+    type: string
+    format: uuid
+    description: ID of the user who made the reservation
+  bivouac:
+    type: string
+    format: uuid
+    description: ID of the reserved bivouac
+  reservedPlaces:
+    type: integer
+    description: Number of places reserved
+    example: 2
+  reservationDate:
+    type: string
+    format: date
+    description: Date of the reservation
+    example: 2024-07-15

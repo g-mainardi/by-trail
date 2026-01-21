@@ -120,3 +120,5 @@ components:
       $ref: './components/schemas/Bivouac.yaml'
     Route:
       $ref: './components/schemas/Route.yaml'
+    Reservation:
+      $ref: './components/schemas/Reservation.yaml'

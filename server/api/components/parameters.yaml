@@ -34,6 +34,15 @@ proposalId:
   schema:
     type: string
 
+reservationId:
+  name: id
+  in: path
+  format: uuid
+  required: true
+  description: Reservation ID
+  schema:
+    type: string
+
 notificationId:
   name: id
   in: path
