@@ -65,14 +65,6 @@ export const useNotificationStore = defineStore('notifications', () => {
     }
   }
 
-  async function triggerTestNotification(): Promise<void> {
-    try {
-      await api.post('/test/realtime-reservation');
-    } catch (err) {
-      setError(err, 'Failed to trigger test notification');
-    }
-  }
-
   function listenForNotifications(callback: (n: NotificationItem) => void) {
     if (activeSocketHandler) {
       socket.off('notification:new', activeSocketHandler);
@@ -101,6 +93,5 @@ export const useNotificationStore = defineStore('notifications', () => {
     deleteNotification,
     listenForNotifications,
     stopListening,
-    triggerTestNotification,
   };
 });
