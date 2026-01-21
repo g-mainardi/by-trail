@@ -61,6 +61,12 @@ const bivouacSchema = new Schema(
     altitude: { type: Number, required: true },
     capacity: { type: Number, required: true },
     note: { type: String },
+    images: [
+      {
+        data: Buffer,
+        contentType: String,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -108,6 +114,12 @@ const routeSchema = new Schema(
         required: true,
       },
     },
+    images: [
+      {
+        data: Buffer,
+        contentType: String,
+      },
+    ],
   },
   {
     timestamps: true,
