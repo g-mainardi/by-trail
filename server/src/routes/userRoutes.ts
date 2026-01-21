@@ -20,21 +20,23 @@ const router = express.Router();
 // All routes here are protected
 router.use(protect);
 
-// /api/users/profile
+// /api/users
+
+// Profile management
 router.get('/profile', getProfile);
 router.patch('/profile', updateProfile);
 
-// /api/users/favorites/bivouacs
+// Favorite bivouacs management
 router.get('/favorites/bivouacs', fetchFavoriteBivouacs);
 router.post('/favorites/bivouacs', addFavoriteBivouac);
 router.delete('/favorites/bivouacs', removeFavoriteBivouac);
 
-// /api/users/favorites/routes
+// Favorite routes management
 router.get('/favorites/routes', fetchFavoriteRoutes);
 router.post('/favorites/routes', addFavoriteRoute);
 router.delete('/favorites/routes', removeFavoriteRoute);
 
-// /api/users/intentions
+// Intentions management
 router.post('/intentions', createIntention);
 router.delete('/intentions', deleteIntention);
 router.get('/intentions', fetchUserIntentions);
