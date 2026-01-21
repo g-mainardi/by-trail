@@ -104,7 +104,7 @@ const cancelIntention = async (intentionId: string) => {
   const res = await intentionStore.deleteIntention(intentionId);
   if (res.success) {
     toast.success(
-      res.message ? res.message : 'Intention cancelled successfully!'
+      res.message ? res.message : t('intention_cancelled_successfully')
     );
     await updateIntentions();
   } else {
@@ -363,9 +363,10 @@ onMounted(async () => {
     "explain_plan_functionality": "Here you can express the intention to go to a bivouac and know how many
         people have expressed the intention to go to the same bivouac on the
         various days.",
-    "explain_your_intentions": "You have not expressed any intentions yet. Use the form above to plan your visit.",
+    "explain_your_intentions": "You have not expressed any intentions yet. Use the form below to plan your visit.",
     "explain_other_intentions": "No one has expressed intentions yet. Be the first to plan your visit!",
-    "my_programs": "My programs"
+    "my_programs": "My programs",
+    "intention_cancelled_successfully": "Intention cancelled successfully!"
   },
   "it": {
     "description": "Descrizione",
@@ -388,9 +389,10 @@ onMounted(async () => {
     "explain_plan_functionality": "Qui puoi esprimere l'intenzione di andare in un bivacco e sapere quante
         persone hanno espresso l'intenzione di andare nello stesso bivacco nei
         vari giorni.",
-    "explain_your_intentions": "Non hai ancora espresso intenzioni. Usa il modulo sopra per pianificare la tua visita.",
+    "explain_your_intentions": "Non hai ancora espresso intenzioni. Usa il modulo sotto per pianificare la tua visita.",
     "explain_other_intentions": "Nessuno ha ancora espresso intenzioni. Sii il primo a pianificare la tua visita!",
-    "my_programs": "I miei programmi"
+    "my_programs": "I miei programmi",
+    "intention_cancelled_successfully": "Intenzione annullata con successo!"
   },
   "es": {
     "description": "Descripción",
@@ -413,9 +415,10 @@ onMounted(async () => {
     "explain_plan_functionality": "Aquí puedes expresar la intención de ir a un bivouac y saber cuántas
         personas han expresado la intención de ir al mismo bivouac en los
         varios días.",
-    "explain_your_intentions": "Aún no has expresado intenciones. Usa el formulario de arriba para planificar tu visita.",
+    "explain_your_intentions": "Aún no has expresado intenciones. Usa el formulario de abajo para planificar tu visita.",
     "explain_other_intentions": "Nadie ha expresado intenciones todavía. ¡Sé el primero en planificar tu visita!",
-    "my_programs": "Mis programas"
+    "my_programs": "Mis programas",
+    "intention_cancelled_successfully": "¡Intención anulada con éxito!"
   }
 }
 </i18n>

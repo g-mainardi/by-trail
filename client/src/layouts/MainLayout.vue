@@ -14,8 +14,8 @@ import {
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import AppSidebar from '@/pages/sidebar/AppSidebar.vue';
 import { computed, Suspense } from 'vue';
-import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 const { t } = useI18n();
 
 const route = useRoute();
@@ -31,7 +31,9 @@ const pageName = computed(() => {
     <AppSidebar />
 
     <SidebarInset>
-      <div class="flex items-center gap-2 h-10 px-4">
+      <div
+        class="flex items-center gap-2 h-10 px-4 sticky top-0 z-10 bg-background border-b"
+      >
         <SidebarTrigger class="-ml-1" />
 
         <Separator
@@ -48,7 +50,7 @@ const pageName = computed(() => {
         </Breadcrumb>
       </div>
 
-      <div class="flex flex-1 flex-col px-4 pb-4">
+      <div class="flex flex-1 flex-col px-4 pb-4 pt-4">
         <Suspense>
           <template #default>
             <RouterView />
