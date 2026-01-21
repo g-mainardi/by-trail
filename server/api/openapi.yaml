@@ -108,8 +108,8 @@ paths:
   # Test
   /test/realtime-weather:
     $ref: './paths/test.yaml#/realtimeWeather'
-  /test/realtime-reservation:
-    $ref: './paths/test.yaml#/realtimeReservation'
+  /test/realtime-intention:
+    $ref: './paths/test.yaml#/realtimeIntention'
 
 components:
   securitySchemes:
@@ -124,16 +124,16 @@ components:
       $ref: './components/schemas/Bivouac.yaml'
     Route:
       $ref: './components/schemas/Route.yaml'
-    Reservation:
-      $ref: './components/schemas/Reservation.yaml'
+    Intention:
+      $ref: './components/schemas/Intention.yaml'
     Notification:
       $ref: './components/schemas/Notification.yaml'
     Error:
       $ref: './components/messages.yaml#/Error'
     Success:
       $ref: './components/messages.yaml#/Success'
-    CreateReservationRequest:
-      $ref: './components/requests.yaml#/CreateReservationRequest'
+    CreateIntentionRequest:
+      $ref: './components/requests.yaml#/CreateIntentionRequest'
     RequestWithinBoundingBox:
       $ref: './components/requests.yaml#/RequestWithinBoundingBox'
     LoginRequest:

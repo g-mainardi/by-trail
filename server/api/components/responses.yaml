@@ -60,15 +60,15 @@ RoutesListContent:
           items:
             $ref: '../components/schemas/Route.yaml'
 
-ReservationListContent:
+IntentionListContent:
   application/json:
     schema:
       type: object
       properties:
-        reservations:
+        intentions:
           type: array
           items:
-            $ref: '../components/schemas/Reservation.yaml'
+            $ref: '../components/schemas/Intention.yaml'
 
 NotificationListContent:
   application/json:
@@ -205,8 +205,8 @@ ProposalNotFound:
           message:
             type: string
             example: 'Proposal not found'
-ReservationNotFound:
-  description: The requested reservation does not exist.
+IntentionNotFound:
+  description: The requested intention does not exist.
   content:
     application/json:
       schema:
@@ -214,7 +214,7 @@ ReservationNotFound:
         properties:
           message:
             type: string
-            example: 'Reservation not found'
+            example: 'Intention not found'
 NotificationNotFound:
   description: The requested notification does not exist.
   content:

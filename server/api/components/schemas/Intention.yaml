@@ -3,11 +3,11 @@ properties:
   _id:
     type: string
     format: uuid
-    description: Unique identifier for the reservation
+    description: Unique identifier for the intention
   user:
     type: string
     format: uuid
-    description: ID of the user who made the reservation
+    description: ID of the user who made the intention
   bivouac:
     type: string
     format: uuid
@@ -16,8 +16,8 @@ properties:
     type: integer
     description: Number of places reserved
     example: 2
-  reservationDate:
+  intentionDate:
     type: string
     format: date
-    description: Date of the reservation
+    description: Date of the intention
     example: 2024-07-15

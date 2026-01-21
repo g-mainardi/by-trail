@@ -55,7 +55,7 @@ RequestWithinBoundingBox:
       description: Longitude of the southeast corner of the bounding box
       example: 9.8321
 
-CreateReservationRequest:
+CreateIntentionRequest:
   type: object
   properties:
     bivouacId:
@@ -64,9 +64,9 @@ CreateReservationRequest:
       $ref: './parameters.yaml#/date'
     people:
       type: integer
-      description: Number of people for the reservation
+      description: Number of people for the intention
       example: 3
   required:
     - bivouacId
     - userId
-    - reservationDate
+    - intentionDate
