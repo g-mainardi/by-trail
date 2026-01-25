@@ -6,9 +6,9 @@ import { ref } from 'vue';
 
 export const useBivouacStore = defineStore('bivouacs', () => {
   // State
-
   const bivouacs = ref<Bivouac[]>([]);
 
+  // Actions
   const fetchBivouacs = async (northWest?: LatLng, southEast?: LatLng) => {
     try {
       const res = await api.get('/bivouacs', {
@@ -34,8 +34,9 @@ export const useBivouacStore = defineStore('bivouacs', () => {
       );
       if (cachedBivouac) return cachedBivouac;
       const res = await api.get(`/bivouacs/${id}`);
-      const data = res.data;
-      return data.bivouac as Bivouac;
+      const newBivouac = res.data.bivouac as Bivouac;
+      bivouacs.value.push(newBivouac);
+      return newBivouac;
     } catch (error: any) {
       console.error('Error fetching bivouac by ID:', error);
       throw new Error('Failed to fetch bivouac by ID');

@@ -27,24 +27,32 @@ export const initWeatherJob = () => {
         );
 
         for (const intention of upcomingIntentions) {
-          const bivouac: any = intention.bivouac;
+          try {
+            const bivouac: any = intention.bivouac;
 
-          const lat = bivouac.coords.latitude;
-          const lng = bivouac.coords.longitude;
+            const weather = await getForecast(
+              bivouac.coords.latitude,
+              bivouac.coords.longitude,
+              intention.intentionDate
+            );
 
-          const weather = await getForecast(lat, lng, intention.intentionDate);
-
-          if (weather) {
-            const message = `Forecast for ${bivouac.name} on ${intention.intentionDate.toISOString().split('T')[0]}: ${weather.description}, Min Temp: ${weather.minTemp}°C, Max Temp: ${weather.maxTemp}°C.\n
+            if (weather) {
+              const message = `Forecast for ${bivouac.name} on ${intention.intentionDate.toISOString().split('T')[0]}: ${weather.description}, Min Temp: ${weather.minTemp}°C, Max Temp: ${weather.maxTemp}°C.\n
                     Precipitation: ${weather.precipitationSum}mm over ${weather.precipitationHours} hours. Max Wind Speed: ${weather.maxWindSpeed} km/h.\n
                     Sunrise: ${new Date(weather.sunrise).toLocaleTimeString()}, Sunset: ${new Date(weather.sunset).toLocaleTimeString()}.`;
 
-            await sendNotification(
-              intention.user.toString(),
-              'weather_alert',
-              'info',
-              'Weather Forecast',
-              message
+              await sendNotification(
+                intention.user.toString(),
+                'weather_alert',
+                'info',
+                'Weather Forecast',
+                message
+              );
+            }
+          } catch (innerError) {
+            console.error(
+              `[WeatherJob] Failed for intention ${intention._id}:`,
+              innerError
             );
           }
         }
