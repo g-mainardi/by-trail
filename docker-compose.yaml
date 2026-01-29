@@ -23,7 +23,9 @@ services:
   # 3. Backend (Node/Express)
   server:
     container_name: by-trail-server
-    build: ./server
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
     ports:
       - '3000:3000'
     secrets:
@@ -39,13 +41,17 @@ services:
       USE_ATLAS: '${USE_ATLAS:-true}'
 
     volumes:
-      - ./server:/app # Synchronize local files with the container (Hot Reload)
+      - ./server:/app/server
+      - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
       - /app/node_modules
+      - /app/server/node_modules # Preserve container deps
 
   # 4. Frontend (Vite/React)
   client:
     container_name: by-trail-client
-    build: ./client
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
     ports:
       - '5173:5173'
     secrets:
@@ -57,8 +63,11 @@ services:
       VITE_MAP_API_KEY_FILE: /run/secrets/map_api_key # We tell Vite where to look for the key file inside the container
       CHOKIDAR_USEPOLLING: 'true' # Tell Vite to use polling (better FS changes detection in Docker)
     volumes:
-      - ./client:/app # Sync files for HMR
-      - /app/node_modules # Protect container's node_modules
+      - ./client:/app/client
+      - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
+      - /app/node_modules
+      - /app/client/node_modules # Preserve container deps
+
     depends_on:
       - server
 
