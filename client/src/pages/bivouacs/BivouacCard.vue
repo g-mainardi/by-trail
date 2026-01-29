@@ -2,7 +2,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import H2 from '@/layouts/typography/H2.vue';
 import { placeholderBivouac } from '@/services/placeholders';
-import type { Bivouac } from '@/types';
+import type { Bivouac } from '@by-trail/shared';
 import {
   Bed as BedIcon,
   Heart as HeartIcon,

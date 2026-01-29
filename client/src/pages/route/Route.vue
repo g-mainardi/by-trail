@@ -10,7 +10,7 @@ import { placeholderRoute } from '@/services/placeholders';
 import { getCoords, getDurationHM, routeIcon } from '@/services/utility';
 import { useFavoriteStore } from '@/stores/favorites';
 import { useRouteStore } from '@/stores/routes';
-import { RouteDifficultyEnum, type Route } from '@/types';
+import { RouteDifficultyEnum, type Route } from '@by-trail/shared';
 import { LMap, LMarker, LPolyline, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import type { Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';

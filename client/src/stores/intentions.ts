@@ -1,4 +1,4 @@
-import type { Intention } from '@/types';
+import type { Intention } from '@by-trail/shared';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import api from './utility/axiosInstance';

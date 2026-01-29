@@ -1,7 +1,7 @@
 import api from '@/stores/utility/axiosInstance';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Proposal } from '@/types';
+import type { Proposal } from '@by-trail/shared';
 
 export const useProposalStore = defineStore('proposal', () => {
   const isSubmitting = ref(false);

@@ -1,4 +1,4 @@
-import type { Bivouac, Route } from '@/types';
+import type { Bivouac, Route } from '@by-trail/shared';
 import { ref } from 'vue';
 
 export interface BivouacFilter {

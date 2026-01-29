@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAdminStore } from '@/stores/admin';
 import { storeToRefs } from 'pinia';
-import type { Route } from '@/types';
+import type { Route } from '@by-trail/shared';
 
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { AlertCircle, CheckCircle } from 'lucide-vue-next';
@@ -29,12 +29,10 @@ onMounted(() => {
   adminStore.fetchRoutes();
 });
 
-const getRouteId = (route: Route) => route.id || route._id || '';
-
 // --- Handlers ---
 
 const onOpenEdit = (id: string) => {
-  const route = routes.value.find((route) => getRouteId(route) === id);
+  const route = routes.value.find((route) => route._id === id);
   if (route) {
     selectedRoute.value = route;
     isEditOpen.value = true;

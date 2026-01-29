@@ -1,5 +1,5 @@
 import api from '@/stores/utility/axiosInstance';
-import type { Route } from '@/types';
+import type { Route } from '@by-trail/shared';
 import type { LatLng } from 'leaflet';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';

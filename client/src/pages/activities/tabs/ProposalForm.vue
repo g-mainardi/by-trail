@@ -9,7 +9,7 @@ import {
   type Proposal,
   type ProposalType,
   type Region,
-} from '@/types';
+} from '@by-trail/shared';
 import { storeToRefs } from 'pinia';
 
 // --- UI Components ---

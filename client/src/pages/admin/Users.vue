@@ -8,7 +8,7 @@ import {
   type UserStatus,
   UserStatusEnum,
   UserTypeEnum,
-} from '@/types';
+} from '@by-trail/shared';
 
 import DataTable from '@/components/ui/data-table/DataTable.vue';
 import UserActions from './UserActions.vue';
@@ -31,10 +31,6 @@ onMounted(() => {
   fetchUsers();
 });
 
-const getUserId = (user: User): string => {
-  return user.id || user._id || '';
-};
-
 const columns = [
   { accessorKey: 'name', header: t('name') },
   { accessorKey: 'email', header: 'Email' },
@@ -45,7 +41,7 @@ const columns = [
 ];
 
 const onBanUser = async (user: User) => {
-  const id = getUserId(user);
+  const id = user._id;
   if (!id) return;
   const originalStatus = user.status as UserStatus;
   try {
@@ -71,7 +67,8 @@ const onBanUser = async (user: User) => {
 };
 
 const onDeleteUser = async (user: User) => {
-  const id = getUserId(user);
+  const id = user._id;
+  if (!id) return;
   try {
     if (!id) return;
     const confirmed = confirm(t('confirm_delete'));
@@ -162,7 +159,7 @@ const alertConfig = computed(() => {
       <template #cell-actions="{ row }">
         <UserActions
           v-if="row.type !== ADMIN"
-          :user="{ ...row, id: getUserId(row), status: row.status || ACTIVE }"
+          :user="{ ...row, id: row._id || '', status: row.status || ACTIVE }"
           @ban="onBanUser(row)"
           @delete="onDeleteUser(row)"
         />

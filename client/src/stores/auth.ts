@@ -1,6 +1,6 @@
 import { socket } from '@/services/socket';
 import api from '@/stores/utility/axiosInstance'; // Import the global instance
-import type { User } from '@/types';
+import type { User } from '@by-trail/shared';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';

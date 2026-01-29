@@ -9,7 +9,7 @@ import {
   RegionsEnum,
   RouteDifficultyEnum,
   RouteTypeEnum,
-} from '@/types';
+} from '@by-trail/shared';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -63,7 +63,7 @@ const handleChange = <K extends keyof Route>(field: K, value: Route[K]) => {
 const handleSave = async () => {
   if (Object.keys(updates.value).length > 0) {
     emit('save', {
-      id: props.route?.id || props.route?._id || '',
+      id: props.route?._id || '',
       updates: updates.value,
     });
   }

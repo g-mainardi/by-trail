@@ -15,13 +15,13 @@ import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { placeholderBivouac } from '@/services/placeholders';
 import { useBivouacStore } from '@/stores/bivouacs';
-// todo: change to type from '@/types' when store is updated
+// todo: change to type from '@by-trail/shared' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
 import {
   useIntentionStore,
   type AnonymousIntention,
 } from '@/stores/intentions';
-import type { Bivouac, Intention } from '@/types';
+import type { Bivouac, Intention } from '@by-trail/shared';
 import {
   fromDate,
   getLocalTimeZone,

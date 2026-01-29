@@ -8,7 +8,7 @@ import {
 } from '@/services/utility';
 import { useBivouacStore } from '@/stores/bivouacs';
 import { useRouteStore } from '@/stores/routes';
-import { RouteDifficultyEnum } from '@/types';
+import { RouteDifficultyEnum } from '@by-trail/shared';
 import {
   LMap,
   LMarker,
