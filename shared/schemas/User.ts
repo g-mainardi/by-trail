@@ -31,3 +31,7 @@ export const UserZodSchema = z.object({
 
 // Infer the TypeScript Type directly from Zod
 export type User = z.infer<typeof UserZodSchema>;
+
+// Also infer specific field types if needed
+export type UserStatus = z.infer<typeof UserZodSchema>['status'];
+export type UserType = z.infer<typeof UserZodSchema>['type'];

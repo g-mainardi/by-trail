@@ -4,7 +4,7 @@ import path from 'path';
 import { getDbConfig } from './src/config/db.js';
 import { getGeoJsonFromGpx } from './src/utils/seedHelpers.js';
 
-import { Bivouac, Image, Route } from './src/models/models.js';
+import { Bivouac, Image, Route } from './../models/models.js';
 
 const bivouacsImages: string[] = [
   './src/data/bivouacs/bivouac-2.jpg',

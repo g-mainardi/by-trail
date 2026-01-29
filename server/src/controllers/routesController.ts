@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { Route } from 'src/models/models.js';
+import { RouteModel as Route } from '../models/Route.js';
 import { AuthRequest } from 'src/types/server_only.js';
 
 export const fetchRoutes = async (req: AuthRequest, res: Response) => {

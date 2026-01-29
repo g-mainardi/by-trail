@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import { Setting, User } from '../models/models.js';
+import { UserModel as User } from '../models/User.js';
 import { AuthRequest } from '../types/server_only.js';
 
 /**
@@ -9,7 +9,7 @@ import { AuthRequest } from '../types/server_only.js';
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     // req.user.id comes from the middleware that decodes the token
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
     // 1. Fetch User (without password)
     const user = await User.findById(userId).select('-password');
@@ -17,8 +17,8 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // 2. Fetch Settings (if any)
-    const settings = await Setting.findOne({ user: userId });
+    // 2.todo Fetch Settings (if any)
+    // const settings = await Setting.findOne({ user: userId });
 
     // 3. Data preparation for frontend
     res.status(200).json({
@@ -42,7 +42,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
  */
 export const updateProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
     const { name, favRegions, darkMode, language } = req.body;
 
     // todo No email or password updates allowed here => dedicated routes needed
@@ -60,7 +60,8 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
-    const updatedSettings = await Setting.findOne({ user: userId });
+    // todo
+    //  const updatedSettings = await Setting.findOne({ user: userId });
 
     res.status(200).json({
       message: 'Profile updated successfully',
@@ -69,7 +70,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
         email: updatedUser.email,
         favRegions: updatedUser.favRegions,
       },
-      settings: updatedSettings,
+      // settings: updatedSettings,
     });
   } catch (error) {
     console.error('Error updating profile:', error);

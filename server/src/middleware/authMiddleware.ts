@@ -1,13 +1,13 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 
-import { User } from '../models/models.js';
+import { UserModel as User } from '../models/User.js';
 import { getSecret } from '../utils/secrets.js';
 import { NextFunction, Response } from 'express';
 import { AuthRequest } from '../types/server_only.js';
-import { UserStatusEnum } from 'src/types/index.js';
 import { minsToMillis } from 'src/utils/middleware.js';
 import mongoose from 'mongoose';
+import { UserStatusEnum } from '@by-trail/shared';
 
 const windowDurationMins = 15;
 const maxRequestPerWindow = 10;
@@ -47,13 +47,13 @@ export const protect = async (
           .json({ message: 'User not found / Token invalid' });
       }
 
-      if (!req.user.id) {
+      if (!req.user._id) {
         return res
           .status(401)
           .json({ message: 'User ID missing / Token invalid' });
       }
 
-      if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      if (!mongoose.Types.ObjectId.isValid(req.user._id)) {
         return res.status(400).json({ error: 'Invalid user ID format' });
       }
 

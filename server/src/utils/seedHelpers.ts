@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
-import { RoutePathTypeEnum } from '../types/index.js';
+import { RoutePathTypeEnum } from '@by-trail/shared';
 import toGeoJSON from '@mapbox/togeojson';
 import { FeatureCollection, LineString, MultiLineString } from 'geojson';
 

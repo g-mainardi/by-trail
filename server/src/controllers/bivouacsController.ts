@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { Bivouac } from '../models/models.js';
-import type { AuthRequest } from '../types/server_only.js';
+import { BivouacModel as Bivouac } from '../models/Bivouac.js';
+import type { AuthRequest, BivouacParams } from '../types/server_only.js';
 
 export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
   const { latNw, lngNw, latSe, lngSe } = req.query;
@@ -49,7 +49,10 @@ export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const fetchBivouacById = async (req: Request, res: Response) => {
+export const fetchBivouacById = async (
+  req: Request<BivouacParams>,
+  res: Response
+) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });

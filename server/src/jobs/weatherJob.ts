@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { Intention } from '../models/models.js';
+import { IntentionModel as Intention } from '../models/Intention.js';
 import { getForecast } from '../utils/weatherHelper.js';
 import { sendNotification } from '../utils/notificationHelper.js';
 

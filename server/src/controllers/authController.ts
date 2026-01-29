@@ -2,10 +2,10 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import { User } from '../models/models.js';
-import { AuthRequestWithPassword } from '../types/server_only.js';
+import { UserModel as User } from '../models/User.js';
 import { getSecret } from '../utils/secrets.js';
-import { UserStatusEnum, UserTypeEnum } from 'src/types/index.js';
+import { UserStatusEnum, UserTypeEnum } from '@by-trail/shared';
+import { AuthRequest } from 'src/types/server_only.js';
 
 let JWT_SECRET;
 try {
@@ -141,10 +141,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteAccount = async (
-  req: AuthRequestWithPassword,
-  res: Response
-) => {
+export const deleteAccount = async (req: AuthRequest, res: Response) => {
   const userId = req.user?._id;
   const { password } = req.body;
   if (!password) return res.status(400).json({ error: 'Password is required' });

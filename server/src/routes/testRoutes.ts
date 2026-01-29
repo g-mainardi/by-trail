@@ -2,7 +2,7 @@ import express, { Response } from 'express';
 import { protect } from '../middleware/authMiddleware.js';
 import { sendNotification } from '../utils/notificationHelper.js';
 import { AuthRequest } from '../types/server_only.js';
-import { Intention } from '../models/models.js';
+import { IntentionModel as Intention } from '../models/Intention.js';
 import { getForecast } from '../utils/weatherHelper.js';
 
 const router = express.Router();
