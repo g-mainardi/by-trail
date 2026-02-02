@@ -5,8 +5,8 @@ import {
   EXCLUDED_UPDATE_FIELDS,
   ProposalParams,
   RouteParams,
-} from '../types/server_only.js';
-import { UserModel as User, UserDocument } from '../models/User.js';
+} from '@/types/server_only.js';
+import { UserModel as User, UserDocument } from '@/models/User.js';
 import mongoose from 'mongoose';
 import {
   PathObj,
@@ -16,9 +16,9 @@ import {
   UserStatusEnum,
   UserTypeEnum,
 } from '@by-trail/shared';
-import { BivouacModel as Bivouac } from '../models/Bivouac.js';
-import { RouteModel as Route } from '../models/Route.js';
-import { ProposalModel as Proposal } from '../models/Proposal.js';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import { RouteModel as Route } from '@/models/Route.js';
+import { ProposalModel as Proposal } from '@/models/Proposal.js';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
   try {

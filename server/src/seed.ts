@@ -1,10 +1,12 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path';
-import { getDbConfig } from './src/config/db.js';
-import { getGeoJsonFromGpx } from './src/utils/seedHelpers.js';
+import { getDbConfig } from '@/config/db.js';
+import { getGeoJsonFromGpx } from '@/utils/seedHelpers.js';
 
-import { Bivouac, Image, Route } from './../models/models.js';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import { RouteModel as Route } from '@/models/Route.js';
+import { ImageModel as Image } from '@/models/Image.js';
 
 const bivouacsImages: string[] = [
   './src/data/bivouacs/bivouac-2.jpg',

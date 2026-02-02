@@ -1,7 +1,7 @@
 import cron from 'node-cron';
-import { IntentionModel as Intention } from '../models/Intention.js';
-import { getForecast } from '../utils/weatherHelper.js';
-import { sendNotification } from '../utils/notificationHelper.js';
+import { IntentionModel as Intention } from '@/models/Intention.js';
+import { getForecast } from '@/utils/weatherHelper.js';
+import { sendNotification } from '@/utils/notificationHelper.js';
 
 export const initWeatherJob = () => {
   cron.schedule('0 6 * * *', async () => {

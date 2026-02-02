@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { RouteModel as Route } from '../models/Route.js';
-import { AuthRequest } from 'src/types/server_only.js';
+import { RouteModel as Route } from '@/models/Route.js';
+import { AuthRequest } from '@/types/server_only.js';
 
 export const fetchRoutes = async (req: AuthRequest, res: Response) => {
   const { latNw, lngNw, latSe, lngSe } = req.query;

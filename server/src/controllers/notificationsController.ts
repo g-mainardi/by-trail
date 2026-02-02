@@ -1,6 +1,6 @@
 import type { Response } from 'express';
-import type { AuthRequest } from '../types/server_only.js';
-import { NotificationModel as Notification } from '../models/Notification.js';
+import type { AuthRequest } from '@/types/server_only.js';
+import { NotificationModel as Notification } from '@/models/Notification.js';
 
 export const fetchNotifications = async (req: AuthRequest, res: Response) => {
   const userId = req.user?._id!;

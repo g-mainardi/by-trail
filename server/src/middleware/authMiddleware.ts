@@ -1,11 +1,11 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 
-import { UserModel as User } from '../models/User.js';
-import { getSecret } from '../utils/secrets.js';
+import { UserModel as User } from '@/models/User.js';
+import { getSecret } from '@/utils/secrets.js';
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from '../types/server_only.js';
-import { minsToMillis } from 'src/utils/middleware.js';
+import { AuthRequest } from '@/types/server_only.js';
+import { minsToMillis } from '@/utils/middleware.js';
 import mongoose from 'mongoose';
 import { UserStatusEnum } from '@by-trail/shared';
 

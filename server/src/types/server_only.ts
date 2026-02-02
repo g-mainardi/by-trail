@@ -1,6 +1,6 @@
-import { Proposal, User } from '@by-trail/shared';
+import { Proposal } from '@by-trail/shared';
 import { Request } from 'express';
-import { UserDocument } from '../models/User.js';
+import { UserDocument } from '@/models/User.js';
 
 // Constants
 export const EXCLUDED_UPDATE_FIELDS = ['_id', '__v', 'createdAt', 'updatedAt'];

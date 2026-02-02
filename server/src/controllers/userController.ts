@@ -1,6 +1,6 @@
 import type { Response } from 'express';
-import { UserModel as User } from '../models/User.js';
-import { AuthRequest } from '../types/server_only.js';
+import { UserModel as User } from '@/models/User.js';
+import { AuthRequest } from '@/types/server_only.js';
 
 /**
  * GET /api/users/profile

@@ -1,9 +1,9 @@
 import type { Response } from 'express';
 import mongoose from 'mongoose';
-import { BivouacModel as Bivouac } from '../models/Bivouac.js';
-import { IntentionModel as Intention } from '../models/Intention.js';
-import { AuthRequest } from 'src/types/server_only.js';
-import { sendNotification } from 'src/utils/notificationHelper.js';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import { IntentionModel as Intention } from '@/models/Intention.js';
+import { AuthRequest } from '@/types/server_only.js';
+import { sendNotification } from '@/utils/notificationHelper.js';
 
 const formatDateForDisplay = (dateInput: Date | string): string => {
   const dateObj = new Date(dateInput);

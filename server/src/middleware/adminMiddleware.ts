@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from '../types/server_only.js';
+import { AuthRequest } from '@/types/server_only.js';
 import { UserTypeEnum } from '@by-trail/shared';
 
 export const admin = (req: AuthRequest, res: Response, next: NextFunction) => {

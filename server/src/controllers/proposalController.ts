@@ -1,6 +1,6 @@
 import type { Response } from 'express';
-import { ProposalModel as Proposal } from '../models/Proposal.js';
-import type { ProposalRequest } from '../types/server_only.js';
+import { ProposalModel as Proposal } from '@/models/Proposal.js';
+import type { ProposalRequest } from '@/types/server_only.js';
 
 // POST /api/proposal
 export const sendProposal = async (req: ProposalRequest, res: Response) => {

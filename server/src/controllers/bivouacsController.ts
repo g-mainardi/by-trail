@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { BivouacModel as Bivouac } from '../models/Bivouac.js';
-import type { AuthRequest, BivouacParams } from '../types/server_only.js';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import type { AuthRequest, BivouacParams } from '@/types/server_only.js';
 
 export const fetchBivouacs = async (req: AuthRequest, res: Response) => {
   const { latNw, lngNw, latSe, lngSe } = req.query;

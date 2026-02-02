@@ -1,10 +1,10 @@
 import express from 'express';
-import { fetchAnonymousBivouacIntentions } from 'src/controllers/intentionController.js';
+import { fetchAnonymousBivouacIntentions } from '@/controllers/intentionController.js';
 import {
   fetchBivouacById,
   fetchBivouacs,
-} from '../controllers/bivouacsController.js';
-import { protect } from '../middleware/authMiddleware.js';
+} from '@/controllers/bivouacsController.js';
+import { protect } from '@/middleware/authMiddleware.js';
 
 const router = express.Router();
 

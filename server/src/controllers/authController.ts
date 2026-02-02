@@ -2,10 +2,10 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import { UserModel as User } from '../models/User.js';
-import { getSecret } from '../utils/secrets.js';
+import { UserModel as User } from '@/models/User.js';
+import { getSecret } from '@/utils/secrets.js';
 import { UserStatusEnum, UserTypeEnum } from '@by-trail/shared';
-import { AuthRequest } from 'src/types/server_only.js';
+import { AuthRequest } from '@/types/server_only.js';
 
 let JWT_SECRET;
 try {
