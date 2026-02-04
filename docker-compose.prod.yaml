@@ -1,0 +1,25 @@
+services:
+  # Backend (API)
+  server:
+    container_name: by-trail-server-prod
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    ports:
+      - '3000:3000'
+    secrets:
+      - db_uri
+      - jwt_secret
+    environment:
+      PORT: ${SERVER_PORT:-3000}
+      CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
+      MONGO_URI_FILE: /run/secrets/db_uri
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      USE_ATLAS: '${USE_ATLAS:-true}'
+      NODE_ENV: production
+
+secrets:
+  db_uri:
+    file: ./secrets/mongo_atlas_uri.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt

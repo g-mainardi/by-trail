@@ -26,6 +26,7 @@ services:
     build:
       context: .
       dockerfile: ./server/Dockerfile
+      target: builder # Use the builder stage for dev
     ports:
       - '3000:3000'
     secrets:
@@ -39,6 +40,10 @@ services:
       JWT_SECRET_FILE: /run/secrets/jwt_secret
       # Logic handled inside the app: to use Atlas or local MongoDB
       USE_ATLAS: '${USE_ATLAS:-true}'
+      NODE_ENV: development # Force development mode
+
+    # Override the default command to enable hot-reload with nodemon
+    command: npm run start:dev
 
     volumes:
       - ./server:/app/server
