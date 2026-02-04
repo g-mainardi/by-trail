@@ -3,11 +3,11 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "rootDir": "./",
+    "rootDir": "..",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@by-trail/shared": ["../shared/src"]
+      "@by-trail/shared": ["../shared/index.ts"]
     },
     "outDir": "./dist",
     "strict": true,
@@ -17,6 +17,6 @@
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "noImplicitAny": true
   },
-  "include": ["src/**/*", "src/types/declaration.d.ts"],
+  "include": ["src/**/*", "../shared/**/*", "src/types/declaration.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

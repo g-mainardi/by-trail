@@ -2,6 +2,7 @@
   "name": "@by-trail/shared",
   "version": "1.0.0",
   "main": "index.ts",
+  "types": "index.ts",
   "type": "module",
   "dependencies": {
     "zod": "^3.25.76"
