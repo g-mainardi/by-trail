@@ -1,37 +1,59 @@
-# Use Node.js environment
-FROM node:22-slim
+# ==========================================
+# STAGE 1: Builder (Node + Vite)
+# ==========================================
+FROM node:22-slim AS builder
 
-# Set the working directory to the MONOREPO ROOT
 WORKDIR /app
 
-# Copy package files
+# Copy package manifests first for caching
 COPY package*.json ./
-
-# Copy the workspace package.json files
 COPY client/package.json ./client/
 COPY shared/package.json ./shared/
 
-# Install dependencies
-RUN npm install
+# Install shared dependencies
+WORKDIR /app/shared
+RUN npm install --ignore-scripts
 
-# Copy source code for shared and client
+# Install client dependencies
+WORKDIR /app/client
+RUN npm install --ignore-scripts
+
+# Copy source code
+WORKDIR /app
 COPY shared ./shared
 COPY client ./client
 
-# Switch context to client to run commands easily
+# Build Frontend
 WORKDIR /app/client
 
-# For Production --------------
+# --- HANDLE BUILD ARGUMENTS ---
 ARG VITE_SERVER_URL
+ARG VITE_PORT
 ARG VITE_SOCKET_URL
 
+# Transfer build arguments to environment variables
 ENV VITE_SERVER_URL=$VITE_SERVER_URL
+ENV VITE_PORT=$VITE_PORT
 ENV VITE_SOCKET_URL=$VITE_SOCKET_URL
-# -----------------------------
 
-# Expose Vite default port
-EXPOSE ${VITE_PORT:-5173}
+# Compile (generate /app/client/dist)
+RUN npm run build
 
-# Start Vite
-# --host: to make Vite listen even outside the container (from browser)
-CMD ["npm", "run", "dev", "--", "--host"]
+# ==========================================
+# STAGE 2: Production Runner (Nginx)
+# ==========================================
+FROM nginx:stable-alpine AS runner
+
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Use custom nginx config
+COPY client/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built assets from Builder stage
+COPY --from=builder /app/client/dist /usr/share/nginx/html
+
+# Nginx listening port
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

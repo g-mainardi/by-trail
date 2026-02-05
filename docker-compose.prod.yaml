@@ -18,6 +18,22 @@ services:
       USE_ATLAS: '${USE_ATLAS:-true}'
       NODE_ENV: production
 
+  # Frontend (Nginx)
+  client:
+    container_name: by-trail-client-prod
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+      args:
+        VITE_PORT: 5173
+        VITE_SERVER_URL: http://localhost:3000
+        VITE_SOCKET_URL: http://localhost:3000
+    ports:
+      - '5173:80' # Map host port 5173 to container port 80 (Nginx)
+
+    depends_on:
+      - server
+
 secrets:
   db_uri:
     file: ./secrets/mongo_atlas_uri.txt
