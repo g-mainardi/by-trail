@@ -63,8 +63,8 @@ services:
       - map_api_key
     environment:
       VITE_PORT: ${CLIENT_PORT:-5173}
-      VITE_SERVER_URL: http://${SERVER_HOST:-server}:${SERVER_PORT:-3000}
-      VITE_SOCKET_URL: http://localhost:${SERVER_PORT:-3000}
+      VITE_SERVER_URL: http://${SERVER_HOST:-localhost}:${SERVER_PORT:-3000}
+      VITE_SOCKET_URL: http://${SERVER_HOST:-localhost}:${SERVER_PORT:-3000}
       VITE_MAP_API_KEY_FILE: /run/secrets/map_api_key # We tell Vite where to look for the key file inside the container
       CHOKIDAR_USEPOLLING: 'true' # Tell Vite to use polling (better FS changes detection in Docker)
     volumes:
