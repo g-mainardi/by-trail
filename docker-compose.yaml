@@ -34,7 +34,7 @@ services:
       - jwt_secret
     environment:
       PORT: ${SERVER_PORT:-3000}
-      CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
+      CLIENT_ORIGIN: http://${CLIENT_HOST:-localhost}:${CLIENT_PORT:-5173}
       MONGO_URI_FILE: /run/secrets/db_uri
       MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
       JWT_SECRET_FILE: /run/secrets/jwt_secret
