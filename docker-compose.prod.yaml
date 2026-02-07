@@ -30,6 +30,8 @@ services:
         VITE_SOCKET_URL: http://localhost:3000
     ports:
       - '5173:80' # Map host port 5173 to container port 80 (Nginx)
+    secrets:
+      - map_api_key
 
     depends_on:
       - server
@@ -39,3 +41,5 @@ secrets:
     file: ./secrets/mongo_atlas_uri.txt
   jwt_secret:
     file: ./secrets/jwt_secret.txt
+  map_api_key:
+    file: ./secrets/thunderforest_map_key.txt

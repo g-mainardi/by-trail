@@ -10,12 +10,14 @@ import fs from 'node:fs'; // Import fs to read the secret file
 export default defineConfig(({ mode }) => {
   // Load env variables (this captures VITE_MAP_API_KEY_FILE passed from Docker)
   const env = loadEnv(mode, process.cwd(), '');
-
-  // Logic to read the Docker Secret
   let mapApiKey = '';
   const secretPath = env.VITE_MAP_API_KEY_FILE;
 
-  if (secretPath && fs.existsSync(secretPath)) {
+  if (
+    process.env.NODE_ENV === 'development' &&
+    secretPath &&
+    fs.existsSync(secretPath)
+  ) {
     try {
       mapApiKey = fs.readFileSync(secretPath, 'utf8').trim();
       console.log('Map API Key successfully read from secret file.');
@@ -24,6 +26,9 @@ export default defineConfig(({ mode }) => {
     }
   } else {
     // Fallback if running locally without Docker secrets
+    console.warn(
+      'Running in development mode without Docker secrets. Falling back to VITE_MAP_API_KEY env variable.'
+    );
     mapApiKey = env.VITE_MAP_API_KEY || '';
   }
 

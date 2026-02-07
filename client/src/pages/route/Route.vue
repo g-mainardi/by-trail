@@ -26,6 +26,8 @@ import {
 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { getMapApiKey } from '@/utils/config';
+
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
@@ -44,7 +46,7 @@ const onMapReady = (map: Map) => {
 };
 
 const tileLayerUrl = computed(() => {
-  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
+  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${getMapApiKey()}`;
 });
 
 onMounted(async () => {

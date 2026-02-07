@@ -47,6 +47,10 @@ FROM nginx:stable-alpine AS runner
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
+# Create entrypoint script to handle dynamic config
+COPY client/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 # Use custom nginx config
 COPY client/nginx.conf /etc/nginx/conf.d/default.conf
 
