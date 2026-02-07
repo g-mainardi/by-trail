@@ -57,6 +57,7 @@ services:
     build:
       context: .
       dockerfile: ./client/Dockerfile
+      target: builder # Use the builder stage for dev
     ports:
       - '5173:5173'
     secrets:
@@ -67,6 +68,7 @@ services:
       VITE_SOCKET_URL: http://${SERVER_HOST:-localhost}:${SERVER_PORT:-3000}
       VITE_MAP_API_KEY_FILE: /run/secrets/map_api_key # We tell Vite where to look for the key file inside the container
       CHOKIDAR_USEPOLLING: 'true' # Tell Vite to use polling (better FS changes detection in Docker)
+    command: npm run dev --host
     volumes:
       - ./client:/app/client
       - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
