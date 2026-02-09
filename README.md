@@ -67,10 +67,10 @@ This project uses a seeding script to populate the database with initial users a
 
 ## Production Deployment
 
-For production deployment, you can use the provide `docker-compose.prod.yml` file. This setup uses MongoDB Atlas for the database and serves the client application using Nginx.
+For production deployment, you can use the provide `docker-compose.prod.yaml` file. This setup uses MongoDB Atlas for the database and serves the client application using Nginx.
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.ayml up -d
 ```
 
 ## Commit Message Linting
