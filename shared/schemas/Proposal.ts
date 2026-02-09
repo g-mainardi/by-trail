@@ -15,7 +15,7 @@ export const ProposalZodSchema = z.object({
   description: z.string().min(1),
   region: RegionSchema,
   locality: z.string().min(1),
-  submissionDate: z.date().optional(),
+  submissionDate: z.coerce.date().optional(),
 });
 
 // Secondary schema including sender's email
