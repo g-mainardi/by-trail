@@ -26,7 +26,7 @@ export const NotificationZodSchema = z.object({
     .default(NotificationUiTypeEnum.INFO),
   title: z.string().min(1),
   message: z.string().min(1),
-  data: z.record(z.any()).optional(), // flexible container
+  data: z.record(z.string(), z.any()).optional(), // flexible container
   referenceUrl: z.string().url().optional(),
   isRead: z.boolean().default(false),
   createdAt: z.coerce.date().optional(),

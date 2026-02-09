@@ -24,6 +24,9 @@
     "url": "https://github.com/g-mainardi/by-trail/issues"
   },
   "homepage": "https://github.com/g-mainardi/by-trail#readme",
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",

@@ -4,7 +4,7 @@
   "main": "index.ts",
   "types": "index.ts",
   "type": "module",
-  "dependencies": {
-    "zod": "^3.25.76"
+  "peerDependencies": {
+    "zod": "^4.0.0"
   }
 }

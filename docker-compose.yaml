@@ -50,6 +50,7 @@ services:
       - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
       - /app/node_modules
       - /app/server/node_modules # Preserve container deps
+      - /app/shared/node_modules # Preserve shared deps
 
   # 4. Frontend (Vite/React)
   client:
@@ -74,6 +75,7 @@ services:
       - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
       - /app/node_modules
       - /app/client/node_modules # Preserve container deps
+      - /app/shared/node_modules # Preserve shared deps
 
     depends_on:
       - server
