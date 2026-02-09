@@ -55,4 +55,4 @@ ENV NODE_ENV=production
 EXPOSE ${PORT:-3000}
 
 # Default Command: point to compiled file
-CMD ["node", "dist/server/src/index.js"]
+CMD ["npm", "start"]
