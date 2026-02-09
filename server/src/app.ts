@@ -34,7 +34,6 @@ app.use(
         // Allow localhost in development mode
         if (
           process.env.NODE_ENV === 'development' &&
-          origin &&
           (origin.startsWith('vscode-webview://') ||
             origin.startsWith('http://localhost:') ||
             origin.startsWith('https://localhost:'))

@@ -37,9 +37,9 @@ const filteredBivouacs = computed(() => {
     <div v-for="bivouac in filteredBivouacs" :key="bivouac._id" class="mt-0">
       <BivouacCard
         :bivouac="bivouac"
-        :isFavorite="favoritesStore.isFavoriteBivouac(bivouac._id || '')"
+        :isFavorite="favoritesStore.isFavoriteBivouac(bivouac._id ?? '')"
         @toggle-favorite="
-          favoritesStore.toggleFavoriteBivouac(bivouac._id || '')
+          favoritesStore.toggleFavoriteBivouac(bivouac._id ?? '')
         "
       />
     </div>

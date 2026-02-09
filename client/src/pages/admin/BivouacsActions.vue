@@ -25,12 +25,12 @@ const { t } = useI18n();
 
 function copyId() {
   // Handle both id and _id depending on what backend sends
-  const id = props.bivouac._id || props.bivouac._id || '';
+  const id = props.bivouac._id ?? '';
   navigator.clipboard.writeText(id);
 }
 
 function getBivouacId() {
-  return props.bivouac._id || props.bivouac._id || '';
+  return props.bivouac._id ?? '';
 }
 </script>
 

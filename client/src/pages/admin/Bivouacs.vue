@@ -29,7 +29,7 @@ onMounted(() => {
   adminStore.fetchBivouacs();
 });
 
-const getBivouacId = (b: Bivouac) => b._id || '';
+const getBivouacId = (b: Bivouac) => b._id ?? '';
 
 // --- Handlers ---
 

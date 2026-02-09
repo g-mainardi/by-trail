@@ -39,7 +39,7 @@ const filteredRoutes = computed(() => {
     <div v-for="route in filteredRoutes" :key="route._id">
       <RouteCard
         :route="route"
-        :isFavorite="favoriteStore.isFavoriteRoute(route._id || '')"
+        :isFavorite="favoriteStore.isFavoriteRoute(route._id ?? '')"
         @toggle-favorite="favoriteStore.toggleFavoriteRoute"
       />
     </div>

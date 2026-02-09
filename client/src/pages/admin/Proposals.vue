@@ -132,7 +132,7 @@ const alertConfig = computed(() => {
         <ProposalActions
           :proposal="{
             ...row,
-            id: row._id || '',
+            id: row._id ?? '',
             email: row.senderEmail,
           }"
           @delete="onDeleteProposal(row)"

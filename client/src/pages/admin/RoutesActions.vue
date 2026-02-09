@@ -25,7 +25,7 @@ const { t } = useI18n();
 
 function copyId() {
   // Handle both id and _id depending on what backend sends
-  const id = props.route._id || '';
+  const id = props.route._id ?? '';
   navigator.clipboard.writeText(id);
 }
 </script>
@@ -48,14 +48,14 @@ function copyId() {
 
       <DropdownMenuSeparator />
 
-      <DropdownMenuItem @click="$emit('edit', route._id || '')">
+      <DropdownMenuItem @click="$emit('edit', route._id ?? '')">
         <Pencil class="mr-2 h-4 w-4" />
         {{ t('edit_route') }}
       </DropdownMenuItem>
 
       <DropdownMenuItem
         class="text-red-600 focus:text-red-600"
-        @click="$emit('delete', route._id || '')"
+        @click="$emit('delete', route._id ?? '')"
       >
         <Trash2 class="mr-2 h-4 w-4" />
         {{ t('delete_route') }}

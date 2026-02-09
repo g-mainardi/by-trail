@@ -62,7 +62,7 @@ const handleChange = <K extends keyof Bivouac>(field: K, value: Bivouac[K]) => {
 const handleSave = async () => {
   if (Object.keys(updates.value).length > 0) {
     emit('save', {
-      id: props.bivouac?._id || '',
+      id: props.bivouac?._id ?? '',
       updates: updates.value,
     });
   }

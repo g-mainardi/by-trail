@@ -159,7 +159,7 @@ const alertConfig = computed(() => {
       <template #cell-actions="{ row }">
         <UserActions
           v-if="row.type !== ADMIN"
-          :user="{ ...row, id: row._id || '', status: row.status || ACTIVE }"
+          :user="{ ...row, id: row._id ?? '', status: row.status || ACTIVE }"
           @ban="onBanUser(row)"
           @delete="onDeleteUser(row)"
         />

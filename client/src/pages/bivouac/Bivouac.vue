@@ -90,7 +90,7 @@ const sendIntention = async () => {
   const dateString = selectedDate.value.toString(); // dateString: YYYY-MM-DD
 
   const res = await intentionStore.sendIntention(
-    bivouac.value?._id || '',
+    bivouac.value?._id ?? '',
     dateString,
     people.value
   );
@@ -212,7 +212,7 @@ onMounted(async () => {
                 variant="destructive"
                 size="sm"
                 :style="{ width: '1.5rem', height: '1.5rem' }"
-                @click="cancelIntention(intention._id || '')"
+                @click="cancelIntention(intention._id ?? '')"
               >
                 <X class="icon" />
               </Button>
