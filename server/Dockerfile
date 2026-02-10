@@ -43,6 +43,7 @@ COPY shared ./shared
 # Copy compiled assets from the Builder stage
 WORKDIR /app/server
 COPY --from=builder /app/server/dist ./dist
+COPY --from=builder /app/shared/dist ./shared/dist
 
 # Environment variable for production and port exposure
 ENV NODE_ENV=production
