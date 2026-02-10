@@ -62,7 +62,7 @@ This project uses a seeding script to populate the database with initial users a
 - Run the seeding script inside the server container:
 
   ```bash
-  docker exec -it by-trail-server npx tsx seed.ts
+  docker exec -it by-trail-server npx tsx server/src/seed.ts
   ```
 
 ## Production Deployment
@@ -70,7 +70,7 @@ This project uses a seeding script to populate the database with initial users a
 For production deployment, you can use the provide `docker-compose.prod.yaml` file. This setup uses MongoDB Atlas for the database and serves the client application using Nginx.
 
 ```bash
-docker compose -f docker-compose.prod.ayml up -d
+docker compose -f docker-compose.prod.yaml up -d
 ```
 
 ## Commit Message Linting
