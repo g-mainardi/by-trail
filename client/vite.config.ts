@@ -21,9 +21,10 @@ export default defineConfig(({ mode }) => {
       console.warn('Could not read map API Key from secret file:', error);
     }
   } else {
-    console.warn(
-      'Running in development mode without Docker secrets. Falling back to VITE_MAP_API_KEY env variable.'
-    );
+    if (mode === 'development')
+      console.warn(
+        'Running in development mode without Docker secrets. Falling back to VITE_MAP_API_KEY env variable.'
+      );
     mapApiKey = env.VITE_MAP_API_KEY ?? '';
   }
 
