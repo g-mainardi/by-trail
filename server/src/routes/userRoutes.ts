@@ -3,7 +3,7 @@ import {
   createIntention,
   deleteIntention,
   fetchUserIntentions,
-} from 'src/controllers/intentionController.js';
+} from '@/controllers/intentionController.js';
 import {
   addFavoriteBivouac,
   addFavoriteRoute,
@@ -11,9 +11,9 @@ import {
   fetchFavoriteRoutes,
   removeFavoriteBivouac,
   removeFavoriteRoute,
-} from '../controllers/favoritesController.js';
-import { getProfile, updateProfile } from '../controllers/userController.js';
-import { protect } from '../middleware/authMiddleware.js';
+} from '@/controllers/favoritesController.js';
+import { getProfile, updateProfile } from '@/controllers/userController.js';
+import { protect } from '@/middleware/authMiddleware.js';
 
 const router = express.Router();
 

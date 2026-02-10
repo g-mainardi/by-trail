@@ -10,7 +10,7 @@ import { ArrowUpDown } from 'lucide-vue-next';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { AlertCircle, CheckCircle } from 'lucide-vue-next';
 import { Alert, AlertTitle } from '@/components/ui/alert';
-import type { Proposal } from '@/types';
+import type { Proposal } from '@by-trail/shared';
 import ProposalActions from './ProposalActions.vue';
 
 const { t, locale } = useI18n();
@@ -24,10 +24,6 @@ onMounted(() => {
   fetchProposals();
 });
 
-const getProposalId = (proposal: Proposal): string => {
-  return proposal.id || proposal._id || '';
-};
-
 const columns = [
   { accessorKey: 'subjectName', header: t('subject_name') },
   { accessorKey: 'senderEmail', header: t('sender_email') },
@@ -40,7 +36,7 @@ const columns = [
 ];
 
 const onDeleteProposal = async (proposal: Proposal) => {
-  const id = getProposalId(proposal);
+  const id = proposal._id;
   try {
     if (!id) return;
     const confirmed = confirm(t('confirm_delete'));
@@ -136,7 +132,7 @@ const alertConfig = computed(() => {
         <ProposalActions
           :proposal="{
             ...row,
-            id: getProposalId(row),
+            id: row._id ?? '',
             email: row.senderEmail,
           }"
           @delete="onDeleteProposal(row)"

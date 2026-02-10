@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFavoriteStore } from '@/stores/favorites';
-import { type Route } from '@/types';
+import { type Route } from '@by-trail/shared';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 

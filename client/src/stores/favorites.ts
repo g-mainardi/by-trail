@@ -1,5 +1,5 @@
 import api from '@/stores/utility/axiosInstance';
-import type { Bivouac, Route } from '@/types';
+import type { Bivouac, Route } from '@by-trail/shared';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 

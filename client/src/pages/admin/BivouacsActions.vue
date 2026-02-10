@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Trash2, Pencil, Copy } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import type { Bivouac } from '@/types';
+import type { Bivouac } from '@by-trail/shared';
 
 const props = defineProps<{
   bivouac: Bivouac;
@@ -25,12 +25,12 @@ const { t } = useI18n();
 
 function copyId() {
   // Handle both id and _id depending on what backend sends
-  const id = props.bivouac.id || props.bivouac._id || '';
+  const id = props.bivouac._id ?? '';
   navigator.clipboard.writeText(id);
 }
 
 function getBivouacId() {
-  return props.bivouac.id || props.bivouac._id || '';
+  return props.bivouac._id ?? '';
 }
 </script>
 

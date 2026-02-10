@@ -16,7 +16,7 @@ import {
   Copy,
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import { type UserStatus, UserStatusEnum } from '@/types';
+import { type UserStatus, UserStatusEnum } from '@by-trail/shared';
 
 const { ACTIVE } = UserStatusEnum;
 

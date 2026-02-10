@@ -8,7 +8,8 @@ import {
 } from '@/services/utility';
 import { useBivouacStore } from '@/stores/bivouacs';
 import { useRouteStore } from '@/stores/routes';
-import { RouteDifficultyEnum } from '@/types';
+import { getMapApiKey } from '@/utils/config';
+import { RouteDifficultyEnum } from '@by-trail/shared';
 import {
   LMap,
   LMarker,
@@ -39,7 +40,7 @@ const zoom = ref(6);
 const center = ref<[number, number]>([41.9100711, 12.5359979]); // Rome
 
 const tileLayerUrl = computed(() => {
-  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
+  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${getMapApiKey()}`;
 });
 
 const mapRef = ref<Map | null>(null);

@@ -1,5 +1,5 @@
 import rateLimit from 'express-rate-limit';
-import { minsToMillis } from 'src/utils/middleware.js';
+import { minsToMillis } from '@/utils/middleware.js';
 
 const windowDurationMins = 15;
 const maxRequestPerWindow = 10;

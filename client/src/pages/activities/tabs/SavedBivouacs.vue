@@ -3,7 +3,7 @@ import { onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useFavoriteStore } from '@/stores/favorites';
-import type { Bivouac } from '@/types';
+import type { Bivouac } from '@by-trail/shared';
 
 import P from '@/layouts/typography/P.vue';
 import BivouacCard from './BivouacCard.vue';

@@ -5,17 +5,15 @@ import vue from '@vitejs/plugin-vue';
 import path, { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, loadEnv } from 'vite';
-import fs from 'node:fs'; // Import fs to read the secret file
+import fs from 'node:fs';
 
 export default defineConfig(({ mode }) => {
-  // Load env variables (this captures VITE_MAP_API_KEY_FILE passed from Docker)
+  // For development, try to read the API key from the Docker secret file if it exists
   const env = loadEnv(mode, process.cwd(), '');
-
-  // Logic to read the Docker Secret
   let mapApiKey = '';
   const secretPath = env.VITE_MAP_API_KEY_FILE;
 
-  if (secretPath && fs.existsSync(secretPath)) {
+  if (mode === 'development' && secretPath && fs.existsSync(secretPath)) {
     try {
       mapApiKey = fs.readFileSync(secretPath, 'utf8').trim();
       console.log('Map API Key successfully read from secret file.');
@@ -23,8 +21,11 @@ export default defineConfig(({ mode }) => {
       console.warn('Could not read map API Key from secret file:', error);
     }
   } else {
-    // Fallback if running locally without Docker secrets
-    mapApiKey = env.VITE_MAP_API_KEY || '';
+    if (mode === 'development')
+      console.warn(
+        'Running in development mode without Docker secrets. Falling back to VITE_MAP_API_KEY env variable.'
+      );
+    mapApiKey = env.VITE_MAP_API_KEY ?? '';
   }
 
   return {
@@ -54,7 +55,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         // Every request starting with /api is forwarded to the backend
         '/api': {
-          target: process.env.VITE_SERVER_URL || 'http://server:3000',
+          target: process.env.VITE_SERVER_URL || 'http://localhost:3000',
           changeOrigin: true,
         },
       },

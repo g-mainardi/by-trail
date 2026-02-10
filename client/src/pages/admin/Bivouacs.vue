@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAdminStore } from '@/stores/admin';
 import { storeToRefs } from 'pinia';
-import type { Bivouac } from '@/types';
+import type { Bivouac } from '@by-trail/shared';
 
 import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { AlertCircle, CheckCircle } from 'lucide-vue-next';
@@ -29,7 +29,7 @@ onMounted(() => {
   adminStore.fetchBivouacs();
 });
 
-const getBivouacId = (b: Bivouac) => b.id || b._id || '';
+const getBivouacId = (b: Bivouac) => b._id ?? '';
 
 // --- Handlers ---
 

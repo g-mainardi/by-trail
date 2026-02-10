@@ -24,7 +24,7 @@ import {
 } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import type { RouteFilter } from '../filterbar/filters';
-import { RouteDifficultyEnum } from '@/types';
+import { RouteDifficultyEnum } from '@by-trail/shared';
 
 const { t } = useI18n();
 

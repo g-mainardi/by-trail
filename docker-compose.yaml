@@ -23,7 +23,10 @@ services:
   # 3. Backend (Node/Express)
   server:
     container_name: by-trail-server
-    build: ./server
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      target: builder # Use the builder stage for dev
     ports:
       - '3000:3000'
     secrets:
@@ -31,34 +34,51 @@ services:
       - jwt_secret
     environment:
       PORT: ${SERVER_PORT:-3000}
-      CLIENT_ORIGIN: http://localhost:${CLIENT_PORT:-5173}
+      CLIENT_ORIGIN: http://${CLIENT_HOST:-localhost}:${CLIENT_PORT:-5173}
       MONGO_URI_FILE: /run/secrets/db_uri
       MONGO_URI_LOCAL: mongodb://mongo:27017/by_trail
       JWT_SECRET_FILE: /run/secrets/jwt_secret
       # Logic handled inside the app: to use Atlas or local MongoDB
       USE_ATLAS: '${USE_ATLAS:-true}'
+      NODE_ENV: development # Force development mode
+
+    # Override the default command to enable hot-reload with nodemon
+    command: npm run dev:server
 
     volumes:
-      - ./server:/app # Synchronize local files with the container (Hot Reload)
+      - ./server:/app/server
+      - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
       - /app/node_modules
+      - /app/server/node_modules # Preserve container deps
+      - /app/shared/node_modules # Preserve shared deps
+      - /app/shared/dist
 
   # 4. Frontend (Vite/React)
   client:
     container_name: by-trail-client
-    build: ./client
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+      target: builder # Use the builder stage for dev
     ports:
       - '5173:5173'
     secrets:
       - map_api_key
     environment:
       VITE_PORT: ${CLIENT_PORT:-5173}
-      VITE_SERVER_URL: http://${SERVER_HOST:-server}:${SERVER_PORT:-3000}
-      VITE_SOCKET_URL: http://localhost:${SERVER_PORT:-3000}
+      VITE_SERVER_URL: http://${SERVER_HOST:-localhost}:${SERVER_PORT:-3000}
+      VITE_SOCKET_URL: http://${SERVER_HOST:-localhost}:${SERVER_PORT:-3000}
       VITE_MAP_API_KEY_FILE: /run/secrets/map_api_key # We tell Vite where to look for the key file inside the container
       CHOKIDAR_USEPOLLING: 'true' # Tell Vite to use polling (better FS changes detection in Docker)
+    command: npm run dev:client --host
     volumes:
-      - ./client:/app # Sync files for HMR
-      - /app/node_modules # Protect container's node_modules
+      - ./client:/app/client
+      - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
+      - /app/node_modules
+      - /app/client/node_modules # Preserve container deps
+      - /app/shared/node_modules # Preserve shared deps
+      - /app/shared/dist
+
     depends_on:
       - server
 

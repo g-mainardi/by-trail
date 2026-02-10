@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { placeholderRoute } from '@/services/placeholders';
-import { type Route } from '@/types';
+import { type Route } from '@by-trail/shared';
 import { X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 

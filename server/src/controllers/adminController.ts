@@ -1,19 +1,24 @@
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
+import {
+  AuthRequest,
+  BivouacParams,
+  EXCLUDED_UPDATE_FIELDS,
+  ProposalParams,
+  RouteParams,
+} from '@/types/server_only.js';
+import { UserModel as User, UserDocument } from '@/models/User.js';
+import mongoose from 'mongoose';
 import {
   PathObj,
+  ProposalWithEmail,
   RoutePathType,
   RoutePathTypeEnum,
   UserStatusEnum,
   UserTypeEnum,
-  ProposalWithEmail,
-} from '../types/index.js';
-import {
-  AuthRequest,
-  EXCLUDED_UPDATE_FIELDS,
-  UserDocument,
-} from '../types/server_only.js';
-import { User, Bivouac, Route, Proposal } from '../models/models.js';
-import mongoose from 'mongoose';
+} from '@by-trail/shared';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import { RouteModel as Route } from '@/models/Route.js';
+import { ProposalModel as Proposal } from '@/models/Proposal.js';
 
 export const fetchUsers = async (req: AuthRequest, res: Response) => {
   try {
@@ -27,8 +32,8 @@ export const fetchUsers = async (req: AuthRequest, res: Response) => {
 };
 
 export const updateUserStatus = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-  const targetUserId = req.params.id;
+  const userId = req.user?._id.toString();
+  const targetUserId = req.params.id as string;
   const { status } = req.body;
 
   if (!status || !Object.values(UserStatusEnum).includes(status)) {
@@ -64,8 +69,8 @@ export const updateUserStatus = async (req: AuthRequest, res: Response) => {
 };
 
 export const deleteUser = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
-  const targetUserId = req.params.id;
+  const userId = req.user?._id.toString();
+  const targetUserId = req.params.id as string;
 
   if (userId === targetUserId) {
     return res.status(400).json({
@@ -93,7 +98,10 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const updateBivouac = async (req: AuthRequest, res: Response) => {
+export const updateBivouac = async (
+  req: Request<BivouacParams>,
+  res: Response
+) => {
   const bivouacId = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });
@@ -134,7 +142,10 @@ export const updateBivouac = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteBivouac = async (req: AuthRequest, res: Response) => {
+export const deleteBivouac = async (
+  req: Request<BivouacParams>,
+  res: Response
+) => {
   const bivouacId = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(bivouacId)) {
@@ -153,7 +164,7 @@ export const deleteBivouac = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const updateRoute = async (req: AuthRequest, res: Response) => {
+export const updateRoute = async (req: Request<RouteParams>, res: Response) => {
   const routeId = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(routeId))
     return res.status(400).json({ error: 'Invalid route ID format' });
@@ -222,7 +233,7 @@ export const updateRoute = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteRoute = async (req: AuthRequest, res: Response) => {
+export const deleteRoute = async (req: Request<RouteParams>, res: Response) => {
   const routeId = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(routeId)) {
@@ -255,9 +266,10 @@ export const fetchProposals = async (req: AuthRequest, res: Response) => {
         // Because of lean(), we can treat 'sender' as a plain object or check if it exists
         // Check if sender is populated and has an email (handle deleted users edge case)
         // Exclude the sender field from the serialized response to avoid leaking internal IDs
-        const { sender: sender, ...proposalWithoutSender } = proposal;
+        const { sender: sender, _id: _id, ...proposalWithoutSender } = proposal;
         return {
           ...proposalWithoutSender,
+          _id: _id?.toString(),
           senderEmail: (sender as unknown as UserDocument | null)?.email,
         } as ProposalWithEmail;
       }
@@ -270,7 +282,10 @@ export const fetchProposals = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteProposal = async (req: AuthRequest, res: Response) => {
+export const deleteProposal = async (
+  req: Request<ProposalParams>,
+  res: Response
+) => {
   const proposalId = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(proposalId)) {

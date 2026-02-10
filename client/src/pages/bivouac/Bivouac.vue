@@ -15,13 +15,13 @@ import H1 from '@/layouts/typography/H1.vue';
 import H2 from '@/layouts/typography/H2.vue';
 import { placeholderBivouac } from '@/services/placeholders';
 import { useBivouacStore } from '@/stores/bivouacs';
-// todo: change to type from '@/types' when store is updated
+// todo: change to type from '@by-trail/shared' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
 import {
   useIntentionStore,
   type AnonymousIntention,
 } from '@/stores/intentions';
-import type { Bivouac, Intention } from '@/types';
+import type { Bivouac, Intention } from '@by-trail/shared';
 import {
   fromDate,
   getLocalTimeZone,
@@ -90,7 +90,7 @@ const sendIntention = async () => {
   const dateString = selectedDate.value.toString(); // dateString: YYYY-MM-DD
 
   const res = await intentionStore.sendIntention(
-    bivouac.value?._id || '',
+    bivouac.value?._id ?? '',
     dateString,
     people.value
   );
@@ -212,7 +212,7 @@ onMounted(async () => {
                 variant="destructive"
                 size="sm"
                 :style="{ width: '1.5rem', height: '1.5rem' }"
-                @click="cancelIntention(intention._id || '')"
+                @click="cancelIntention(intention._id ?? '')"
               >
                 <X class="icon" />
               </Button>

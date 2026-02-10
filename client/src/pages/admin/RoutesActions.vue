@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Trash2, Pencil, Copy } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import type { Route } from '@/types';
+import type { Route } from '@by-trail/shared';
 
 const props = defineProps<{
   route: Route;
@@ -25,12 +25,8 @@ const { t } = useI18n();
 
 function copyId() {
   // Handle both id and _id depending on what backend sends
-  const id = props.route.id || props.route._id || '';
+  const id = props.route._id ?? '';
   navigator.clipboard.writeText(id);
-}
-
-function getRouteId() {
-  return props.route.id || props.route._id || '';
 }
 </script>
 
@@ -52,14 +48,14 @@ function getRouteId() {
 
       <DropdownMenuSeparator />
 
-      <DropdownMenuItem @click="$emit('edit', getRouteId())">
+      <DropdownMenuItem @click="$emit('edit', route._id ?? '')">
         <Pencil class="mr-2 h-4 w-4" />
         {{ t('edit_route') }}
       </DropdownMenuItem>
 
       <DropdownMenuItem
         class="text-red-600 focus:text-red-600"
-        @click="$emit('delete', getRouteId())"
+        @click="$emit('delete', route._id ?? '')"
       >
         <Trash2 class="mr-2 h-4 w-4" />
         {{ t('delete_route') }}

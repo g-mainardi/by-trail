@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useBivouacStore } from '@/stores/bivouacs';
-// todo: change to type from '@/types' when store is updated
+// todo: change to type from '@by-trail/shared' when store is updated
 import { useFavoriteStore } from '@/stores/favorites';
 import { computed, onMounted } from 'vue';
 import FilterBar from '../filterbar/FilterBar.vue';
@@ -37,9 +37,9 @@ const filteredBivouacs = computed(() => {
     <div v-for="bivouac in filteredBivouacs" :key="bivouac._id" class="mt-0">
       <BivouacCard
         :bivouac="bivouac"
-        :isFavorite="favoritesStore.isFavoriteBivouac(bivouac._id || '')"
+        :isFavorite="favoritesStore.isFavoriteBivouac(bivouac._id ?? '')"
         @toggle-favorite="
-          favoritesStore.toggleFavoriteBivouac(bivouac._id || '')
+          favoritesStore.toggleFavoriteBivouac(bivouac._id ?? '')
         "
       />
     </div>

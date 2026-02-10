@@ -1,8 +1,10 @@
 import type { Response } from 'express';
 import mongoose from 'mongoose';
 import console from 'node:console';
-import { Bivouac, Route, User } from '../models/models.js';
-import type { AuthRequest } from '../types/server_only.js';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import { RouteModel as Route } from '@/models/Route.js';
+import { UserModel as User } from '@/models/User.js';
+import type { AuthRequest } from '@/types/server_only.js';
 
 export const fetchFavoriteBivouacs = async (
   req: AuthRequest,
@@ -25,7 +27,7 @@ export const fetchFavoriteBivouacs = async (
 };
 
 export const addFavoriteBivouac = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
+  const userId = req.user?._id;
   const bivouacId = req.body.id;
 
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
@@ -59,7 +61,7 @@ export const removeFavoriteBivouac = async (
   req: AuthRequest,
   res: Response
 ) => {
-  const userId = req.user?.id;
+  const userId = req.user?._id;
   const bivouacId = req.body.id;
 
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
@@ -104,7 +106,7 @@ export const fetchFavoriteRoutes = async (req: AuthRequest, res: Response) => {
 };
 
 export const addFavoriteRoute = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
+  const userId = req.user?._id;
   const routeId = req.body.id;
 
   if (!routeId || !mongoose.Types.ObjectId.isValid(routeId)) {
@@ -135,7 +137,7 @@ export const addFavoriteRoute = async (req: AuthRequest, res: Response) => {
 };
 
 export const removeFavoriteRoute = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id;
+  const userId = req.user?._id;
   const routeId = req.body.id;
 
   if (!routeId || !mongoose.Types.ObjectId.isValid(routeId)) {

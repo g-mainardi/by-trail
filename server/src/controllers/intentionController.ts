@@ -1,8 +1,9 @@
 import type { Response } from 'express';
 import mongoose from 'mongoose';
-import { Bivouac, Intention } from 'src/models/models.js';
-import { AuthRequest } from 'src/types/server_only.js';
-import { sendNotification } from 'src/utils/notificationHelper.js';
+import { BivouacModel as Bivouac } from '@/models/Bivouac.js';
+import { IntentionModel as Intention } from '@/models/Intention.js';
+import { AuthRequest } from '@/types/server_only.js';
+import { sendNotification } from '@/utils/notificationHelper.js';
 
 const formatDateForDisplay = (dateInput: Date | string): string => {
   const dateObj = new Date(dateInput);
@@ -74,7 +75,7 @@ const notifyPeers = async (
 };
 
 export const createIntention = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id!;
+  const userId = req.user?._id!;
   const { bivouacId, date, people } = req.body; // date: YYYY-MM-DD
   if (!bivouacId || !mongoose.Types.ObjectId.isValid(bivouacId)) {
     return res.status(400).json({ error: 'Invalid bivouac ID format' });
@@ -100,7 +101,7 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
 
       try {
         await sendNotification(
-          userId,
+          userId.toString(),
           'bivouac_intention_update',
           'success',
           'Bivouac Intention Updated',
@@ -110,7 +111,7 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
         await notifyPeers(
           bivouacId,
           new Date(date),
-          userId,
+          userId.toString(),
           people,
           bivouacName
         );
@@ -133,7 +134,7 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
 
       try {
         await sendNotification(
-          userId,
+          userId.toString(),
           'bivouac_intention',
           'success',
           'Bivouac Intention Created',
@@ -143,7 +144,7 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
         await notifyPeers(
           bivouacId,
           new Date(date),
-          userId,
+          userId.toString(),
           people,
           bivouacName!
         );
@@ -163,7 +164,7 @@ export const createIntention = async (req: AuthRequest, res: Response) => {
 };
 
 export const deleteIntention = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id!;
+  const userId = req.user?._id!;
   const { intentionId } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(intentionId)) {
@@ -191,7 +192,7 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
 
     try {
       await sendNotification(
-        userId,
+        userId.toString(),
         'bivouac_intention_delete',
         'alert',
         'Bivouac Intention Cancelled',
@@ -212,7 +213,7 @@ export const deleteIntention = async (req: AuthRequest, res: Response) => {
 };
 
 export const fetchUserIntentions = async (req: AuthRequest, res: Response) => {
-  const userId = req.user?.id!;
+  const userId = req.user?._id!;
 
   try {
     const intentions = await Intention.find({ user: userId })

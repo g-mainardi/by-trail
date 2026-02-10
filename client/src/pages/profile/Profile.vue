@@ -11,7 +11,7 @@ import ProfilePersonalData from './info/ProfilePersonalData.vue';
 import ProfileRegionSelector from './info/ProfileRegionSelector.vue';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle } from 'lucide-vue-next';
-import type { Region } from '@/types';
+import type { Region } from '@by-trail/shared';
 
 const authStore = useAuthStore();
 const { user, isLoading } = storeToRefs(authStore);

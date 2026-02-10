@@ -2,8 +2,8 @@ import { Server, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { Application } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { getSecret } from '../utils/secrets.js'; // reuse secret helper
-import { User } from '../models/models.js'; // reuse User model
+import { getSecret } from '@/utils/secrets.js'; // reuse secret helper
+import { UserModel as User } from '@/models/User.js';
 
 interface AuthenticatedSocket extends Socket {
   userId?: string;

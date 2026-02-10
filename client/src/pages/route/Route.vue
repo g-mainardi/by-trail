@@ -10,7 +10,7 @@ import { placeholderRoute } from '@/services/placeholders';
 import { getCoords, getDurationHM, routeIcon } from '@/services/utility';
 import { useFavoriteStore } from '@/stores/favorites';
 import { useRouteStore } from '@/stores/routes';
-import { RouteDifficultyEnum, type Route } from '@/types';
+import { RouteDifficultyEnum, type Route } from '@by-trail/shared';
 import { LMap, LMarker, LPolyline, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import type { Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -26,6 +26,8 @@ import {
 } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { getMapApiKey } from '@/utils/config';
+
 const { t } = useI18n();
 
 const favoritesStore = useFavoriteStore();
@@ -44,7 +46,7 @@ const onMapReady = (map: Map) => {
 };
 
 const tileLayerUrl = computed(() => {
-  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${__MAP_API_KEY__}`;
+  return `https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${getMapApiKey()}`;
 });
 
 onMounted(async () => {

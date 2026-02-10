@@ -11,7 +11,7 @@ import AppInfo from '@/pages/sidebar/AppInfo.vue';
 import SidebarOptions from '@/pages/sidebar/SidebarOptions.vue';
 import SidebarUser from '@/pages/sidebar/SidebarUser.vue';
 import { useAuthStore } from '@/stores/auth.ts';
-import { UserTypeEnum } from '@/types';
+import { UserTypeEnum } from '@by-trail/shared';
 import {
   Activity,
   Bell,

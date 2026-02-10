@@ -1,6 +1,6 @@
 // notificationHelper connects your business logic to both Mongoose and Socket
-import { Notification } from '../models/models.js';
-import { getIO } from '../config/socket.js';
+import { NotificationModel as Notification } from '@/models/Notification.js';
+import { getIO } from '@/config/socket.js';
 
 /* Saves a notification to DB and attempts to send it via Socket.io */
 export const sendNotification = async (

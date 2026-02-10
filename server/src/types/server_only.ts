@@ -1,24 +1,27 @@
+import { Proposal } from '@by-trail/shared';
 import { Request } from 'express';
-import { User, Bivouac, Route, Proposal } from './index.js';
+import { UserDocument } from '@/models/User.js';
 
 // Constants
 export const EXCLUDED_UPDATE_FIELDS = ['_id', '__v', 'createdAt', 'updatedAt'];
 
-export interface UserDocument extends User {
-  password: string;
-}
-export interface BivouacDocument extends Bivouac {}
-export interface RouteDocument extends Route {}
-export interface ProposalDocument extends Proposal {
-  sender: string;
-}
-
 export interface AuthRequest extends Request {
-  user?: User | null;
+  user?: UserDocument | null;
 }
 
-export interface AuthRequestWithPassword extends Request {
-  user?: UserDocument | null;
+export interface UserParams {
+  id: string;
+}
+export interface BivouacParams {
+  id: string;
+}
+
+export interface RouteParams {
+  id: string;
+}
+
+export interface ProposalParams {
+  id: string;
 }
 
 export interface ProposalRequest extends AuthRequest {

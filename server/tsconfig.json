@@ -3,22 +3,19 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "rootDir": "./",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "baseUrl": ".",
     "noImplicitAny": true
   },
-  "include": ["src/**/*", "index.ts", "seed.ts", "src/types/declaration.d.ts"],
-  "exclude": [
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "seed.ts",
-    "src/utils/seedHelpers.ts"
-  ]
+  "include": ["src/**/*", "src/types/declaration.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

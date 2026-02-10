@@ -1,10 +1,14 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import api from '@/stores/utility/axiosInstance';
-import type { ProposalWithEmail, User, UserStatus } from '@/types';
 import { useBivouacStore } from '@/stores/bivouacs';
 import { useRouteStore } from './routes';
-import { UserStatusEnum } from '@/types';
+import {
+  type User,
+  type UserStatus,
+  UserStatusEnum,
+  type ProposalWithEmail,
+} from '@by-trail/shared';
 
 const { ACTIVE, BANNED } = UserStatusEnum;
 
@@ -47,9 +51,7 @@ export const useAdminStore = defineStore('admin', () => {
       await api.patch(`/admin/users/${userId}/status`, { status: newStatus });
 
       // Local update
-      const userIndex = users.value.findIndex(
-        (u) => u.id === userId || u._id === userId
-      );
+      const userIndex = users.value.findIndex((u) => u._id === userId);
       if (userIndex !== -1) {
         // Create a copy for safe reactivity or modify directly if it's a deep ref
         (users.value[userIndex] as User).status = newStatus;
@@ -74,9 +76,7 @@ export const useAdminStore = defineStore('admin', () => {
         throw new Error('Failed to delete user');
 
       // Remove from the local users array
-      users.value = users.value.filter(
-        (u) => u.id !== userId && u._id !== userId
-      );
+      users.value = users.value.filter((u) => userId && u._id !== userId);
 
       return true;
     } catch (err: any) {
@@ -118,9 +118,7 @@ export const useAdminStore = defineStore('admin', () => {
       const response = await api.delete(`/admin/bivouacs/${bivouacId}`);
       if (!response || response.status !== 204)
         throw new Error('Failed to delete bivouac');
-      bivouacs.value = bivouacs.value.filter(
-        (b) => (b.id || b._id) !== bivouacId
-      );
+      bivouacs.value = bivouacs.value.filter((b) => b._id !== bivouacId);
       return true;
     } catch (err: any) {
       console.error(`Error deleting bivouac ${bivouacId}:`, err);
@@ -155,7 +153,7 @@ export const useAdminStore = defineStore('admin', () => {
       const response = await api.delete(`/admin/routes/${routeId}`);
       if (!response || response.status !== 204)
         throw new Error('Failed to delete route');
-      routes.value = routes.value.filter((r) => (r.id || r._id) !== routeId);
+      routes.value = routes.value.filter((r) => r._id !== routeId);
       return true;
     } catch (err: any) {
       console.error(`Error deleting route ${routeId}:`, err);
@@ -194,9 +192,7 @@ export const useAdminStore = defineStore('admin', () => {
         throw new Error('Failed to delete proposal');
 
       // Remove from the local proposals array
-      proposals.value = proposals.value.filter(
-        (p) => p.id !== proposalId && p._id !== proposalId
-      );
+      proposals.value = proposals.value.filter((p) => p._id !== proposalId);
 
       return true;
     } catch (err: any) {

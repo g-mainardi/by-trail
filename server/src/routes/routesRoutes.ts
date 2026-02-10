@@ -1,9 +1,6 @@
 import express from 'express';
-import {
-  fetchRouteById,
-  fetchRoutes,
-} from '../controllers/routesController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { fetchRouteById, fetchRoutes } from '@/controllers/routesController.js';
+import { protect } from '@/middleware/authMiddleware.js';
 
 const router = express.Router();
 

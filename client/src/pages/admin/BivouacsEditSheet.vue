@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { type Bivouac, type Region, RegionsEnum } from '@/types';
+import { type Bivouac, type Region, RegionsEnum } from '@by-trail/shared';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -62,7 +62,7 @@ const handleChange = <K extends keyof Bivouac>(field: K, value: Bivouac[K]) => {
 const handleSave = async () => {
   if (Object.keys(updates.value).length > 0) {
     emit('save', {
-      id: props.bivouac?.id || props.bivouac?._id || '',
+      id: props.bivouac?._id ?? '',
       updates: updates.value,
     });
   }

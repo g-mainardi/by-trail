@@ -1,11 +1,11 @@
 import type { Response } from 'express';
-import { Proposal } from '../models/models.js';
-import type { ProposalRequest } from '../types/server_only.js';
+import { ProposalModel as Proposal } from '@/models/Proposal.js';
+import type { ProposalRequest } from '@/types/server_only.js';
 
 // POST /api/proposal
 export const sendProposal = async (req: ProposalRequest, res: Response) => {
   try {
-    const sender = req.user?.id!;
+    const sender = req.user?._id!;
     const { type, subjectName, description, region, locality } = req.body;
 
     if (!type || !subjectName || !description || !region || !locality) {

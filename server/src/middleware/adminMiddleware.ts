@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
-import { UserTypeEnum } from '../types/index.js';
-import { AuthRequest } from '../types/server_only.js';
+import { AuthRequest } from '@/types/server_only.js';
+import { UserTypeEnum } from '@by-trail/shared';
 
 export const admin = (req: AuthRequest, res: Response, next: NextFunction) => {
   // Defensive check: If req.user is missing, someone probably forgot to add 'protect' before 'admin' in the routes
