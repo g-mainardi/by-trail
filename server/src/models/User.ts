@@ -4,7 +4,6 @@ import {
   UserStatusEnum,
   UserTypeEnum,
   RegionsEnum,
-  UserZodSchema,
 } from '@by-trail/shared';
 
 // Extend the Shared Type for Server-Only logic (Password)

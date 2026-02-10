@@ -20,7 +20,7 @@ export const ProposalZodSchema = z.object({
 
 // Secondary schema including sender's email
 export const ProposalWithEmailZodSchema = ProposalZodSchema.extend({
-  senderEmail: z.string().email('Invalid email format'),
+  senderEmail: z.string().email('Invalid email format').optional(),
 });
 
 // Infer the TypeScript type from the Zod schema
