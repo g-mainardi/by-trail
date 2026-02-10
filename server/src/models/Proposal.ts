@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { Proposal, ProposalEnum, RegionsEnum } from '@by-trail/shared';
 
 // Extend Shared Type: sender becomes ObjectId

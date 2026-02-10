@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { Region } from '@by-trail/shared/index';
-import { RegionsEnum } from '@by-trail/shared/index';
+import type { Region } from '@by-trail/shared';
+import { RegionsEnum } from '@by-trail/shared';
 
 // --- UI Components ---
 import { Button } from '@/components/ui/button';
