@@ -10,21 +10,12 @@ COPY package*.json ./
 COPY client/package.json ./client/
 COPY shared/package.json ./shared/
 
-# Install shared dependencies
-WORKDIR /app/shared
-RUN npm install --ignore-scripts
-
-# Install client dependencies
-WORKDIR /app/client
+# Install ALL workspaces from root
 RUN npm install --ignore-scripts
 
 # Copy source code
-WORKDIR /app
 COPY shared ./shared
 COPY client ./client
-
-# Build Frontend
-WORKDIR /app/client
 
 # --- HANDLE BUILD ARGUMENTS ---
 ARG VITE_SERVER_URL
@@ -37,7 +28,8 @@ ENV VITE_PORT=$VITE_PORT
 ENV VITE_SOCKET_URL=$VITE_SOCKET_URL
 
 # Compile (generate /app/client/dist)
-RUN npm run build
+RUN npm run build:shared
+RUN npm run build:client
 
 # ==========================================
 # STAGE 2: Production Runner (Nginx)

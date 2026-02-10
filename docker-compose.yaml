@@ -43,7 +43,7 @@ services:
       NODE_ENV: development # Force development mode
 
     # Override the default command to enable hot-reload with nodemon
-    command: npm run start:dev
+    command: npm run dev:server
 
     volumes:
       - ./server:/app/server
@@ -69,7 +69,7 @@ services:
       VITE_SOCKET_URL: http://${SERVER_HOST:-localhost}:${SERVER_PORT:-3000}
       VITE_MAP_API_KEY_FILE: /run/secrets/map_api_key # We tell Vite where to look for the key file inside the container
       CHOKIDAR_USEPOLLING: 'true' # Tell Vite to use polling (better FS changes detection in Docker)
-    command: npm run dev --host
+    command: npm run dev:client --host
     volumes:
       - ./client:/app/client
       - ./shared:/app/shared # Critical! Allows hot-reload if you change schemas
