@@ -51,6 +51,7 @@ services:
       - /app/node_modules
       - /app/server/node_modules # Preserve container deps
       - /app/shared/node_modules # Preserve shared deps
+      - /app/shared/dist
 
   # 4. Frontend (Vite/React)
   client:
@@ -76,6 +77,7 @@ services:
       - /app/node_modules
       - /app/client/node_modules # Preserve container deps
       - /app/shared/node_modules # Preserve shared deps
+      - /app/shared/dist
 
     depends_on:
       - server
