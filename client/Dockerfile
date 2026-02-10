@@ -52,4 +52,5 @@ COPY --from=builder /app/client/dist /usr/share/nginx/html
 # Nginx listening port
 EXPOSE 80
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
